@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<head th:fragment="head(title)">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>
+  <th:block th:if="${#strings.isEmpty(title)}">한반도 투어</th:block>
+  <th:block th:if="${not #strings.isEmpty(title)}" th:text="${title}"></th:block>
+</title>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" th:href="@{/css/init.css(ver=1.1)}" />
+<link rel="stylesheet" th:href="@{/css/header.css(ver=1.1)}" />
+<link rel="stylesheet" th:href="@{/css/main.css(ver=1.1)}" />
+<link rel="stylesheet" th:href="@{/css/footer.css(ver=1.0)}" />
+<link rel="stylesheet" th:href="@{/css/owl.carousel.css(ver=1.0)}" />
+<link rel="stylesheet" th:href="@{/css/owl.theme.default.css(ver=1.0)}" />
+<link rel="stylesheet" th:href="@{/css/paging.css(ver=1.0)}" />
+<link rel="stylesheet" th:href="@{/css/common.css(ver=1.0)}" />
+<link rel="stylesheet" th:href="@{/css/ckeditor.css(ver=1.0)}" />
+<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+<script src="https://cdn.ckeditor.com/ckeditor5/40.0.0/decoupled-document/ckeditor.js"></script>
+<script src="js/owl.carousel.min.js"></script> 
+
+</head>
+<body>
+ <div th:fragment="header" class="header_wrap">	
+   <div class="container text-center header_top">
+		  <div class="row">
+		    <div class="col-3">
+		       <div class="logo"><a th:href="@{/}" ><img src="image/logol.jpg"></a></div>
+		    </div>
+		    <div class="col-8">
+		       <div class="header_search">
+				   	<form class="frm_search">
+				   	<input type="search" class="header_searchbar" name="search" ><button type="submit" class="btn_search">검색</button>
+				   	</form></div>
+		    </div>
+		    <div class="col-1">
+		      <div class="user">
+						<a href=""><i class="fa-regular fa-user fa-2xl" style="color: #96b6c5;"></i></a> 
+						<a href=""><i class="fa-regular fa-calendar-check fa-2xl" style="color: #96b6c5;"></i></a> 		 
+					</div>
+		    </div>
+		  </div>
+		</div>
+
+	  <nav class="navbar navbar-expand-lg bg-body-tertiary">
+  <div class="container-fluid">    
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNavDropdown">
+      <ul class="navbar-nav">
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            패키지
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="#">서울/인천</a></li>
+            <li><a class="dropdown-item" href="#">경기도</a></li>
+            <li><a class="dropdown-item" href="#">충정도</a></li>
+            <li><a class="dropdown-item" href="#">전라도</a></li>
+            <li><a class="dropdown-item" href="#">경상도</a></li>
+          </ul>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            호텔
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="#">서울/인천</a></li>
+            <li><a class="dropdown-item" href="#">경기도</a></li>
+            <li><a class="dropdown-item" href="#">충정도</a></li>
+            <li><a class="dropdown-item" href="#">전라도</a></li>
+            <li><a class="dropdown-item" href="#">경상도</a></li>
+          </ul>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">이벤트</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">고객센터</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav> 
+	   
+</div>	   
+ 
+	
+	
+	
+	
+	
+
+</body>
+</html>
+
