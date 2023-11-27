@@ -41,6 +41,10 @@ public class UserController {
     // 네이버로그인-1
     model.addAttribute("naverLoginURL", userService.getNaverLoginURL(request));
     return "user/login";
+    
+    // 카카오로그인-1
+ // model.addAttribute("kakaoLoginURL", userService.getKakaoLoginURL(request));
+ // return "user/login";
   }
   
   @GetMapping("/naver/getAccessToken.do")
@@ -66,6 +70,10 @@ public class UserController {
       return "redirect:/main.do";
     }
   }
+  
+  
+
+  
   
   @PostMapping("/naver/join.do")
   public void naverJoin(HttpServletRequest request, HttpServletResponse response) {
