@@ -1,0 +1,16 @@
+@charset "UTF-8";
+
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR&display=swap');
+@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css');
+
+.paging {
+  text-align: center;
+  padding: 8px 0;
+}
+.paging a {
+  margin: 0 10px;
+}
+.paging .now_page {
+  color: #198754;
+  font-weight: 900;
+}
