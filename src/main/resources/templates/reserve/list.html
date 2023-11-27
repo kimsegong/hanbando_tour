@@ -14,8 +14,77 @@
 		    </div>
 		    <div class="col-10" style="border:1px gray dotted">
 		      	<!--/*여기에 작성/ 다 만들고 style 지워주세요  */-->
-		   
-		      	
+		      <div>
+            <h2>예약내역목록</h2>
+          </div>
+          <div>
+            <table class="table">
+              <colgroup>
+                <col style="width:25%;">
+                <col style="width:15%;">
+                <col style="width:15%;">
+                <col style="width:15%;">
+                <col style="width:14%;">
+                <col style="width:10%;">
+              </colgroup>
+              <thead>
+                <tr>
+                  <th>예약날짜/예약번호</th>
+                  <th>상품명</th>
+                  <th>상품금액</th>
+                  <th>인원</th>
+                  <th>여행일정</th>
+                  <th>예약상태</th>
+                </tr>
+              </thead>
+              <tbody>
+                <th:block th:each="res,vs:${reserveList}">
+                  <th:block th:if="${session.user.auth == 0}">
+                    <tr>
+                      <td id="resSche">
+                        <a th:href="@{/reserve/detail.do(reserveNo=${res.reserveNo})}" th:text="|${res.reserveDate} / ${res.reserveNo}|"></a>
+                      </td> 
+                      <td id="prodName" th:text="${res.productDto.tripName}"></td>
+                      <td id="totalPrice" th:text="|${res.productDto.price}~|"></td>
+                      <td id="personCnt" th:text="${res.reservePerson}"></td>
+                      <td id="trvlSche" th:text="|${res.reserveStart} / ${res.productDto.timetaken}|"></td>
+                      <td id="resStatus" th:text="${res.reserveStatus}"></td>
+                    </tr>
+                  </th:block>
+                  <th:block th:if="${session.user.userNo == res.userDto.userNo}">
+                    <tr>
+                      <td id="resSche">
+                        <a href="@{/reserve/detail.do(reserveNo=${res.reserveNo})}" th:text="|${res.reserveDate} / ${res.reserveNo}|"></a>
+                      </td> 
+                      <td id="prodName" th:text="${res.productDto.tripName}"></td>
+                      <td id="totalPrice" th:text="|${res.productDto.price}~|"></td>
+                      <td id="personCnt" th:text="${res.reservePerson}"></td>
+                      <td id="trvlSche" th:text="|${res.reserveStart} / ${res.productDto.timetaken}|"></td>
+                      <th:block th:if="${res.reserveStatus == 0}">
+                        <td id="resStatus">결제대기</td>
+                      </th:block>
+                      <th:block th:if="${res.reserveStatus == 1}">
+                        <td id="resStatus">완료</td>
+                      </th:block>
+                      <th:block th:if="${res.reserveStatus == 2}">
+                        <td id="resStatus">취소</td>
+                      </th:block>
+                    </tr>
+                  </th:block>
+                </th:block>
+              </tbody>
+              <tfoot>
+                <tr>
+                  <td colspan="6" th:utext="${paging}"></td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+          <hr>
+          
+          <button type="button" onclick="location.href='@{/product/list.do}'" class="btn btn-success btn-lg" th:text="다른상품 예약하러가기"></button>
+    		   
+    		      	
 		      	
 		    </div>
 		    <div class="col-1">	      
