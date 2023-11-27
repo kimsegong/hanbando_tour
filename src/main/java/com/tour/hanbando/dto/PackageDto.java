@@ -11,9 +11,9 @@ import lombok.NoArgsConstructor;
 @Builder
 public class PackageDto {
   private int packageNo;
-  private int userNo;
-  private int regionNo;
-  private int themeNo;
+  private UserDto userDto;
+  private RegionDto regionDto;
+  private ThemeDto themeDto;
   private String packageTitle;
   private String packagePlan;
   private String packageContents;
