@@ -1,5 +1,11 @@
 package com.tour.hanbando.service;
 
-public interface MainService {
+import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.ui.Model;
+
+public interface MainService {
+  public Map<String, Object> headerSearch(HttpServletRequest request);
 }
