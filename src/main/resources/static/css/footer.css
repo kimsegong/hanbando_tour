@@ -1,0 +1,30 @@
+@charset "UTF-8";
+
+@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css');
+@font-face {
+    font-family: 'TheJamsil5Bold';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2302_01@1.0/TheJamsil5Bold.woff2') format('woff2');
+    font-weight: 700;
+    font-style: normal;
+}
+
+.footer_wrap{
+	margin:auto;
+	margin-top: 10px;
+	
+}
+.footer_logo{
+	float:left;
+	margin-left: 13.5%;
+}
+.footer_wrap img {
+	height: 100px;
+}
+.info{
+	height: 120px;
+	font-size: 13px;
+	float:left;
+	padding-top: 12px;
+	padding-left: 13px;
+	color: dimgray;
+}

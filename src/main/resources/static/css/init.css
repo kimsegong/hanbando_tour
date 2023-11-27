@@ -1,0 +1,42 @@
+@charset "UTF-8";
+
+@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css');
+@font-face {
+    font-family: 'TheJamsil5Bold';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2302_01@1.0/TheJamsil5Bold.woff2') format('woff2');
+    font-weight: 700;
+    font-style: normal;
+}
+
+* {
+  font-family: 'TheJamsil5Bold';
+  font-weight: 100;
+  color: #333333;
+}
+div, ul, li, ol {
+  padding: 0;
+  margin: 0;
+  position: relative;
+
+}
+
+a {
+  text-decoration: none;
+  color: #333333;
+}
+i {
+  color: #333333;
+}
+a:hover {
+  color: crimson;
+}
+a:hover i {
+  color: crimson;
+}
+ul, ol {
+  list-style-type: none;
+}
+.col-10 {
+	padding: 0 0 0 0;
+	margin-top: 20px;
+}
