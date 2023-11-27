@@ -5,12 +5,12 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Data
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
+@Data
 @Builder
-public class HeartDto {
-  private PackageDto packageDto;
-  private HotelDto hotelDto;
-  private int userNo;
+public class FaqCaDto {
+  private int caNo;
+  private int caTitle;
+
 }

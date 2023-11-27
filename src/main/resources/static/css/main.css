@@ -19,7 +19,6 @@
 	margin: auto;
 	display: flex;
   align-items: center;
-	border-bottom: 1px gray solid;
 	width:1340px;
 	height: 600px;
 	
@@ -60,8 +59,8 @@ h3{
 }
 .btn-heart {
  float: right;		
- height: 40px;
- width: 40px;
+ height: 35px;
+ width: 35px;
  border: 1px white solid;
  background-color: #F1F0E8;
  border-radius: 50%;
