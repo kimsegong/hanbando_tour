@@ -22,7 +22,8 @@ public class ReserveDto {
   private int reservePerson;
   private int reservePrice;
 //  private UserDto userDto;
-//  private PackageDto packageDto;
+  private PackageDto packageDto;
 //  private HotelDto hotelDto;
+//  private RoomtypeDto roomtypeDto;
   
 }

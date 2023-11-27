@@ -14,6 +14,13 @@
     <typeAlias alias="TouristDto" type="com.tour.hanbando.dto.TouristDto"/>
     <typeAlias alias="PaymentDto" type="com.tour.hanbando.dto.PaymentDto"/>
     
+    <typeAlias alias="HeartDto" type="com.tour.hanbando.dto.HeartDto"/>
+    <typeAlias alias="PackageDto" type="com.tour.hanbando.dto.PackageDto"/>
+    <typeAlias alias="ProductImageDto" type="com.tour.hanbando.dto.ProductImageDto"/>
+    <typeAlias alias="RegionDto" type="com.tour.hanbando.dto.RegionDto"/>
+    <typeAlias alias="ReviewDto" type="com.tour.hanbando.dto.ReviewDto"/>
+    <typeAlias alias="ThemeDto" type="com.tour.hanbando.dto.ThemeDto"/>
+    
   </typeAliases>
      
 </configuration>
