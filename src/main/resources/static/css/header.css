@@ -8,10 +8,6 @@
     font-style: normal;
 }
 
-.header_wrap {
- 
- 
-}
 
 
 
@@ -26,6 +22,9 @@
 
 .user {
 		margin-top:20px;
+}
+i {
+  margin: 0 5px 0 5px;
 }
 .collapse {
 	margin-left:9.10%;
