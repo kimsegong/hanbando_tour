@@ -1,0 +1,46 @@
+@charset "UTF-8";
+
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR&display=swap');
+@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css');
+
+.title {
+  text-align: center;
+  font-weight: 900;
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+.attach {
+  margin-bottom: 10px;
+}
+.attach img {
+  width: 25px;
+}
+.attach a {
+  cursor: pointer;  
+}
+.attached_list {
+  display: flex;
+  flex-wrap: wrap;
+}
+.attached_list div {
+  margin-right: 20px;
+}
+.wrap {
+  padding: 10px;
+  margin: 0 auto;  
+}
+.wrap_5 {
+  width: 500px;
+}
+.wrap_6 {
+  width: 600px;
+}
+.wrap_7 {
+  width: 700px;
+}
+.wrap_8 {
+  width: 800px;
+}
+.wrap_9 {
+  width: 900px;
+}
