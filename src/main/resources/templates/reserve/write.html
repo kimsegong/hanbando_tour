@@ -14,8 +14,216 @@
 		    </div>
 		    <div class="col-10" style="border:1px gray dotted">
 		      	<!--/*여기에 작성/ 다 만들고 style 지워주세요  */-->
-		   
-		      	
+		      <!--/* 패키지 또는 호텔 번호를 받아오고 필요시 다른 정보도 받아오기 */-->
+		      <div>
+            <h2>패키지 예약하기</h2>
+		      </div>
+		      
+		      <div>
+            <h3>상품명표시하기</h3>
+		      </div>
+		      <div>예약자 정보</div>
+		      <div>
+  		      <table>
+              <tbody>
+                <tr>
+                  <td>이름</td>
+                  <td></td>
+                  <td>휴대폰번호</td>
+                  <td></td>
+                </tr>
+                <tr>
+                  <td>성별</td>
+                  <td></td>
+                  <td>이메일</td>
+                  <td></td>
+                </tr>
+                <tr>
+                  <td>요청사항</td>
+                  <td>
+                    <textarea placeholder="내용을 입력해주세요"></textarea>
+                  </td>
+                </tr>
+              </tbody>
+            </table>	
+		      </div>	
+		      
+		      <div>
+            <h4>요금 및 여행인원</h4>
+          </div>
+          <div>
+            <table>
+              <thead>
+                <tr class="table-active">
+                  <th>요금구분</th>
+                  <th>성인요금</th>
+                  <th>소아요금</th>
+                  <th>성인인원</th>
+                  <th>소아인원</th>
+                  <th>합계</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td></td>
+                  <td id="adultPrice">${product.price}</td> <!-- 상품가격 -->
+                  <td id="childPrice">${product.price}</td> <!-- 성인요금에서 금액변동 적용하기 -->
+                  <td>
+                    <select name="adultCnt">
+                      <c:forEach var="cnt" begin="0" end="20" step="1"> <!-- end값으로 product.person(최대인원수) 적용하기 -->
+                        <option class="adtCnt" value="${cnt}">${cnt}명</option>
+                      </c:forEach>
+                    </select>
+                  </td>
+                  <td>
+                    <select name="childCnt">
+                      <c:forEach var="cnt" begin="0" end="20" step="1"> <!-- end값으로 product.person(최대인원수) 적용하기 -->
+                        <option class="cldCnt" value="${cnt}">명</option>
+                      </c:forEach>
+                    </select>
+                  </td>
+                  <td>
+                    <span id="totalPriceOne">
+                    <!-- 계산된 총 금액 -->
+                    
+                    </span>
+                    원
+                  </td>
+                </tr>
+              </tbody>
+              <tfoot>
+                <tr>
+                  <td colspan="3">총계</td>
+                  <td>
+                    <span class="adultCntVal">0</span>명
+                  </td>
+                  <td>
+                    <span class="childCntVal">0</span>명
+                  </td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+		      
+		      <!-- 여행자 정보 -->
+          <form id="frm_tourist"  method="post">
+            <div>
+              <div>
+                <h4>여행자 정보</h4>
+              </div>
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>구분</th>
+                    <th>이름</th>
+                    <th>생년월일</th>
+                    <th>성별</th>
+                    <th>연락처</th>
+                  </tr>
+                </thead>
+                <tbody id="inp_tourist">
+                <!-- 여행인원 선택시 선택한만큼 추가되어야 함 -->
+                </tbody>
+              </table>
+                 
+            </div>
+          </form>
+		      
+		      
+		      <!-- 예약 정보 -->
+          <!-- 받아올 정보 : userNo, productNo -->  
+          <form id="frm_reserve" >
+            
+            <input type="hidden" name="userNo" value="${session.user.userNo}">
+            <input type="hidden" name="productNo" value="${product.productNo}">
+            <input type="hidden" name="resStart" value="${resDate}">
+            <!-- 
+            <input type="hidden" name="resFinish">
+            -->
+          
+            <!-- 픽업장소 선택 -->
+            <div>
+              <h4>출발지 선택</h4>
+            </div>
+            <div>
+              총<span class="totalPerson">0</span>명
+              <input type="hidden" id="reservePerson" name="reservePerson" class="totalPerson">
+            </div>
+            <div class="d-grid gap-2 col-2 mx-auto">
+              <ul class="list-group">
+                <li class="list-group-item">
+                  <input class="form-check-input me-1" type="radio" name="pickupLoc" id="byOwn" value="자차" checked>
+                  <label class="form-check-label" for="byOwn">자차 이용</label> 
+                </li>
+                <li class="list-group-item">
+                  <input class="form-check-input me-1" type="radio" name="pickupLoc" id="pickupSeoul" value="서울역" >
+                  <label class="form-check-label" for="pickupSeoul">서울역</label> 
+                </li>
+                <li class="list-group-item">
+                  <input class="form-check-input me-1" type="radio" name="pickupLoc" id="pickupDDP" value="동대문">
+                  <label class="form-check-label" for="pickupDDP">동대문</label> 
+                </li>
+              </ul>
+            </div>
+              
+            <hr>  
+            
+      
+            <!-- 약관 동의 -->
+            <div class="agreeFrom">
+              <h4>약관 동의</h4>
+            </div>
+              <div>
+                <table class="table">
+                  <tbody class="d-grid gap-2 col-6 mx-auto">
+                    <tr>
+                      <td>
+                        <div>
+                          <span>
+                            <input type="checkbox" id="chkAgree" name="chkAgree" value="0" class="chk_each">
+                            <label for="chkAgree">개인정보 수집에 동의합니다(필수)</label>
+                          </span>
+                        </div>
+                      </td>
+                      <td>
+                        <a href="#" >자세히</a>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <div>
+                          <span>
+                            <input type="checkbox" id="chkMarketing" name="chkAgree" value="1" class="chk_each">
+                            <label for="chkMarketing">마케팅 이용 정보 수집에 동의합니다(선택)</label>
+                          </span>
+                        </div>
+                      </td>
+                      <td>
+                        <a href="#" >자세히</a>
+                      </td>
+                    </tr>
+                  </tbody>
+                  <tfoot class="d-grid gap-2 col-6 mx-auto">
+                    <tr>
+                      <td>
+                        <div>
+                          <span>
+                            <input type="checkbox" id="chkAll">
+                            <label for="chkAll">모든 약관에 동의합니다.</label>
+                          </span>
+                        </div>
+                      </td>
+                    </tr>
+                  </tfoot>
+                </table>
+              </div>
+           
+            
+            <div class="d-grid gap-2 col-6 mx-auto" >
+              <button type="button" id="btn_reserve" class="btn btn-success">예약하기</button>
+              
+            </div>
+          </form>
 		      	
 		    </div>
 		    <div class="col-1">	      
