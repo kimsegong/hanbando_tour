@@ -3,7 +3,7 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.tour.hanbando.dao.PackageMapper">
+ <mapper namespace="com.tour.hanbando.dao.PackageMapper">
     <!-- 패키지테이블 -->
     <resultMap type="PackageDto" id="PackageMap">
           <id column="PACKAGE_NO" property="packageNo"/>
@@ -22,192 +22,192 @@
           <result column="STATUS" property="status"/>
           <result column="MAX_PEOPLE" property="maxPeople"/>
           <result column="RECOMMEND_STATUS" property="recommendStatus"/>
-      <association property="regionDto" javaType="RegionDto">
+      <association javaType="RegionDto" property="regionDto">
           <id column="REGION_NO" property="regionNo"/>
           <result column="REGION_NAME" property="regionName"/>
       </association>
-      <association property="themeDto" javaType="ThemeDto">
+      <association javaType="ThemeDto" property="themeDto">
           <id column="THEME_NO" property="themeNo"/>
           <result column="THEME_NAME" property="themeName"/>
       </association>
-      <association>
-          <id column="IMAGE_NO" property="imageNo"/>
-          <result column="PACKAGE_NO" property="packageNo"/>
-          <result column="HOTEL_NO" property="hotelNo"/>
-          <result column="THUMBNAIL" property="thumbnail"/>
-          <result column="FILESYSTEM_NAME" property="filesystemName"/>
-          <result column="IMAGE_PATH" property="imagePath"/>
-      </association>
-      <association property="userDto" javaType="UserDto">
+      <association javaType="UserDto" property="userDto">
           <id column="USER_NO" property="userNo"/>
           <result column="EMAIL" property="email"/>
-          <result column="PW" property="pw"/>
           <result column="NAME" property="name"/>
-          <result column="GENDER" property="gender"/>
-          <result column="MOBILE" property="mobile"/>
-          <result column="POSTCODE" property="postcode"/>
-          <result column="ROAD_ADDRESS" property="roadAddress"/>
-          <result column="JIBUN_ADDRESS" property="jibunAddress"/>
-          <result column="DETAIL_ADDRESS" property="detailAddress"/>
-          <result column="AGREE" property="agree"/>
-          <result column="STATE" property="state"/>
-          <result column="AUTH" property="auth"/>
-          <result column="PW_MODIFIED_AT" property="pwModifiedAt"/>
-          <result column="JOINED_AT" property="joinedAt"/>
       </association>
     </resultMap>
     <!-- 리뷰테이블 -->
     <resultMap type="ReviewDto" id="ReviewMap">
-            <id column="REVIEW_NO" property="reviewNo"/>
-            <result column="USER_NO" property="userNo"/>
+            <id column="REVIEW_NO" property="reviewNo"/>            
             <result column="RESERVE_NO" property="reserveNo"/>
+            <result column="REVIEW_CONTENTS" property="reviewContents"/>
             <result column="PACKAGE_NO" property="packageNo"/>
             <result column="HOTEL_NO" property="hotelNo"/>
-            <result column="REVIEW_CONTENTS" property="reviewContents"/>
             <result column="STAR" property="star"/>
             <result column="REGIST_AT" property="registAt"/>   
         <association javaType="UserDto" property="userDto">
             <id column="USER_NO" property="userNo"/>
             <result column="EMAIL" property="email"/>
-            <result column="PW" property="pw"/>
-            <result column="NAME" property="name"/>
-            <result column="GENDER" property="gender"/>
-            <result column="MOBILE" property="mobile"/>
-            <result column="POSTCODE" property="postcode"/>
-            <result column="ROAD_ADDRESS" property="roadAddress"/>
-            <result column="JIBUN_ADDRESS" property="jibunAddress"/>
-            <result column="DETAIL_ADDRESS" property="detailAddress"/>
-            <result column="AGREE" property="agree"/>
-            <result column="STATE" property="state"/>
-            <result column="AUTH" property="auth"/>
-            <result column="PW_MODIFIED_AT" property="pwModifiedAt"/>
-            <result column="JOINED_AT" property="joinedAt"/>     
-        </association>
-        <association javaType="PackageDto" property="packageDto">
-            <id column="PACKAGE_NO" property="packageNo"/>
-            <result column="USER_NO" property="userNo"/>
-            <result column="REGION_NO" property="regionNo"/>
-            <result column="THEME_NO" property="themeNo"/>
-            <result column="PACKAGE_TITLE" property="packageTitle"/>
-            <result column="MINI_ONE" property="miniOne"/>
-            <result column="MINI_TWO" property="miniTwo"/>
-            <result column="MINI_THREE" property="miniThree"/>
-            <result column="PACKAGE_PLAN" property="packagePlan"/>
-            <result column="PACKAGE_CONTENTS" property="packageContents"/>
-            <result column="HOTEL_CONTENTS" property="hotelContents"/>
-            <result column="PRICE" property="price"/>
-            <result column="DANGER" property="danger"/>
-            <result column="CREATED_AT" property="createdAt"/>
-            <result column="MODIFIED_AT" property="modifiedAt"/>
-            <result column="HIT" property="hit"/>
-            <result column="STATUS" property="status"/>
-            <result column="MAX_PEOPLE" property="maxPeople"/>
-            <result column="RECOMMEND_STATUS" property="recommendStatus"/>       
+            <result column="NAME" property="name"/>    
         </association>
      </resultMap>       
 
     <!-- 찜테이블 -->
-    <resultMap id="HeartDto" type="HeartMap">
-            <result column="PACKAGE_NO" property="packageNo"/>
-            <result column="HOTEL_NO" property="hotelNo"/>
+    <resultMap type="HeartDto" id="HeartMap">            
             <result column="USER_NO" property="userNo"/>
       <association javaType="PackageDto" property="packageDto">
-            <id column="PACKAGE_NO" property="packageNo"/>
-            <result column="USER_NO" property="userNo"/>
-            <result column="REGION_NO" property="regionNo"/>
-            <result column="THEME_NO" property="themeNo"/>
-            <result column="PACKAGE_TITLE" property="packageTitle"/>
-            <result column="MINI_ONE" property="miniOne"/>
-            <result column="MINI_TWO" property="miniTwo"/>
-            <result column="MINI_THREE" property="miniThree"/>
-            <result column="PACKAGE_PLAN" property="packagePlan"/>
-            <result column="PACKAGE_CONTENTS" property="packageContents"/>
-            <result column="HOTEL_CONTENTS" property="hotelContents"/>
-            <result column="PRICE" property="price"/>
-            <result column="DANGER" property="danger"/>
-            <result column="CREATED_AT" property="createdAt"/>
-            <result column="MODIFIED_AT" property="modifiedAt"/>
-            <result column="HIT" property="hit"/>
-            <result column="STATUS" property="status"/>
-            <result column="MAX_PEOPLE" property="maxPeople"/>
-            <result column="RECOMMEND_STATUS" property="recommendStatus"/>       
+            <id column="PACKAGE_NO" property="packageNo"/>            
+            <result column="PACKAGE_TITLE" property="packageTitle"/>      
+       </association>
+      <association javaType="HotelDto" property="hotelDto">
+            <id column="HOTEL_NO" property="hotelNo"/>            
+            <result column="HOTEL_NAME" property="hotelName"/>      
        </association>
     </resultMap>
 
-    <!-- resultMap for PackageMap -->
-<resultMap id="PackageMap" type="com.example.dto.PackageDto">
-    <id column="PACKAGE_NO" property="packageNo"/>
-    <result column="USER_NO" property="userNo"/>
-    <result column="REGION_NO" property="regionNo"/>
-    <result column="THEME_NO" property="themeNo"/>
-    <result column="PACKAGE_TITLE" property="packageTitle"/>
-    <result column="MINI_ONE" property="miniOne"/>
-    <result column="MINI_TWO" property="miniTwo"/>
-    <result column="MINI_THREE" property="miniThree"/>
-    <result column="PACKAGE_PLAN" property="packagePlan"/>
-    <result column="PACKAGE_CONTENTS" property="packageContents"/>
-    <result column="HOTEL_CONTENTS" property="hotelContents"/>
-    <result column="PRICE" property="price"/>
-    <result column="DANGER" property="danger"/>
-    <result column="CREATED_AT" property="createdAt"/>
-    <result column="MODIFIED_AT" property="modifiedAt"/>
-    <result column="HIT" property="hit"/>
-    <result column="STATUS" property="status"/>
-    <result column="MAX_PEOPLE" property="maxPeople"/>
-    <result column="RECOMMEND_STATUS" property="recommendStatus"/>
-    <association property="regionDto" javaType="com.example.dto.RegionDto">
-        <id column="REGION_NO" property="regionNo"/>
-        <result column="REGION_NAME" property="regionName"/>
-    </association>
-    <association property="themeDto" javaType="com.example.dto.ThemeDto">
-        <id column="THEME_NO" property="themeNo"/>
-        <result column="THEME_NAME" property="themeName"/>
-    </association>
-    <association property="productImageDto" javaType="com.example.dto.ProductImageDto">
-        <id column="IMAGE_NO" property="imageNo"/>
-        <result column="PACKAGE_NO" property="packageNo"/>
-        <result column="HOTEL_NO" property="hotelNo"/>
-        <result column="THUMBNAIL" property="thumbnail"/>
-        <result column="FILESYSTEM_NAME" property="filesystemName"/>
-        <result column="IMAGE_PATH" property="imagePath"/>
-    </association>
-  </resultMap>
-
-    <!-- SELECT query for joining PACKAGE_T, REGION_T, THEME_T, and PRODUCT_IMAGE_T -->
-    <select id="getPackageList" resultMap="PackageMap">
-        SELECT
-            P.PACKAGE_NO,
-            P.USER_NO,
-            P.REGION_NO,
-            P.THEME_NO,
-            P.PACKAGE_TITLE,
-            P.MINI_ONE,
-            P.MINI_TWO,
-            P.MINI_THREE,
-            P.PACKAGE_PLAN,
-            P.PACKAGE_CONTENTS,
-            P.HOTEL_CONTENTS,
-            P.PRICE,
-            P.DANGER,
-            P.CREATED_AT,
-            P.MODIFIED_AT,
-            P.HIT,
-            P.STATUS,
-            P.MAX_PEOPLE,
-            P.RECOMMEND_STATUS,
-            R.REGION_NAME,
-            T.THEME_NAME,
-            I.IMAGE_NO,
-            I.THUMBNAIL,
-            I.FILESYSTEM_NAME,
-            I.IMAGE_PATH
-        FROM PACKAGE_T P
-        JOIN REGION_T R ON P.REGION_NO = R.REGION_NO
-        JOIN THEME_T T ON P.THEME_NO = T.THEME_NO
-        LEFT JOIN PRODUCT_IMAGE_T I ON P.PACKAGE_NO = I.PACKAGE_NO
+    <select id="getPackageCount" resultType="int">
+      SELECT COUNT(*)
+        FROM PACKAGE_T
     </select>
 
+    <!-- 패키지리스트불러오기 -->
+    <select id="getPackageList" resultMap="PackageMap">
+    SELECT
+        P.PACKAGE_NO,
+        P.USER_NO,
+        P.REGION_NO,
+        R.REGION_NAME,
+        P.THEME_NO,
+        T.THEME_NAME,
+        P.PACKAGE_TITLE,
+        P.MINI_ONE,
+        P.MINI_TWO,
+        P.MINI_THREE,
+        P.PACKAGE_PLAN,
+        P.PACKAGE_CONTENTS,
+        P.HOTEL_CONTENTS,
+        P.PRICE,
+        P.DANGER,
+        P.CREATED_AT,
+        P.MODIFIED_AT,
+        P.HIT,
+        P.STATUS,
+        P.MAX_PEOPLE,
+        P.RECOMMEND_STATUS,
+        PI.IMAGE_NO,
+        PI.THUMBNAIL,
+        PI.FILESYSTEM_NAME,
+        PI.IMAGE_PATH
+    FROM (
+        SELECT
+            PT.PACKAGE_NO,
+            PT.USER_NO,
+            PT.REGION_NO,
+            PT.THEME_NO,
+            PT.PACKAGE_TITLE,
+            PT.MINI_ONE,
+            PT.MINI_TWO,
+            PT.MINI_THREE,
+            PT.PACKAGE_PLAN,
+            PT.PACKAGE_CONTENTS,
+            PT.HOTEL_CONTENTS,
+            PT.PRICE,
+            PT.DANGER,
+            PT.CREATED_AT,
+            PT.MODIFIED_AT,
+            PT.HIT,
+            PT.STATUS,
+            PT.MAX_PEOPLE,
+            PT.RECOMMEND_STATUS,
+            ROW_NUMBER() OVER (ORDER BY PT.PACKAGE_NO DESC) AS RN
+        FROM
+            PACKAGE_T PT
+    ) P
+    LEFT JOIN
+        PRODUCT_IMAGE_T PI ON P.PACKAGE_NO = PI.PACKAGE_NO
+    LEFT JOIN
+        REGION_T R ON P.REGION_NO = R.REGION_NO
+    LEFT JOIN
+        THEME_T T ON P.THEME_NO = T.THEME_NO
+    WHERE
+        P.RN BETWEEN #{begin} AND #{end}
+    </select>
 
+    <insert id="insertPackage" parameterType="PackageDto">
+      <selectKey order="BEFORE" keyProperty="packageNo" resultType="int">
+          SELECT PACKAGE_SEQ.NEXTVAL 
+            FROM DUAL
+      </selectKey>
+        INSERT INTO PACKAGE_T (
+            PACKAGE_NO,
+            USER_NO,
+            REGION_NO,
+            THEME_NO,
+            PACKAGE_TITLE,
+            MINI_ONE,
+            MINI_TWO,
+            MINI_THREE,
+            PACKAGE_PLAN,
+            PACKAGE_CONTENTS,
+            HOTEL_CONTENTS,
+            PRICE,
+            DANGER,
+            CREATED_AT,
+            MODIFIED_AT,
+            MAX_PEOPLE,
+            RECOMMEND_STATUS
+        ) VALUES (
+            #{packageNo},
+            #{userNo},
+            #{regionNo},
+            #{themeNo},
+            #{packageTitle},
+            #{miniOne},
+            #{miniTwo},
+            #{miniThree},
+            #{packagePlan},
+            #{packageContents},
+            #{hotelContents},
+            #{price},
+            #{danger},
+            #{createdAt},
+            #{modifiedAt},
+            #{maxPeople},
+            #{recommendStatus}
+        )
+    </insert>
+
+     <insert id="insertThumbnail" parameterType="productImageDto">
+        INSERT INTO PRODUCT_IMAGE_T (
+            IMAGE_NO
+          , PACKAGE_NO
+          , THUMBNAIL
+          , FILESYSTEM_NAME
+          , IMAGE_PATH
+        ) VALUES (
+            PRODUCT_IMAGE_SEQ.NEXTVAL
+          , #{packageNo}
+          , #{thumbnail}
+          , #{filesystemName}
+          , #{imagePath}
+        )
+      </insert>
+    
+    
+      <insert id="insertPackageImage" parameterType="productImageDto">
+        INSERT INTO PRODUCT_IMAGE_T (
+            IMAGE_NO
+          , PACKAGE_NO
+          , FILESYSTEM_NAME
+          , IMAGE_PATH
+        ) VALUES (
+            PRODUCT_IMAGE_SEQ.NEXTVAL
+          , #{packageNo}
+          , #{filesystemName}
+          , #{imagePath}
+        )
+      </insert>
+  
 
   
 </mapper>

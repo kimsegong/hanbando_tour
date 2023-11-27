@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 @Builder
-public class RoomImageDto {
+public class HotelImageDto {
   private int hotelNo;
   private Integer roomNo; // Nullable
   private Integer thumbnail; // Nullable
