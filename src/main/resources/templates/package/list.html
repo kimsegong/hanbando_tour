@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+ <!--<head th:replace="~{/layout/header::head('패키지상품리스트')}"></head>-->
+<body>
+<style>
+  .card {
+      width: 18rem;
+      margin-bottom: 20px;
+  }
+
+  .admin_btn {
+      display: flex;
+      justify-content: flex-end;
+  }
+</style>  
+
+  <div class="container text-center">  <!-- 그리드 시작 -->  
+  <div class="row">
+    <div class="col">    
+    </div>
+    <div class="col-8">
+      
+      <!--<th:block th:if="${session.user.auth == 0}">   --> 
+      <a th:href="@{/product/write.form}">
+        <button type="button" class="admin_btn" style="margin-left: auto;">게시글 작성</button>
+      </a>
+     <!-- </th:block>-->
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <div style="display: inline-block;"> 
+         <span th:text="${count}"></span>개의 상품
+        </div>
+        <div class="btn-group btn-group-sm" role="group" aria-label="Small button group" style="display: inline-block;">
+          <button type="button" class="btn btn-outline-dark" id="recommend">추천순</button>
+          <button type="button" class="btn btn-outline-dark" id="reviewProduct">리뷰순</button>
+        </div>
+      </div>
+      <hr>
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+    </div>
+    <div class="col">      
+    </div>
+  </div>
+
+    
+
+ 
+</body>
+</html>
+
