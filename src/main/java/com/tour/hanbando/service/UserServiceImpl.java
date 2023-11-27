@@ -192,6 +192,7 @@ public class UserServiceImpl implements UserService {
     
   }
   
+  // 카카오로그인-1
   @Override
   public UserDto getUser(String email) {
     return userMapper.getUser(Map.of("email", email));

@@ -24,7 +24,8 @@ public class UserDto {
   private String detailAddress;
   private int agree;
   private int state;
-  private Date pwModifiedAt ;
-  private Date joinedAt ;
+  private int auth;
+  private String pwModifiedAt ;
+  private String joinedAt ;
 }
 
