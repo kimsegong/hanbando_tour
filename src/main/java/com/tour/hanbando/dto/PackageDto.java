@@ -11,10 +11,10 @@ import lombok.NoArgsConstructor;
 @Builder
 public class PackageDto {
   private int packageNo;
-  private UserDto userDto;
-  private RegionDto regionDto;
-  private ThemeDto themeDto;
   private String packageTitle;
+  private String miniOne;
+  private String miniTwo;
+  private String miniThree;
   private String packagePlan;
   private String packageContents;
   private String hotelContents;
@@ -26,5 +26,8 @@ public class PackageDto {
   private int status;
   private int maxPeople;
   private int recommendStatus;
+  private RegionDto regionDto;
+  private ThemeDto themeDto;
+  private UserDto userDto;
 
 }
