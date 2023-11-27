@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<configuration>
+
+	<!-- Appenders : 로그를 출력하는 Appender 모음 -->
+  
+
+  <!-- Console에 로그를 찍는 Appender -->
+	<appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+      <encoder class="ch.qos.logback.core.encoder.LayoutWrappingEncoder">
+        <layout class="com.tour.hanbando.logback.MyLogbackLayout" />
+      </encoder>
+	</appender>
+    
+  <!-- 매일 새로운 로그 파일을 만드는 RollingFileAppender -->
+  <appender name="rolling" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+      <fileNamePattern>/logs/myhome.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+      <maxFileSize>100MB</maxFileSize>
+      <maxHistory>30</maxHistory>
+      <totalSizeCap>3GB</totalSizeCap>
+    </rollingPolicy>
+    <encoder class="ch.qos.logback.core.encoder.LayoutWrappingEncoder">
+      <layout class="com.tour.hanbando.logback.MyLogbackLayout" />
+    </encoder>
+  </appender>
+
+ 
+	<!-- Application Loggers -->
+	<logger name="com.tour.hanbando" level="debug"/>
+	
+	<!-- 3rdparty Loggers -->
+	<logger name="org.springframework" level="info"/>
+  <logger name="log4jdbc"            level="info" />
+  <logger name="jdbc.sqlonly"        level="info" />         <!-- 쿼리문 출력하기 -->
+  <logger name="jdbc.sqltiming"      level="off" />        <!-- 쿼리문 + 실행시간 출력하기 -->
+  <logger name="jdbc.resultsettable" level="info" />  <!-- SELECT 결과를 테이블 형식으로 출력하기 -->
+  <logger name="jdbc.connection"     level="off" />   <!-- Connection 연결/종료 정보 출력하기 -->
+  <logger name="jdbc.audit"          level="off" />   <!-- ResultSet을 제외한 jdbc 호출 정보 출력하기 -->
+  <logger name="jdbc.resultset"      level="off" />   <!-- ResultSet을 포함한 jdbc 호출 정보 출력하기 -->
+  <logger name="com.zaxxer.hikari"   level="info" />
+  <logger name="org.mybatis"         level="info" />
+  <logger name="org.apache.ibatis"   level="info" />
+    
+    
+	<!-- Root Logger -->
+	<root>
+		<appender-ref ref="console" />
+    <appender-ref ref="rolling" />
+	</root>
+	
+</configuration>
