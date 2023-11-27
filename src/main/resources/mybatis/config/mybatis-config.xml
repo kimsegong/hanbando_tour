@@ -14,6 +14,32 @@
     <typeAlias alias="TouristDto" type="com.tour.hanbando.dto.TouristDto"/>
     <typeAlias alias="PaymentDto" type="com.tour.hanbando.dto.PaymentDto"/>
     
+    <typeAlias alias="HeartDto"        type="com.tour.hanbando.dto.HeartDto"/>
+    <typeAlias alias="PackageDto"      type="com.tour.hanbando.dto.PackageDto"/>
+    <typeAlias alias="ProductImageDto" type="com.tour.hanbando.dto.ProductImageDto"/>
+    <typeAlias alias="RegionDto"       type="com.tour.hanbando.dto.RegionDto"/>
+    <typeAlias alias="ReviewDto"       type="com.tour.hanbando.dto.ReviewDto"/>
+    <typeAlias alias="ThemeDto"        type="com.tour.hanbando.dto.ThemeDto"/>
+    
+    <typeAlias alias="InquiryDto"       type="com.tour.hanbando.dto.InquiryDto"/>
+    <typeAlias alias="InquiryAnswerDto" type="com.tour.hanbando.dto.InquiryAnswerDto"/>
+    <typeAlias alias="FaqCaDto"         type="com.tour.hanbando.dto.FaqCaDto"/>
+    <typeAlias alias="FaqDto"           type="com.tour.hanbando.dto.FaqDto"/>
+    <typeAlias alias="NoticeDto"        type="com.tour.hanbando.dto.NoticeDto"/>
+    
+    <typeAlias alias="UserDto"         type="com.tour.hanbando.dto.UserDto"/>
+    <typeAlias alias="LeaveUserDto"    type="com.tour.hanbando.dto.LeaveUserDto"/>
+    <typeAlias alias="InactiveUserDto" type="com.tour.hanbando.dto.InactiveUserDto"/>
+    <typeAlias alias="AccessDto"       type="com.tour.hanbando.dto.AccessDto"/>
+    
+    <typeAlias alias="HotelDto"       type="com.tour.hanbando.dto.HotelDto"/>
+    <typeAlias alias="BannerImageDto" type="com.tour.hanbando.dto.BannerImageDto"/>
+    <typeAlias alias="FacilitiesDto"  type="com.tour.hanbando.dto.FacilitiesDto"/>
+    <typeAlias alias="RoomtypeDto"    type="com.tour.hanbando.dto.RoomtypeDto"/>
+    <typeAlias alias="RoomFeatureDto" type="com.tour.hanbando.dto.RoomFeatureDto"/>
+    <typeAlias alias="HotelImageDto"  type="com.tour.hanbando.dto.HotelImageDto"/>
+    <typeAlias alias="RoompriceDto"   type="com.tour.hanbando.dto.RoompriceDto"/>
+    
   </typeAliases>
      
 </configuration>
