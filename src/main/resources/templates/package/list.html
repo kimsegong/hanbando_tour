@@ -12,6 +12,18 @@
       display: flex;
       justify-content: flex-end;
   }
+  
+  .btn-kong {
+    background-color: #96B6C5;
+    color:white;
+      }
+  .card-font {
+    font-family: 'TheJamsil5Bold';
+  }
+  .btn-outline-kong {
+    color: rgb(23, 62, 104);
+  }
+  
 </style>  
 <body>
 
@@ -21,42 +33,38 @@
   <div class="row">
     <div class="col-1">    
     </div>
-    <div class="col-10" style="border:1px gray dotted; height: 1000px;">
+    <div class="col-10" >
       
       <!--  <th:block th:if="session.user.auth == 0}"> -->
       <a th:href="@{/package/write.form}">
         <button type="button" class="admin_btn" style="margin-left: auto;">게시글 작성</button>
       </a> 
-   <!-- </th:block> -->
+      <!-- </th:block> -->
       <div style="display: flex; justify-content: space-between; align-items: center;">
         <div style="display: inline-block;"> 
-         <span th:text="count}"></span>개의 상품
+         <span th:text="${count}"></span>개의 상품
         </div>
         <div class="btn-group btn-group-sm" role="group" aria-label="Small button group" style="display: inline-block;">
-          <button type="button" class="btn btn-outline-dark" id="recommend">추천순</button>
-          <button type="button" class="btn btn-outline-dark" id="reviewPackage">리뷰순</button>
+          <button type="button" class="btn btn-outline-kong" id="recommend">추천순</button>
+          <button type="button" class="btn btn-outline-kong" id="reviewPackage">리뷰순</button>
+          <button type="button" class="btn btn-outline-kong" id="reviewPackage">가격낮은순</button>
+          <button type="button" class="btn btn-outline-kong" id="reviewPackage">가격높은순</button>
         </div>
       </div>
       <hr>
       <div class="container">
         <div class="row" id="package_list"> 
-          <!-- Package cards will be appended here -->
+          
         </div>
       </div>
       
       
-      
-      
-      
-      
-      
-      
-      
-      
+
       
     </div>
     <div class="col-1">      
     </div>
+  </div>
   </div>
 
 <script>
@@ -79,9 +87,9 @@
               str += '<div class="card">';
               str += '<img src="https://github.com/skal48/portfolio/blob/main/hanla.jpg?raw=true" style="height: 150px;" class="card-img-top" alt="Package Image">';
               str += '<div class="card-body">';
-              str += '<h5 class="card-title">' + package.tripName + '</h5>';
+              str += '<h5 class="card-title card-font">' + package.packageTitle + '</h5>';
               str += '<p class="card-text"></p>';
-              str += '<a th:href="' + '/package/increseHit.do?packageNo=' + package.packageNo + '" class="btn btn-primary">상세보기</a>';           
+              str += '<a th:href="' + '/package/increseHit.do?packageNo=' + package.packageNo + '" class="btn btn-kong">여행가기</a>';           
               str += '</div>';
               str += '</div>';
               str += '</div>';
@@ -97,100 +105,28 @@
       });
       
     };
-  
-    $('#recommend').on('click', function () {
-        $.ajax({
-            type: 'get',
-            url: '/package/hitList.do',
-            data: 'page=' + page,
-            dataType: 'json',
-            success: (resData) => {
-                totalPage = resData.totalPage;
-                if (resData.hitList != null && resData.hitList.length > 0) {
-                    // #package_list의 내용을 새로 가져온 데이터로 대체
-                    $('#package_list').empty();
-                    $.each(resData.hitList, (i, package) => {
-                        let str = '<div class="col-md-4">';
-                        str += '<div class="card">';
-                        str += '<img src="https://github.com/skal48/portfolio/blob/main/hanla.jpg?raw=true" style="height: 150px;" class="card-img-top" alt="Package Image">';
-                        str += '<div class="card-body">';
-                        str += '<h5 class="card-title">' + package.tripName + '</h5>';
-                        str += '<p class="card-text"></p>';
-                        str += '<a th:href="' + '/package/increseHit.do?packageNo=' + package.packageNo + '" class="btn btn-primary">상세보기</a>';
-                        str += '</div>';
-                        str += '</div>';
-                        str += '</div>';
-                        $('#package_list').append(str);
-                    });
-                } else {
-                    console.log('데이터가 없습니다.');
-                }
-            },
-            error: (error) => {
-                console.error('Ajax 요청 에러:', error);
-            }
-        });
-    });
     
-    
-    
-    $('#reviewPackage').on('click', function () {
-        $.ajax({
-            type: 'get',
-            url: '/package/reviewPackageList.do',
-            data: 'page=' + page,
-            dataType: 'json',
-            success: (resData) => {
-                totalPage = resData.totalPage;
-                if (resData.reviewPackageList != null && resData.reviewPackageList.length > 0) {
-                    $('#package_list').empty();
-                    $.each(resData.reviewPackageList, (i, package) => {
-                        let str = '<div class="col-md-4">';
-                        str += '<div class="card">';
-                        str += '<img src="https://github.com/skal48/portfolio/blob/main/hanla.jpg?raw=true" style="height: 150px;" class="card-img-top" alt="Package Image">';
-                        str += '<div class="card-body">';
-                        str += '<h5 class="card-title">' + package.packageDto.tripName + '</h5>';
-                        str += '<p class="card-text"></p>';
-                        str += '<a th:href="' + '/package/increseHit.do?packageNo=' + package.packageDto.packageNo + '" class="btn btn-primary">상세보기</a>';
-                        str += '</div>';
-                        str += '</div>';
-                        str += '</div>';
-                        $('#package_list').append(str);
-                    });
-                } else {
-                    console.log('데이터가 없습니다.');
+     const fnScroll = () => {
+        var timerId;  // 최초 undefined 상태
+        $(window).on('scroll', () => {
+          if(timerId) {  // timerId가 undefined이면 false로 인식, timerId가 값을 가지면 true로 인식
+            clearTimeout(timerId);
+          }
+          timerId = setTimeout(() => {  // setTimeout 실행 전에는 timerId가 undefined 상태, setTimeout이 한 번이라도 동작하면 timerId가 값을 가짐
+              let scrollTop = $(window).scrollTop();     // 스크롤바 위치(스크롤 된 길이)
+              let windowHeight = $(window).height();     // 화면 전체 크기
+              let documentHeight = $(document).height(); // 문서 전체 크기
+              if((scrollTop + windowHeight + 100) >= documentHeight) {  // 스크롤이 바닥에 닿기 100px 전에 true가 됨
+                if(page > totalPage){  // 마지막 페이지를 보여준 이후에 true가 됨
+                  return;              // 마지막 페이지를 보여준 이후에는 아래 코드를 수행하지 말 것 
                 }
-            },
-            error: (error) => {
-                console.error('Ajax 요청 에러:', error);
-            }
-        });
-    });
-            
-      const fnScroll = () => {
-          var timerId;  // 최초 undefined 상태
-          $(window).on('scroll', () => {
-            if(timerId) {  // timerId가 undefined이면 false로 인식, timerId가 값을 가지면 true로 인식
-              clearTimeout(timerId);
-            }
-            timerId = setTimeout(() => {  // setTimeout 실행 전에는 timerId가 undefined 상태, setTimeout이 한 번이라도 동작하면 timerId가 값을 가짐
-                let scrollTop = $(window).scrollTop();     // 스크롤바 위치(스크롤 된 길이)
-                let windowHeight = $(window).height();     // 화면 전체 크기
-                let documentHeight = $(document).height(); // 문서 전체 크기
-                if((scrollTop + windowHeight + 100) >= documentHeight) {  // 스크롤이 바닥에 닿기 100px 전에 true가 됨
-                  if(page > totalPage){  // 마지막 페이지를 보여준 이후에 true가 됨
-                    return;              // 마지막 페이지를 보여준 이후에는 아래 코드를 수행하지 말 것 
-                  }
-                  page++;
-                  fnGetPackageList();
-                }
-            }, 200);  // 200밀리초(0.2초) 후 동작(시간은 임의로 조정 가능함)
-          })
-      }
+                page++;
+                fnGetPackageList();
+              }
+          }, 200);  // 200밀리초(0.2초) 후 동작(시간은 임의로 조정 가능함)
+        })
+    }
   
-  
-      
-      
       
     fnGetPackageList();
     fnScroll();
