@@ -1,16 +1,18 @@
 package com.tour.hanbando.dto;
 
+import java.util.Date;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Data
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
+@Data
 @Builder
-public class HeartDto {
-  private PackageDto packageDto;
-  private HotelDto hotelDto;
-  private int userNo;
+public class LeaveUserDto {
+  private String email;
+  private Date joinedAt;
+  private Date leavedAt;
 }
