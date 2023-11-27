@@ -21,8 +21,9 @@ public class ReserveDto {
   private String reserveFinish;
   private int reservePerson;
   private int reservePrice;
-//  private UserDto userDto;
-//  private PackageDto packageDto;
-//  private HotelDto hotelDto;
+  private UserDto userDto;
+  private PackageDto packageDto;
+  private HotelDto hotelDto;
+  private RoomtypeDto roomtypeDto;
   
 }

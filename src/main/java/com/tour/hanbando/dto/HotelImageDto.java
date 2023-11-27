@@ -5,15 +5,14 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Data
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
+@Data
 @Builder
-public class ProductImageDto {
-  private int imageNo;
-  private int packageNo;
+public class HotelImageDto {
   private int hotelNo;
-  private int thumbnail;
+  private Integer roomNo; // Nullable
+  private Integer thumbnail; // Nullable
   private String filesystemName;
   private String imagePath;
 }
