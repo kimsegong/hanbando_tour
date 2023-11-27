@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 @Builder
-public class RommtypeDto {
+public class RoomtypeDto {
   private int roomNo;
   private int hotelNo;
   private String roomDetail;
