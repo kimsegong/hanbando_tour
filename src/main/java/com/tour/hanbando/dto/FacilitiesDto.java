@@ -5,15 +5,15 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Data
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
+@Data
 @Builder
-public class ProductImageDto {
-  private int imageNo;
-  private int packageNo;
+public class FacilitiesDto {
   private int hotelNo;
-  private int thumbnail;
-  private String filesystemName;
-  private String imagePath;
+  private int pool;
+  private int morning;
+  private int sauna;
+  private int lounge;
+  private int roomservice;
 }

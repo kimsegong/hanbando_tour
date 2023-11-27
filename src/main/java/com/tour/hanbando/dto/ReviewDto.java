@@ -11,11 +11,11 @@ import lombok.NoArgsConstructor;
 @Builder
 public class ReviewDto {
   private int reviewNo;
-  private int userNo;
   private int reserveNo;
+  private String reviewContents;
   private int packageNo;
   private int hotelNo;
-  private String reviewContents;
   private int star;
   private String registAt;
+  private UserDto userDto;
 }
