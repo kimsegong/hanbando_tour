@@ -1,15 +1,14 @@
 package com.tour.hanbando.service;
 
 import org.springframework.stereotype.Service;
-
-import com.tour.hanbando.dao.ReserveMapper;
+import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 
+@Transactional
 @RequiredArgsConstructor
 @Service
-public class ReserveServiceImpl implements ReserveService {
+public class ManageServiceImpl implements ManageService {
 
-  private final ReserveMapper reserveMapper;
-  
+
 }
