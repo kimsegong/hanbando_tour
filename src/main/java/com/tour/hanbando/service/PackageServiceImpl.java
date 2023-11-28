@@ -3,6 +3,7 @@ package com.tour.hanbando.service;
 import java.io.File;
 import java.nio.file.Files;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -224,37 +225,17 @@ public class PackageServiceImpl implements PackageService {
     }
     
     @Override
-    public Map<String, Object> getRegionList(HttpServletRequest request) {
-        Optional<String> opt = Optional.ofNullable(request.getParameter("page"));
-        int page = Integer.parseInt(opt.orElse("1"));
-        int total = packageMapper.getPackageCount();
-        int display = 9;
-  
-        myPageUtils.setPaging(page, total, display);
-  
-        Map<String, Object> map = Map.of("begin", myPageUtils.getBegin(),
-                                        "end", myPageUtils.getEnd());
-  
-        List<RegionDto> regionList = packageMapper.getRegion(map);       
-        return Map.of("regionList", regionList,
-                      "totalPage", myPageUtils.getTotalPage());
+    public Map<String, Object> getRegionAndTheme(Map<String, Object> map) {
+        Map<String, Object> resultMap = new HashMap<>();
+        
+        List<RegionDto> regionList = packageMapper.getRegion(map);
+        List<ThemeDto> themeList = packageMapper.getTheme(map);
+        
+        resultMap.put("regionList", regionList);
+        resultMap.put("themeList", themeList);
+        
+        return resultMap;
     }
-    
-    @Override
-    public Map<String, Object> getThemeList(HttpServletRequest request) {
-      Optional<String> opt = Optional.ofNullable(request.getParameter("page"));
-      int page = Integer.parseInt(opt.orElse("1"));
-      int total = packageMapper.getPackageCount();
-      int display = 9;
 
-      myPageUtils.setPaging(page, total, display);
-
-      Map<String, Object> map = Map.of("begin", myPageUtils.getBegin(),
-                                      "end", myPageUtils.getEnd());
-
-      List<ThemeDto> themeList = packageMapper.getTheme(map);       
-      return Map.of("themeList", themeList,
-                    "totalPage", myPageUtils.getTotalPage());
-  }
 
 }
