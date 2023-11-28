@@ -34,29 +34,29 @@
 		    </div>
 		    <div class="col-8">
 		       <div class="header_search">
-				   	<form class="frm_search">
-				   	<input type="search" class="header_searchbar" name="search" ><button type="submit" class="btn_search">검색</button>
+				   	<form class="frm_search" method="get" th:action="@{/main/search.do}">
+				   	<input type="text" class="header_searchbar" name="query" placeholder="가고 싶은 곳을 입력하세요" ><button type="submit" class="btn_search">검색</button>
 				   	</form></div>
 		    </div>
 		    <div class="col-1">
 		      <div  class="user">
 						<a th:href="@{/user/login.form}"><i class="fa-regular fa-user fa-2xl" style="color: #96b6c5;"></i><div>&emsp;로그인&emsp;</div></a> 
-						<a href=""><i class="fa-regular fa-calendar-check fa-2xl" style="color: #96b6c5;"></i><div>내일정</div></a> 		 
+						<a th:href="@{/reserve/reserveList.do}"><i class="fa-regular fa-calendar-check fa-2xl" style="color: #96b6c5;"></i><div>내일정</div></a> 		 
 					</div>  
 					<div class="user">
-            <a href=""><i class="fa-solid fa-user fa-2xl" style="color: #96b6c5;"></i><div>마이페이지</div></a> 
-            <a href=""><i class="fa-regular fa-calendar-check fa-2xl" style="color: #96b6c5;"></i><div>내일정</div></a>   
+            <a th:href="@{/user/mypage.form}"><i class="fa-solid fa-user fa-2xl" style="color: #96b6c5;"></i><div>마이페이지</div></a> 
+            <a th:href="@{/reserve/reserveList.do}"><i class="fa-regular fa-calendar-check fa-2xl" style="color: #96b6c5;"></i><div>내일정</div></a>   
             <a href=""><i class="fa-solid fa-right-from-bracket fa-2xl" style="color: #96b6c5;"></i><div>로그아웃</div></a>   
           </div>
 					<div class="user">
-            <a th:href="@{/user/mypage.form}"><i class="fa-solid fa-user fa-2xl" style="color: #96b6c5;"></i><div>관리페이지</div></a> 
-            <a href=""><i class="fa-regular fa-calendar-check fa-2xl" style="color: #96b6c5;"></i><div>내일정</div></a>
+            <a th:href="@{/manage/userList.do}"><i class="fa-solid fa-user fa-2xl" style="color: #96b6c5;"></i><div>관리페이지</div></a> 
+            <a th:href="@{/reserve/reserveList.do}"><i class="fa-regular fa-calendar-check fa-2xl" style="color: #96b6c5;"></i><div>내일정</div></a>
             <a href=""><i class="fa-solid fa-right-from-bracket fa-2xl" style="color: #96b6c5;"></i><div>로그아웃</div></a>       
           </div>	
 		    </div>
 		  </div>
 		</div>
-
+  <!-- 내일정에 세션유저값 넣기 (userNo=${session.user.userNo}) -->
 	  <nav class="navbar navbar-expand-lg bg-body-tertiary">
   <div class="container-fluid">    
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
@@ -94,7 +94,7 @@
           <a class="nav-link" href="#">이벤트</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#">고객센터</a>
+          <a class="nav-link" th:href="@{/notice/list.do}">고객센터</a>
         </li>
       </ul>
     </div>

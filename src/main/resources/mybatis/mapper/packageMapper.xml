@@ -133,6 +133,16 @@
         P.RN BETWEEN #{begin} AND #{end}
     </select>
 
+    <select id="getRegion" resultType="regionDto">
+      SELECT REGION_NO, REGION_NAME
+        FROM REGION_T     
+    </select>
+    
+    <select id="getTheme" resultType="themeDto">
+      SELECT THEME_NO, THEME_NAME
+        FROM THEME_T    
+    </select>
+
     <insert id="insertPackage" parameterType="PackageDto">
       <selectKey order="BEFORE" keyProperty="packageNo" resultType="int">
           SELECT PACKAGE_SEQ.NEXTVAL 
@@ -158,9 +168,9 @@
             RECOMMEND_STATUS
         ) VALUES (
             #{packageNo},
-            #{userNo},
-            #{regionNo},
-            #{themeNo},
+            #{userDto.userNo},
+            #{regionDto.regionNo},
+            #{themeDto.themeNo},
             #{packageTitle},
             #{miniOne},
             #{miniTwo},
@@ -170,8 +180,8 @@
             #{hotelContents},
             #{price},
             #{danger},
-            #{createdAt},
-            #{modifiedAt},
+            TO_CHAR(SYSDATE,'YYYY/MM/DD'),
+            TO_CHAR(SYSDATE,'YYYY/MM/DD'),
             #{maxPeople},
             #{recommendStatus}
         )
@@ -207,8 +217,78 @@
           , #{imagePath}
         )
       </insert>
+      
+      <insert id="insertRegion" parameterType="regionDto">
+        INSERT INTO REGION_T (
+            REGION_NO
+          , REGION_NAME
+        ) VALUES (
+            REGION_SEQ.NEXTVAL
+          , #{regionName}
+        )
+      </insert>
+      
+      <insert id="insertTheme" parameterType="themeDto">
+        INSERT INTO THEME_T (
+            THEME_NO
+          , THEME_NAME
+        ) VALUES (
+            THEME_SEQ.NEXTVAL
+          , #{themeName}
+        )
+      </insert>
   
+      <select id="getPackage" parameterType="int" resultMap="PackageMap">
+        SELECT
+            P.PACKAGE_NO,
+            P.USER_NO,
+            P.REGION_NO,
+            P.THEME_NO,
+            P.PACKAGE_TITLE,
+            P.MINI_ONE,
+            P.MINI_TWO,
+            P.MINI_THREE,
+            P.PACKAGE_PLAN,
+            P.PACKAGE_CONTENTS,
+            P.HOTEL_CONTENTS,
+            P.PRICE,
+            P.DANGER,
+            P.CREATED_AT,
+            P.MODIFIED_AT,
+            P.HIT,
+            P.STATUS,
+            P.MAX_PEOPLE,
+            P.RECOMMEND_STATUS,
+            I.IMAGE_NO,
+            I.THUMBNAIL,
+            I.FILESYSTEM_NAME,
+            I.IMAGE_PATH,
+            R.REGION_NAME,
+            T.THEME_NAME
+        FROM PACKAGE_T P
+        LEFT JOIN PRODUCT_IMAGE_T I ON P.PACKAGE_NO = I.PACKAGE_NO
+        LEFT JOIN REGION_T R ON P.REGION_NO = R.REGION_NO
+        LEFT JOIN THEME_T T ON P.THEME_NO = T.THEME_NO
+        WHERE P.PACKAGE_NO = #{packageNo}
+      </select>
 
-  
+      
+      
+      
+
+      
+      
+      <update id="packageHit" parameterType="int">
+        UPDATE PACKAGE_T
+           SET HIT = HIT + 1
+         WHERE PACKAGE_NO = #{packageNo}  
+      </update>
+
+      <select id="getHitList" parameterType="Map" resultType="packageDto">
+        SELECT PACKAGE_NO, PACKAGE_TITLE, PACKAGE_PLAN, HIT 
+        FROM PACKAGE_T
+        ORDER BY HIT DESC
+      </select>
+      
 </mapper>
 
