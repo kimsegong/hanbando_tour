@@ -2,6 +2,23 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 
 <head th:replace="~{/layout/header::head('패키지상품작성')}"></head>
+<style>
+.ck.ck-editor {
+  max-width: 1000px;
+}
+.ck-editor__editable {
+  min-height: 400px;
+}
+.ck-content {
+  color: gray;
+}
+#ckeditor {
+  border: 1px solid silver;
+}
+.image_resized img {
+  width: 80%;
+} 
+</style>
 <body>
 	
 	<div th:replace="~{/layout/header::header}"></div>
@@ -9,14 +26,14 @@
 	<div class="container text-center">  <!-- 그리드 시작 -->  
 	  <div class="row">
 	    <div class="col-1">
-		<div class="w3-sidebar w3-bar-block" style="width:25%"> <!-- 사이드바 -->
-		  <a href="#" class="w3-bar-item w3-button">지역/테마 작성</a>
-		  <a href="#" class="w3-bar-item w3-button">Link 2</a>
+		<div class="w3-sidebar w3-bar-block" style="width:10%; height:100px;"> <!-- 사이드바 -->
+		  <a th:href="@{/package/regionWrite.form}" class="w3-bar-item w3-button">지역 작성</a>
+		  <a th:href="@{/package/themeWrite.form}" class="w3-bar-item w3-button">테마 작성</a>
 		</div>    
 	    </div>
 	    <div class="col-10" >
 		<h2>패키지게시글작성</h2>
-	<form method="post" id="frm_product_add" th:action="@{/package/add.do}" enctype="multipart/form-data">
+	<form method="post" id="frm_package_add" th:action="@{/package/add.do}" enctype="multipart/form-data">
 	  <div style="margin: 30px 270px;" class="w-50 p-3">
 		<div style="text-align: left;">
 		      <label for="files" class="form-label">썸네일첨부</label>
@@ -43,22 +60,9 @@
             </div>
         </div>
         <!-- 선택박스 -->
-        <div class="w-25 p-3">
-            <select class="form-select" aria-label="Default select example"> <!-- 지역 -->
-                <option selected>경기도</option>
-                <option value="1">서울/인천</option>
-                <option value="2">충청도</option>
-                <option value="3">전라도</option>
-                <option value="4">경상도</option>
-            </select>
-            <select class="form-select" aria-label="Default select example"> <!-- 테마 -->
-                <option selected>뭐할까</option>
-                <option value="1">골프여행</option>
-                <option value="2">커플여행</option>
-                <option value="3">가족여행</option>
-                <option value="4">단풍여행</option>
-            </select>
-		        </div>
+        <div class="w-25 p-3" id="selectBox">
+
+		     </div>
 		    </div>
 		</div>
     	   <div>
@@ -67,31 +71,30 @@
 	       </div>
     	   <div>
 	        <label for="miniOne" class="form-label"></label>
-	        <input type="text" name="miniOne" id="miniOne" class="form-control" placeholder="패키지를 표현해주세요">
+	        <input type="text" name="miniOne" id="miniOne" class="form-control" placeholder="패키지를 표현해주세요 ex) 신혼여행">
 	       </div>
     	   <div>
 	        <label for="miniTwo" class="form-label"></label>
-	        <input type="text" name="miniTwo" id="miniTwo" class="form-control" placeholder="패키지를 표현해주세요">
+	        <input type="text" name="miniTwo" id="miniTwo" class="form-control" placeholder="패키지를 표현해주세요 ex) 가을여행">
 	       </div>
     	   <div>
 	        <label for="miniThree" class="form-label"></label>
-	        <input type="text" name="miniThree" id="miniThree" class="form-control" placeholder="패키지를 표현해주세요">
+	        <input type="text" name="miniThree" id="miniThree" class="form-control" placeholder="패키지를 표현해주세요 ex) 커플여행">
 	       </div>
     	  <div>
 	        <label for="price" class="form-label"></label>
 	        <input type="text" name="price" id="price" class="form-control" placeholder="가격을 작성해주세요">
 	      </div>
 
-    	  <div class="mb-3">
-    	  <div class="choice"></div>
+    	  <div class="mb-3">   	  
     		<label for="packagePlan" class="form-label"></label>
  		    <textarea class="form-control" id="packagePlan" name="packagePlan" rows="10" placeholder="패키지일정을 작성해주세요"></textarea>
     	  </div>
     	  
-    	  <div>
+    	  <div style="text-align: left;">
     	   <div class="choice"></div>
     	    <label for="packageContents">상품내용</label>
-			<textarea name="packageContents" id="packageContents" style="display: none;"></textarea>
+			      <textarea name="packageContents" id="packageContents" style="display: none;"></textarea>
             <div id="toolbar-container"></div>
             <div id="ckeditor"></div>  
            </div>	     	    
@@ -101,19 +104,23 @@
 	        <input type="text" name="hotelContents" id="hotelContents" class="form-control" placeholder="호텔내용을 작성해주세요">
     	  </div>
     	  
+    	  <div class="mb-3">
+    	  	<label for="danger" class="form-label"></label>
+    	  	<textarea class="form-control" id="danger" name="danger" rows="10" placeholder="유의사항 작성해주세요"></textarea>
+    	  </div>    
+    	  	  
     	  <div>
     	  	<label for="maxPeople" class="form-label"></label>
 	        <input type="text" name="maxPeople" id="maxPeople" class="form-control" placeholder="최대인원수">
-    	  </div>
-    	  
+    	  </div>    	  
     	  <div>
-    	  	<label for="recommendStatus" class="form-label">추천</label>
-	        <input type="text" name="recommendStatus" id="recommendStatus" class="form-control">
-    	  </div>
+    	  	<label for="recommendStatus" class="form-label"></label>
+	        <input type="text" name="recommendStatus" id="recommendStatus" class="form-control" placeholder="임시추천">
+    	  </div>    	  
 
 
 		  <div class="d-grid gap-2 col-6 mx-auto">
-		     <!-- <input type="hidden" name="userNo" th:value="${session.user.userNo}"> -->
+		      <input type="hidden" name="userNo" th:value="${session.user.userNo}">
 		      <button type="submit" class="btn btn-primary" style="margin: 32px;">작성완료</button>
 	      </div>
 		 </div>
@@ -124,6 +131,94 @@
     </div>
   </div>
   </div>
+
+  <script th:inline="javascript">
+    
+    const fnCkeditor = () => {
+    DecoupledEditor
+      .create(document.getElementById('ckeditor'), {
+        ckfinder: {
+          // 이미지 업로드 경로
+          uploadUrl: '/package/imageUpload.do'
+        }
+      })
+      .then(editor => {
+        const toolbarContainer = document.getElementById('toolbar-container');
+        toolbarContainer.appendChild(editor.ui.view.toolbar.element);
+
+        // 이미지 초기화 시에 style 및 다른 속성 제거
+        editor.model.schema.extend('$image', { allowAttributes: ['style'] });
+        editor.model.schema.setAttribute('image', 'style', true);
+
+        // 이미지 크기 조절 옵션 추가
+        editor.ui.componentFactory.add('resizeImage', locale => {
+          const view = new ButtonView(locale);
+
+          view.set({
+            label: 'Resize Image',
+            tooltip: true
+          });
+
+          // 클릭 이벤트 핸들러
+          view.on('execute', () => {
+            // 이미지 크기 조절 로직 추가
+            // 아래는 예시로 50%로 크기를 조절하는 코드
+            const imageElement = editor.model.document.selection.getSelectedElement();
+            const newSize = '50%';
+
+            editor.model.change(writer => {
+              writer.setAttribute('style', `width: ${newSize}`, imageElement);
+            });
+          });
+
+          return view;
+        });
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  }
+
+  var page = 1;
+  var totalPage = 0;
+
+ // const packageNo = $('#packageNo').val();
+
+  const fnRegionList = () => { 
+    $.ajax({
+      type: 'get',
+      url: '/package/regionList.do',
+      data: 'page=' + page,
+      dataType: 'json',
+      success: (resData) => {
+        totalPage = resData.totalPage;
+        if (resData.regionListList != null && resData.regionList.length > 0) {         
+                const selectBox = $('#selectBox');
+                selectBox.empty();              
+                const select = $('<select class="form-select" aria-label="Default select example"></select>');
+                resData.regionList.forEach((i, region) => {
+                    const option = $('<option></option>');
+                    option.attr('value', region.regionNo);
+                    option.text(region.regionName);
+                    select.append(option);
+                });
+                selectBox.append(select);
+            } else {
+                $('#selectBox').append('<div class="text-center">없습니다.</div>');
+            }
+        },
+        error: (error) => {
+            console.error('Ajax 요청 에러:', error);
+        }
+    });
+
+  fnRegionList();
+  fnCkeditor();
+  
+  </script>
+  
+
+
 
 <div th:replace="~{/layout/footer::footer}"></div>
 </body>

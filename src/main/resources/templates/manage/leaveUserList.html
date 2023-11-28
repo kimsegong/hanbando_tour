@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 
-<head th:replace="~{/layout/header::head('일반회원 관리')}"></head> 
+<head th:replace="~{/layout/header::head('탈퇴회원 관리')}"></head> 
 <style>
   
   .second_main_wrap {
@@ -23,7 +23,7 @@
   
   #userList a,
   #productList a,
-  #reseveList a,
+  #reserveList a,
   #reviewList a,
   #bannerList a {
     display: block;
@@ -34,7 +34,9 @@
     padding: 10px;
     box-sizing: border-box;
     font-size: 2.5em;
+    font-weight: bold;
     position: relative;
+    transition: color 0.3s; /* hover 시 글씨 색상 변화 트랜지션 설정 */
   }
 
   #userList a::after {
@@ -49,37 +51,16 @@
     left: 0;
   }
 
-  #userList a:hover::after {
-    width: 90%;
-  }
-
-  #userList a,
-  #productList a,
-  #reseveList a,
-  #reviewList a,
-  #bannerList a {
-    display: block;
-    width: 100%;
-    height: 100%;
-    text-decoration: none;
-    color: #404040; /* 기본 글씨 색상 */
-    padding: 10px;
-    box-sizing: border-box;
-    font-size: 2.5em;
-    position: relative;
-    transition: color 0.3s; /* hover 시 글씨 색상 변화 트랜지션 설정 */
-  }
-
   #userList a:hover,
   #productList a:hover,
-  #reseveList a:hover,
+  #reserveList a:hover,
   #reviewList a:hover,
   #bannerList a:hover {
     color: #96B6C5; /* hover 시 글씨 색상 변화 */
   }
   
   #productList a::after,
-  #reseveList a::after,
+  #reserveList a::after,
   #reviewList a::after,
   #bannerList a::after {
     content: "";
@@ -94,37 +75,34 @@
   }
   
   #productList a:hover::after,
-  #reseveList a:hover::after,
+  #reserveList a:hover::after,
   #reviewList a:hover::after,
   #bannerList a:hover::after {
     width: 90%;
   }
   
-  table a:hover {
-    color: #96B6C5;
-  }
   
   #btn_search_leaveUser {
     height: 38px; 
-    color: #96B6C5; /* 텍스트 색상 */
+    color: #96B6C5;         /* 텍스트 색상 */
     background-color: #fff; /* 기본 배경 색상 */
-    border-color: #96B6C5; /* 테두리 색상 */
-    border-radius: 10px; /* 테두리를 둥글게 만듭니다. */
-    transition: all 0.3s; /* 모든 속성에 대해 0.3초 동안 트랜지션 효과 적용 */
+    border-color: #96B6C5;  /* 테두리 색상 */
+    border-radius: 10px;      /* 테두리를 둥글게 만듭니다. */
+    transition: all 0.3s;     /* 모든 속성에 대해 0.3초 동안 트랜지션 효과 적용 */
   }
   
   #btn_search_leaveUser:hover {
-    color: #fff; /* 호버 시 텍스트 색상 */
+    color: #fff;               /* 호버 시 텍스트 색상 */
     background-color: #96B6C5; /* 호버 시 배경 색상 */
   }
   
   #column,
   #query {
-    height: 38px; /* 원하는 높이로 설정하세요 */
+    height: 38px; 
   }
   
   #column {
-    flex: 1; /* 셀렉트 박스가 나머지 영역을 모두 차지하도록 설정 */
+    flex: 1;           /* 셀렉트 박스가 나머지 영역을 모두 차지하도록 설정 */
     margin-right: 5px; /* 셀렉트 박스와 인풋 사이의 간격을 조절 */
   }
   
@@ -153,6 +131,7 @@
     color: #404040;            /* 버튼 텍스트 색상 */
     border-radius: 10px;         /* 둥근 모서리 */
     font-size: medium;
+    font-weight: 500;
   }
   #inactiveUser a,
   #user a {
@@ -163,6 +142,7 @@
     color: #404040;            /* 버튼 텍스트 색상 */
     border-radius: 10px;         /* 둥근 모서리 */
     font-size: medium;
+    font-weight: 500;
   }
   
   #user a:hover,
@@ -173,25 +153,7 @@
   }
 
 </style>
-<script th:inline="javascript">
 
-  $(() => {
-   fnRemoveMember();
-  })
-  
-  const fnRemoveMember = () => {
-    let removeResult = /*[[${removeResult}]]*/ null;
-    if(removeResult !== null){
-      if(reremoveResult === 1){
-      alert('회원이 탈퇴되었습니다.');
-      } else {
-      alert('회원이 탈퇴되지 않았습니다.');
-      }
-    }
-  }
- 
-  
-</script>
 <body>
 	<div th:replace="~{/layout/header::header}"></div>
 	
@@ -223,7 +185,7 @@
                 <div id="productList">
                   <a th:href="@{/manage/productList.do}">상품관리</a>
                 </div>
-                <div id="reseveList">
+                <div id="reserveList">
                   <a th:href="@{/manage/reserveList.do}">예약관리</a>
                 </div>
                 <div id="reviewList">
@@ -261,7 +223,7 @@
                   
                 <!--/* 전체 목록을 나타내는 테이블 */-->
                 <div>
-                  <table border="1" class="table">
+                  <table border="1" class="table table-hover">
                     <thead>
                       <tr>
                         <th scope="col">No</th>
@@ -289,7 +251,7 @@
                     <!--/* 페이징 처리 */-->
                     <tfoot>
                       <tr>
-                        <td colspan="8" th:utext="${paging}"></td>
+                        <td colspan="4" th:utext="${paging}"></td>
                       </tr>
                     </tfoot>
                   </table>
