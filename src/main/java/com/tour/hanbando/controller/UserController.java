@@ -2,10 +2,12 @@ package com.tour.hanbando.controller;
 
 
 import java.util.Map;
+import java.util.Random;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.swing.Spring;
 
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.tour.hanbando.dto.UserDto;
 import com.tour.hanbando.service.UserService;
@@ -27,6 +30,28 @@ import lombok.RequiredArgsConstructor;
 public class UserController {
   
   private final UserService userService;
+  
+ //인증번호
+  @ResponseBody
+  @GetMapping("/execute.form")
+  public String sendSMS(String userPhoneNum) {
+      // 5자리 인증번호 만들기
+      Random random  = new Random();
+      String numStr = "";
+      for(int i=0; i<5; i++) {
+          String ranNum = Integer.toString(random.nextInt(10));   // 0부터 9까지 랜덤으로 숫자를 뽑는다.
+          numStr += ranNum;   // 랜덤으로 나온 숫자를 하나씩 누적해서 담는다.
+      }
+      // 확인용
+      System.out.println("수신자 번호 : " + userPhoneNum);
+      System.out.println("인증번호 : " + numStr);
+
+      // 문자 보내기
+     // userService.certifiedPhoneNumber(userPhoneNum , numStr);
+      return numStr;    // 인증번호 반환
+  }
+
+
   
   @GetMapping("/login.form")
   public String loginForm(HttpServletRequest request, Model model) throws Exception {
