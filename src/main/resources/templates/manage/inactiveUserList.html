@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 
-<head th:replace="~{/layout/header::head('일반회원 관리')}"></head> 
+<head th:replace="~{/layout/header::head('휴면회원 관리')}"></head> 
 <style>
   
   .second_main_wrap {
@@ -51,6 +51,23 @@
     left: 0;
   }
 
+  #userList a,
+  #productList a,
+  #reserveList a,
+  #reviewList a,
+  #bannerList a {
+    display: block;
+    width: 100%;
+    height: 100%;
+    text-decoration: none;
+    color: #404040; /* 기본 글씨 색상 */
+    padding: 10px;
+    box-sizing: border-box;
+    font-size: 2.5em;
+    position: relative;
+    transition: color 0.3s; /* hover 시 글씨 색상 변화 트랜지션 설정 */
+  }
+
   #userList a:hover,
   #productList a:hover,
   #reserveList a:hover,
@@ -85,7 +102,7 @@
     color: #96B6C5;
   }
   
-  #btn_search_user {
+  #btn_search_inactiveUser {
     height: 38px; 
     color: #96B6C5;         /* 텍스트 색상 */
     background-color: #fff; /* 기본 배경 색상 */
@@ -94,14 +111,14 @@
     transition: all 0.3s;     /* 모든 속성에 대해 0.3초 동안 트랜지션 효과 적용 */
   }
   
-  #btn_search_user:hover {
+  #btn_search_inactiveUser:hover {
     color: #fff;               /* 호버 시 텍스트 색상 */
     background-color: #96B6C5; /* 호버 시 배경 색상 */
   }
   
   #column,
   #query {
-    height: 38px;
+    height: 38px; 
   }
   
   #column {
@@ -126,7 +143,7 @@
     margin-right: 10%; /* 각 버튼 사이의 간격 조절 */
   }
   
-  #user a{
+  #inactiveUser a{
     display: block;
     padding: 15px;
     background-color: #EEE0C9; /* 기본 배경 색상 */
@@ -136,7 +153,7 @@
     font-size: medium;
     font-weight: 500;
   }
-  #inactiveUser a,
+  #user a,
   #leaveUser a {
     display: block;
     padding: 15px;
@@ -156,25 +173,7 @@
   }
 
 </style>
-<script th:inline="javascript">
 
-  $(() => {
-   fnRemoveMember();
-  })
-  
-  const fnRemoveMember = () => {
-    let removeResult = /*[[${removeResult}]]*/ null;
-    if(removeResult !== null){
-      if(reremoveResult === 1){
-      alert('회원이 탈퇴되었습니다.');
-      } else {
-      alert('회원이 탈퇴되지 않았습니다.');
-      }
-    }
-  }
- 
-  
-</script>
 <body>
 	<div th:replace="~{/layout/header::header}"></div>
 	
@@ -185,7 +184,12 @@
 		  <div class="row">
 		    <div class="col-1">	      
 		    </div>
-		    <div class="col-10">
+		    <div class="col-10" style="border:1px gray dotted">
+		      	<!--/*여기에 작성/ 다 만들고 style 지워주세요  */-->
+		   
+		      
+		   
+		   
 		   
 		   
         		         
@@ -257,25 +261,25 @@
                         <tr>
                           <th scope="row" th:text="${u.userNo}"></th>
                           <td>
-                            <a th:href="@{/manage/userDetail.do(userNo=${u.userNo})}" th:text="${u.email}"></a>
+                            <a th:href="@{/manage/inactiveDetail.do(userNo=${u.userNo})}" th:text="${u.email}"></a>
                           </td>
                           <td>
-                            <a th:href="@{/manage/userDetail.do(userNo=${u.userNo})}" th:text="${u.name}"></a>
+                            <a th:href="@{/manage/inactiveDetail.do(userNo=${u.userNo})}" th:text="${u.name}"></a>
                           </td>
                           <td>
-                            <a th:href="@{/manage/userDetail.do(userNo=${u.userNo})}" th:text="${u.mobile}"></a>
+                            <a th:href="@{/manage/inactiveDetail.do(userNo=${u.userNo})}" th:text="${u.mobile}"></a>
                           </td>
                           <td>
-                            <a th:href="@{/manage/userDetail.do(userNo=${u.userNo})}" th:if="${u.gender == 'F'}">여자</a>
-                            <a th:href="@{/manage/userDetail.do(userNo=${u.userNo})}" th:if="${u.gender == 'M'}">남자</a>
+                            <a th:href="@{/manage/inactiveDetail.do(userNo=${u.userNo})}" th:if="${u.gender == 'F'}">여자</a>
+                            <a th:href="@{/manage/inactiveDetail.do(userNo=${u.userNo})}" th:if="${u.gender == 'M'}">남자</a>
                           </td>
                           <td>
-                            <a th:href="@{/manage/userDetail.do(userNo=${u.userNo})}" th:if="${u.state == 0}">일반회원</a>
-                            <a th:href="@{/manage/userDetail.do(userNo=${u.userNo})}" th:if="${u.state == 1}">네이버 간편로그인</a>
-                            <a th:href="@{/manage/userDetail.do(userNo=${u.userNo})}" th:if="${u.state == 2}">카카오 간편로그인</a>
+                            <a th:href="@{/manage/inactiveDetail.do(userNo=${u.userNo})}" th:if="${u.state == 0}">일반회원</a>
+                            <a th:href="@{/manage/inactiveDetail.do(userNo=${u.userNo})}" th:if="${u.state == 1}">네이버 간편로그인</a>
+                            <a th:href="@{/manage/inactiveDetail.do(userNo=${u.userNo})}" th:if="${u.state == 2}">카카오 간편로그인</a>
                           </td>
                           <td>
-                            <a th:href="@{/manage/userDetail.do(userNo=${u.userNo})}" th:text="${u.joinedAt}"></a>
+                            <a th:href="@{/manage/inactiveDetail.do(userNo=${u.userNo})}" th:text="${u.joinedAt}"></a>
                           </td>
                           <td>
                             <th:block th:if="${u.auth != 1}">관리자</th:block>
@@ -294,7 +298,7 @@
                     
                   <!--/* 검색기능 */-->
                   <div>
-                    <form id="frm_search" method="get" th:action="@{/manage/userSearchList.do}" >
+                    <form id="frm_search" method="get" th:action="@{/manage/inactiveUserSearchList.do}" >
                       <select name="column" id="column" >
                         <option value="USER_NO">회원번호</option>
                         <option value="EMAIL">이메일</option>
@@ -303,7 +307,7 @@
                         <option value="JOINED_AT">가입일</option>
                       </select>
                       <input type="text" name="query" id="query" placeholder="검색어 입력" >
-                      <button type="submit" id="btn_search_user" >검색</button>
+                      <button type="submit" id="btn_search_inactiveUser" >검색</button>
                     </form>
                   </div>
                 
@@ -314,7 +318,15 @@
             </div>      
           </div>
         
+
         
+		   
+		   
+		   
+		   
+		   
+		   
+		      	
 		      	
 		    </div>
 		    <div class="col-1">	      
