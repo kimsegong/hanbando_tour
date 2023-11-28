@@ -6,11 +6,17 @@ import java.util.Map;
 import org.apache.ibatis.annotations.Mapper;
 
 import com.tour.hanbando.dto.ReserveDto;
+import com.tour.hanbando.dto.TouristDto;
 
 @Mapper
 public interface ReserveMapper {
   
   public int getReserveCount();
-  public List<ReserveDto> getReserveList(Map<String, Object> map);
+  public int getReserveCountByUserNo(int userNo);
   
+  public List<ReserveDto> getReserveList(Map<String, Object> map);
+  public List<ReserveDto> getReserveListByUser(Map<String, Object> map);
+  public ReserveDto getReserve(int reserveNo);
+  
+  public List<TouristDto> getTourists(int reserveNo);
 }

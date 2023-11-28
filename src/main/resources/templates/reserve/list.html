@@ -18,6 +18,13 @@
             <h2>예약내역목록</h2>
           </div>
           <div>
+            <!--
+            <a th:href="|@{/reserve/reserveList.do(userNo=${session.user.userNo})}|">패키지</a>
+            <a th:href="|@{/reserve/reserveHotelList.do(userNo=${session.user.userNo})}|">호텔</a>
+            -->
+            <a></a>
+          </div>
+          <div>
             <table class="table">
               <thead>
                 <tr>
@@ -31,29 +38,28 @@
                 </tr>
               </thead>
               <tbody>
-                <!-- 받아온 데이터 반복문으로 여러개의 tr생성될 자리 -->
                 <th:block th:each="res,vs:${reserveList}">
-                    <tr>
-                      <td th:text="${beginNo - vs.index}"></td>
-                      <td>
-                        <a th:href="@{/reserve/detail.do(reserveNo=${res.reserveNo})}" th:text="|${res.reservedAt} - ${res.reserveNo}|"></a>
-                      </td>
-                      <td>
-                        <a th:href="@{/reserve/detail.do(reserveNo=${res.reserveNo})}" th:text="${res.packageDto.packageTitle}"></a>
-                      </td>
-                      <td th:text="${res.reservePerson}"></td>
-                      <td th:text="${res.reserveStart}"></td>
-                      <td th:text="|${res.reservePrice}원|"></td>
-                      <th:block th:if="${res.reserveStatus == 0}">
-                        <td th:text="결제대기"></td>
-                      </th:block>
-                      <th:block th:if="${res.reserveStatus == 1}">
-                        <td th:text="예약완료"></td>
-                      </th:block>
-                      <th:block th:if="${res.reserveStatus == 2}">
-                        <td th:text="취소"></td>
-                      </th:block>
-                    </tr>
+                  <tr>
+                    <td th:text="${beginNo - vs.index}"></td>
+                    <td>
+                      <a th:href="@{/reserve/detail.do(reserveNo=${res.reserveNo})}" th:text="|${res.reservedAt} - ${res.reserveNo}|"></a>
+                    </td>
+                    <td>
+                      <a th:href="@{/reserve/detail.do(reserveNo=${res.reserveNo})}" th:text="${res.packageDto.packageTitle}"></a>
+                    </td>
+                    <td th:text="${res.reservePerson}"></td>
+                    <td th:text="${res.reserveStart}"></td>
+                    <td th:text="|${res.reservePrice}원|"></td>
+                    <th:block th:if="${res.reserveStatus == 0}">
+                      <td th:text="결제대기"></td>
+                    </th:block>
+                    <th:block th:if="${res.reserveStatus == 1}">
+                      <td th:text="예약완료"></td>
+                    </th:block>
+                    <th:block th:if="${res.reserveStatus == 2}">
+                      <td th:text="취소"></td>
+                    </th:block>
+                  </tr>
                 </th:block>  
               </tbody>
               <tfoot th:if="${not #lists.isEmpty(reserveList)}">
@@ -71,8 +77,6 @@
 	  </div>
 	
 	</div>
-
-	
 	
 	
 	<div th:replace="~{/layout/footer::footer}"></div>

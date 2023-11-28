@@ -129,6 +129,12 @@
       FROM RESERVE_T
   </select>
   
+  <select id="getReserveCountByUserNo" resultType="int" parameterType="int">
+    SELECT COUNT(*)
+      FROM RESERVE_T
+     WHERE USER_NO = #{userNo}
+  </select>
+  
   <select id="getReserveList" parameterType="Map" resultMap="ReserveMap">
     SELECT A.RESERVE_NO, A.RESERVED_AT, A.REQUESTED_TERM, A.AGREE, A.DEPARTURE_LOC, A.RESERVE_STATUS, A.RESERVE_START, A.RESERVE_FINISH, A.RESERVE_PERSON, A.RESERVE_PRICE, A.USER_NO, A.PACKAGE_NO, A.PACKAGE_TITLE, A.PRICE, A.PACKAGE_PLAN, A.MINI_ONE
       FROM (SELECT ROW_NUMBER() OVER(ORDER BY RES.RESERVE_NO DESC) AS RN
@@ -137,15 +143,150 @@
                  , P.PACKAGE_TITLE, P.PRICE, P.PACKAGE_PLAN, P.MINI_ONE
               FROM PACKAGE_T P INNER JOIN RESERVE_T RES
                 ON P.PACKAGE_NO = RES.PACKAGE_NO) A
-    <where>
-       <if test="begin != null">A.RN BETWEEN #{begin} AND #{end}</if>
-       <if test="userNo != null">AND A.USER_NO = #{userNo}</if> 
-    </where>                
+     WHERE A.RN BETWEEN #{begin} AND #{end}             
+  </select>
+  
+  <select id="getReserveListByUser" parameterType="Map" resultMap="ReserveMap">
+    SELECT A.RESERVE_NO, A.RESERVED_AT, A.REQUESTED_TERM, A.AGREE, A.DEPARTURE_LOC, A.RESERVE_STATUS, A.RESERVE_START, A.RESERVE_FINISH, A.RESERVE_PERSON, A.RESERVE_PRICE, A.USER_NO, A.PACKAGE_NO, A.PACKAGE_TITLE, A.PRICE, A.PACKAGE_PLAN, A.MINI_ONE
+      FROM (SELECT ROW_NUMBER() OVER(ORDER BY RES.RESERVE_NO DESC) AS RN
+                 , RES.RESERVE_NO, RES.RESERVED_AT, RES.REQUESTED_TERM, RES.AGREE, RES.DEPARTURE_LOC, RES.RESERVE_STATUS, RES.RESERVE_START, RES.RESERVE_FINISH
+                 , RES.RESERVE_PERSON, RES.RESERVE_PRICE, RES.USER_NO, RES.PACKAGE_NO, RES.HOTEL_NO, RES.ROOM_NO
+                 , P.PACKAGE_TITLE, P.PRICE, P.PACKAGE_PLAN, P.MINI_ONE
+              FROM PACKAGE_T P INNER JOIN RESERVE_T RES
+                ON P.PACKAGE_NO = RES.PACKAGE_NO
+             WHERE RES.USER_NO = #{userNo}) A
+     WHERE A.RN BETWEEN #{begin} AND #{end}             
+  </select>
+  
+  <select id="getReserve" parameterType="int" resultMap="ReserveMap">
+    SELECT RES.RESERVE_NO, RES.RESERVED_AT, RES.REQUESTED_TERM, RES.AGREE, RES.DEPARTURE_LOC, RES.RESERVE_STATUS, RES.RESERVE_START, RES.RESERVE_FINISH, RES.RESERVE_PERSON, RES.RESERVE_PRICE
+         , U.USER_NO, U.NAME, U.EMAIL, U.GENDER, U.MOBILE, U.AUTH
+         , P.PACKAGE_NO, P.PACKAGE_TITLE, P.PACKAGE_PLAN, P.PRICE, P.MAX_PEOPLE, P.DANGER
+      FROM USER_T U INNER JOIN RESERVE_T RES
+        ON U.USER_NO = RES.USER_NO INNER JOIN PACKAGE_T P
+        ON P.PACKAGE_NO = RES.PACKAGE_NO
+      WHERE RES.RESERVE_NO = #{reserveNo} 
+  </select>
+  
+  <select id="getTourists" parameterType="int" resultMap="TouristMap">
+    SELECT T.TOURIST_NO, T.NAME, T.BIRTH_DATE, T.GENDER, T.MOBILE, T.AGE_CASE, T.RESERVE_NO, RES.DEPARTURE_LOC, RES.RESERVE_START, RES.PACKAGE_NO
+      FROM TOURIST_T T INNER JOIN RESERVE_T RES
+        ON T.RESERVE_NO = RES.RESERVE_NO
+     WHERE RES.RESERVE_NO = #{reserveNo}
   </select>
   
   
+  <insert id="insertReserve" parameterType="ReserveDto" useGeneratedKeys="true" keyProperty="reserveNo">
+    <selectKey order="BEFORE" keyProperty="reserveNo" resultType="int">
+      SELECT RESERVE_SEQ.NEXTVAL 
+        FROM DUAL
+    </selectKey>
+    INSERT INTO RESERVE_T (
+        RESERVE_NO
+      , RESERVED_AT
+      , REQUESTED_TERM
+      , AGREE
+      , DEPARTURE_LOC
+      , RESERVE_STATUS
+      , RESERVE_START
+      , RESERVE_FINISH
+      , RESERVE_PERSON
+      , RESERVE_PRICE
+      , USER_NO
+      , PACKAGE_NO
+      , HOTEL_NO
+      , ROOM_NO
+    ) VALUES (
+        #{reserveNo}
+      , TO_CHAR(SYSDATE, 'YYYYMMDD') 
+      , #{requestedTerm}
+      , #{agree}
+      , #{departureLoc}
+      , #{reserveStatus}
+      , #{reserveStart}
+      , #{reserveFinish}
+      , #{reservePerson}
+      , #{reservePrice}
+      , #{userDto.userNo}
+      , #{packageDto.productNo}  
+      , #{hotelDto.hotelNo}  
+      , #{roomDto.roomNo}  
+    )
+  </insert>
+  
+  <insert id="insertTourist" parameterType="TouristDto">
+    <selectKey order="BEFORE" keyProperty="touristNo" resultType="int">
+      SELECT TOURIST_SEQ.NEXTVAL
+        FROM DUAL
+    </selectKey>
+    INSERT INTO TOURIST_T (
+        TOURIST_NO
+      , NAME
+      , BIRTH_DATE
+      , GENDER
+      , MOBILE
+      , AGE_CASE
+      , RESERVE_NO
+    ) VALUES (
+        #{touristNo}
+      , #{name}
+      , #{birthDate}
+      , #{gender}
+      , #{mobile}
+      , #{ageCase}
+      , #{reserveDto.reserveNo}
+    )
+  </insert>
+  
+  <insert id="insertPayment" parameterType="PaymentDto">
+    <selectKey order="BEFORE" keyProperty="paymentNo" resultType="int">
+      SELECT PAYMENT_SEQ.NEXTVAL
+        FROM DUAL
+    </selectKey>
+    INSERT INTO PAYMENT_T (
+        PAYMENT_NO
+      , IMP_UID
+      , PAY_YN
+      , PAY_METHOD
+      , PAID_AMOUNT
+      , PAID_AT
+      , MERCHANT_UID
+      , BUYER_NAME
+      , BUYER_EMAIL
+      , ERROR_MSG
+      , PAY_STATUS
+        RESERVE_NO
+    ) VALUES (
+        #{paymentNo}
+      , #{impUid}  
+      , #{payYn}  
+      , #{payMethod}  
+      , #{paidAmount}  
+      , #{paidAt}  
+      , #{merchantUid}  
+      , #{buyerName}  
+      , #{buyerEmail}  
+      , #{errorMsg}  
+      , #{payStatus}  
+      , #{reserveDto.reserveNo}
+    )
+  </insert>
   
   
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  <delete id="deleteReserve" parameterType="int">
+    DELETE 
+      FROM RESERVE_T
+     WHERE RESERVE_NO = #{reserveNo}
+  </delete>
   
   
   
