@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{/layout/header::head('휴면회원 관리')}"></head> 
+<style>
+  
+  .second_main_wrap {
+    display: flex;
+  }
+
+  .split1 {
+    flex: 0 0 20%;
+  }
+
+  .split2 {
+    flex: 0 0 80%;
+  }
+  
+  .listWrap1 {
+    height: 100%;
+    width: 100%;
+  }
+  
+  #userList a,
+  #productList a,
+  #reserveList a,
+  #reviewList a,
+  #bannerList a {
+    display: block;
+    width: 100%;
+    height: 100%;
+    text-decoration: none;
+    color: #404040; /* 기본 글씨 색상 */
+    padding: 10px;
+    box-sizing: border-box;
+    font-size: 2.5em;
+    font-weight: bold;
+    position: relative;
+    transition: color 0.3s; /* hover 시 글씨 색상 변화 트랜지션 설정 */
+  }
+
+  #userList a::after {
+    content: "";
+    display: block;
+    width: 90%;
+    height: 2px;
+    background-color: #404040; /* 언더라인 색상 */
+    transition: width 0.3s;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+  }
+
+  #userList a,
+  #productList a,
+  #reserveList a,
+  #reviewList a,
+  #bannerList a {
+    display: block;
+    width: 100%;
+    height: 100%;
+    text-decoration: none;
+    color: #404040; /* 기본 글씨 색상 */
+    padding: 10px;
+    box-sizing: border-box;
+    font-size: 2.5em;
+    position: relative;
+    transition: color 0.3s; /* hover 시 글씨 색상 변화 트랜지션 설정 */
+  }
+
+  #userList a:hover,
+  #productList a:hover,
+  #reserveList a:hover,
+  #reviewList a:hover,
+  #bannerList a:hover {
+    color: #96B6C5; /* hover 시 글씨 색상 변화 */
+  }
+  
+  #productList a::after,
+  #reserveList a::after,
+  #reviewList a::after,
+  #bannerList a::after {
+    content: "";
+    display: block;
+    width: 0;                    /* 초기에는 0으로 설정 */
+    height: 2px;
+    background-color: #96B6C5; /* 언더라인 색상 */
+    transition: width 0.3s;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+  }
+  
+  #productList a:hover::after,
+  #reserveList a:hover::after,
+  #reviewList a:hover::after,
+  #bannerList a:hover::after {
+    width: 90%;
+  }
+  
+  table a:hover {
+    color: #96B6C5;
+  }
+  
+  #btn_search_inactiveUser {
+    height: 38px; 
+    color: #96B6C5;         /* 텍스트 색상 */
+    background-color: #fff; /* 기본 배경 색상 */
+    border-color: #96B6C5;  /* 테두리 색상 */
+    border-radius: 10px;      /* 테두리를 둥글게 만듭니다. */
+    transition: all 0.3s;     /* 모든 속성에 대해 0.3초 동안 트랜지션 효과 적용 */
+  }
+  
+  #btn_search_inactiveUser:hover {
+    color: #fff;               /* 호버 시 텍스트 색상 */
+    background-color: #96B6C5; /* 호버 시 배경 색상 */
+  }
+  
+  #column,
+  #query {
+    height: 38px; 
+  }
+  
+  #column {
+    flex: 1;           /* 셀렉트 박스가 나머지 영역을 모두 차지하도록 설정 */
+    margin-right: 5px; /* 셀렉트 박스와 인풋 사이의 간격을 조절 */
+  }
+  
+  table {
+    font-size: 17px;
+  }
+  
+  .listWrap2 {
+  display: flex;
+  justify-content: center; /* 가로 가운데 정렬 */
+  align-items: center;     /* 세로 가운데 정렬 */
+  margin: 8% 15%;
+}
+
+  #user,
+  #inactiveUser,
+  #leaveUser {
+    margin-right: 10%; /* 각 버튼 사이의 간격 조절 */
+  }
+  
+  #inactiveUser a{
+    display: block;
+    padding: 15px;
+    background-color: #EEE0C9; /* 기본 배경 색상 */
+    text-decoration: none;
+    color: #404040;            /* 버튼 텍스트 색상 */
+    border-radius: 10px;         /* 둥근 모서리 */
+    font-size: medium;
+    font-weight: 500;
+  }
+  #user a,
+  #leaveUser a {
+    display: block;
+    padding: 15px;
+    background-color: #F1F0E8; /* 기본 배경 색상 */
+    text-decoration: none;
+    color: #404040;            /* 버튼 텍스트 색상 */
+    border-radius: 10px;         /* 둥근 모서리 */
+    font-size: medium;
+    font-weight: 500;
+  }
+  
+  #user a:hover,
+  #inactiveUser a:hover,
+  #leaveUser a:hover {
+    background-color: #ADC4CE; /* hover 시 배경 색상 지정 */
+    color: #fff;               /* hover 시 텍스트 색상 지정 */
+  }
+
+</style>
+
+<body>
+	<div th:replace="~{/layout/header::header}"></div>
+	
+	<div class="main_wrap">
+	
+	
+		 <div class="container text-center">
+		  <div class="row">
+		    <div class="col-1">	      
+		    </div>
+		    <div class="col-10" style="border:1px gray dotted">
+		      	<!--/*여기에 작성/ 다 만들고 style 지워주세요  */-->
+		   
+		      
+		   
+		   
+		   
+		   
+        		         
+          <div class="second_main_wrap">
+              
+            <div class="split1">
+                
+              <!--/* 각 관리 페이지로 이동 가능한 좌측 목록 */-->
+              <div class="listWrap1">
+                <div id="userList">
+                  <a th:href="@{/manage/userList.do}">회원관리</a>
+                </div>
+                <div id="productList">
+                  <a th:href="@{/manage/productList.do}">상품관리</a>
+                </div>
+                <div id="reserveList">
+                  <a th:href="@{/manage/reserveList.do}">예약관리</a>
+                </div>
+                <div id="reviewList">
+                  <a th:href="@{/manage/reviewList.do}">리뷰관리</a>
+                </div>
+                <div id="bannerList">
+                  <a th:href="@{/manage/reviewList.do}">배너관리</a>
+                </div>
+              </div>
+                
+            </div>
+            
+            
+            <div class="split2">
+                
+              <!--/* 각 회원관리 페이지로 이동 가능한 상단 목록 */-->
+              <div class="listWrap2">
+                <div id="user">
+                  <a th:href="@{/manage/userList.do}">일반회원관리</a>
+                </div>
+                <div id="inactiveUser">
+                  <a th:href="@{/manage/inactiveUserList.do}">휴면회원관리</a>
+                </div>
+                <div id="leaveUser">
+                  <a th:href="@{/manage/leaveUserList.do}">탈퇴회원관리</a>
+                </div>
+              </div>
+                
+        
+              <!--/* 관리 회원목록이 표시될 div */-->
+              <div class="listMainWrap">
+                  
+                <!--/* 총 회원 수를 표시 */-->
+                <div style="text-align: left;" th:text="|총 ${total}명|"></div>
+                  
+                <!--/* 전체 목록을 나타내는 테이블 */-->
+                <div>
+                  <table border="1" class="table table-hover">
+                    <thead>
+                      <tr>
+                        <th scope="col">회원번호</th>
+                        <th scope="col">이메일</th>
+                        <th scope="col">이름</th>
+                        <th scope="col">전화번호</th>
+                        <th scope="col">성별</th>
+                        <th scope="col">가입형태</th>
+                        <th scope="col">가입일</th>
+                        <th scope="col">권한</th>
+                      </tr>
+                    </thead>
+                    <tbody class="table-group-divider table_to_detail">
+                      <th:block th:each="u:${userList}">
+                        <tr>
+                          <th scope="row" th:text="${u.userNo}"></th>
+                          <td>
+                            <a th:href="@{/manage/inactiveDetail.do(userNo=${u.userNo})}" th:text="${u.email}"></a>
+                          </td>
+                          <td>
+                            <a th:href="@{/manage/inactiveDetail.do(userNo=${u.userNo})}" th:text="${u.name}"></a>
+                          </td>
+                          <td>
+                            <a th:href="@{/manage/inactiveDetail.do(userNo=${u.userNo})}" th:text="${u.mobile}"></a>
+                          </td>
+                          <td>
+                            <a th:href="@{/manage/inactiveDetail.do(userNo=${u.userNo})}" th:if="${u.gender == 'F'}">여자</a>
+                            <a th:href="@{/manage/inactiveDetail.do(userNo=${u.userNo})}" th:if="${u.gender == 'M'}">남자</a>
+                          </td>
+                          <td>
+                            <a th:href="@{/manage/inactiveDetail.do(userNo=${u.userNo})}" th:if="${u.state == 0}">일반회원</a>
+                            <a th:href="@{/manage/inactiveDetail.do(userNo=${u.userNo})}" th:if="${u.state == 1}">네이버 간편로그인</a>
+                            <a th:href="@{/manage/inactiveDetail.do(userNo=${u.userNo})}" th:if="${u.state == 2}">카카오 간편로그인</a>
+                          </td>
+                          <td>
+                            <a th:href="@{/manage/inactiveDetail.do(userNo=${u.userNo})}" th:text="${u.joinedAt}"></a>
+                          </td>
+                          <td>
+                            <th:block th:if="${u.auth != 1}">관리자</th:block>
+                            <th:block th:if="${u.auth == 1}">회원</th:block>
+                          </td>
+                        </tr>
+                      </th:block>
+                    </tbody>
+                    <!--/* 페이징 처리 */-->
+                    <tfoot>
+                      <tr>
+                        <td colspan="8" th:utext="${paging}"></td>
+                      </tr>
+                    </tfoot>
+                  </table>
+                    
+                  <!--/* 검색기능 */-->
+                  <div>
+                    <form id="frm_search" method="get" th:action="@{/manage/inactiveUserSearchList.do}" >
+                      <select name="column" id="column" >
+                        <option value="USER_NO">회원번호</option>
+                        <option value="EMAIL">이메일</option>
+                        <option value="NAME">이름</option>
+                        <option value="MOBILE">전화번호</option>
+                        <option value="JOINED_AT">가입일</option>
+                      </select>
+                      <input type="text" name="query" id="query" placeholder="검색어 입력" >
+                      <button type="submit" id="btn_search_inactiveUser" >검색</button>
+                    </form>
+                  </div>
+                
+                </div>
+              </div>
+        
+                
+            </div>      
+          </div>
+        
+
+        
+		   
+		   
+		   
+		   
+		   
+		   
+		      	
+		      	
+		    </div>
+		    <div class="col-1">	      
+		    </div>
+		  </div>
+	  </div>
+	
+	</div>
+
+	
+	
+	
+	<div th:replace="~{/layout/footer::footer}"></div>
+</body>
+</html>
+

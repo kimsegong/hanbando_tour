@@ -1,36 +1,77 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 
-<head></head>
+<head th:replace="~{/layout/header::head('패키지상품')}"></head>
+<style>
+  .btn-kong {
+    background-color: #96B6C5;
+    color:white;
+      } 
+  .btn-kong1 {
+    background-color: #164863;
+    color:white;
+      } 
+  .choice{
+    box-sizing: border-box;
+    margin: 0px 0px 28px;
+    min-width: 0px;
+    line-break: anywhere;
+    font-size: 20px;
+    letter-spacing: -0.02em;
+    line-height: 30px;
+    font-weight: 700;
+    border-bottom: 1px solid rgb(0, 0, 0);
+    width: 100%;
+    text-align: left;
+    justify-content: space-between;
+    padding: 8px 16px;
+    margin-top: 80px;
+} 
+ #myform fieldset{
+    display: inline-block;
+    direction: rtl;
+    border:0;
+}
+#myform fieldset legend{
+    text-align: right;
+}
+#myform input[type=radio]{
+    display: none;
+}
+#myform label{
+    font-size: 3em;
+    color: transparent;
+    text-shadow: 0 0 0 #f0f0f0;
+}
+#myform label:hover{
+    text-shadow: 0 0 0 rgba(250, 208, 0, 0.99);
+}
+#myform label:hover ~ label{
+    text-shadow: 0 0 0 rgba(250, 208, 0, 0.99);
+}
+#myform input[type=radio]:checked ~ label{
+    text-shadow: 0 0 0 rgba(250, 208, 0, 0.99);
+}
+#contents {
+    width: 100%;
+    height: 150px;
+    padding: 10px;
+    box-sizing: border-box;
+    border: solid 1.5px #D3D3D3;
+    border-radius: 5px;
+    font-size: 16px;
+    resize: none;
+   }
+</style>
 <body>
   
   <div th:replace="~{/layout/header::header}"></div>
   
+
   <div class="container text-center">
    <div class="row">
     <div class="col-8">
-      <th:block th:if="${session.user.auth == 0}">
-         <form id="frm_btn" method="post">
-            <input type="hidden" name="packageNo" class="heart" th:value="${package.packageNo}">
-            <input type="hidden" name="userNo" class="heart2" th:value="${session.user.userNo}">
-            <input type="hidden" name="regionNo" th:value="${package.regionNo}">
-            <input type="hidden" name="themeNo" th:value="${package.themeNo}">
-            <input type="hidden" name="packageTitle" th:value="${package.packageTitle}">
-            <input type="hidden" name="miniOne" th:value="${package.miniOne}">
-            <input type="hidden" name="miniTwo" th:value="${package.miniTwo}">
-            <input type="hidden" name="miniThree" th:value="${package.miniThree}">
-            <input type="hidden" name="packagePlan" th:value="${package.packagePlan}">
-            <input type="hidden" name="packageContents" th:value="${package.packageContents}">
-            <input type="hidden" name="hotelContents" th:value="${package.hotelContents}">
-            <input type="hidden" name="price" th:value="${package.price}">       
-            <input type="hidden" name="danger" th:value="${package.danger}">
-            <input type="hidden" name="plan" th:value="${package.plan}">                  
-            <input type="hidden" name="maxPeople" th:value="${package.maxPeople}">
-            <input type="hidden" name="recommendStatus" th:value="${package.recommendStatus}">
-          <button type="button" id="btn_edit">편집</button> <!-- 관리자만 보이게 -->
-          <button type="button" id="btn_remove">삭제</button> <!-- 관리자만 보이게 -->
-         </form>
-       </th:block>           
+      <div style="text-align: left;" th:text="|조회수 : ${#numbers.formatInteger(packageDto.hit, 1, 'COMMA')}|"></div>
       <!-- 패키지 슬라이드 시작-->
      <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="true">
       <div class="carousel-indicators">
@@ -40,13 +81,13 @@
       </div>
       <div class="carousel-inner">
         <div class="carousel-item active">
-          <img src="https://www.shutterstock.com/ko/image-photo/woman-pouring-tea-girlfriend-cup-standing-2303361757" class="d-block w-100" alt="...">
+          <img src="https://github.com/skal48/portfolio/blob/main/hanla.jpg?raw=true" class="d-block w-100" alt="...">
         </div>
         <div class="carousel-item">
-          <img src="https://www.shutterstock.com/ko/image-photo/male-traveler-winter-coat-canoeing-spirit-2133415727" class="d-block w-100" alt="...">
+          <img src="https://github.com/skal48/portfolio/blob/main/hanla.jpg?raw=true" class="d-block w-100" alt="...">
         </div>
         <div class="carousel-item">
-          <img src="https://www.shutterstock.com/ko/image-photo/lit-candle-outdoor-table-restaurant-winter-2095269505" class="d-block w-100" alt="...">
+          <img src="https://github.com/skal48/portfolio/blob/main/hanla.jpg?raw=true" class="d-block w-100" alt="...">
         </div>
       </div>
       <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
@@ -59,16 +100,168 @@
       </button>
      </div>
       <!-- 패키지 슬라이드 끝 -->
+      <div>
+       <div class="choice">여행 주요일정</div>
+       <div style="text-align: left;" th:text="${packageDto.packagePlan}"></div>
+       <div style="text-align: left;" th:text="|${packageDto.maxPeople} 명|"></div>
+      <!-- 모달 버튼 -->
+      <div class="col-12 text-end">
+       <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+        여행시 유의사항
+       </button>
+      </div>
+      <!-- 모달창 -->
+      <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h1 class="modal-title fs-5" id="exampleModalLabel">여행시 유의사항</h1>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" th:text="${packageDto.danger}">
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      </div>
+      <!-- 여행장소 -->
+      <div style="text-align: left;" th:text="${packageDto.packagePlan}"></div>
       
-    </div>
+      <div>
+       <div class="choice">여행 상세사항</div>
+       
+       <ul class="nav nav-tabs" id="myTab" role="tablist">
+         <li class="nav-item" role="presentation">
+           <button
+              class="nav-link active"
+              id="home-tab" 
+              data-bs-toggle="tab"
+              data-bs-target="#home-tab-pane" 
+              type="button"
+              role="tab"
+              aria-controls="home-tab-pane"
+              aria-selected="true"
+          >패키지정보
+          </button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button
+              class="nav-link"
+              id="profile-tab"
+              data-bs-toggle="tab"
+              data-bs-target="#profile-tab-pane"
+              type="button"
+              role="tab"
+              aria-controls="profile-tab-pane"
+              aria-selected="false"
+          >호텔정보
+          </button>
+        </li>
+       </ul>
+      </div>
+       <div class="tab-content" id="myTabContent" style="text-align: left;">
+          <div
+            class="tab-pane fade show active"
+            id="home-tab-pane"
+            role="tabpanel"
+            aria-labelledby="home-tab" th:text="${packageDto.packageContents}"></div>     
+          <div
+            class="tab-pane fade"
+            id="profile-tab-pane"
+            role="tabpanel"
+            aria-labelledby="profile-tab" th:text="${packageDto.hotelContents}"></div>
+        </div>
+        
+        
+        <div class="choice">여행 후기</div>
+         <c:if test="${sessionScope.user.userNo != null}">
+          <form class="mb-3 frm_review_add" id="myform" method="post">
+          <fieldset>
+            <span class="text-bold"> ❤️ 별점을 선택해주세요</span>
+            <input type="radio" name="star" value="5" id="rate1"><label
+              for="rate1">★</label>
+            <input type="radio" name="star" value="4" id="rate2"><label
+              for="rate2">★</label>
+            <input type="radio" name="star" value="3" id="rate3"><label
+              for="rate3">★</label>
+            <input type="radio" name="star" value="2" id="rate4"><label
+              for="rate4">★</label>
+            <input type="radio" name="star" value="1" id="rate5"><label
+              for="rate5">★</label>
+          </fieldset>
+          
+            <div>
+              <input type="hidden" name="userNo" value="${sessionScope.user.userNo}">
+                  <input type="hidden" name="productNo" value="${product.productNo}">
+              <textarea class="col-auto form-control" id="contents" name="contents" placeholder="행복했던 여행후기를 남겨보세요🙂"></textarea>   <!-- 예약한사람만 보이게 -->
+              <button type="button" class="btn btn-kong" id="btn_review_add" style="margin-top: 20px; margin-left: 750px">작성완료</button>
+            </div>
+           </form>
+           </c:if>  
+            
+          <div style="overflow: hidden;">
+            <div style="height: 100px; float: right;">
+                <select class="form-select form-select-sm mb-3 h-50 d-inline-block" style="width: 120px;" aria-label=".form-select-sm example">
+                    <option value="1" selected>최신순</option>
+                    <option value="2">별점순</option>
+                </select>
+            </div>
+        </div>
+        <div id="reviewAccordion">
+             <input type="hidden" id="productNo" name="productNo" value="${product.productNo}">     
+                  
+        </div>  
+    </div>    
+    
+    
+    
+    
     <div class="col-4">
-      
-      
-      
+      <div class="w3-sidebar w3-bar-block" style="width:20%; height: 500px;"> <!-- 사이드바 -->
+        <div style="font-size: large; font-weight: bolder; text-align: left;">선택중인 행사</div>
+        <div style="margin-top: 20px">
+         <div style="font-weight: bolder; text-align: left; font-size: 25px;" th:text="${packageDto.packageTitle}"></div>
+         <div style="font-size: 30px; text-align: right;" th:text="|${packageDto.price} 원|"></div>
+        </div> 
+        <div style="text-align: left;">
+         <span class="badge text-bg-success" th:text="${packageDto.miniOne}"></span>
+         <span class="badge text-bg-warning" th:text="${packageDto.miniTwo}"></span>
+         <span class="badge text-bg-secondary" th:text="${packageDto.miniThree}"></span>
+       </div>
+       <button class="btn btn-kong"  style="margin-left: 200px; margin-top: 50px;">
+        <div id="heartButton" style="color: white; cursor: pointer;">찜하기♥</div>
+       </button>
+       <button class="btn btn-kong1"  style="margin-top: 50px;">
+        <div id="heartButton" style="color: white; cursor: pointer;">출발일선택</div>
+       </button>
+       <button class="btn btn-kong1"  style="margin-top: 50px;" id="btn_reserve">
+        <div style="color: white; cursor: pointer;">예약하러가기</div>
+       </button>
+      </div> 
     </div>
    </div>
   </div>
 
+  
+  <script>   
+    function fnGoReserve(){
+      $('#btn_reserve').click(function(){
+         location.href='/reserve/write.form?packageNo=${packageDto.packageNo}';
+      })
+   }
+   
+   
+   
+   
+   fnGoReserve();
+  </script>
+
+
+  
+  <div th:replace="~{/layout/footer::footer}"></div>
 </body>
 </html>
 
