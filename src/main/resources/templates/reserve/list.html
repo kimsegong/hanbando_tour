@@ -21,9 +21,10 @@
             <table class="table">
               <thead>
                 <tr>
+                  <th>순번</th>
                   <th>예약날짜/예약번호</th>
-                  <th>상품명</th>
-                  <th>인원</th>
+                  <th>예약상품명</th>
+                  <th>예약인원</th>
                   <th>여행 출발일</th>
                   <th>금액</th>
                   <th>예약상태</th>
@@ -31,19 +32,37 @@
               </thead>
               <tbody>
                 <!-- 받아온 데이터 반복문으로 여러개의 tr생성될 자리 -->
+                <th:block th:each="res,vs:${reserveList}">
+                    <tr>
+                      <td th:text="${beginNo - vs.index}"></td>
+                      <td>
+                        <a th:href="@{/reserve/detail.do(reserveNo=${res.reserveNo})}" th:text="|${res.reservedAt} - ${res.reserveNo}|"></a>
+                      </td>
+                      <td>
+                        <a th:href="@{/reserve/detail.do(reserveNo=${res.reserveNo})}" th:text="${res.packageDto.packageTitle}"></a>
+                      </td>
+                      <td th:text="${res.reservePerson}"></td>
+                      <td th:text="${res.reserveStart}"></td>
+                      <td th:text="|${res.reservePrice}원|"></td>
+                      <th:block th:if="${res.reserveStatus == 0}">
+                        <td th:text="결제대기"></td>
+                      </th:block>
+                      <th:block th:if="${res.reserveStatus == 1}">
+                        <td th:text="예약완료"></td>
+                      </th:block>
+                      <th:block th:if="${res.reserveStatus == 2}">
+                        <td th:text="취소"></td>
+                      </th:block>
+                    </tr>
+                </th:block>  
               </tbody>
-              <tfoot>
+              <tfoot th:if="${not #lists.isEmpty(reserveList)}">
                 <tr>
-                  <!--페이징처리-->
+                  <td colspan="7" th:utext="${paging}"></td>
                 </tr>
               </tfoot>
             </table>
           </div>
-          <hr>
-          
-          
-    		   
-    		      	
 		      	
 		    </div>
 		    <div class="col-1">	      
