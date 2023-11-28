@@ -38,6 +38,7 @@ public class PackageServiceImpl implements PackageService {
   private final MyPageUtils myPageUtils;
   private final MyPackageUtils myPackageUtils;
   
+  // 패키지 리스트 불러오기
   @Override
   public Map<String, Object> getPackageList(HttpServletRequest request) {
     Optional<String> opt = Optional.ofNullable(request.getParameter("page"));
@@ -55,7 +56,7 @@ public class PackageServiceImpl implements PackageService {
                 , "totalPage", myPageUtils.getTotalPage());
     
   }
-  
+  // 패키지의 이미지 추가하기
   @Transactional(readOnly=true)
   @Override
   public List<String> getEditorImageList(String contents) {
@@ -76,10 +77,11 @@ public class PackageServiceImpl implements PackageService {
    return editorImageList;
   }
   
+  // 패키지 추가하기
   @Override
   public int addPackage(MultipartHttpServletRequest multipartRequest) throws Exception {
       String packageContents = multipartRequest.getParameter("packageContents");
-
+      
       try {
           String userNoStr = multipartRequest.getParameter("userNo");
           if (userNoStr == null || userNoStr.isEmpty()) {
@@ -111,11 +113,10 @@ public class PackageServiceImpl implements PackageService {
                   .build();
 
           int addResult = packageMapper.insertPackage(packageDto);
-
           // CKEditor 이미지 처리
           List<String> editorImages = getEditorImageList(packageContents);
           for (String editorImage : editorImages) {
-              ProductImageDto packageImage = ProductImageDto.builder()                      
+            ProductImageDto packageImage = ProductImageDto.builder()                      
                       .packageNo(packageDto.getPackageNo())
                       .filesystemName(editorImage)
                       .imagePath(myPackageUtils.getPackageImagePath())                      
@@ -162,9 +163,8 @@ public class PackageServiceImpl implements PackageService {
                       e.printStackTrace();
 
                   }
-              }
+              }           
           }
-
           // 성공 시 1, 실패 시 0 반환
           return addResult == 1 && files.size() == thumbnailCount ? 1 : 0;
       } catch (NumberFormatException e) {
@@ -172,4 +172,89 @@ public class PackageServiceImpl implements PackageService {
           return 0; // Invalid number format
       }
   }
+    // 지역/테마 넣기
+  @Override
+  public int addRegion(HttpServletRequest request) {
+        String regionName = request.getParameter("regionName");
+    
+        RegionDto regionDto = new RegionDto();
+        regionDto.setRegionName(regionName);
+    
+        return packageMapper.insertRegion(regionDto);
+    }
+   @Override
+   public int addTheme(HttpServletRequest request) {
+        String themeName = request.getParameter("themeName");
+
+        ThemeDto themeDto = new ThemeDto();
+        themeDto.setThemeName(themeName);
+
+        return packageMapper.insertTheme(themeDto);
+    }
+
+  
+    // 패키지 상세보기
+    @Transactional(readOnly=true)
+    @Override
+    public PackageDto getPackage(int packageNo) {
+      return packageMapper.getPackage(packageNo);
+    }
+    // 조회수
+    @Override
+    public int increseHit(int packageNo) {
+      return packageMapper.packageHit(packageNo);
+    }
+    // 조회수 불러오기
+    @Override
+    public Map<String, Object> getHit(HttpServletRequest request) {
+          
+       Optional<String> opt = Optional.ofNullable(request.getParameter("page"));
+            int page = Integer.parseInt(opt.orElse("1"));
+            int total = packageMapper.getPackageCount();
+            int display = 9;
+
+            myPageUtils.setPaging(page, total, display);
+
+            Map<String, Object> map = Map.of("begin", myPageUtils.getBegin(),
+                                            "end", myPageUtils.getEnd());
+
+            List<PackageDto> hitList = packageMapper.getHitList(map);
+            return Map.of("hitList", hitList,
+                          "totalPage", myPageUtils.getTotalPage());
+    }
+    
+    @Override
+    public Map<String, Object> getRegionList(HttpServletRequest request) {
+        Optional<String> opt = Optional.ofNullable(request.getParameter("page"));
+        int page = Integer.parseInt(opt.orElse("1"));
+        int total = packageMapper.getPackageCount();
+        int display = 9;
+  
+        myPageUtils.setPaging(page, total, display);
+  
+        Map<String, Object> map = Map.of("begin", myPageUtils.getBegin(),
+                                        "end", myPageUtils.getEnd());
+  
+        List<RegionDto> regionList = packageMapper.getRegion(map);       
+        return Map.of("regionList", regionList,
+                      "totalPage", myPageUtils.getTotalPage());
+    }
+    
+    @Override
+    public Map<String, Object> getThemeList(HttpServletRequest request) {
+      Optional<String> opt = Optional.ofNullable(request.getParameter("page"));
+      int page = Integer.parseInt(opt.orElse("1"));
+      int total = packageMapper.getPackageCount();
+      int display = 9;
+
+      myPageUtils.setPaging(page, total, display);
+
+      Map<String, Object> map = Map.of("begin", myPageUtils.getBegin(),
+                                      "end", myPageUtils.getEnd());
+
+      List<ThemeDto> themeList = packageMapper.getTheme(map);       
+      return Map.of("themeList", themeList,
+                    "totalPage", myPageUtils.getTotalPage());
+  }
+
 }
