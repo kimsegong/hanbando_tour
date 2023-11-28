@@ -1,5 +1,6 @@
 package com.tour.hanbando.controller;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -16,6 +17,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.tour.hanbando.dto.PackageDto;
 import com.tour.hanbando.service.PackageService;
+
 
 import lombok.RequiredArgsConstructor;
 
@@ -39,7 +41,10 @@ public class PackageController {
   }  
 
   @GetMapping("/write.form")
-  public String write() {
+  public String write(Model model) {
+	 Map<String, Object> result = packageService.getRegionAndTheme(new HashMap<>());	    
+	 model.addAttribute("regionList", result.get("regionList"));
+	 model.addAttribute("themeList", result.get("themeList"));
 	 return "package/write"; 
 	}
   
@@ -100,16 +105,6 @@ public class PackageController {
     return packageService.getHit(request);
   }
   
-  @ResponseBody
-  @GetMapping(value="/regionList.do", produces="application/json")
-  public Map<String, Object> regionList(HttpServletRequest request){
-    return packageService.getRegionList(request);
-  }
-  
-  @ResponseBody
-  @GetMapping(value="/themeList.do", produces="application/json")
-  public Map<String, Object> themeList(HttpServletRequest request){
-    return packageService.getThemeList(request);
-  }
+
 
 }

@@ -133,16 +133,14 @@
         P.RN BETWEEN #{begin} AND #{end}
     </select>
 
-    <select id="getRegion" parameterType="Map" resultType="regionDto">
+    <select id="getRegion" resultType="regionDto">
       SELECT REGION_NO, REGION_NAME
-        FROM REGION_T
-       WHERE REGION_NO = ${regionNo}     
+        FROM REGION_T     
     </select>
     
-    <select id="getTheme" parameterType="Map" resultType="themeDto">
+    <select id="getTheme" resultType="themeDto">
       SELECT THEME_NO, THEME_NAME
-        FROM THEME_T
-       WHERE THEME_NO = ${themeNo}     
+        FROM THEME_T    
     </select>
 
     <insert id="insertPackage" parameterType="PackageDto">
