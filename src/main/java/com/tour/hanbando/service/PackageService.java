@@ -18,7 +18,6 @@ public interface PackageService {
   public PackageDto getPackage(int packageNo);
   public int increseHit(int packageNo);
   public Map<String, Object> getHit(HttpServletRequest request);
-  public Map<String, Object> getRegionList(HttpServletRequest request);
-  public Map<String, Object> getThemeList(HttpServletRequest request);
+  public Map<String, Object> getRegionAndTheme(Map<String, Object> map);
   
 }
