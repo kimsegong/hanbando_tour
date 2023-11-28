@@ -7,5 +7,5 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.ui.Model;
 
 public interface MainService {
-  public Map<String, Object> headerSearch(HttpServletRequest request);
+  public Map<String, Object> SearchPackageList(HttpServletRequest request);
 }

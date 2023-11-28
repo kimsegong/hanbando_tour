@@ -24,7 +24,7 @@ public class MainServiceImpl implements MainService {
   private final MyPageUtils myPageUtils;
   
   @Override
-  public Map<String, Object> headerSearch(HttpServletRequest request) {
+  public Map<String, Object> SearchPackageList(HttpServletRequest request) {
     
     String query = request.getParameter("search");
     Optional<String> opt = Optional.ofNullable(request.getParameter("page"));
