@@ -13,7 +13,7 @@ public class ProductImageDto {
   private int imageNo;
   private int packageNo;
   private int hotelNo;
-  private String thumbnail;
+  private int thumbnail;
   private String filesystemName;
   private String imagePath;
 }

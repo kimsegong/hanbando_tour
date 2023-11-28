@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.tour.hanbando.dao.ManageMapper">
+	
+  <!-- 회원 관리 목록 -->
+  <select id="getUserCount" resultType="int">
+    SELECT COUNT(*)
+      FROM USER_T
+  </select>
+
+  <select id="getUserList" parameterType="Map" resultType="UserDto">
+    SELECT USER_NO, EMAIL, PW, NAME, GENDER, MOBILE, POSTCODE, ROAD_ADDRESS, JIBUN_ADDRESS, DETAIL_ADDRESS, AGREE, STATE, AUTH, PW_MODIFIED_AT, JOINED_AT
+      FROM (SELECT ROW_NUMBER() OVER(ORDER BY USER_NO DESC) AS RN, USER_NO, EMAIL, PW, NAME, GENDER, MOBILE, POSTCODE, ROAD_ADDRESS, JIBUN_ADDRESS, DETAIL_ADDRESS, AGREE, STATE, AUTH, PW_MODIFIED_AT, JOINED_AT
+              FROM USER_T)
+     WHERE RN BETWEEN #{begin} AND #{end}
+  </select>
+
+  <!-- 회원 검색결과 목록 -->
+  <select id="getSearchUserCount" parameterType="Map" resultType="int">
+    SELECT COUNT(*)
+      FROM USER_T
+     WHERE ${column} LIKE '%' || #{query} || '%'
+  </select>
+  <select id="getSearchUser" parameterType="Map" resultType="UserDto">
+    SELECT USER_NO, EMAIL, PW, NAME, GENDER, MOBILE, POSTCODE, ROAD_ADDRESS, JIBUN_ADDRESS, DETAIL_ADDRESS, AGREE, STATE, AUTH, PW_MODIFIED_AT, JOINED_AT
+      FROM (SELECT ROW_NUMBER() OVER(ORDER BY USER_NO DESC) AS RN, USER_NO, EMAIL, PW, NAME, GENDER, MOBILE, POSTCODE, ROAD_ADDRESS, JIBUN_ADDRESS, DETAIL_ADDRESS, AGREE, STATE, AUTH, PW_MODIFIED_AT, JOINED_AT
+              FROM USER_T
+             WHERE ${column} LIKE '%' || #{query} || '%')
+     WHERE RN BETWEEN #{begin} AND #{end}
+  </select>
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+</mapper>
