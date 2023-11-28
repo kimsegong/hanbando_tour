@@ -19,4 +19,6 @@ public interface ReserveMapper {
   public ReserveDto getReserve(int reserveNo);
   
   public List<TouristDto> getTourists(int reserveNo);
+  
+  public int deleteReserve(int reserveNo);
 }

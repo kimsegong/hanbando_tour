@@ -15,4 +15,6 @@ public interface ReserveService {
   public ReserveDto loadReserve(int reserveNo);
   
   public Map<String, Object> loadTourists(HttpServletRequest request);
+  
+  public int removeReserve(HttpServletRequest request);
 }

@@ -81,4 +81,14 @@ public class ReserveServiceImpl implements ReserveService {
   
   
   
+  
+  @Override
+  public int removeReserve(HttpServletRequest request) {
+    int reserveNo = Integer.parseInt(request.getParameter("reserveNo"));
+    int removeResult = reserveMapper.deleteReserve(reserveNo);
+    return removeResult;
+  }
+  
+  
+  
 }
