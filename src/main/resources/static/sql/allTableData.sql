@@ -120,8 +120,8 @@ CREATE TABLE USER_T (
     JIBUN_ADDRESS  VARCHAR2(100 BYTE)  NULL,             -- 지번주소
     DETAIL_ADDRESS VARCHAR2(100 BYTE)  NULL,             -- 상세주소
     AGREE          NUMBER              NOT NULL,         -- 서비스 동의 여부(0:필수, 1:이벤트)
-    STATE          NUMBER              NULL,             -- (간편로그인)가입형태(0:정상, 1:네이버, 2:카카오)
-    AUTH           NUMBER              NULL,             -- 사용자 권한 (관리자:0, 회원:1)
+    STATE          NUMBER              NULL,             -- (간편로그인)가입형태(0:일반, 1:네이버, 2:카카오)
+    AUTH           NUMBER              NULL,             -- 사용자 권한 (0:관리자, 1:회원)
     PW_MODIFIED_AT VARCHAR2(30 BYTE)   NULL,             -- 비밀번호 수정일
     JOINED_AT      VARCHAR2(30 BYTE)   NULL,             -- 가입일
     CONSTRAINT PK_USER PRIMARY KEY(USER_NO)
@@ -187,14 +187,14 @@ CREATE TABLE PACKAGE_T (
 	REGION_NO	        NUMBER	            NULL,      -- 지역 번호                (FK)
 	THEME_NO	        NUMBER	            NULL,      -- 테마 번호                (FK)
 	PACKAGE_TITLE	    VARCHAR2(150 BYTE)	NOT NULL,  -- 패키지 이름
-    MINI_ONE	        VARCHAR2(150)	    NULL,      -- 패키지 작은 설명1
-	MINI_TWO	        VARCHAR2(150)	    NULL,      -- 패키지 작은 설명2
-	MINI_THREE	        VARCHAR2(150)	    NULL,      -- 패키지 작은 설명3
+    MINI_ONE	        VARCHAR2(150 BYTE)	NULL,      -- 패키지 작은 설명1
+	MINI_TWO	        VARCHAR2(150 BYTE)	NULL,      -- 패키지 작은 설명2
+	MINI_THREE	        VARCHAR2(150 BYTE)	NULL,      -- 패키지 작은 설명3
 	PACKAGE_PLAN	    VARCHAR2(500 BYTE)	NULL,      -- 패키지 계획
 	PACKAGE_CONTENTS	CLOB	            NULL,      -- 패키지 내용
 	HOTEL_CONTENTS	    CLOB	            NULL,      -- 호텔 상세
 	PRICE	            NUMBER	            NULL,      -- 가격
-	DANGER	            VARCHAR2(500 BYTE)	NULL,      -- 주의사항
+	DANGER	            VARCHAR2(500 BYTE)	NULL,      -- 여행참고사항
 	CREATED_AT	        VARCHAR2(100 BYTE)	NULL,      -- 시작일
 	MODIFIED_AT	        VARCHAR2(100 BYTE)	NULL,      -- 수정일
 	HIT             	NUMBER	            DEFAULT 0, -- 조회수
@@ -214,7 +214,7 @@ CREATE TABLE BANNER_IMAGE_T (
    ORIGINAL_NAME    VARCHAR2(300 BYTE)    NOT NULL,    -- 원래 이름
    FILESYSTEM_NAME  VARCHAR2(300 BYTE)    NOT NULL,    -- 시스템 상 이름
    BANNER_PATH      VARCHAR2(300 BYTE)    NOT NULL,    -- 배너 경로 
-   STATE            NUMBER                DEFAULT 0,   -- (0 게시 안함, 1 게시)
+   STATE            NUMBER                DEFAULT 0,   -- (0:게시 안함, 1:게시)
    LINKED_ADDRESS   VARCHAR2(300 BYTE)    DEFAULT '/', -- 클릭시 이동 경로 
    CONSTRAINT PK_BANNER PRIMARY KEY(BANNER_NO)
 );
@@ -226,85 +226,86 @@ CREATE TABLE HOTEL_T (
     HOTEL_NO           NUMBER               NOT NULL,  -- 호텔 번호  (PK)
     REGION_NO          NUMBER               NOT NULL,  -- 지역 구분
     HOTEL_NAME         VARCHAR2(150 BYTE)   NOT NULL,  -- 호텔 명
-    HOTEL_ADDRESS      VARCHAR2(255 BYTE)       NULL,  -- 주소
-    LATITUDE           NUMBER                   NULL,  -- 위도
-    LONGITUDE          NUMBER                   NULL,  -- 경도 
-    HOTEL_DETAIL       CLOB                     NULL,  -- 설명
-    PHONE_NUMBER       VARCHAR2(10 BYTE)        NULL,  -- 전화번호
-    H_EMAIL            VARCHAR2(100 BYTE)       NULL,  -- 이메일
-    CREATED_AT         VARCHAR2(100 BYTE)       NULL,  -- 작성일
-    MODIFIED_AT        VARCHAR2(100 BYTE)       NULL,  -- 수정일
-    HIT                NUMBER              DEFAULT 0,  -- 조회수
-    STATUS             NUMBER                   NULL,  -- 판매중, (0 판매 안함, 1 판매)
-    RECOMMEND_STATUS   NUMBER                   NULL,  -- 추천 상태  (0 없음, 1 추천)
+    HOTEL_ADDRESS      VARCHAR2(255 BYTE)   NULL,      -- 주소
+    LATITUDE           NUMBER               NULL,      -- 위도
+    LONGITUDE          NUMBER               NULL,      -- 경도 
+    HOTEL_DETAIL       CLOB                 NULL,      -- 설명
+    PHONE_NUMBER       VARCHAR2(10 BYTE)    NULL,      -- 전화번호
+    H_EMAIL            VARCHAR2(100 BYTE)   NULL,      -- 이메일
+    CREATED_AT         VARCHAR2(100 BYTE)   NULL,      -- 작성일
+    MODIFIED_AT        VARCHAR2(100 BYTE)   NULL,      -- 수정일
+    HIT                NUMBER               DEFAULT 0, -- 조회수
+    STATUS             NUMBER               NULL,      -- 판매중 (0:판매 안함, 1:판매)
+    RECOMMEND_STATUS   NUMBER               NULL,      -- 추천 상태 (0:없음, 1:추천)
     CONSTRAINT PK_HOTEL PRIMARY KEY(HOTEL_NO)
 );
 
 -- 호텔 시설 테이블
 CREATE TABLE FACILITIES_T (
-    HOTEL_NO           NUMBER   NOT NULL, -- 호텔 번호   (PK)
-    POOL               NUMBER   NULL,     -- 수영장 (0 없음, 1 있음)
+    HOTEL_NO           NUMBER   NOT NULL, -- 호텔 번호   (FK)
+    POOL               NUMBER   NULL,     -- 수영장 (0:없음, 1:있음)
     MORNING            NUMBER   NULL,     -- 조식
     SAUNA              NUMBER   NULL,     -- 사우나
     LOUNGE             NUMBER   NULL,     -- 라운지
     ROOMSERVICE        NUMBER   NULL,     -- 룸서비스
-    CONSTRAINT FK_HOFEL_FAC FOREIGN KEY(HOTEL_NO) REFERENCES HOTEL_T(HOTEL_NO)
+    CONSTRAINT FK_HOFEL_FAC FOREIGN KEY(HOTEL_NO) REFERENCES HOTEL_T(HOTEL_NO) ON DELETE CASCADE
 );
+
 
 -- 호텔 객실 테이블
 CREATE TABLE ROOMTYPE_T (
     ROOM_NO       NUMBER               NOT NULL,   -- 방번호     (PK)
     HOTEL_NO      NUMBER               NOT NULL,   -- 호텔 번호  (FK)
-    ROOM_DETAIL   CLOB                     NULL,   -- 룸 설명
+    ROOM_DETAIL   CLOB                 NULL,       -- 룸 설명
     ROOM_NAME     VARCHAR2(100 BYTE)   NOT NULL,   -- 룸 이름
     ROOM_MANY     NUMBER               NOT NULL,   -- 룸 개수 
-    R_VIEW        VARCHAR2(100 BYTE)       NULL,   -- 시티뷰 오션뷰 
+    R_VIEW        VARCHAR2(100 BYTE)   NULL,       -- 시티뷰 오션뷰 
     BLEAKFAST     NUMBER               NOT NULL,   -- 조식여부 
     SMOKE         NUMBER               NOT NULL,   -- 흡연
     PEOPLE        NUMBER               NOT NULL,   -- 방 인원수  
     BED           VARCHAR2(100 BYTE)   NOT NULL,   -- 침대 종류 
     SHOWER        VARCHAR2(100 BYTE)   NOT NULL,   -- 샤워실인가 욕조인가 
-    R_SIZE          NUMBER               NOT NULL, -- 방 크기
+    R_SIZE        NUMBER               NOT NULL,   -- 방 크기
     CONSTRAINT PK_ROOM PRIMARY KEY(ROOM_NO),
-    CONSTRAINT FK_HOEL_ROOM FOREIGN KEY(HOTEL_NO) REFERENCES HOTEL_T(HOTEL_NO)
+    CONSTRAINT FK_HOEL_ROOM FOREIGN KEY(HOTEL_NO) REFERENCES HOTEL_T(HOTEL_NO) ON DELETE CASCADE
 );
 
 -- 호텔, 객실 이미지 테이블
 CREATE TABLE HOTEL_IMAGE_T (
     HOTEL_NO          NUMBER           NOT NULL,  -- 호텔 번호  (FK)
     ROOM_NO           NUMBER           NULL,      -- 룸 번호    (FK)
-    THUMBNAIL         NUMBER           NULL,      -- 썸네일 유무 (0 없음, 1 있음) 
+    THUMBNAIL         NUMBER           NULL,      -- 썸네일 유무 (0:없음, 1:있음) 
     FILESYSTEM_NAME   VARCHAR2(300)    NOT NULL,  -- 시스템 이름
     IMAGE_PATH        VARCHAR2(300)    NOT NULL,  -- 경로 
-    CONSTRAINT FK_HOTLE_IMGAE FOREIGN KEY(HOTEL_NO) REFERENCES HOTEL_T(HOTEL_NO),
-    CONSTRAINT FK_ROOM_IMAGE FOREIGN KEY(ROOM_NO) REFERENCES ROOMTYPE_T(ROOM_NO)   
+    CONSTRAINT FK_HOTLE_IMGAE FOREIGN KEY(HOTEL_NO) REFERENCES HOTEL_T(HOTEL_NO) ON DELETE CASCADE,
+    CONSTRAINT FK_ROOM_IMAGE FOREIGN KEY(ROOM_NO) REFERENCES ROOMTYPE_T(ROOM_NO) ON DELETE CASCADE  
 );
 
 -- 객실 특성 테이블
 CREATE TABLE ROOM_FEATURE_T (
     ROOM_NO    NUMBER      NOT NULL,  -- 방번호   (FK)
-    TOWEL      NUMBER      NULL,      -- 수건 (0 없음, 1 있음)
+    TOWEL      NUMBER      NULL,      -- 수건 (0:없음, 1:있음)
     WATER      NUMBER      NULL,      -- 생수
     COFFEE     NUMBER      NULL,      -- 커피/티
     DRIER      NUMBER      NULL,      -- 드라이기
     IRON       NUMBER      NULL,      -- 다리미
     MINIBAR    NUMBER      NULL,      -- 미니바
-    CONSTRAINT FK_ROOM_FEATURE FOREIGN KEY(ROOM_NO) REFERENCES ROOMTYPE_T(ROOM_NO) 
+    CONSTRAINT FK_ROOM_FEATURE FOREIGN KEY(ROOM_NO) REFERENCES ROOMTYPE_T(ROOM_NO) ON DELETE CASCADE
 );
 
 -- 객실 기간 별 가격 테이블
 CREATE TABLE ROOMPRICE_T (
     ROOM_NO          NUMBER              NOT NULL,  -- 방번호    (FK)
-    BI_PRICE         NUMBER                  NULL,  -- 비성수기 요금
-    BS_DATE          VARCHAR2(100 BYTE)      NULL,  -- 비성수기 시작
-    BE_DATE          VARCHAR2(100 BYTE)      NULL,  -- 비성수기 끝
-    JUN_PRICE        NUMBER                  NULL,  -- 비성수기 요금
-    JS_DATE          VARCHAR2(100 BYTE)      NULL,  -- 준성수기 시작
-    JE_DATE          VARCHAR2(100 BYTE)      NULL,  -- 준성수기 끝
-    SUNG_PRICE       NUMBER                  NULL,  -- 비성수기 요금
-    SS_DATE          VARCHAR2(100 BYTE)      NULL,  -- 성수기 시작
-    SE_DATE          VARCHAR2(100 BYTE)      NULL,  -- 성수기 끝
-    CONSTRAINT FK_ROOM_PRICE FOREIGN KEY(ROOM_NO) REFERENCES ROOMTYPE_T(ROOM_NO) 
+    BI_PRICE         NUMBER              NULL,      -- 비성수기 요금
+    BS_DATE          VARCHAR2(100 BYTE)  NULL,      -- 비성수기 시작
+    BE_DATE          VARCHAR2(100 BYTE)  NULL,      -- 비성수기 끝
+    JUN_PRICE        NUMBER              NULL,      -- 비성수기 요금
+    JS_DATE          VARCHAR2(100 BYTE)  NULL,      -- 준성수기 시작
+    JE_DATE          VARCHAR2(100 BYTE)  NULL,      -- 준성수기 끝
+    SUNG_PRICE       NUMBER              NULL,      -- 비성수기 요금
+    SS_DATE          VARCHAR2(100 BYTE)  NULL,      -- 성수기 시작
+    SE_DATE          VARCHAR2(100 BYTE)  NULL,      -- 성수기 끝
+    CONSTRAINT FK_ROOM_PRICE FOREIGN KEY(ROOM_NO) REFERENCES ROOMTYPE_T(ROOM_NO) ON DELETE CASCADE
 );
 
 -- ************************************ 예약 ************************************
@@ -410,11 +411,11 @@ CREATE TABLE REVIEW_T (
 -- ************************************ 공지 ************************************
 -- 공지사항 테이블
 CREATE TABLE NOTICE_T (
-    NOTICE_NO       NUMBER               NOT NULL,      -- 공지 번호  (PK)
-    TITLE           VARCHAR2(100 BYTE),                 -- 공지 제목
-    CONTENTS        CLOB,                               -- 공지 내용
-    CREATED_AT      VARCHAR2(100 BYTE),                 -- 공지 작성일
-    MODIFIED_AT     VARCHAR2(100 BYTE),                 -- 공지 수정일
+    NOTICE_NO       NUMBER              NOT NULL,  -- 공지 번호  (PK)
+    TITLE           VARCHAR2(100 BYTE)  NULL,      -- 공지 제목
+    CONTENTS        CLOB                NULL,      -- 공지 내용
+    CREATED_AT      VARCHAR2(100 BYTE)  NULL,      -- 공지 작성일
+    MODIFIED_AT     VARCHAR2(100 BYTE)  NULL,      -- 공지 수정일
     CONSTRAINT PK_NOTICE PRIMARY KEY(NOTICE_NO)
 );
 
@@ -431,26 +432,26 @@ CREATE TABLE INQUIRY_T(
   CONSTRAINT FK_USER_INQUIRY FOREIGN KEY(USER_NO) REFERENCES USER_T(USER_NO) ON DELETE CASCADE
 );
 
--- 1:1문의 답변테이블
+-- 1:1문의 답변 테이블
 CREATE TABLE INQUIRY_ANSWER_T(
   ANSWER_NO     NUMBER            NOT NULL,  -- 답변 번호                (PK)
   USER_NO       NUMBER            NOT NULL,  -- 회원(답변한 관리자) 번호 (FK)
   INQUIRY_NO    NUMBER            NOT NULL,  -- 문의 번호                (FK)
-  CONTENTS       CLOB             NULL,      -- 내용
+  CONTENTS      CLOB              NULL,      -- 내용
   CREATED_AT    VARCHAR2(50 BYTE) NULL,      -- 작성일
   CONSTRAINT PK_ANSWER         PRIMARY KEY(ANSWER_NO),
   CONSTRAINT FK_USER_ANSWER    FOREIGN KEY(USER_NO)    REFERENCES USER_T(USER_NO)       ON DELETE CASCADE,
   CONSTRAINT FK_INQUIRY_ANSWER FOREIGN KEY(INQUIRY_NO) REFERENCES INQUIRY_T(INQUIRY_NO) ON DELETE CASCADE
 );
 
--- 자주묻는 질문 카테고리 테이블
+-- 자주묻는질문 카테고리 테이블
 CREATE TABLE FAQ_CA_T(
   CA_NO         NUMBER             NOT NULL,  -- 카테고리 번호  (PK)
   CA_TITLE      VARCHAR2(100 BYTE) NULL,      -- 카테고리명      
   CONSTRAINT PK_FAQ_CA PRIMARY KEY(CA_NO)
 );
 
--- 자주묻는 질문 테이블
+-- 자주묻는질문 테이블
 CREATE TABLE FAQ_T(
   FAQ_NO        NUMBER             NOT NULL,  -- 글번호        (PK)
   CA_NO         NUMBER             NOT NULL,  -- 카테고리 번호 (FK)
@@ -551,10 +552,10 @@ INSERT INTO PACKAGE_T VALUES(PACKAGE_SEQ.NEXTVAL, 2, 4, 3, '경상도로 놀러�
 INSERT INTO PACKAGE_T VALUES(PACKAGE_SEQ.NEXTVAL, 1, 6, 2, '서울 단풍보러 놀러가요', '예약가능', '효도여행 강추', '항공없음', '서울에서 먹고자고싸고', '단풍은 이래저래', '호텔정보는 이렇습니다!', 219000, '위험한사항이있어요', TO_CHAR(SYSDATE,'YYYY/MM/DD'), TO_CHAR(SYSDATE,'YYYY/MM/DD'), 0, 1, 30, 1);
 INSERT INTO PACKAGE_T VALUES(PACKAGE_SEQ.NEXTVAL, 2, 5, 5, '제주도로 등산가요', '예약가능', '강추', '항공없음', '제주도에서 먹고자고싸고', '제주도 등산은 이래저래', '호텔정보는 이렇습니다!', 136000, '위험한사항이있어요', TO_CHAR(SYSDATE,'YYYY/MM/DD'), TO_CHAR(SYSDATE,'YYYY/MM/DD'), 0, 1, 30, 1);
 INSERT INTO PACKAGE_T VALUES(PACKAGE_SEQ.NEXTVAL, 1, 7, 2, '경기도 단풍보러 놀러가요', '예약가능', '인기폭발', '항공없음', '경기도에서 먹고자고싸고', '경기도 단풍은 이래저래', '호텔정보는 이렇습니다!', 45000, '위험한사항이있어요', TO_CHAR(SYSDATE,'YYYY/MM/DD'), TO_CHAR(SYSDATE,'YYYY/MM/DD'), 0, 1, 30, 1);
-INSERT INTO PACKAGE_T VALUES(PACKAGE_SEQ.NEXTVAL, 2, NULL, NULL, '인기 없는 묻지마여행1 놀러가요', '예약가능', '추천', '항공없음', '아무데서 먹고자고싸고', '묻지마여행은 이래저래', '호텔정보는 이렇습니다!', 55000, '위험한사항이있어요', TO_CHAR(SYSDATE,'YYYY/MM/DD'), TO_CHAR(SYSDATE,'YYYY/MM/DD'), 0, 1, 30, 0);
-INSERT INTO PACKAGE_T VALUES(PACKAGE_SEQ.NEXTVAL, 2, NULL, NULL, '인기 없는 묻지마여행2 놀러가요', '예약가능', '강추', '항공없음', '아무데서 먹고자고싸고', '묻지마여행은 이래저래', '호텔정보는 이렇습니다!', 55000, '위험한사항이있어요', TO_CHAR(SYSDATE,'YYYY/MM/DD'), TO_CHAR(SYSDATE,'YYYY/MM/DD'), 0, 1, 30, 0);
-INSERT INTO PACKAGE_T VALUES(PACKAGE_SEQ.NEXTVAL, 2, NULL, NULL, '인기 많은묻지마여행 놀러가요1', '예약가능', '친구와 함께 추천', '항공없음', '아무데서 먹고자고싸고', '묻지마여행은 이래저래', '호텔정보는 이렇습니다!', 55000, '위험한사항이있어요', TO_CHAR(SYSDATE,'YYYY/MM/DD'), TO_CHAR(SYSDATE,'YYYY/MM/DD'), 0, 1, 30, 1);
-INSERT INTO PACKAGE_T VALUES(PACKAGE_SEQ.NEXTVAL, 2, NULL, NULL, '인기 많은묻지마여행 놀러가요2', '예약가능', '친구와 함께 추천', '항공없음', '아무데서 먹고자고싸고', '묻지마여행은 이래저래', '호텔정보는 이렇습니다!', 55000, '위험한사항이있어요', TO_CHAR(SYSDATE,'YYYY/MM/DD'), TO_CHAR(SYSDATE,'YYYY/MM/DD'), 0, 1, 30, 1);
+INSERT INTO PACKAGE_T VALUES(PACKAGE_SEQ.NEXTVAL, 2, NULL, NULL, '인기 없는 묻지마여행1', '예약가능', '추천', '항공없음', '아무데서 먹고자고싸고', '묻지마여행은 이래저래', '호텔정보는 이렇습니다!', 55000, '위험한사항이있어요', TO_CHAR(SYSDATE,'YYYY/MM/DD'), TO_CHAR(SYSDATE,'YYYY/MM/DD'), 0, 1, 30, 0);
+INSERT INTO PACKAGE_T VALUES(PACKAGE_SEQ.NEXTVAL, 2, NULL, NULL, '인기 없는 묻지마여행2', '예약가능', '강추', '항공없음', '아무데서 먹고자고싸고', '묻지마여행은 이래저래', '호텔정보는 이렇습니다!', 55000, '위험한사항이있어요', TO_CHAR(SYSDATE,'YYYY/MM/DD'), TO_CHAR(SYSDATE,'YYYY/MM/DD'), 0, 1, 30, 0);
+INSERT INTO PACKAGE_T VALUES(PACKAGE_SEQ.NEXTVAL, 2, NULL, NULL, '인기 많은 묻지마여행1', '예약가능', '친구와 함께 추천', '항공없음', '아무데서 먹고자고싸고', '묻지마여행은 이래저래', '호텔정보는 이렇습니다!', 55000, '위험한사항이있어요', TO_CHAR(SYSDATE,'YYYY/MM/DD'), TO_CHAR(SYSDATE,'YYYY/MM/DD'), 0, 1, 30, 1);
+INSERT INTO PACKAGE_T VALUES(PACKAGE_SEQ.NEXTVAL, 2, NULL, NULL, '인기 많은 묻지마여행2', '예약가능', '친구와 함께 추천', '항공없음', '아무데서 먹고자고싸고', '묻지마여행은 이래저래', '호텔정보는 이렇습니다!', 55000, '위험한사항이있어요', TO_CHAR(SYSDATE,'YYYY/MM/DD'), TO_CHAR(SYSDATE,'YYYY/MM/DD'), 0, 1, 30, 1);
 COMMIT;
 
 -- ******************************************************************************
