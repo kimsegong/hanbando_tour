@@ -1,0 +1,11 @@
+<div class="line_inp">
+  <p class="form_title">휴대폰 번호</p>
+  <input type="tel" class="inp" id="userPhoneNum" name="userPhoneNum" placeholder="휴대폰 번호를 - 없이 입력해주세요"/>
+  <input type="button" class="half_button" id="goSMS" value="SMS 전송" />
+</div>
+<div class="line_inp confirmDiv" style="display: none">
+  <p class="form_title">인증번호</p>
+  <input class="inp" id="authNumber" type="tel" placeholder="SMS로 수신된 인증번호 5자리를 입력해주세요"/>
+  <input type="hidden" id="authCode"/>  
+  <input type="button" class="half_button" id="confirmBnt" value="인증" />
+</div>

@@ -28,20 +28,21 @@
               <tbody>
                 <tr>
                   <td>이름</td>
-                  <td></td>
+                  <td th:text="${session.user.name}"></td>
                   <td>휴대폰번호</td>
-                  <td></td>
+                  <td th:text="${session.user.mobile}"></td>
                 </tr>
                 <tr>
                   <td>성별</td>
-                  <td></td>
+                  <td th:if="${session.user.gender == 'M'}">남</td>
+                  <td th:if="${session.user.gender == 'F'}">여</td>
                   <td>이메일</td>
-                  <td></td>
+                  <td th:text="${session.user.email}"></td>
                 </tr>
                 <tr>
                   <td>요청사항</td>
                   <td>
-                    <textarea placeholder="내용을 입력해주세요"></textarea>
+                    <textarea id="reqTerm" name="reqTerm" placeholder="내용을 입력해주세요"></textarea>
                   </td>
                 </tr>
               </tbody>
@@ -54,7 +55,7 @@
           <div>
             <table>
               <thead>
-                <tr class="table-active">
+                <tr>
                   <th>요금구분</th>
                   <th>성인요금</th>
                   <th>소아요금</th>
@@ -70,15 +71,15 @@
                   <td id="childPrice">${product.price}</td> <!-- 성인요금에서 금액변동 적용하기 -->
                   <td>
                     <select name="adultCnt">
-                      <c:forEach var="cnt" begin="0" end="20" step="1"> <!-- end값으로 product.person(최대인원수) 적용하기 -->
-                        <option class="adtCnt" value="${cnt}">${cnt}명</option>
-                      </c:forEach>
+                      <th:block th:each="cnt:${#numbers.sequence(0,20,1)}"> <!-- end값으로 최대인원수 적용하기 -->
+                        <option class="adtCnt" th:value="${cntStat.index}" th:text="|${cntStat.index}명|"></option>
+                      </th:block>
                     </select>
                   </td>
                   <td>
                     <select name="childCnt">
-                      <c:forEach var="cnt" begin="0" end="20" step="1"> <!-- end값으로 product.person(최대인원수) 적용하기 -->
-                        <option class="cldCnt" value="${cnt}">명</option>
+                      <th:block th:each="cnt:${#numbers.sequence(0,20,1)}"> <!-- end값으로 최대인원수 적용하기 -->
+                        <option class="cldCnt" th:value="${cntStat.index}" th:text="|${cntStat.index}명|"></option>
                       </c:forEach>
                     </select>
                   </td>
@@ -131,7 +132,7 @@
 		      
 		      
 		      <!-- 예약 정보 -->
-          <!-- 받아올 정보 : userNo, productNo -->  
+          <!-- 받아올 정보 : userNo, packageNo -->  
           <form id="frm_reserve" >
             
             <input type="hidden" name="userNo" value="${session.user.userNo}">
@@ -162,6 +163,10 @@
                 <li class="list-group-item">
                   <input class="form-check-input me-1" type="radio" name="pickupLoc" id="pickupDDP" value="동대문">
                   <label class="form-check-label" for="pickupDDP">동대문</label> 
+                </li>
+                <li class="list-group-item">
+                  <input class="form-check-input me-1" type="radio" name="pickupLoc" id="pickupJamsil" value="잠실">
+                  <label class="form-check-label" for="pickupJamsil">잠실</label> 
                 </li>
               </ul>
             </div>
@@ -234,7 +239,83 @@
 	</div>
 
 	
-	
+	<script th:inline="javascript">
+    
+    // 성인, 소아 선택한 만큼 입력창 생성메소드
+    function fnAddTouristForm(){
+      $(document).ready(function() {
+        $('select[name="adultCnt"], select[name="childCnt"]').change(function() {
+            var adultCount = parseInt($('select[name="adultCnt"]').val());
+            var childCount = parseInt($('select[name="childCnt"]').val());
+            
+            $('#inp_tourist').empty();
+          let str = '';
+          if(adultCount !== 0){
+            for(let i = 1; i <= adultCount; i++){
+                str += '<tr>';
+                str += '  <td><span>성인 </span><span class="ageNum">' + i + '</span></td>';
+                str += '  <input type="hidden" name="ageCase" value="0">';
+                str += '  <td><input type="text" name="touristName" maxlength="10"></td>';
+                  str += '  <td><input type="date" name="birthDate" max="9999-12-31"></td>';
+                  str += '  <td>';
+                    str += '    <select name="gender">';
+                    str += '    <option value="">선택</option>';
+                    str += '    <option value="M">남</option>';
+                    str += '    <option value="F">여</option>';
+                    str += '     </select>';
+                    str += '  </td>';
+                  str += '  <td>'; 
+                str += '    <input type="text" class="inpMob tourContact" name="tourContact" maxlength="11">';
+                str += '  </td>';
+                  str += '</tr>';
+              }
+          }
+          if(childCount !== 0){
+            for(let i = 1; i <= childCount; i++){
+                  str += '<tr>';
+                  str += '  <td><span>소아 </span><span class="ageNum">' + i + '</span></td>';
+                  str += '  <input type="hidden" name="ageCase" value="1">';
+                  str += '  <td><input type="text" name="touristName" maxlength="10"></td>';
+                str += '  <td><input type="date" name="birthDate" max="9999-12-31"></td>';
+                str += '  <td>';
+                  str += '    <select name="gender">';
+                  str += '    <option value="">선택</option>';
+                  str += '    <option value="M">남</option>';
+                  str += '    <option value="F">여</option>';
+                  str += '     </select>';
+                  str += '  </td>';
+                str += '  <td>'; 
+                str += '    <input type="text" class="inpMob tourContact" name="tourContact" maxlength="11">';
+              str += '  </td>';
+                str += '</tr>';
+                }
+          }
+        $('#inp_tourist').append(str);
+          });
+        });
+    }
+    
+    function fnChkAll(){
+      $('#chkAll').click(function(){
+        $('#chkAgree').prop('checked', $(this).prop('checked'));
+        $('#chkMarketing').prop('checked', $(this).prop('checked'));
+      })
+    }
+    
+    
+    function fnChkEach(){
+      $('.chk_each').click(function(){
+        var total = 0;
+        total += $('#chkAgree').prop('checked');
+        total += $('#chkMarketing').prop('checked');
+        $('#chkAll').prop('checked', total === $('.chk_each').length);
+      })
+    } 
+  
+    fnAddTouristForm();
+    fnChkAll();
+    fnChkEach();
+  </script>
 	
 	<div th:replace="~{/layout/footer::footer}"></div>
 </body>

@@ -5,6 +5,301 @@
 
 <mapper namespace="com.tour.hanbando.dao.ReserveMapper">
 
+  
+   <resultMap type="PackageDto" id="PackageMap">
+        <id column="PACKAGE_NO" property="packageNo"/>
+        <result column="PACKAGE_TITLE" property="packageTitle"/>
+        <result column="MINI_ONE" property="miniOne"/>
+        <result column="MINI_TWO" property="miniTwo"/>
+        <result column="MINI_THREE" property="miniThree"/>
+        <result column="PACKAGE_PLAN" property="packagePlan"/>
+        <result column="PACKAGE_CONTENTS" property="packageContents"/>
+        <result column="HOTEL_CONTENTS" property="hotelContents"/>
+        <result column="PRICE" property="price"/>
+        <result column="DANGER" property="danger"/>
+        <result column="CREATED_AT" property="createdAt"/>
+        <result column="MODIFIED_AT" property="modifiedAt"/>
+        <result column="HIT" property="hit"/>
+        <result column="STATUS" property="status"/>
+        <result column="MAX_PEOPLE" property="maxPeople"/>
+        <result column="RECOMMEND_STATUS" property="recommendStatus"/>
+    <association javaType="RegionDto" property="regionDto">
+        <id column="REGION_NO" property="regionNo"/>
+        <result column="REGION_NAME" property="regionName"/>
+    </association>
+    <association javaType="ThemeDto" property="themeDto">
+        <id column="THEME_NO" property="themeNo"/>
+        <result column="THEME_NAME" property="themeName"/>
+    </association>
+    <association javaType="UserDto" property="userDto">
+        <id column="USER_NO" property="userNo"/>
+        <result column="EMAIL" property="email"/>
+        <result column="NAME" property="name"/>
+    </association>
+  </resultMap> 
+   
+  <resultMap type="ReserveDto" id="ReserveMap">
+    <id column="RESERVE_NO" property="reserveNo"/>
+    <result column="RESERVED_AT" property="reservedAt"/>
+    <result column="REQUESTED_TERM" property="requestedTerm"/>
+    <result column="AGREE" property="agree"/>
+    <result column="DEPARTURE_LOC" property="departureLoc"/>
+    <result column="RESERVE_STATUS" property="reserveStatus"/>
+    <result column="RESERVE_START" property="reserveStart"/>
+    <result column="RESERVE_FINISH" property="reserveFinish"/>
+    <result column="RESERVE_PERSON" property="reservePerson"/>
+    <result column="RESERVE_PRICE" property="reservePrice"/>
+    <association javaType="UserDto" property="userDto">
+      <id column="USER_NO" property="userNo"/>
+      <result column="EMAIL" property="email" />
+      <result column="PW" property="pw" />
+      <result column="NAME" property="name" />
+      <result column="GENDER" property="gender" />
+      <result column="MOBILE" property="mobile" />
+      <result column="POSTCODE" property="postcode" />
+      <result column="ROAD_ADDRESS" property="roadAddress" />
+      <result column="JIBUN_ADDRESS" property="jibunAddress" />
+      <result column="DETAIL_ADDRESS" property="detailAddress" />
+      <result column="AGREE" property="agree" />
+      <result column="STATE" property="state" />
+      <result column="AUTH" property="auth" />
+      <result column="PW_MODIFIED_AT" property="pwModifiedAt" />
+      <result column="JOINED_AT" property="joinedAt" />  
+    </association>
+    <association property="packageDto" resultMap="PackageMap"/>
+    <association javaType="HotelDto" property="hotelDto">
+      <id column="HOTEL_NO" property="hotelNo"/>
+      <result column="REGION_NO" property="regionNo"/>
+      <result column="HOTEL_NAME" property="hotelName"/>
+      <result column="HOTEL_ADDRESS" property="hotelAddress"/>
+      <result column="LATITUDE" property="latitude"/>
+      <result column="LONGITUDE" property="longitude"/>
+      <result column="HOTEL_DETAIL" property="hotelDetail"/>
+      <result column="PHONE_NUMBER" property="phoneNumber"/>
+      <result column="H_EMAIL" property="HEmail"/>
+      <result column="CREATED_AT" property="createdAt"/>
+      <result column="MODIFIED_AT" property="modifiedAt"/>
+      <result column="HIT" property="hit"/>
+      <result column="STATUS" property="status"/>
+      <result column="RECOMMEND_STATUS" property="recommendStatus"/>
+    </association>
+    <association javaType="RoomtypeDto" property="roomtypeDto">
+      <id column="ROOM_NO" property="roomNo"/>
+      <result column="HOTEL_NO" property="hotelNo"/>
+      <result column="ROOM_DETAIL" property="roomDetail"/>
+      <result column="ROOM_NAME" property="roomName"/>
+      <result column="ROOM_MANY" property="roomMany"/>
+      <result column="VIEW" property="view"/>
+      <result column="BREAKFAST" property="breakfast"/>
+      <result column="SMOKE" property="smoke"/>
+      <result column="PEOPLE" property="people"/>
+      <result column="BED" property="bed"/>
+      <result column="SHOWER" property="shower"/>
+      <result column="SIZE" property="size"/>
+    </association>
+  </resultMap> 
+  
+  <resultMap type="TouristDto" id="TouristMap">
+    <id column="TOURIST_NO" property="touristNo"/>
+    <result column="NAME" property="name"/> 
+    <result column="BIRTH_DATE" property="birthDate"/> 
+    <result column="GENDER" property="gender"/> 
+    <result column="MOBILE" property="mobile"/> 
+    <result column="AGE_CASE" property="ageCase"/> 
+    <association property="reserveDto" resultMap="ReserveMap"/>
+  </resultMap>
+  
+  <resultMap type="PaymentDto" id="PaymentMap">
+    <id column="PAYMENT_NO" property="paymentNo"/>
+    <result column="IMP_UID" property="impUid"/>
+    <result column="PAY_YN" property="payYn"/>
+    <result column="PAY_METHOD" property="payMethod"/>
+    <result column="PAID_AMOUNT" property="paidAmount"/>
+    <result column="PAID_AT" property="paidAt"/>
+    <result column="MERCHANT_UID" property="merchantUid"/>
+    <result column="BUYER_NAME" property="buyerName"/>
+    <result column="BUYER_EMAIL" property="buyerEmail"/>
+    <result column="ERROR_MSG" property="errorMsg"/>
+    <result column="PAY_STATUS" property="payStatus"/>
+    <association property="reserveDto" resultMap="ReserveMap"/>
+  </resultMap>
+  
+  <select id="getReserveCount" resultType="int">
+    SELECT COUNT(*)
+      FROM RESERVE_T
+  </select>
+  
+  <select id="getReserveCountByUserNo" resultType="int" parameterType="int">
+    SELECT COUNT(*)
+      FROM RESERVE_T
+     WHERE USER_NO = #{userNo}
+  </select>
+  
+  <select id="getReserveList" parameterType="Map" resultMap="ReserveMap">
+    SELECT A.RESERVE_NO, A.RESERVED_AT, A.REQUESTED_TERM, A.AGREE, A.DEPARTURE_LOC, A.RESERVE_STATUS, A.RESERVE_START, A.RESERVE_FINISH, A.RESERVE_PERSON, A.RESERVE_PRICE, A.USER_NO, A.PACKAGE_NO, A.PACKAGE_TITLE, A.PRICE, A.PACKAGE_PLAN, A.MINI_ONE
+      FROM (SELECT ROW_NUMBER() OVER(ORDER BY RES.RESERVE_NO DESC) AS RN
+                 , RES.RESERVE_NO, RES.RESERVED_AT, RES.REQUESTED_TERM, RES.AGREE, RES.DEPARTURE_LOC, RES.RESERVE_STATUS, RES.RESERVE_START, RES.RESERVE_FINISH
+                 , RES.RESERVE_PERSON, RES.RESERVE_PRICE, RES.USER_NO, RES.PACKAGE_NO, RES.HOTEL_NO, RES.ROOM_NO
+                 , P.PACKAGE_TITLE, P.PRICE, P.PACKAGE_PLAN, P.MINI_ONE
+              FROM PACKAGE_T P INNER JOIN RESERVE_T RES
+                ON P.PACKAGE_NO = RES.PACKAGE_NO) A
+     WHERE A.RN BETWEEN #{begin} AND #{end}             
+  </select>
+  
+  <select id="getReserveListByUser" parameterType="Map" resultMap="ReserveMap">
+    SELECT A.RESERVE_NO, A.RESERVED_AT, A.REQUESTED_TERM, A.AGREE, A.DEPARTURE_LOC, A.RESERVE_STATUS, A.RESERVE_START, A.RESERVE_FINISH, A.RESERVE_PERSON, A.RESERVE_PRICE, A.USER_NO, A.PACKAGE_NO, A.PACKAGE_TITLE, A.PRICE, A.PACKAGE_PLAN, A.MINI_ONE
+      FROM (SELECT ROW_NUMBER() OVER(ORDER BY RES.RESERVE_NO DESC) AS RN
+                 , RES.RESERVE_NO, RES.RESERVED_AT, RES.REQUESTED_TERM, RES.AGREE, RES.DEPARTURE_LOC, RES.RESERVE_STATUS, RES.RESERVE_START, RES.RESERVE_FINISH
+                 , RES.RESERVE_PERSON, RES.RESERVE_PRICE, RES.USER_NO, RES.PACKAGE_NO, RES.HOTEL_NO, RES.ROOM_NO
+                 , P.PACKAGE_TITLE, P.PRICE, P.PACKAGE_PLAN, P.MINI_ONE
+              FROM PACKAGE_T P INNER JOIN RESERVE_T RES
+                ON P.PACKAGE_NO = RES.PACKAGE_NO
+             WHERE RES.USER_NO = #{userNo}) A
+     WHERE A.RN BETWEEN #{begin} AND #{end}             
+  </select>
+  
+  <select id="getReserve" parameterType="int" resultMap="ReserveMap">
+    SELECT RES.RESERVE_NO, RES.RESERVED_AT, RES.REQUESTED_TERM, RES.AGREE, RES.DEPARTURE_LOC, RES.RESERVE_STATUS, RES.RESERVE_START, RES.RESERVE_FINISH, RES.RESERVE_PERSON, RES.RESERVE_PRICE
+         , U.USER_NO, U.NAME, U.EMAIL, U.GENDER, U.MOBILE, U.AUTH
+         , P.PACKAGE_NO, P.PACKAGE_TITLE, P.PACKAGE_PLAN, P.PRICE, P.MAX_PEOPLE, P.DANGER
+      FROM USER_T U INNER JOIN RESERVE_T RES
+        ON U.USER_NO = RES.USER_NO INNER JOIN PACKAGE_T P
+        ON P.PACKAGE_NO = RES.PACKAGE_NO
+      WHERE RES.RESERVE_NO = #{reserveNo} 
+  </select>
+  
+  <select id="getTourists" parameterType="int" resultMap="TouristMap">
+    SELECT T.TOURIST_NO, T.NAME, T.BIRTH_DATE, T.GENDER, T.MOBILE, T.AGE_CASE, T.RESERVE_NO, RES.DEPARTURE_LOC, RES.RESERVE_START, RES.PACKAGE_NO
+      FROM TOURIST_T T INNER JOIN RESERVE_T RES
+        ON T.RESERVE_NO = RES.RESERVE_NO
+     WHERE RES.RESERVE_NO = #{reserveNo}
+  </select>
+  
+  
+  <insert id="insertReserve" parameterType="ReserveDto" useGeneratedKeys="true" keyProperty="reserveNo">
+    <selectKey order="BEFORE" keyProperty="reserveNo" resultType="int">
+      SELECT RESERVE_SEQ.NEXTVAL 
+        FROM DUAL
+    </selectKey>
+    INSERT INTO RESERVE_T (
+        RESERVE_NO
+      , RESERVED_AT
+      , REQUESTED_TERM
+      , AGREE
+      , DEPARTURE_LOC
+      , RESERVE_STATUS
+      , RESERVE_START
+      , RESERVE_FINISH
+      , RESERVE_PERSON
+      , RESERVE_PRICE
+      , USER_NO
+      , PACKAGE_NO
+      , HOTEL_NO
+      , ROOM_NO
+    ) VALUES (
+        #{reserveNo}
+      , TO_CHAR(SYSDATE, 'YYYYMMDD') 
+      , #{requestedTerm}
+      , #{agree}
+      , #{departureLoc}
+      , #{reserveStatus}
+      , #{reserveStart}
+      , #{reserveFinish}
+      , #{reservePerson}
+      , #{reservePrice}
+      , #{userDto.userNo}
+      , #{packageDto.productNo}  
+      , #{hotelDto.hotelNo}  
+      , #{roomDto.roomNo}  
+    )
+  </insert>
+  
+  <insert id="insertTourist" parameterType="TouristDto">
+    <selectKey order="BEFORE" keyProperty="touristNo" resultType="int">
+      SELECT TOURIST_SEQ.NEXTVAL
+        FROM DUAL
+    </selectKey>
+    INSERT INTO TOURIST_T (
+        TOURIST_NO
+      , NAME
+      , BIRTH_DATE
+      , GENDER
+      , MOBILE
+      , AGE_CASE
+      , RESERVE_NO
+    ) VALUES (
+        #{touristNo}
+      , #{name}
+      , #{birthDate}
+      , #{gender}
+      , #{mobile}
+      , #{ageCase}
+      , #{reserveDto.reserveNo}
+    )
+  </insert>
+  
+  <insert id="insertPayment" parameterType="PaymentDto">
+    <selectKey order="BEFORE" keyProperty="paymentNo" resultType="int">
+      SELECT PAYMENT_SEQ.NEXTVAL
+        FROM DUAL
+    </selectKey>
+    INSERT INTO PAYMENT_T (
+        PAYMENT_NO
+      , IMP_UID
+      , PAY_YN
+      , PAY_METHOD
+      , PAID_AMOUNT
+      , PAID_AT
+      , MERCHANT_UID
+      , BUYER_NAME
+      , BUYER_EMAIL
+      , ERROR_MSG
+      , PAY_STATUS
+        RESERVE_NO
+    ) VALUES (
+        #{paymentNo}
+      , #{impUid}  
+      , #{payYn}  
+      , #{payMethod}  
+      , #{paidAmount}  
+      , #{paidAt}  
+      , #{merchantUid}  
+      , #{buyerName}  
+      , #{buyerEmail}  
+      , #{errorMsg}  
+      , #{payStatus}  
+      , #{reserveDto.reserveNo}
+    )
+  </insert>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  <delete id="deleteReserve" parameterType="int">
+    DELETE 
+      FROM RESERVE_T
+     WHERE RESERVE_NO = #{reserveNo}
+  </delete>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+
 
 </mapper>
 
