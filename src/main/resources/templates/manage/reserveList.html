@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 
-<head th:replace="~{/layout/header::head('휴면회원 관리')}"></head> 
+<head th:replace="~{/layout/header::head('패키지예약 관리')}"></head> 
 <style>
   
   .second_main_wrap {
@@ -39,7 +39,7 @@
     transition: color 0.3s; /* hover 시 글씨 색상 변화 트랜지션 설정 */
   }
 
-  #userList a::after {
+  #reserveList a::after {
     content: "";
     display: block;
     width: 90%;
@@ -51,23 +51,6 @@
     left: 0;
   }
 
-  #userList a,
-  #productList a,
-  #reserveList a,
-  #reviewList a,
-  #bannerList a {
-    display: block;
-    width: 100%;
-    height: 100%;
-    text-decoration: none;
-    color: #404040; /* 기본 글씨 색상 */
-    padding: 10px;
-    box-sizing: border-box;
-    font-size: 2.5em;
-    position: relative;
-    transition: color 0.3s; /* hover 시 글씨 색상 변화 트랜지션 설정 */
-  }
-
   #userList a:hover,
   #productList a:hover,
   #reserveList a:hover,
@@ -76,7 +59,7 @@
     color: #96B6C5; /* hover 시 글씨 색상 변화 */
   }
   
-  #productList a::after,
+  #userList a::after,
   #reserveList a::after,
   #reviewList a::after,
   #bannerList a::after {
@@ -91,7 +74,7 @@
     left: 0;
   }
   
-  #productList a:hover::after,
+  #userList a:hover::after,
   #reserveList a:hover::after,
   #reviewList a:hover::after,
   #bannerList a:hover::after {
@@ -102,7 +85,7 @@
     color: #96B6C5;
   }
   
-  #btn_search_inactiveUser {
+  #btn_search_reserve {
     height: 38px; 
     color: #96B6C5;         /* 텍스트 색상 */
     background-color: #fff; /* 기본 배경 색상 */
@@ -111,14 +94,14 @@
     transition: all 0.3s;     /* 모든 속성에 대해 0.3초 동안 트랜지션 효과 적용 */
   }
   
-  #btn_search_inactiveUser:hover {
+  #btn_search_reserve:hover {
     color: #fff;               /* 호버 시 텍스트 색상 */
     background-color: #96B6C5; /* 호버 시 배경 색상 */
   }
   
   #column,
   #query {
-    height: 38px; 
+    height: 38px;
   }
   
   #column {
@@ -137,43 +120,27 @@
   margin: 8% 15%;
 }
 
-  #user,
-  #inactiveUser,
-  #leaveUser {
-    margin-right: 10%; /* 각 버튼 사이의 간격 조절 */
-  }
-  
-  #inactiveUser a{
-    display: block;
-    padding: 15px;
-    background-color: #EEE0C9; /* 기본 배경 색상 */
-    text-decoration: none;
-    color: #404040;            /* 버튼 텍스트 색상 */
-    border-radius: 10px;         /* 둥근 모서리 */
-    font-size: medium;
-    font-weight: 500;
-  }
-  #user a,
-  #leaveUser a {
-    display: block;
-    padding: 15px;
-    background-color: #F1F0E8; /* 기본 배경 색상 */
-    text-decoration: none;
-    color: #404040;            /* 버튼 텍스트 색상 */
-    border-radius: 10px;         /* 둥근 모서리 */
-    font-size: medium;
-    font-weight: 500;
-  }
-  
-  #user a:hover,
-  #inactiveUser a:hover,
-  #leaveUser a:hover {
-    background-color: #ADC4CE; /* hover 시 배경 색상 지정 */
-    color: #fff;               /* hover 시 텍스트 색상 지정 */
-  }
 
 </style>
+<script th:inline="javascript">
 
+  $(() => {
+   fnRemoveMember();
+  })
+  
+  const fnRemoveMember = () => {
+    let removeResult = /*[[${removeResult}]]*/ null;
+    if(removeResult !== null){
+      if(reremoveResult === 1){
+      alert('회원이 탈퇴되었습니다.');
+      } else {
+      alert('회원이 탈퇴되지 않았습니다.');
+      }
+    }
+  }
+ 
+  
+</script>
 <body>
 	<div th:replace="~{/layout/header::header}"></div>
 	
@@ -184,13 +151,9 @@
 		  <div class="row">
 		    <div class="col-1">	      
 		    </div>
-		    <div class="col-10" style="border:1px gray dotted">
-		      	<!--/*여기에 작성/ 다 만들고 style 지워주세요  */-->
-		   
-		      
-		   
-		   
-		   
+        <div class="col-10" style="border:1px gray dotted">
+            <!--/*여기에 작성/ 다 만들고 style 지워주세요  */-->
+     
 		   
         		         
           <div class="second_main_wrap">
@@ -221,16 +184,13 @@
             
             <div class="split2">
                 
-              <!--/* 각 회원관리 페이지로 이동 가능한 상단 목록 */-->
+              <!--/* 각 상품관리 페이지로 이동 가능한 상단 목록 */-->
               <div class="listWrap2">
-                <div id="user">
-                  <a th:href="@{/manage/userList.do}">일반회원관리</a>
+                <div id="package">
+                  <a th:href="@{/manage/productList.do}">패키지</a>
                 </div>
-                <div id="inactiveUser">
-                  <a th:href="@{/manage/inactiveUserList.do}">휴면회원관리</a>
-                </div>
-                <div id="leaveUser">
-                  <a th:href="@{/manage/leaveUserList.do}">탈퇴회원관리</a>
+                <div id="hotel">
+                  <a th:href="@{/manage/hotelProductList.do}">호텔</a>
                 </div>
               </div>
                 
@@ -261,25 +221,25 @@
                         <tr>
                           <th scope="row" th:text="${u.userNo}"></th>
                           <td>
-                            <a th:href="@{/manage/inactiveDetail.do(userNo=${u.userNo})}" th:text="${u.email}"></a>
+                            <a th:href="@{/manage/userDetail.do(userNo=${u.userNo})}" th:text="${u.email}"></a>
                           </td>
                           <td>
-                            <a th:href="@{/manage/inactiveDetail.do(userNo=${u.userNo})}" th:text="${u.name}"></a>
+                            <a th:href="@{/manage/userDetail.do(userNo=${u.userNo})}" th:text="${u.name}"></a>
                           </td>
                           <td>
-                            <a th:href="@{/manage/inactiveDetail.do(userNo=${u.userNo})}" th:text="${u.mobile}"></a>
+                            <a th:href="@{/manage/userDetail.do(userNo=${u.userNo})}" th:text="${u.mobile}"></a>
                           </td>
                           <td>
-                            <a th:href="@{/manage/inactiveDetail.do(userNo=${u.userNo})}" th:if="${u.gender == 'F'}">여자</a>
-                            <a th:href="@{/manage/inactiveDetail.do(userNo=${u.userNo})}" th:if="${u.gender == 'M'}">남자</a>
+                            <a th:href="@{/manage/userDetail.do(userNo=${u.userNo})}" th:if="${u.gender == 'F'}">여자</a>
+                            <a th:href="@{/manage/userDetail.do(userNo=${u.userNo})}" th:if="${u.gender == 'M'}">남자</a>
                           </td>
                           <td>
-                            <a th:href="@{/manage/inactiveDetail.do(userNo=${u.userNo})}" th:if="${u.state == 0}">일반회원</a>
-                            <a th:href="@{/manage/inactiveDetail.do(userNo=${u.userNo})}" th:if="${u.state == 1}">네이버 간편로그인</a>
-                            <a th:href="@{/manage/inactiveDetail.do(userNo=${u.userNo})}" th:if="${u.state == 2}">카카오 간편로그인</a>
+                            <a th:href="@{/manage/userDetail.do(userNo=${u.userNo})}" th:if="${u.state == 0}">일반회원</a>
+                            <a th:href="@{/manage/userDetail.do(userNo=${u.userNo})}" th:if="${u.state == 1}">네이버 간편로그인</a>
+                            <a th:href="@{/manage/userDetail.do(userNo=${u.userNo})}" th:if="${u.state == 2}">카카오 간편로그인</a>
                           </td>
                           <td>
-                            <a th:href="@{/manage/inactiveDetail.do(userNo=${u.userNo})}" th:text="${u.joinedAt}"></a>
+                            <a th:href="@{/manage/userDetail.do(userNo=${u.userNo})}" th:text="${u.joinedAt}"></a>
                           </td>
                           <td>
                             <th:block th:if="${u.auth != 1}">관리자</th:block>
@@ -298,7 +258,7 @@
                     
                   <!--/* 검색기능 */-->
                   <div>
-                    <form id="frm_search" method="get" th:action="@{/manage/inactiveUserSearchList.do}" >
+                    <form id="frm_search" method="get" th:action="@{/manage/packageProductSearch.do}" >
                       <select name="column" id="column" >
                         <option value="USER_NO">회원번호</option>
                         <option value="EMAIL">이메일</option>
@@ -307,7 +267,7 @@
                         <option value="JOINED_AT">가입일</option>
                       </select>
                       <input type="text" name="query" id="query" placeholder="검색어 입력" >
-                      <button type="submit" id="btn_search_inactiveUser" >검색</button>
+                      <button type="submit" id="btn_search_reserve" >검색</button>
                     </form>
                   </div>
                 
@@ -318,15 +278,7 @@
             </div>      
           </div>
         
-
         
-		   
-		   
-		   
-		   
-		   
-		   
-		      	
 		      	
 		    </div>
 		    <div class="col-1">	      

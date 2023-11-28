@@ -14,12 +14,14 @@ public interface ManageMapper {
   public int getUserCount();
   public List<UserDto> getUserList(Map<String, Object> map);
 
-
-
   /* 회원 검색결과 목록 */
   public int getSearchUserCount(Map<String, Object> map);
   public List<UserDto> getSearchUser(Map<String, Object> map);
   
- 
+  
+  
+  
+  
+  
 
 }
