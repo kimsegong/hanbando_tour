@@ -224,6 +224,31 @@ public class UserServiceImpl implements UserService {
     
   }
   
+  /*
+  @Override
+  public String getKakaoLoginURL(HttpServletRequest request) throws Exception {
+    // 카카오로그인-1
+    // 카카오 로그인 연동 URL 생성하기를 위해 redirect_uri(URLEncoder), state(SecureRandom) 값의 전달이 필요하다.
+    // redirect_uri : 카카오로그인-2를 처리할 서버 경로를 작성한다.
+    // redirect_uri 값은 카카오 로그인 Callback URL에도 동일하게 등록해야 한다.
+    
+    String apiURL = "https://kauth.kakao.com/oauth/authorize";
+    String response_type = "code";
+    String redirect_uri = URLEncoder.encode("http://localhos:8080" + request.getContextPath() + "/user/kakao_join.html", "UTF-8");
+    String state = new BigInteger(130, new SecureRandom()).toString();
+  
+    StringBuilder sb = new StringBuilder();
+    sb.append(apiURL);
+    sb.append("?response_type=").append(response_type);
+    sb.append("&client_id=").append(client_id);
+    sb.append("&redirect_uri=").append(redirect_uri);
+    sb.append("&state=").append(state);
+    
+    return sb.toString();
+    
+  }
+  */
+  
   @Override
   public UserDto getUser(String email) {
     return userMapper.getUser(Map.of("email", email));

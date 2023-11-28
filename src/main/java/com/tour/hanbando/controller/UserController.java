@@ -72,7 +72,7 @@ public class UserController {
     model.addAttribute("referer", ret.isEmpty() ? referer : ret);
     // 네이버로그인-1
     model.addAttribute("naverLoginURL", userService.getNaverLoginURL(request));
-    //model.addAttribute("kakaoLoginURL", userService.getKakaoLoginURL(request));
+    model.addAttribute("kakaoLoginURL", userService.getKakaoLoginURL(request));
     return "user/login";
   }
   
