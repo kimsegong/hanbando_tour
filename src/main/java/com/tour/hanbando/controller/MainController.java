@@ -1,5 +1,7 @@
 package com.tour.hanbando.controller;
 
+import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.stereotype.Controller;
@@ -18,11 +20,15 @@ public class MainController {
   private final MainService mainService;
  
   @GetMapping("search.do")
-  public String mainSearch(HttpServletRequest request, Model model) {
-    model.add
+  public String mainSearch(String query, Model model) {
+    model.addAttribute("query", query);
     return "main/search";
   }
   
+  @GetMapping("searchlist.do")
+  public Map<String, Object> SearchList(HttpServletRequest request){
+    return mainService.SearchPackageList(request);
+  }
   
   
 }

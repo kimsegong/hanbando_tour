@@ -20,7 +20,6 @@
 <link rel="stylesheet" th:href="@{/css/common.css(ver=1.0)}" />
 <link rel="stylesheet" th:href="@{/css/ckeditor.css(ver=1.0)}" />
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-<script th:src="@{/js/headerSearch.js(ver=1.0)}"></script>
 <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
 <script src="https://cdn.ckeditor.com/ckeditor5/40.0.0/decoupled-document/ckeditor.js"></script>
 <script src="js/owl.carousel.min.js"></script> 
@@ -36,22 +35,22 @@
 		    <div class="col-8">
 		       <div class="header_search">
 				   	<form class="frm_search" method="get" th:action="@{/main/search.do}">
-				   	<input type="text" class="header_searchbar" name="search" placeholder="가고 싶은 곳을 입력하세요" ><button type="submit" class="btn_search">검색</button>
+				   	<input type="text" class="header_searchbar" name="query" placeholder="가고 싶은 곳을 입력하세요" ><button type="submit" class="btn_search">검색</button>
 				   	</form></div>
 		    </div>
 		    <div class="col-1">
 		      <div  class="user">
 						<a th:href="@{/user/login.form}"><i class="fa-regular fa-user fa-2xl" style="color: #96b6c5;"></i><div>&emsp;로그인&emsp;</div></a> 
-						<a href=""><i class="fa-regular fa-calendar-check fa-2xl" style="color: #96b6c5;"></i><div>내일정</div></a> 		 
+						<a th:href="@{/reserve/reserveList.do}"><i class="fa-regular fa-calendar-check fa-2xl" style="color: #96b6c5;"></i><div>내일정</div></a> 		 
 					</div>  
 					<div class="user">
             <a th:href="@{/user/mypage.form}"><i class="fa-solid fa-user fa-2xl" style="color: #96b6c5;"></i><div>마이페이지</div></a> 
-            <a href=""><i class="fa-regular fa-calendar-check fa-2xl" style="color: #96b6c5;"></i><div>내일정</div></a>   
+            <a th:href="@{/reserve/reserveList.do}"><i class="fa-regular fa-calendar-check fa-2xl" style="color: #96b6c5;"></i><div>내일정</div></a>   
             <a href=""><i class="fa-solid fa-right-from-bracket fa-2xl" style="color: #96b6c5;"></i><div>로그아웃</div></a>   
           </div>
 					<div class="user">
-            <a href=""><i class="fa-solid fa-user fa-2xl" style="color: #96b6c5;"></i><div>관리페이지</div></a> 
-            <a href=""><i class="fa-regular fa-calendar-check fa-2xl" style="color: #96b6c5;"></i><div>내일정</div></a>
+            <a th:href="@{/manage/userList.do}"><i class="fa-solid fa-user fa-2xl" style="color: #96b6c5;"></i><div>관리페이지</div></a> 
+            <a th:href="@{/reserve/reserveList.do}"><i class="fa-regular fa-calendar-check fa-2xl" style="color: #96b6c5;"></i><div>내일정</div></a>
             <a href=""><i class="fa-solid fa-right-from-bracket fa-2xl" style="color: #96b6c5;"></i><div>로그아웃</div></a>       
           </div>	
 		    </div>
@@ -95,7 +94,7 @@
           <a class="nav-link" href="#">이벤트</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#">고객센터</a>
+          <a class="nav-link" th:href="@{/notice/list.do}">고객센터</a>
         </li>
       </ul>
     </div>

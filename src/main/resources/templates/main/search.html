@@ -36,6 +36,8 @@
     </div>
     <div class="col-10" style="border:1px gray dotted" >
       
+      <input type="hidden" id="query" name="query" th:value="${query}">
+      
       
       <ul class="nav nav-tabs" id="myTab" role="tablist">
 			  <li class="nav-item" role="presentation">
@@ -108,16 +110,21 @@
         $('#hotel').addClass('show active');
       }
 	
-	 const fnGetPackageList = () => {
+	 // 전역 변수
+    var page = 1;
+    var totalPage = 0;
+    
+	 const fnsearchList = () => {
+     let query=$('#query').val();
       $.ajax({
         type: 'get',
-        url: '/main/getList.do', 
-        data: 'page=' + page,
+        url: '/main/searchlist.do', 
+        data: {page: page, query: query},
         dataType: 'json',
         success: (resData) => {  
           totalPage = resData.totalPage;
-          if (resData.packageList != null && resData.packageList.length > 0) {
-            $.each(resData.sPackage, (i, package) => {           
+          if (resData.sPackageList != null && resData.sPackageList.length > 0) {
+            $.each(resData.sPackageList, (i, package) => {           
               let str = '<div class="col-md-4">';
               str += '<div class="card">';
               str += '<img src="https://github.com/skal48/portfolio/blob/main/hanla.jpg?raw=true" style="height: 150px;" class="card-img-top" alt="Package Image">';
@@ -159,13 +166,13 @@
                   return;              // 마지막 페이지를 보여준 이후에는 아래 코드를 수행하지 말 것 
                 }
                 page++;
-                fnGetPackageList();
+                fnsearchList();
               }
           }, 200);  // 200밀리초(0.2초) 후 동작(시간은 임의로 조정 가능함)
         })
     }
 	
-	
+	fnsearchList();
 	fnScroll();
 	
 </script>      
