@@ -20,17 +20,33 @@ public class ManageController {
   
   /* 기존 회원 목록 페이지 */
   @GetMapping("/userList.do")
-  public String memberList(HttpServletRequest request, Model model) {
+  public String userList(HttpServletRequest request, Model model) {
     manageService.loadUserList(request, model);
     return "manage/userList";
   }
   
   /* 기존 회원 검색 */
   @GetMapping("/userSearchList.do")
-  public String memberSearchList(HttpServletRequest request, Model model) {
+  public String userSearchList(HttpServletRequest request, Model model) {
     manageService.loadSearchUserList(request, model);
     return "manage/userList";
   }
+  
+  /* 휴면 회원 목록 */
+  @GetMapping("/inactiveUserList.do")
+  public String inactiveUserList(HttpServletRequest request, Model model) {
+    return "manage/inactiveUserList";
+  }
+  
+  /* 휴면 회원 검색 */
+  
+  /* 탈퇴 회원 목록 */
+  @GetMapping("/leaveUserList.do")
+  public String leaveUserList(HttpServletRequest request, Model model) {
+    return "manage/leaveUserList";
+  }
+  
+  /* 탈퇴 회원 검색 */
   
   
 }
