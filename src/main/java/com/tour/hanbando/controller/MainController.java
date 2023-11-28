@@ -8,6 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.tour.hanbando.service.MainService;
 
@@ -25,9 +26,27 @@ public class MainController {
     return "main/search";
   }
   
-  @GetMapping("searchlist.do")
-  public Map<String, Object> SearchList(HttpServletRequest request){
+  @ResponseBody
+  @GetMapping("searchPackage.do")
+  public Map<String, Object> searchPackageList(HttpServletRequest request){
     return mainService.SearchPackageList(request);
+  }
+  
+  @ResponseBody
+  @GetMapping("searchHotel.do")
+  public Map<String, Object> searchHotelList(HttpServletRequest request){
+    return mainService.SearchHotelList(request);
+  }
+  
+  @ResponseBody
+  @GetMapping("getBest.do")
+  public Map<String, Object> bestPackage(){
+    return mainService.getBestPackage();
+  }
+  @ResponseBody
+  @GetMapping("getTheme.do")
+  public Map<String, Object> themePackage(){
+    return mainService.getThemePackage();
   }
   
   
