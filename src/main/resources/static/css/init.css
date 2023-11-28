@@ -1,17 +1,13 @@
 @charset "UTF-8";
 
+@import url('https://webfontworld.github.io/TheJamsil/TheJamsil.css');
 @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css');
-@font-face {
-    font-family: 'TheJamsil5Bold';
-    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2302_01@1.0/TheJamsil5Bold.woff2') format('woff2');
-    font-weight: 700;
-    font-style: normal;
-}
+
 
 * {
-  font-family: 'TheJamsil5Bold';
-  font-weight: 100;
-  color: #333333;
+  font-family: 'TheJamsil';
+  color:#333333;
+  font-weight: 300;
 }
 div, ul, li, ol {
   padding: 0;
