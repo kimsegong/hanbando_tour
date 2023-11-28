@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 
 import com.tour.hanbando.dao.ManageMapper;
+import com.tour.hanbando.dao.UserMapper;
 import com.tour.hanbando.dto.UserDto;
 import com.tour.hanbando.util.MyPageUtils;
 import com.tour.hanbando.util.MySecurityUtils;
@@ -23,6 +24,7 @@ import lombok.RequiredArgsConstructor;
 @Service
 public class ManageServiceImpl implements ManageService {
 
+  private final UserMapper userMapper;
   private final ManageMapper manageMapper;
   private final MyPageUtils myPageUtils;
   private final MySecurityUtils mySecurityUtils;
@@ -96,6 +98,19 @@ public class ManageServiceImpl implements ManageService {
     model.addAttribute("beginNo", total - (page - 1) * display);
     model.addAttribute("total", total);
     
+  }
+  
+  /**
+   * 기존 회원 상세
+   * 
+   * @author 심희수
+   * @param userNo 회원번호
+   * @return 회원번호를 Map에 담아서 반환
+   */
+  @Transactional(readOnly=true)
+  @Override
+  public UserDto getUser(int userNo) {
+    return userMapper.getUser(Map.of("userNo", userNo));
   }
   
   
