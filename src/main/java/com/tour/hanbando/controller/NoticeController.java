@@ -33,6 +33,10 @@ public class NoticeController {
     return "notice/write";
   }
   
+  @PostMapping("addNotice.do")
+  public String addNotice() {
+    return "redirect:/notice/list.do";
+  }
   
   
   
