@@ -104,7 +104,7 @@
     color: #96B6C5;
   }
   
-  #btn_search_user {
+  #btn_search_inactiveUser {
     height: 38px; 
     color: #96B6C5; /* 텍스트 색상 */
     background-color: #fff; /* 기본 배경 색상 */
@@ -113,7 +113,7 @@
     transition: all 0.3s; /* 모든 속성에 대해 0.3초 동안 트랜지션 효과 적용 */
   }
   
-  #btn_search_user:hover {
+  #btn_search_inactiveUser:hover {
     color: #fff; /* 호버 시 텍스트 색상 */
     background-color: #96B6C5; /* 호버 시 배경 색상 */
   }
@@ -145,7 +145,7 @@
     margin-right: 10%; /* 각 버튼 사이의 간격 조절 */
   }
   
-  #user a{
+  #inactiveUser a{
     display: block;
     padding: 15px;
     background-color: #EEE0C9; /* 기본 배경 색상 */
@@ -154,7 +154,7 @@
     border-radius: 10px;         /* 둥근 모서리 */
     font-size: medium;
   }
-  #inactiveUser a,
+  #user a,
   #leaveUser a {
     display: block;
     padding: 15px;
@@ -202,7 +202,12 @@
 		  <div class="row">
 		    <div class="col-1">	      
 		    </div>
-		    <div class="col-10">
+		    <div class="col-10" style="border:1px gray dotted">
+		      	<!--/*여기에 작성/ 다 만들고 style 지워주세요  */-->
+		   
+		      
+		   
+		   
 		   
 		   
         		         
@@ -311,7 +316,7 @@
                     
                   <!--/* 검색기능 */-->
                   <div>
-                    <form id="frm_search" method="get" th:action="@{/manage/userSearchList.do}" >
+                    <form id="frm_search" method="get" th:action="@{/manage/inactiveUserSearchList.do}" >
                       <select name="column" id="column" >
                         <option value="USER_NO">회원번호</option>
                         <option value="EMAIL">이메일</option>
@@ -320,7 +325,7 @@
                         <option value="JOINED_AT">가입일</option>
                       </select>
                       <input type="text" name="query" id="query" placeholder="검색어 입력" >
-                      <button type="submit" id="btn_search_user" >검색</button>
+                      <button type="submit" id="btn_search_inactiveUser" >검색</button>
                     </form>
                   </div>
                 
@@ -331,7 +336,15 @@
             </div>      
           </div>
         
+
         
+		   
+		   
+		   
+		   
+		   
+		   
+		      	
 		      	
 		    </div>
 		    <div class="col-1">	      
