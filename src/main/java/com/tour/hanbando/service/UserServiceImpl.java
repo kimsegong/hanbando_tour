@@ -8,9 +8,11 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.security.SecureRandom;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
+import javax.mail.Message;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -28,6 +30,7 @@ import com.tour.hanbando.util.MyJavaMailUtils;
 import com.tour.hanbando.util.MySecurityUtils;
 
 import lombok.RequiredArgsConstructor;
+import net.nurigo.java_sdk.exceptions.CoolsmsException;
 
 @Transactional
 @RequiredArgsConstructor
@@ -40,6 +43,34 @@ public class UserServiceImpl implements UserService {
   
   private final String client_id = "RTJMyHb54a63lvLzPh7A";
   private final String client_secret = "0xR9yv0oo3";
+  
+ 
+  //인증번호
+  @Override
+  public void certifiedPhoneNumber(String phoneNumber, String cerNum) throws Exception {
+    
+      String api_key = "NCS9YET2CLIIXCUL";
+      String api_secret = "CTWEHCPFCPLEM2AVYQY02UDN8LXROBCQ";
+      //Message coolsms = new Message(api_key, api_secret);
+
+      HashMap<String, String> params = new HashMap<>();
+      params.put("to", phoneNumber);    // 수신전화번호
+      params.put("from", "본인 휴대번호");    // 발신전화번호
+      params.put("type", "SMS");
+      params.put("text", "빵야빵야(屋) 인증번호 " + "["+cerNum+"]" + "를 입력하세요.");
+      params.put("app_version", "test app 1.2"); // application name and version
+
+     // try {
+          //JSONObject obj = coolsms.send(params);  // 문자 보내기
+          //System.out.println(obj.toString());
+      //} catch (CoolsmsException e) {  // 문자전송 실패 시 메세지
+          //System.out.println(e.getMessage());
+          //System.out.println(e.getCode());
+      //}
+  }
+    
+  
+  
   
   @Override
   public void login(HttpServletRequest request, HttpServletResponse response) throws Exception {
