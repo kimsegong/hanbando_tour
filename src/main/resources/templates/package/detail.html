@@ -231,7 +231,7 @@
          <span class="badge text-bg-warning" th:text="${packageDto.miniTwo}"></span>
          <span class="badge text-bg-secondary" th:text="${packageDto.miniThree}"></span>
        </div>
-       <button class="btn btn-kong"  style="margin-left: 300px; margin-top: 50px;">
+       <button class="btn btn-kong"  style="margin-left: 200px; margin-top: 50px;">
         <div id="heartButton" style="color: white; cursor: pointer;">찜하기♥</div>
        </button>
        <button class="btn btn-kong1"  style="margin-top: 50px;">
@@ -252,6 +252,9 @@
          location.href='/reserve/write.form?packageNo=${packageDto.packageNo}';
       })
    }
+   
+   
+   
    
    fnGoReserve();
   </script>
