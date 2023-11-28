@@ -12,7 +12,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-import javax.mail.Message;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -30,7 +29,11 @@ import com.tour.hanbando.util.MyJavaMailUtils;
 import com.tour.hanbando.util.MySecurityUtils;
 
 import lombok.RequiredArgsConstructor;
-import net.nurigo.java_sdk.exceptions.CoolsmsException;
+import net.nurigo.sdk.NurigoApp;
+import net.nurigo.sdk.message.model.Message;
+import net.nurigo.sdk.message.request.SingleMessageSendingRequest;
+import net.nurigo.sdk.message.response.SingleMessageSentResponse;
+import net.nurigo.sdk.message.service.DefaultMessageService;
 
 @Transactional
 @RequiredArgsConstructor
@@ -43,6 +46,7 @@ public class UserServiceImpl implements UserService {
   
   private final String client_id = "RTJMyHb54a63lvLzPh7A";
   private final String client_secret = "0xR9yv0oo3";
+  private DefaultMessageService messageService;
   
  
   //인증번호
@@ -51,22 +55,26 @@ public class UserServiceImpl implements UserService {
     
       String api_key = "NCS9YET2CLIIXCUL";
       String api_secret = "CTWEHCPFCPLEM2AVYQY02UDN8LXROBCQ";
+      messageService = NurigoApp.INSTANCE.initialize(api_key, api_secret,"https://api.coolsms.co.kr");
+      
       //Message coolsms = new Message(api_key, api_secret);
-
+      /*
       HashMap<String, String> params = new HashMap<>();
       params.put("to", phoneNumber);    // 수신전화번호
       params.put("from", "본인 휴대번호");    // 발신전화번호
       params.put("type", "SMS");
       params.put("text", "빵야빵야(屋) 인증번호 " + "["+cerNum+"]" + "를 입력하세요.");
       params.put("app_version", "test app 1.2"); // application name and version
-
-     // try {
-          //JSONObject obj = coolsms.send(params);  // 문자 보내기
-          //System.out.println(obj.toString());
-      //} catch (CoolsmsException e) {  // 문자전송 실패 시 메세지
-          //System.out.println(e.getMessage());
-          //System.out.println(e.getCode());
-      //}
+  */
+      Message message = new Message();
+      // 발신번호 및 수신번호는 반드시 01012345678 형태로 입력되어야 합니다.
+      message.setFrom("01062316858");
+      message.setTo(phoneNumber);
+      message.setText("한글 45자, 영자 90자 이하 입력되면 자동으로 SMS타입의 메시지가 추가됩니다.");
+      
+      
+      SingleMessageSentResponse response = this.messageService.sendOne(new SingleMessageSendingRequest(message));
+      System.out.println(response);
   }
     
   
