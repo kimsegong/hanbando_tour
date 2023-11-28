@@ -72,7 +72,7 @@
           if (resData.bestPackageList != null && resData.bestPackageList.length > 0) {
             $.each(resData.bestPackageList, (i, package) => {  
               let str = '<div class="mycard position-relative">';
-                  str += '<a th:href="' + '/package/increseHit.do?packageNo=' + package.packageNo+'">';
+                  str += '<a href="' + '/package/increseHit.do?packageNo=' + package.packageNo+'">';
                   str += '<img src="https://github.com/skal48/portfolio/blob/main/hanla.jpg?raw=true" class="card_image" alt="Package Image">';
                   str += '<h4>'+package.packageTitle+'</h4>';
                   str += '<h4>'+package.price+'</h4></a>';
@@ -93,7 +93,7 @@
           if (resData.themePackageList != null && resData.themePackageList.length > 0) {
             $.each(resData.themePackageList, (i, package) => {  
               let str = '<div class="mycard position-relative">';
-                  str += '<a th:href="' + '/package/increseHit.do?packageNo=' + package.packageNo+'">';
+                  str += '<a href="' + '/package/increseHit.do?packageNo=' + package.packageNo+'">';
                   str += '<img src="https://github.com/skal48/portfolio/blob/main/hanla.jpg?raw=true" class="card_image" alt="Package Image">';
                   str += '<h4>'+package.packageTitle+'</h4>';
                   str += '<h4>'+package.price+'</h4></a>';
