@@ -127,15 +127,15 @@
             <hr>
             <div>
               <form id="frm_btn" method="post">
-                <input type="hidden" name="reserveNo" value="${reserve.reserveNo}">
-                <input type="hidden" name="userNo" value="${session.user.userNo}">
-                <input type="hidden" name="request" value="${reserve.requestedTerm}">
-                <input type="hidden" name="pickupLoc" value="${reserve.departureLoc}">
-                <div><button class="btn btn-primary" type="button">결제하기</button></div>
+                <input type="hidden" name="reserveNo" th:value="${reserve.reserveNo}">
+                <input type="hidden" name="userNo" th:value="${session.user.userNo}">
+                <input type="hidden" name="request" th:value="${reserve.requestedTerm}">
+                <input type="hidden" name="pickupLoc" th:value="${reserve.departureLoc}">
+                <div th:if="${reserve.reserveStatus == 0}"><button class="btn btn-primary" type="button">결제하기</button></div>
                 <button class="btn btn-success" type="button" th:onclick="|location.href='@{/package/list.do}'|">다른상품 예약하러가기</button>
                 <button type="button" th:onclick="|location.href='@{/reserve/reserveList.do(userNo=${reserve.userDto.userNo})}'|" class="btn btn-success">나의예약목록</button>
-                <button class="btn btn-outline-secondary" type="button" id="btn_res_modify">예약 수정하러가기</button>
-                <button class="btn btn-outline-danger" type="button" id="btn_res_cancel">예약 취소하기</button>
+                <button th:if="${reserve.reserveStatus != 1}" class="btn btn-outline-secondary" type="button" id="btn_res_modify">예약 수정하러가기</button>
+                <button th:if="${reserve.reserveStatus != 2}" class="btn btn-outline-danger" type="button" id="btn_res_cancel">예약 취소하기</button>
               </form>
             </div>
             
@@ -206,8 +206,35 @@
       })
     }
   
+    function fnChkCancel(){
+      $('#btn_res_cancel').click(function(){
+        if(confirm('예약을 취소하면 여행자 정보도 함께 삭제됩니다. 취소할까요?')){
+          $('#frm_btn').attr('action', '/reserve/delete.do')
+          $('#frm_btn').submit();
+        } 
+      })
+    }
+    
+    function fnCheckCurrUser(){
+      let user = /*[[${session.user}]]*/ null;
+      if(user === null){
+        if(confirm('로그인이 필요한 기능입니다. 로그인 할까요?')){
+          location.href = '/user/login.form';
+        }
+      } else if('[[${session.user.userNo}]]' !== '[[${reserve.userDto.userNo}]]') {
+        alert('내 예약 목록으로 이동합니다.')
+        location.href = '/reserve/reserveList.do?userNo=[[${session.user.userNo}]]';
+        return;
+      } else {
+        return;
+      }
+    }
+  
+  
     fnGoModify();
     fnShowTourist();
+    fnChkCancel();
+    fnCheckCurrUser();
   </script>
 
 
