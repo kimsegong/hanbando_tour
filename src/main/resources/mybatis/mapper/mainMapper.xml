@@ -4,7 +4,7 @@
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.tour.hanbando.dao.MainMapper">
-	
+  
 	<resultMap type="PackageDto" id="PackageMap">
           <id column="PACKAGE_NO" property="packageNo"/>
           <result column="PACKAGE_TITLE" property="packageTitle"/>
@@ -36,6 +36,7 @@
           <result column="NAME" property="name"/>
       </association>
     </resultMap>
+    
     
 	<select id="searchPackageList" parameterType="Map" resultType="PackageDto">
 		SELECT
@@ -107,6 +108,75 @@
 		 WHERE PACKAGE_TITLE LIKE '%' || #{query} || '%'
 
 	</select>
+	
+	<select id="searchHotelList" parameterType="Map" resultType="HotelDto">
+    SELECT  H.HOTEL_NO,
+            H.REGION_NO,
+            H.HOTEL_NAME,
+            H.HOTEL_ADDRESS,
+            H.LATITUDE,
+            H.LONGITUDE,
+            H.HOTEL_DETAIL,
+            H.PHONE_NUMBER,
+            H.H_EMAIL,
+            H.CREATED_AT,
+            H.MODIFIED_AT,
+            H.HIT,
+            H.STATUS,
+            H.RECOMMEND_STATUS,
+            HI.THUMBNAIL,
+            HI.FILESYSTEM_NAME,
+            HI.IMAGE_PATH
+     FROM (  
+        SELECT
+            HT.HOTEL_NO,
+            HT.REGION_NO,
+            HT.HOTEL_NAME,
+            HT.HOTEL_ADDRESS,
+            HT.LATITUDE,
+            HT.LONGITUDE,
+            HT.HOTEL_DETAIL,
+            HT.PHONE_NUMBER,
+            HT.H_EMAIL,
+            HT.CREATED_AT,
+            HT.MODIFIED_AT,
+            HT.HIT,
+            HT.STATUS,
+            HT.RECOMMEND_STATUS,
+            ROW_NUMBER() OVER (ORDER BY HOTEL_NO DESC) AS RN
+         FROM
+           HOTEL_T HT
+         WHERE HOTEL_NAME LIKE '%' || #{query} || '%'  
+         ) H
+         LEFT JOIN HOTEL_IMAGE_T HI ON H.HOTEL_NO = HI.HOTEL_NO 
+         LEFT JOIN REGION_T R ON H.REGION_NO = R.REGION_NO
+         WHERE (H.RN BETWEEN #{begin} AND #{end}) AND HI.THUMBNAIL = 1
+  </select>
+	<select id="countSearchHotel" parameterType="Map" resultType="int">
+    SELECT COUNT(*)
+      FROM HOTEL_T
+     WHERE HOTEL_NAME LIKE '%' || #{query} || '%'
+  </select>
+	
+	<select id="getBestPackage" resultType="PackageDto">
+    SELECT A.PACKAGE_NO, A.PACKAGE_TITLE, A.PRICE, SP, RN
+      FROM (SELECT P.PACKAGE_NO, P.PACKAGE_TITLE, P.PRICE, SUM(R.RESERVE_PERSON) AS SP, ROW_NUMBER() OVER (ORDER BY SUM(R.RESERVE_PERSON) DESC NULLS LAST) AS RN 
+              FROM PACKAGE_T P LEFT JOIN RESERVE_T R 
+                ON P.PACKAGE_NO = R.PACKAGE_NO 
+             GROUP BY P.PACKAGE_NO, P.PACKAGE_TITLE, P.PRICE ) A 
+      WHERE RN BETWEEN 1 AND 4  
+  </select>
+	<select id="countTheme" resultType="int">
+    SELECT COUNT(*)
+      FROM THEME_T
+  </select>
+  <select id="getThemePackage" parameterType="int" resultMap="PackageMap">
+    SELECT P.PACKAGE_NO, P.PACKAGE_TITLE, P.PRICE, T.THEME_NO, T.THEME_NAME  
+      FROM PACKAGE_T P LEFT OUTER JOIN THEME_T T
+        ON P.THEME_NO = T.THEME_NO
+     WHERE T.THEME_NO = #{themeNo}     
+  </select>
+	
  
 </mapper>
 
