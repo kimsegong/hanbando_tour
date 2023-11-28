@@ -34,7 +34,7 @@ public class UserController {
  //인증번호
   @ResponseBody
   @GetMapping("/execute.form")
-  public String sendSMS(String userPhoneNum) {
+  public String sendSMS(@RequestParam String userPhoneNum) throws Exception{
       // 5자리 인증번호 만들기
       Random random  = new Random();
       String numStr = "";
@@ -47,7 +47,7 @@ public class UserController {
       System.out.println("인증번호 : " + numStr);
 
       // 문자 보내기
-     // userService.certifiedPhoneNumber(userPhoneNum , numStr);
+      userService.certifiedPhoneNumber(userPhoneNum , numStr);
       return numStr;    // 인증번호 반환
   }
 
@@ -72,7 +72,7 @@ public class UserController {
     model.addAttribute("referer", ret.isEmpty() ? referer : ret);
     // 네이버로그인-1
     model.addAttribute("naverLoginURL", userService.getNaverLoginURL(request));
-    model.addAttribute("kakaoLoginURL", userService.getKakaoLoginURL(request));
+    //model.addAttribute("kakaoLoginURL", userService.getKakaoLoginURL(request));
     return "user/login";
   }
   
