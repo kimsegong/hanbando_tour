@@ -177,6 +177,28 @@
      WHERE T.THEME_NO = #{themeNo}     
   </select>
 	
+	<select id="getBannerImage" resultType="BannerImageDto">
+    SELECT BANNER_NO, ORIGINAL_NAME, FILESYSTEM_NAME, BANNER_PATH, STATE, LINKED_ADDRESS
+      FROM BANNER_IMAGE_T
+     ORDER BY BANNER_NO DESC
+  </select>
  
-</mapper>
+ <select id="getNoBannerImage" parameterType="int" resultType="BannerImageDto">
+    SELECT BANNER_NO, ORIGINAL_NAME, FILESYSTEM_NAME, BANNER_PATH, STATE, LINKED_ADDRESS
+      FROM BANNER_IMAGE_T
+     WHERE BANNER_NO = #{bannerNo} 
+ </select> 
+ 
+ <update id="updateBannerImage" parameterType="BannerImageDto">
+   UPDATE BANNER_IMAGE_T
+      SET ORIGINAL_NAME = #{originalName},
+          BANNER_PATH = #{bannerPath},
+          FILESYSTEM_NAME = #{filesystemName},
+          STATE = #{state} 
+    WHERE BANNER_NO = #{bannerNo}     
+ </update>
+ 
+ 
+   
+ </mapper>
 
