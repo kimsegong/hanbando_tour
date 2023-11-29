@@ -7,8 +7,11 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.tour.hanbando.service.MainService;
 
@@ -48,6 +51,21 @@ public class MainController {
   public Map<String, Object> themePackage(){
     return mainService.getThemePackage();
   }
+  
+  @GetMapping("/bannerList.do")
+  public String banner(Model model) {
+    mainService.bannerList(model);
+    return "manage/bannerList";
+  }
+  
+  @PostMapping("bannerAdd.do")
+  public String addBanner(MultipartHttpServletRequest multipartRequest
+      , RedirectAttributes redirectAttributes) throws Exception {
+    
+    redirectAttributes.addFlashAttribute("modifyResult", mainService.addBannerImage(multipartRequest));
+    return "redirect:/main/bannerList.do";
+  }
+  
   
   
 }
