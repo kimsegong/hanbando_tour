@@ -31,6 +31,40 @@
              WHERE ${column} LIKE '%' || #{query} || '%')
      WHERE RN BETWEEN #{begin} AND #{end}
   </select>
+  
+  
+  <!-- 휴면회원 관리 목록 -->
+  <select id="getInactiveCount" resultType="int">
+    SELECT COUNT(*)
+      FROM INACTIVE_USER_T
+  </select>
+  <select id="getInactiveList" parameterType="Map" resultType="InactiveUserDto">
+    SELECT USER_NO, EMAIL, PW, NAME, GENDER, MOBILE, POSTCODE, ROAD_ADDRESS, JIBUN_ADDRESS, DETAIL_ADDRESS, AGREE, STATE, AUTH, PW_MODIFIED_AT, JOINED_AT, INACTIVED_AT
+      FROM (SELECT ROW_NUMBER() OVER(ORDER BY INACTIVED_AT DESC) AS RN, USER_NO, EMAIL, PW, NAME, GENDER, MOBILE, POSTCODE, ROAD_ADDRESS, JIBUN_ADDRESS, DETAIL_ADDRESS, AGREE, STATE, AUTH, PW_MODIFIED_AT, JOINED_AT, INACTIVED_AT
+              FROM INACTIVE_USER_T)
+     WHERE RN BETWEEN #{begin} AND #{end}
+  </select>
+  
+  <!-- 휴면회원 검색결과 목록 -->
+  <select id="getSearchInactiveCount" parameterType="Map" resultType="int">
+    SELECT COUNT(*)
+      FROM INACTIVE_USER_T
+     WHERE ${column} LIKE '%' || #{query} || '%'
+  </select>
+  <select id="getSearchInactive" parameterType="Map" resultType="InactiveUserDto">
+    SELECT USER_NO, EMAIL, PW, NAME, GENDER, MOBILE, POSTCODE, ROAD_ADDRESS, JIBUN_ADDRESS, DETAIL_ADDRESS, AGREE, STATE, AUTH, PW_MODIFIED_AT, JOINED_AT, INACTIVED_AT
+      FROM (SELECT ROW_NUMBER() OVER(ORDER BY INACTIVED_AT DESC) AS RN, USER_NO, EMAIL, PW, NAME, GENDER, MOBILE, POSTCODE, ROAD_ADDRESS, JIBUN_ADDRESS, DETAIL_ADDRESS, AGREE, STATE, AUTH, PW_MODIFIED_AT, JOINED_AT, INACTIVED_AT
+              FROM INACTIVE_USER_T
+             WHERE ${column} LIKE '%' || #{query} || '%')
+     WHERE RN BETWEEN #{begin} AND #{end}
+  </select>
+  
+  <!-- 휴면 회원 상세 -->
+  <select id="getInactiveUser" parameterType="int" resultType="InactiveUserDto">
+    SELECT USER_NO, EMAIL, PW, NAME, GENDER, MOBILE, POSTCODE, ROAD_ADDRESS, JIBUN_ADDRESS, DETAIL_ADDRESS, AGREE, STATE, AUTH, PW_MODIFIED_AT, JOINED_AT, INACTIVED_AT
+      FROM INACTIVE_USER_T
+     WHERE USER_NO = #{userNo}
+  </select>
 
   
   

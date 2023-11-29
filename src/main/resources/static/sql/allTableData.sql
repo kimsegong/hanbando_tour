@@ -5,6 +5,7 @@ DROP SEQUENCE USER_SEQ;
 DROP SEQUENCE REGION_SEQ;
 DROP SEQUENCE THEME_SEQ;
 DROP SEQUENCE PACKAGE_SEQ;
+DROP SEQUENCE PRODUCT_IMAGE_SEQ;
 
 DROP SEQUENCE BANNER_SEQUENCE;
 
@@ -15,7 +16,6 @@ DROP SEQUENCE PAYMENT_SEQ;
 DROP SEQUENCE TOURIST_SEQ;
 DROP SEQUENCE RESERVE_SEQ;
 
-DROP SEQUENCE PRODUCT_IMAGE_SEQ;
 DROP SEQUENCE HEART_SEQ;
 
 DROP SEQUENCE REVIEW_SEQ;
@@ -34,6 +34,7 @@ CREATE SEQUENCE USER_SEQ NOCACHE;
 CREATE SEQUENCE REGION_SEQ  NOCACHE;
 CREATE SEQUENCE THEME_SEQ   NOCACHE;
 CREATE SEQUENCE PACKAGE_SEQ NOCACHE;
+CREATE SEQUENCE PRODUCT_IMAGE_SEQ NOCACHE;
 
 CREATE SEQUENCE BANNER_SEQUENCE NOCACHE;
 
@@ -44,7 +45,6 @@ CREATE SEQUENCE RESERVE_SEQ NOCACHE;
 CREATE SEQUENCE TOURIST_SEQ NOCACHE;
 CREATE SEQUENCE PAYMENT_SEQ NOCACHE;
 
-CREATE SEQUENCE PRODUCT_IMAGE_SEQ NOCACHE;
 CREATE SEQUENCE HEART_SEQ         NOCACHE;
 
 CREATE SEQUENCE REVIEW_SEQ NOCACHE;
@@ -71,9 +71,8 @@ DROP TABLE INQUIRY_T;
 -- 리뷰 테이블 삭제
 DROP TABLE REVIEW_T;
 
--- 찜/상품 이미지 테이블 삭제
+-- 찜 테이블 삭제
 DROP TABLE HEART_T;
-DROP TABLE PRODUCT_IMAGE_T;
 
 -- 예약/결제 테이블 삭제
 DROP TABLE PAYMENT_T;
@@ -92,6 +91,7 @@ DROP TABLE HOTEL_T;
 DROP TABLE BANNER_IMAGE_T;
 
 -- 패키지 관련 테이블 삭제
+DROP TABLE PRODUCT_IMAGE_T;
 DROP TABLE PACKAGE_T;
 DROP TABLE THEME_T;
 DROP TABLE REGION_T;
@@ -172,7 +172,7 @@ CREATE TABLE REGION_T (
     CONSTRAINT PK_REGION PRIMARY KEY(REGION_NO)
 );
 
--- ************************************ 패키지 상품 *****************************
+-- ************************************ 테마 ************************************
 -- 테마 카테고리 테이블
 CREATE TABLE THEME_T (
     THEME_NO   NUMBER             NOT NULL,  -- 테마 번호 (PK)
@@ -180,6 +180,7 @@ CREATE TABLE THEME_T (
     CONSTRAINT PK_THEME PRIMARY KEY(THEME_NO)
 );
 
+-- ************************************ 패키지 상품 *****************************
 -- 패키지 상품 테이블
 CREATE TABLE PACKAGE_T (
 	PACKAGE_NO	        NUMBER	            NOT NULL,  -- 패키지 번호              (PK)
@@ -205,6 +206,17 @@ CREATE TABLE PACKAGE_T (
     CONSTRAINT FK_USER_PACKAGE     FOREIGN KEY(USER_NO)     REFERENCES USER_T(USER_NO)         ON DELETE SET NULL,
     CONSTRAINT FK_REGION_PACKAGE   FOREIGN KEY(REGION_NO)   REFERENCES REGION_T(REGION_NO)     ON DELETE SET NULL,
     CONSTRAINT FK_THEME_PACKAGE    FOREIGN KEY(THEME_NO)    REFERENCES THEME_T(THEME_NO)       ON DELETE SET NULL
+);
+
+-- 패키지 상품 이미지 테이블
+CREATE TABLE PRODUCT_IMAGE_T (
+	IMAGE_NO	    NUMBER	            NOT NULL,  -- 이미지 번호  (PK)
+	PACKAGE_NO	    NUMBER	            NULL,      -- 패키지 번호  (FK)
+	THUMBNAIL	    NUMBER          	NULL,      -- 썸네일
+	FILESYSTEM_NAME	VARCHAR2(300 BYTE)	NOT NULL,  -- 파일이름
+	IMAGE_PATH	    VARCHAR2(300 BYTE)	NOT NULL,  -- 파일경로
+    CONSTRAINT PK_PRODUCT_IMAGE  PRIMARY KEY(IMAGE_NO),
+    CONSTRAINT FK_PACKAGE_IMAGE  FOREIGN KEY(PACKAGE_NO)  REFERENCES PACKAGE_T(PACKAGE_NO) ON DELETE CASCADE
 );
 
 -- ************************************ 배너 ************************************
@@ -296,14 +308,14 @@ CREATE TABLE ROOM_FEATURE_T (
 
 -- 객실 기간 별 가격 테이블
 CREATE TABLE ROOMPRICE_T (
-    ROOM_NO          NUMBER              NOT NULL,  -- 방번호    (PK/FK)
-    BI_PRICE         NUMBER              NULL,      -- 비성수기 요금
+    ROOM_NO          NUMBER              NOT NULL,  -- 객실번호    (PK/FK)
+    BI_PRICE         NUMBER              NULL,      -- 비성수기 금액
     BS_DATE          VARCHAR2(100 BYTE)  NULL,      -- 비성수기 시작
     BE_DATE          VARCHAR2(100 BYTE)  NULL,      -- 비성수기 끝
-    JUN_PRICE        NUMBER              NULL,      -- 비성수기 요금
+    JUN_PRICE        NUMBER              NULL,      -- 준성수기 금액
     JS_DATE          VARCHAR2(100 BYTE)  NULL,      -- 준성수기 시작
     JE_DATE          VARCHAR2(100 BYTE)  NULL,      -- 준성수기 끝
-    SUNG_PRICE       NUMBER              NULL,      -- 비성수기 요금
+    SUNG_PRICE       NUMBER              NULL,      -- 비성수기 금액
     SS_DATE          VARCHAR2(100 BYTE)  NULL,      -- 성수기 시작
     SE_DATE          VARCHAR2(100 BYTE)  NULL,      -- 성수기 끝
     CONSTRAINT FK_ROOM_PRICE FOREIGN KEY(ROOM_NO) REFERENCES ROOMTYPE_T(ROOM_NO) ON DELETE CASCADE
@@ -350,35 +362,23 @@ CREATE TABLE TOURIST_T (
 -- ************************************ 결제 ************************************
 -- 결제 테이블
 CREATE TABLE PAYMENT_T (
-    PAYMENT_NO   NUMBER NOT NULL,          -- 결제번호 (PK)
-    IMP_UID      VARCHAR2(30 BYTE)  NULL,  -- 결제고유번호
-    PAY_YN       VARCHAR2(10 BYTE)  NULL,  -- 결제성공여부
-    PAY_METHOD   VARCHAR2(30 BYTE)  NULL,  -- 결제수단
-    PAID_AMOUNT  NUMBER             NULL,  -- 결제금액
-    PAID_AT      VARCHAR2(30 BYTE)  NULL,  -- 결제승인시각
-    MERCHANT_UID VARCHAR2(30 BYTE)  NULL,  -- 주문번호
-    BUYER_NAME   VARCHAR2(20 BYTE)  NULL,  -- 구매자이름
-    BUYER_EMAIL  VARCHAR2(100 BYTE) NULL,  -- 구매자이메일
-    ERROR_MSG    VARCHAR2(300 BYTE) NULL,  -- 에러메시지
-    PAY_STATUS   VARCHAR2(10 BYTE)  NULL,  -- 결제상태 ready,paid,failed(api응답으로 오는 값임)
-    RESERVE_NO   NUMBER             NULL,  -- 예약번호 (FK)
+    PAYMENT_NO   NUMBER             NOT NULL,  -- 결제번호 (PK)
+    IMP_UID      VARCHAR2(30 BYTE)  NULL,      -- 결제고유번호
+    PAY_YN       VARCHAR2(10 BYTE)  NULL,      -- 결제성공여부
+    PAY_METHOD   VARCHAR2(30 BYTE)  NULL,      -- 결제수단
+    PAID_AMOUNT  NUMBER             NULL,      -- 결제금액
+    PAID_AT      VARCHAR2(30 BYTE)  NULL,      -- 결제승인시각
+    MERCHANT_UID VARCHAR2(30 BYTE)  NULL,      -- 주문번호
+    BUYER_NAME   VARCHAR2(20 BYTE)  NULL,      -- 구매자이름
+    BUYER_EMAIL  VARCHAR2(100 BYTE) NULL,      -- 구매자이메일
+    ERROR_MSG    VARCHAR2(300 BYTE) NULL,      -- 에러메시지
+    PAY_STATUS   VARCHAR2(10 BYTE)  NULL,      -- 결제상태 ready,paid,failed(api응답으로 오는 값임)
+    RESERVE_NO   NUMBER             NULL,      -- 예약번호 (FK)
     CONSTRAINT PK_PAY PRIMARY KEY(PAYMENT_NO),
     CONSTRAINT FK_RES_PAY FOREIGN KEY(RESERVE_NO) REFERENCES RESERVE_T(RESERVE_NO) ON DELETE SET NULL
 );
 
--- ************************************ 이미지/찜 ************************************
--- 상품 이미지 테이블
-CREATE TABLE PRODUCT_IMAGE_T (
-	IMAGE_NO	    NUMBER	            NOT NULL,  -- 이미지 번호  (PK)
-	PACKAGE_NO	    NUMBER	            NULL,      -- 패키지 번호  (FK)
-	THUMBNAIL	    NUMBER          	NULL,      -- 썸네일
-	FILESYSTEM_NAME	VARCHAR2(300 BYTE)	NOT NULL,  -- 파일이름
-	IMAGE_PATH	    VARCHAR2(300 BYTE)	NOT NULL,  -- 파일경로
-    CONSTRAINT PK_PRODUCT_IMAGE  PRIMARY KEY(IMAGE_NO),
-    CONSTRAINT FK_PACKAGE_IMAGE  FOREIGN KEY(PACKAGE_NO)  REFERENCES PACKAGE_T(PACKAGE_NO) ON DELETE CASCADE
-);
-
-
+-- ************************************ 찜 **************************************
 -- 찜 테이블
 CREATE TABLE HEART_T (
 	USER_NO	    NUMBER	NULL,  -- 회원 번호   (FK)
@@ -496,9 +496,9 @@ INSERT INTO USER_T VALUES(USER_SEQ.NEXTVAL, 'user15@gmail.com', STANDARD_HASH('1
 INSERT INTO USER_T VALUES(USER_SEQ.NEXTVAL, 'user16@gmail.com', STANDARD_HASH('1111', 'SHA256'), '사용자16', 'F', '01044444444', '44444', '디지털로', '가산동', '104동 16호', 0, 0, 1, TO_CHAR(TO_DATE('20200109'), 'YYYY/MM/DD'), TO_CHAR(TO_DATE('20200109'), 'YYYY/MM/DD'));
 INSERT INTO USER_T VALUES(USER_SEQ.NEXTVAL, 'user17@gmail.com', STANDARD_HASH('1111', 'SHA256'), '사용자17', 'M', '01011111111', '11111', '디지털로', '가산동', '101동 17호', 0, 0, 1, TO_CHAR(TO_DATE('20200108'), 'YYYY/MM/DD'), TO_CHAR(TO_DATE('20200108'), 'YYYY/MM/DD'));
 INSERT INTO USER_T VALUES(USER_SEQ.NEXTVAL, 'user18@gmail.com', STANDARD_HASH('1111', 'SHA256'), '사용자18', 'F', '01022222222', '22222', '디지털로', '가산동', '102동 18호', 0, 0, 1, TO_CHAR(TO_DATE('20200107'), 'YYYY/MM/DD'), TO_CHAR(TO_DATE('20200107'), 'YYYY/MM/DD'));
-INSERT INTO USER_T VALUES(USER_SEQ.NEXTVAL, 'user19@gmail.com', STANDARD_HASH('1111', 'SHA256'), '사용자19', 'M', '01033333333', '33333', '디지털로', '가산동', '103동 19호', 0, 0, 1, TO_CHAR(TO_DATE('20200106'), 'YYYY/MM/DD'), TO_CHAR(TO_DATE('20200106'), 'YYYY/MM/DD'));
-INSERT INTO USER_T VALUES(USER_SEQ.NEXTVAL, 'user20@gmail.com', STANDARD_HASH('1111', 'SHA256'), '사용자20', 'F', '01044444444', '44444', '디지털로', '가산동', '104동 20호', 0, 0, 1, TO_CHAR(TO_DATE('20200105'), 'YYYY/MM/DD'), TO_CHAR(TO_DATE('20200105'), 'YYYY/MM/DD'));
-INSERT INTO USER_T VALUES(USER_SEQ.NEXTVAL, 'user21@gmail.com', STANDARD_HASH('1111', 'SHA256'), '사용자21', 'M', '01011111111', '11111', '디지털로', '가산동', '101동 21호', 0, 0, 1, TO_CHAR(TO_DATE('20200104'), 'YYYY/MM/DD'), TO_CHAR(TO_DATE('20200104'), 'YYYY/MM/DD'));
+INSERT INTO USER_T VALUES(USER_SEQ.NEXTVAL, 'user19@gmail.com', STANDARD_HASH('1111', 'SHA256'), '사용자19', 'NO', '01033333333', '33333', '디지털로', '가산동', '103동 19호', 0, 0, 1, TO_CHAR(TO_DATE('20200106'), 'YYYY/MM/DD'), TO_CHAR(TO_DATE('20200106'), 'YYYY/MM/DD'));
+INSERT INTO USER_T VALUES(USER_SEQ.NEXTVAL, 'user20@gmail.com', STANDARD_HASH('1111', 'SHA256'), '사용자20', 'NO', '01044444444', '44444', '디지털로', '가산동', '104동 20호', 0, 0, 1, TO_CHAR(TO_DATE('20200105'), 'YYYY/MM/DD'), TO_CHAR(TO_DATE('20200105'), 'YYYY/MM/DD'));
+INSERT INTO USER_T VALUES(USER_SEQ.NEXTVAL, 'user21@gmail.com', STANDARD_HASH('1111', 'SHA256'), '사용자21', 'NO', '01011111111', '11111', '디지털로', '가산동', '101동 21호', 0, 0, 1, TO_CHAR(TO_DATE('20200104'), 'YYYY/MM/DD'), TO_CHAR(TO_DATE('20200104'), 'YYYY/MM/DD'));
 INSERT INTO USER_T VALUES(USER_SEQ.NEXTVAL, 'user22@gmail.com', STANDARD_HASH('1111', 'SHA256'), '사용자22', 'F', '01022222222', '22222', '디지털로', '가산동', '102동 22호', 0, 0, 1, TO_CHAR(TO_DATE('20200103'), 'YYYY/MM/DD'), TO_CHAR(TO_DATE('20200103'), 'YYYY/MM/DD'));
 INSERT INTO USER_T VALUES(USER_SEQ.NEXTVAL, 'user23@gmail.com', STANDARD_HASH('1111', 'SHA256'), '사용자23', 'M', '01033333333', '33333', '디지털로', '가산동', '103동 23호', 0, 0, 1, TO_CHAR(TO_DATE('20200102'), 'YYYY/MM/DD'), TO_CHAR(TO_DATE('20200102'), 'YYYY/MM/DD'));
 INSERT INTO USER_T VALUES(USER_SEQ.NEXTVAL, 'user24@gmail.com', STANDARD_HASH('1111', 'SHA256'), '사용자24', 'F', '01044444444', '44444', '디지털로', '가산동', '104동 24호', 0, 0, 1, TO_CHAR(TO_DATE('20200101'), 'YYYY/MM/DD'), TO_CHAR(TO_DATE('20200101'), 'YYYY/MM/DD'));
@@ -522,39 +522,41 @@ COMMIT;
 
 -- ******************************************************************************
 -- 지역 카테고리 등록 ***********************************************************
-INSERT INTO REGION_T VALUES(REGION_SEQ.NEXTVAL, '강원도'); -- 1
-INSERT INTO REGION_T VALUES(REGION_SEQ.NEXTVAL, '전라도'); -- 2
-INSERT INTO REGION_T VALUES(REGION_SEQ.NEXTVAL, '충청도'); -- 3
-INSERT INTO REGION_T VALUES(REGION_SEQ.NEXTVAL, '경상도'); -- 4
-INSERT INTO REGION_T VALUES(REGION_SEQ.NEXTVAL, '제주도'); -- 5
-INSERT INTO REGION_T VALUES(REGION_SEQ.NEXTVAL, '서울');   -- 6
-INSERT INTO REGION_T VALUES(REGION_SEQ.NEXTVAL, '경기도'); -- 7
-INSERT INTO REGION_T VALUES(REGION_SEQ.NEXTVAL, '인천');   -- 8
+INSERT INTO REGION_T VALUES(REGION_SEQ.NEXTVAL, '선택안함'); -- 1
+INSERT INTO REGION_T VALUES(REGION_SEQ.NEXTVAL, '전라도');   -- 2
+INSERT INTO REGION_T VALUES(REGION_SEQ.NEXTVAL, '충청도');   -- 3
+INSERT INTO REGION_T VALUES(REGION_SEQ.NEXTVAL, '경상도');   -- 4
+INSERT INTO REGION_T VALUES(REGION_SEQ.NEXTVAL, '제주도');   -- 5
+INSERT INTO REGION_T VALUES(REGION_SEQ.NEXTVAL, '서울');     -- 6
+INSERT INTO REGION_T VALUES(REGION_SEQ.NEXTVAL, '경기도');   -- 7
+INSERT INTO REGION_T VALUES(REGION_SEQ.NEXTVAL, '인천');     -- 8
+INSERT INTO REGION_T VALUES(REGION_SEQ.NEXTVAL, '강원도');   -- 9
 COMMIT; 
 
 -- 테마 카테고리 등록 ***********************************************************
-INSERT INTO THEME_T VALUES(THEME_SEQ.NEXTVAL, '골프여행');   -- 1
-INSERT INTO THEME_T VALUES(THEME_SEQ.NEXTVAL, '단풍여행');   -- 2
-INSERT INTO THEME_T VALUES(THEME_SEQ.NEXTVAL, '식도락여행'); -- 3
-INSERT INTO THEME_T VALUES(THEME_SEQ.NEXTVAL, '기차여행');   -- 4
-INSERT INTO THEME_T VALUES(THEME_SEQ.NEXTVAL, '등산여행');   -- 5
+INSERT INTO THEME_T VALUES(THEME_SEQ.NEXTVAL, '선택안함');   -- 1
+INSERT INTO THEME_T VALUES(THEME_SEQ.NEXTVAL, '골프여행');   -- 2
+INSERT INTO THEME_T VALUES(THEME_SEQ.NEXTVAL, '단풍여행');   -- 3
+INSERT INTO THEME_T VALUES(THEME_SEQ.NEXTVAL, '식도락여행'); -- 4
+INSERT INTO THEME_T VALUES(THEME_SEQ.NEXTVAL, '기차여행');   -- 5
+INSERT INTO THEME_T VALUES(THEME_SEQ.NEXTVAL, '등산여행');   -- 6
 COMMIT;
 
 -- 패키지 상품 등록 *************************************************************
-INSERT INTO PACKAGE_T VALUES(PACKAGE_SEQ.NEXTVAL, 1, 1, 3, '강원도로 놀러가요', '예약가능', '인기폭발', '항공없음', '강원도에서 먹고자고싸고', '강원도는 이래저래', '호텔정보는 이렇습니다!', 56000, '위험한사항이있어요', TO_CHAR(SYSDATE,'YYYY/MM/DD'), TO_CHAR(SYSDATE,'YYYY/MM/DD'), 0, 1, 30, 1);
-INSERT INTO PACKAGE_T VALUES(PACKAGE_SEQ.NEXTVAL, 2, 2, 3, '전라도로 놀러가요', '예약가능', '강추', '항공없음', '전라도에서 먹고자고싸고', '전라도는 이래저래', '호텔정보는 이렇습니다!', 66000, '위험한사항이있어요', TO_CHAR(SYSDATE,'YYYY/MM/DD'), TO_CHAR(SYSDATE,'YYYY/MM/DD'), 0, 1, 30, 1);
-INSERT INTO PACKAGE_T VALUES(PACKAGE_SEQ.NEXTVAL, 1, 5, 1, '골프여행 놀러가요', '예약가능', '가족과함께 추천', '항공없음', '골프에서 먹고자고싸고', '골프는 이래저래', '호텔정보는 이렇습니다!', 126000, '위험한사항이있어요', TO_CHAR(SYSDATE,'YYYY/MM/DD'), TO_CHAR(SYSDATE,'YYYY/MM/DD'), 0, 1, 30, 1);
-INSERT INTO PACKAGE_T VALUES(PACKAGE_SEQ.NEXTVAL, 2, 3, 5, '등산할래요 놀러가요', '예약가능', '연인과 추천', '항공없음', '등산에서 먹고자고싸고', '등산는 이래저래', '호텔정보는 이렇습니다!', 46000, '위험한사항이있어요', TO_CHAR(SYSDATE,'YYYY/MM/DD'), TO_CHAR(SYSDATE,'YYYY/MM/DD'), 0, 1, 30, 1);
-INSERT INTO PACKAGE_T VALUES(PACKAGE_SEQ.NEXTVAL, 1, 8, 3, '인천으로 놀러가요', '예약가능', '효도여행 강추', '항공없음', '인천에서 먹고자고싸고', '인천는 이래저래', '호텔정보는 이렇습니다!', 226000, '위험한사항이있어요', TO_CHAR(SYSDATE,'YYYY/MM/DD'), TO_CHAR(SYSDATE,'YYYY/MM/DD'), 0, 1, 30, 1);
-INSERT INTO PACKAGE_T VALUES(PACKAGE_SEQ.NEXTVAL, 1, NULL, 4, '기차타고 놀러가요', '예약가능', '연인과 추천', '항공없음', '기차에서 먹고자고싸고', '기차는 이래저래', NULL, 169000, '위험한사항이있어요', TO_CHAR(SYSDATE,'YYYY/MM/DD'), TO_CHAR(SYSDATE,'YYYY/MM/DD'), 0, 1, 30, 1);
-INSERT INTO PACKAGE_T VALUES(PACKAGE_SEQ.NEXTVAL, 2, 4, 3, '경상도로 놀러가요', '예약가능', '가족과함께 추천', '항공없음', '경상도에서 먹고자고싸고', '경상도는 이래저래', '호텔정보는 이렇습니다!', 129000, '위험한사항이있어요', TO_CHAR(SYSDATE,'YYYY/MM/DD'), TO_CHAR(SYSDATE,'YYYY/MM/DD'), 0, 1, 30, 1);
-INSERT INTO PACKAGE_T VALUES(PACKAGE_SEQ.NEXTVAL, 1, 6, 2, '서울 단풍보러 놀러가요', '예약가능', '효도여행 강추', '항공없음', '서울에서 먹고자고싸고', '단풍은 이래저래', '호텔정보는 이렇습니다!', 219000, '위험한사항이있어요', TO_CHAR(SYSDATE,'YYYY/MM/DD'), TO_CHAR(SYSDATE,'YYYY/MM/DD'), 0, 1, 30, 1);
-INSERT INTO PACKAGE_T VALUES(PACKAGE_SEQ.NEXTVAL, 2, 5, 5, '제주도로 등산가요', '예약가능', '강추', '항공없음', '제주도에서 먹고자고싸고', '제주도 등산은 이래저래', '호텔정보는 이렇습니다!', 136000, '위험한사항이있어요', TO_CHAR(SYSDATE,'YYYY/MM/DD'), TO_CHAR(SYSDATE,'YYYY/MM/DD'), 0, 1, 30, 1);
-INSERT INTO PACKAGE_T VALUES(PACKAGE_SEQ.NEXTVAL, 1, 7, 2, '경기도 단풍보러 놀러가요', '예약가능', '인기폭발', '항공없음', '경기도에서 먹고자고싸고', '경기도 단풍은 이래저래', '호텔정보는 이렇습니다!', 45000, '위험한사항이있어요', TO_CHAR(SYSDATE,'YYYY/MM/DD'), TO_CHAR(SYSDATE,'YYYY/MM/DD'), 0, 1, 30, 1);
-INSERT INTO PACKAGE_T VALUES(PACKAGE_SEQ.NEXTVAL, 2, NULL, NULL, '인기 없는 묻지마여행1', '예약가능', '추천', '항공없음', '아무데서 먹고자고싸고', '묻지마여행은 이래저래', '호텔정보는 이렇습니다!', 55000, '위험한사항이있어요', TO_CHAR(SYSDATE,'YYYY/MM/DD'), TO_CHAR(SYSDATE,'YYYY/MM/DD'), 0, 1, 30, 0);
-INSERT INTO PACKAGE_T VALUES(PACKAGE_SEQ.NEXTVAL, 2, NULL, NULL, '인기 없는 묻지마여행2', '예약가능', '강추', '항공없음', '아무데서 먹고자고싸고', '묻지마여행은 이래저래', '호텔정보는 이렇습니다!', 55000, '위험한사항이있어요', TO_CHAR(SYSDATE,'YYYY/MM/DD'), TO_CHAR(SYSDATE,'YYYY/MM/DD'), 0, 1, 30, 0);
-INSERT INTO PACKAGE_T VALUES(PACKAGE_SEQ.NEXTVAL, 2, NULL, NULL, '인기 많은 묻지마여행1', '예약가능', '친구와 함께 추천', '항공없음', '아무데서 먹고자고싸고', '묻지마여행은 이래저래', '호텔정보는 이렇습니다!', 55000, '위험한사항이있어요', TO_CHAR(SYSDATE,'YYYY/MM/DD'), TO_CHAR(SYSDATE,'YYYY/MM/DD'), 0, 1, 30, 1);
-INSERT INTO PACKAGE_T VALUES(PACKAGE_SEQ.NEXTVAL, 2, NULL, NULL, '인기 많은 묻지마여행2', '예약가능', '친구와 함께 추천', '항공없음', '아무데서 먹고자고싸고', '묻지마여행은 이래저래', '호텔정보는 이렇습니다!', 55000, '위험한사항이있어요', TO_CHAR(SYSDATE,'YYYY/MM/DD'), TO_CHAR(SYSDATE,'YYYY/MM/DD'), 0, 1, 30, 1);
+INSERT INTO PACKAGE_T VALUES(PACKAGE_SEQ.NEXTVAL, 1, 9, 4, '강원도로 놀러가요', '예약가능', '인기폭발', '항공없음', '강원도에서 먹고자고싸고', '강원도는 이래저래', '호텔정보는 이렇습니다!', 56000, '위험한사항이있어요', TO_CHAR(SYSDATE,'YYYY/MM/DD'), TO_CHAR(SYSDATE,'YYYY/MM/DD'), 0, 1, 30, 1);
+INSERT INTO PACKAGE_T VALUES(PACKAGE_SEQ.NEXTVAL, 2, 2, 1, '전라도로 놀러가요', '예약가능', '강추', '항공없음', '전라도에서 먹고자고싸고', '전라도는 이래저래', '호텔정보는 이렇습니다!', 66000, '위험한사항이있어요', TO_CHAR(SYSDATE,'YYYY/MM/DD'), TO_CHAR(SYSDATE,'YYYY/MM/DD'), 0, 1, 30, 1);
+INSERT INTO PACKAGE_T VALUES(PACKAGE_SEQ.NEXTVAL, 1, 3, 2, '골프여행 놀러가요', '예약가능', '가족과함께 추천', '항공없음', '골프에서 먹고자고싸고', '골프는 이래저래', '호텔정보는 이렇습니다!', 126000, '위험한사항이있어요', TO_CHAR(SYSDATE,'YYYY/MM/DD'), TO_CHAR(SYSDATE,'YYYY/MM/DD'), 0, 1, 30, 1);
+INSERT INTO PACKAGE_T VALUES(PACKAGE_SEQ.NEXTVAL, 2, 1, 6, '등산할래요 놀러가요', '예약가능', '연인과 추천', '항공없음', '등산에서 먹고자고싸고', '등산는 이래저래', '호텔정보는 이렇습니다!', 46000, '위험한사항이있어요', TO_CHAR(SYSDATE,'YYYY/MM/DD'), TO_CHAR(SYSDATE,'YYYY/MM/DD'), 0, 1, 30, 1);
+INSERT INTO PACKAGE_T VALUES(PACKAGE_SEQ.NEXTVAL, 1, 8, 4, '인천으로 놀러가요', '예약가능', '효도여행 강추', '항공없음', '인천에서 먹고자고싸고', '인천는 이래저래', '호텔정보는 이렇습니다!', 226000, '위험한사항이있어요', TO_CHAR(SYSDATE,'YYYY/MM/DD'), TO_CHAR(SYSDATE,'YYYY/MM/DD'), 0, 1, 30, 1);
+INSERT INTO PACKAGE_T VALUES(PACKAGE_SEQ.NEXTVAL, 1, 1, 5, '기차타고 놀러가요', '예약가능', '연인과 추천', '항공없음', '기차에서 먹고자고싸고', '기차는 이래저래', NULL, 169000, '위험한사항이있어요', TO_CHAR(SYSDATE,'YYYY/MM/DD'), TO_CHAR(SYSDATE,'YYYY/MM/DD'), 0, 1, 30, 1);
+INSERT INTO PACKAGE_T VALUES(PACKAGE_SEQ.NEXTVAL, 2, 4, 4, '경상도로 놀러가요', '예약가능', '가족과함께 추천', '항공없음', '경상도에서 먹고자고싸고', '경상도는 이래저래', '호텔정보는 이렇습니다!', 129000, '위험한사항이있어요', TO_CHAR(SYSDATE,'YYYY/MM/DD'), TO_CHAR(SYSDATE,'YYYY/MM/DD'), 0, 1, 30, 1);
+INSERT INTO PACKAGE_T VALUES(PACKAGE_SEQ.NEXTVAL, 1, 6, 3, '서울 단풍보러 놀러가요', '예약가능', '효도여행 강추', '항공없음', '서울에서 먹고자고싸고', '단풍은 이래저래', '호텔정보는 이렇습니다!', 219000, '위험한사항이있어요', TO_CHAR(SYSDATE,'YYYY/MM/DD'), TO_CHAR(SYSDATE,'YYYY/MM/DD'), 0, 1, 30, 1);
+INSERT INTO PACKAGE_T VALUES(PACKAGE_SEQ.NEXTVAL, 2, 5, 6, '제주도로 등산가요', '예약가능', '강추', '항공없음', '제주도에서 먹고자고싸고', '제주도 등산은 이래저래', '호텔정보는 이렇습니다!', 136000, '위험한사항이있어요', TO_CHAR(SYSDATE,'YYYY/MM/DD'), TO_CHAR(SYSDATE,'YYYY/MM/DD'), 0, 1, 30, 1);
+INSERT INTO PACKAGE_T VALUES(PACKAGE_SEQ.NEXTVAL, 1, 7, 3, '경기도 단풍보러 놀러가요', '예약가능', '인기폭발', '항공없음', '경기도에서 먹고자고싸고', '경기도 단풍은 이래저래', '호텔정보는 이렇습니다!', 45000, '위험한사항이있어요', TO_CHAR(SYSDATE,'YYYY/MM/DD'), TO_CHAR(SYSDATE,'YYYY/MM/DD'), 0, 1, 30, 1);
+INSERT INTO PACKAGE_T VALUES(PACKAGE_SEQ.NEXTVAL, 2, 1, 1, '인기 없는 묻지마여행1', '예약가능', '추천', '항공없음', '아무데서 먹고자고싸고', '묻지마여행은 이래저래', '호텔정보는 이렇습니다!', 55000, '위험한사항이있어요', TO_CHAR(SYSDATE,'YYYY/MM/DD'), TO_CHAR(SYSDATE,'YYYY/MM/DD'), 0, 1, 30, 0);
+INSERT INTO PACKAGE_T VALUES(PACKAGE_SEQ.NEXTVAL, 2, 1, 1, '인기 없는 묻지마여행2', '예약가능', '강추', '항공없음', '아무데서 먹고자고싸고', '묻지마여행은 이래저래', '호텔정보는 이렇습니다!', 55000, '위험한사항이있어요', TO_CHAR(SYSDATE,'YYYY/MM/DD'), TO_CHAR(SYSDATE,'YYYY/MM/DD'), 0, 1, 30, 0);
+INSERT INTO PACKAGE_T VALUES(PACKAGE_SEQ.NEXTVAL, 2, 1, 1, '인기 많은묻지마여행1', '예약가능', '친구와 함께 추천', '항공없음', '아무데서 먹고자고싸고', '묻지마여행은 이래저래', '호텔정보는 이렇습니다!', 55000, '위험한사항이있어요', TO_CHAR(SYSDATE,'YYYY/MM/DD'), TO_CHAR(SYSDATE,'YYYY/MM/DD'), 0, 1, 30, 1);
+INSERT INTO PACKAGE_T VALUES(PACKAGE_SEQ.NEXTVAL, 2, 1, 1, '인기 많은묻지마여행2', '예약가능', '친구와 함께 추천', '항공없음', '아무데서 먹고자고싸고', '묻지마여행은 이래저래', '호텔정보는 이렇습니다!', 55000, '위험한사항이있어요', TO_CHAR(SYSDATE,'YYYY/MM/DD'), TO_CHAR(SYSDATE,'YYYY/MM/DD'), 0, 1, 30, 1);
 COMMIT;
 
 -- ******************************************************************************
