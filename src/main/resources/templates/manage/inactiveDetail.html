@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{/layout/header::head(|${inactiveUser.userNo}번 휴면회원 상세|)}"></head> 
+<style>
+  
+ #main_wraper {
+    display: flex;
+  }
+
+  #split1 {
+    flex: 0 0 20%;
+  }
+
+  #split2 {
+    flex: 0 0 80%;
+  }
+  
+  .inactive {
+    margin-top: 11%;
+  }
+  
+  #date {
+    display: flex;
+  }
+  #joined, 
+  #state, 
+  #pw_modified {
+    flex: 0 0 30%;
+    margin-top: 8%;
+    margin-bottom: 3%;
+  }
+  
+  .content {
+    font-size: 1.2em;
+    border-top: 1px solid #ccc;    /* 위쪽 구분선 스타일 및 색상 */
+    border-bottom: 1px solid #ccc; /* 아래쪽 구분선 스타일 및 색상 */
+    padding: 10px;                   /* 위아래 구분선과 내용 간격 조절 */
+  }
+  
+  .m_event {
+    margin-top: 5%;
+    margin-bottom: 5%;
+    text-align: left;
+  }
+  
+  #show_list
+   {
+    height: 38px; 
+    color: #96B6C5;         /* 텍스트 색상 */
+    background-color: #fff; /* 기본 배경 색상 */
+    border-color: #96B6C5;  /* 테두리 색상 */
+    border-radius: 10px;      /* 테두리를 둥글게 만듭니다. */
+    transition: all 0.3s;     /* 모든 속성에 대해 0.3초 동안 트랜지션 효과 적용 */
+    margin: 5% auto;
+    padding: 0 9%;            /* 버튼 크기 */
+  }
+  #show_list:hover
+  {
+    color: #fff;               /* 호버 시 텍스트 색상 */
+    background-color: #96B6C5; /* 호버 시 배경 색상 */
+  }
+  .gender {
+    text-align: left;
+  }
+  .address {
+    margin-top: 5%;
+  }
+  input {
+    font-weight: bolder;
+  }
+  
+  #name {
+    margin-left: 32px;
+  }
+  #email{
+    margin-left: 14px;
+  }
+
+</style>
+
+<body>
+  <div th:replace="~{/layout/header::header}"></div>
+  
+  <div class="main_wrap">
+  
+  
+     <div class="container text-center">
+      <div class="row">
+        <div class="col-1">       
+        </div>
+        <div class="col-10" >
+       
+       
+       
+          <div id="main_wraper">
+            
+            <div id="split1">
+              <div class="inactive"><h2>휴면회원</h2></div>
+              <div th:text="|휴면전환일 : ${inactiveUser.inactivedAt}|"></div>
+              
+            </div>
+            
+            
+            <div id="split2">
+              
+                  
+              <div id="date">
+                <div th:text="|가입일 : ${inactiveUser.joinedAt}|" id="joined"></div>
+                <div id="state">
+                  <th:block th:if="${inactiveUser.state == 0}">가입형태 : 일반회원</th:block>
+                  <th:block th:if="${inactiveUser.state == 1}">가입형태 : 네이버 간편로그인</th:block>
+                  <th:block th:if="${inactiveUser.state == 2}">가입형태 : 카카오 간편로그인</th:block>
+                </div>
+                <div th:text="|비밀번호 변경일 : ${inactiveUser.pwModifiedAt}|" id="pw_modified"></div>
+              </div>
+  
+              
+              <div class="content">
+                
+                <div class="mb-3 row">
+                  <div class="col-auto">
+                    <label for="email" class="col-form-label">이메일</label>
+                  </div>
+                  <div class="col-auto">
+                    <input type="text" id="email" th:value="${inactiveUser.email}" readonly class="form-control-plaintext">
+                  </div>
+                </div>
+                <div class="mb-3 row">
+                  <div class="col-auto">
+                    <label for="name" class="col-form-label">이름</label>
+                  </div>
+                  <div class="col-auto">
+                    <input type="text" id="name" th:value="${inactiveUser.name}" readonly class="form-control-plaintext">
+                  </div>
+                </div>
+                <div class="mb-3 row">
+                  <div class="col-auto">
+                    <label for="mobile" class="col-form-label">전화번호</label>
+                  </div>
+                  <div class="col-auto">
+                    <input type="text" id="mobile" th:value="${inactiveUser.mobile}" readonly class="form-control-plaintext">
+                  </div>
+                </div>
+
+                <div class="gender">
+                  <div class="form-check form-check-inline">
+                    <input type="radio" name="gender" value="NO" id="none" class="form-check-input">
+                    <label for="none" class="form-check-label">선택안함</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input type="radio" name="gender" value="M" id="man" class="form-check-input">
+                    <label for="man" class="form-check-label">남자</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input type="radio" name="gender" value="F" id="woman" class="form-check-input">
+                    <label for="woman" class="form-check-label">여자</label>
+                  </div>
+                </div>
+                <script th:inline="javascript">
+                  $(':radio[value=[[${inactiveUser.gender}]]]').prop('checked', true);
+                </script>
+                
+                <div class="address">
+                  <div class="mb-3 row">
+                    <div class="col-auto">
+                      <label class="col-form-label">주소</label>
+                    </div>
+                  </div>
+                  <div class="mb-3 row">
+                    <div class="col-auto">
+                      <input type="text" th:value="${inactiveUser.postcode}" readonly class="form-control-plaintext">
+                    </div>
+                  </div>
+                  <div class="mb-3 row">
+                    <div class="col-auto">
+                      <input type="text" th:value="${inactiveUser.roadAddress}" readonly class="form-control-plaintext">
+                    </div>
+                  </div>
+                  <div class="mb-3 row">
+                    <div class="col-auto">
+                      <input type="text" id="address" th:value="${inactiveUser.jibunAddress}" readonly class="form-control-plaintext">
+                    </div>
+                  </div>
+                  <div class="mb-3 row">
+                    <div class="col-auto">
+                      <input type="text" id="address" th:value="${inactiveUser.detailAddress}" readonly class="form-control-plaintext">
+                    </div>
+                  </div>
+                </div>
+                
+                
+
+                
+                
+                
+                
+                <div class="m_event">
+                  <div style="margin-bottom: 10px; font-weight: bold;">이벤트 알림 동의(선택)</div>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="event" id="event_on" value="on">
+                    <label class="form-check-label" for="event_on">동의함</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="event" id="event_off" value="off">
+                    <label class="form-check-label" for="event_off">동의안함</label>
+                  </div>
+                </div>
+                <script th:inline="javascript">
+                  let agree = /*[[${inactiveUser.agree}]]*/ null;
+                  if(agree === 0){
+                  $('#event_off').prop('checked', true);
+                  } else if(agree === 1){
+                  $('#event_on').prop('checked', true);
+                  }
+                </script>
+                
+              </div>
+                 
+              <div>
+                <a th:href="@{/manage/inactiveList.do}"><button id="show_list">목록보기</button></a>
+              </div>
+              
+            </div>
+            
+          </div>
+       
+       
+       
+       
+       
+       
+                     
+
+                
+
+
+
+
+
+
+
+
+        
+        
+            
+        </div>
+        <div class="col-1">       
+        </div>
+      </div>
+    </div>
+  
+  </div>
+
+  
+  
+  
+  <div th:replace="~{/layout/footer::footer}"></div>
+</body>
+</html>
+
