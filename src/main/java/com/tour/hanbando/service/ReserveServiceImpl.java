@@ -49,7 +49,7 @@ public class ReserveServiceImpl implements ReserveService {
     */
     String requestedTerm = null;
     if(request.getParameter("reqTerm") == null) {
-      requestedTerm = "N/A";
+      requestedTerm = "";
     } else {
       requestedTerm = request.getParameter("reqTerm");
     }
@@ -124,14 +124,6 @@ public class ReserveServiceImpl implements ReserveService {
     }
     return result;
   }
-  
-  
-  
-  
-  
-  
-  
-  
   
   
   
