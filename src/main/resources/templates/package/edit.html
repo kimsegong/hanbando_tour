@@ -1,9 +1,205 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 
-<head></head>
-<body>
+<head th:replace="~{/layout/header::head('패키지상품수정')}"></head>
+<style>
+.ck.ck-editor {
+  max-width: 1000px;
+}
+.ck-editor__editable {
+  min-height: 400px;
+}
+.ck-content {
+  color: gray;
+}
+#ckeditor {
+  border: 1px solid silver;
+}
+.image_resized img {
+  width: 80%;
+} 
+</style>
+ <body>
+  <div th:replace="~{/layout/header::header}"></div>
+  
+  <div class="container text-center">  <!-- 그리드 시작 -->  
+    <div class="row">
+      <div class="col-1">
+    <div class="w3-sidebar w3-bar-block" style="width:10%; height:100px;"> <!-- 사이드바 -->
+      <a th:href="@{/package/regionWrite.form}" class="w3-bar-item w3-button">지역 작성</a>
+      <a th:href="@{/package/themeWrite.form}" class="w3-bar-item w3-button">테마 작성</a>
+    </div>    
+      </div>
+      <div class="col-10" >
+    <h2>패키지게시글작성</h2>
+    <form id="frm_product_modify" method="post" th:action="@{/package/modifyPackage.do}" enctype="multipart/form-data">
+  
+    <div style="margin: 30px 270px;" class="w-50 p-3">
+    <div style="text-align: left;">
+          <label for="files" class="form-label">썸네일첨부</label>
+          <input type="file" name="files" id="files" class="form-control"  multiple>
+          <label for="files" class="form-label">메인첨부</label>
+          <input type="file" name="files" id="files" class="form-control" multiple>
+      </div>
+      <div class="attached_list mt-2" id="attached_list"></div>
+      <div><!-- 추천라디오 및 선택박스 -->
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+        <!-- 추천라디오 -->
+        <div style="text-align: left;">
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="recommendStatus" id="recommendStatusInput" th:value="1">
+                <label class="form-check-label" for="recommendStatus">
+                    추천
+                </label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="recommendStatus" id="recommendStatusInput" th:value="2">
+                <label class="form-check-label" for="recommendStatus">
+                    안추천
+                </label>
+            </div>
+        </div>
+       
+       <div class="w-25 p-3">
+            <select id="regionSelect" class="form-select" aria-label="Default select example" name="regionNo">
+                <option th:each="region : ${regionList}" th:value="${region.regionNo}" th:text="${region.regionName}" th:selected="${region.regionNo == packageDto.regionDto.regionNo}"></option>
+            </select>
+            <select id="themeSelect" class="form-select" aria-label="Default select example" name="themeNo">
+                <option th:each="theme : ${themeList}" th:value="${theme.themeNo}" th:text="${theme.themeName}" th:selected="${theme.themeNo == packageDto.themeDto.themeNo}"></option>
+            </select>
+       </div>
 
+         <input type="text" name="packageNo" class="heart" th:value="${packageDto.packageNo}"> 
+        
+        </div>
+    </div>
+         <div>
+          <label for="packageTitle" class="form-label"></label>
+          <input type="text" name="packageTitle" th:value="${packageDto.packageTitle}" id="packageTitle" class="form-control">
+         </div>         
+        <div>
+          <label for="maxPeople" class="form-label"></label>
+          <input type="text" name="maxPeople" id="maxPeople" th:value="${packageDto.maxPeople}" class="form-control">
+        </div>                
+         <div>
+          <label for="miniOne" class="form-label"></label>
+          <input type="text" name="miniOne" th:value="${packageDto.miniOne}" id="miniOne" class="form-control">
+         </div>
+         <div>
+          <label for="miniTwo" class="form-label"></label>
+          <input type="text" name="miniTwo" id="miniTwo" th:value="${packageDto.miniTwo}" class="form-control">
+         </div>
+         <div>
+          <label for="miniThree" class="form-label"></label>
+          <input type="text" name="miniThree" id="miniThree" th:value="${packageDto.miniThree}" class="form-control">
+         </div>
+        <div>
+          <label for="price" class="form-label"></label>
+          <input type="text" name="price" id="price" th:value="${packageDto.price}" class="form-control">
+        </div>
+
+        <div class="mb-3">      
+        <label for="packagePlan" class="form-label"></label>
+        <textarea class="form-control" id="packagePlan" th:text="${packageDto.packagePlan}" name="packagePlan" rows="10"></textarea>
+        </div>
+        
+        <div style="text-align: left;">
+         <div class="choice"></div>
+          <label for="packageContents">상품내용</label>
+            <textarea name="packageContents" id="packageContents" style="display: none;" th:text="${packageDto.packageContents}"></textarea>
+
+        </div>           
+        
+        <div>
+          <label for="hotelContents" class="form-label"></label>
+          <input type="text" name="hotelContents" id="hotelContents" th:value="${packageDto.hotelContents}" class="form-control">
+        </div>
+        
+        <div class="mb-3">
+          <label for="danger" class="form-label"></label>
+          <textarea class="form-control" id="danger" th:text="${packageDto.danger}" name="danger" rows="10"></textarea>
+        </div>                
+
+        <div class="d-grid gap-2 col-6 mx-auto">
+          <input type="hidden" name="userNo" th:value="${session.user.userNo}">
+          <button type="submit" class="btn btn-primary" style="margin: 32px;">수정완료</button>
+        </div>
+     </div>
+    </form>
+    
+    </div>
+    <div class="col-1">      
+    </div>
+  </div>
+  </div>
+
+  <script th:inline="javascript">
+    
+    const fnCkeditor = () => {
+    DecoupledEditor
+      .create(document.getElementById('ckeditor'), {
+        ckfinder: {
+          // 이미지 업로드 경로
+          uploadUrl: '/package/imageUpload.do'
+        }
+      })
+      .then(editor => {
+        const toolbarContainer = document.getElementById('toolbar-container');
+        toolbarContainer.appendChild(editor.ui.view.toolbar.element);
+
+        // 이미지 초기화 시에 style 및 다른 속성 제거
+        editor.model.schema.extend('$image', { allowAttributes: ['style'] });
+        editor.model.schema.setAttribute('image', 'style', true);
+
+        // 이미지 크기 조절 옵션 추가
+        editor.ui.componentFactory.add('resizeImage', locale => {
+          const view = new ButtonView(locale);
+
+          view.set({
+            label: 'Resize Image',
+            tooltip: true
+          });
+
+          // 클릭 이벤트 핸들러
+          view.on('execute', () => {
+            // 이미지 크기 조절 로직 추가
+            // 아래는 예시로 50%로 크기를 조절하는 코드
+            const imageElement = editor.model.document.selection.getSelectedElement();
+            const newSize = '50%';
+
+            editor.model.change(writer => {
+              writer.setAttribute('style', `width: ${newSize}`, imageElement);
+            });
+          });
+
+          return view;
+        });
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  }
+
+  
+  $(document).ready(function () {
+        $('input[type=radio][name=recommendStatus]').change(function() {
+            if (this.value === '1') {
+                $('#recommendStatusInput').val('1'); // 추천
+            } else if (this.value === '2') {
+                $('#recommendStatusInput').val('2'); // 안추천
+            }
+        });
+    });
+
+
+
+    
+    fnCkeditor();
+    
+   </script>
+   
+   <div th:replace="~{/layout/footer::footer}"></div>
+   
 </body>
 </html>
 

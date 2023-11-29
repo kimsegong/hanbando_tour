@@ -14,7 +14,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.tour.hanbando.dto.PackageDto;
 import com.tour.hanbando.dto.ReserveDto;
+import com.tour.hanbando.dto.UserDto;
+import com.tour.hanbando.service.PackageService;
 import com.tour.hanbando.service.ReserveService;
 
 import lombok.RequiredArgsConstructor;
@@ -25,6 +28,7 @@ import lombok.RequiredArgsConstructor;
 public class ReserveController {
 
   private final ReserveService reserveService;
+  private final PackageService packageService;
   
   @GetMapping("/reserveList.do")
   public String list(HttpServletRequest request, Model model) {
@@ -36,8 +40,14 @@ public class ReserveController {
     return "reserve/list";
   }
   
-  @RequestMapping("/write.form")
-  public String write() {
+  
+
+  // 상품상세에서 요청이 올 때 데이터 받아서 저장하기
+  @GetMapping("/write.form")
+  public String reserve(HttpServletRequest request, Model model) {
+    PackageDto pack = packageService.getPackage(Integer.parseInt(request.getParameter("packageNo")));
+    model.addAttribute("pack", pack);
+//    model.addAttribute("resDate", request.getParameter("resDate"));
     return "reserve/write";
   }
   
@@ -49,7 +59,13 @@ public class ReserveController {
   }
   
   @PostMapping("/edit.form")
-  public String edit(@ModelAttribute("reserve") ReserveDto reserve) {
+  public String edit(@ModelAttribute("reserve") ReserveDto reserve, Model model, HttpServletRequest request) {
+    String userNo = request.getParameter("userNo");
+    String userName = request.getParameter("userName");
+    String userMobile = request.getParameter("userMobile");
+    model.addAttribute("userNo", userNo);
+    model.addAttribute("userName", userName);
+    model.addAttribute("userMobile", userMobile);
     return "reserve/edit";
   }
  
@@ -59,6 +75,37 @@ public class ReserveController {
   public Map<String, Object> getTourists(HttpServletRequest request) {
     return reserveService.loadTourists(request);
   }
+  
+  
+  @ResponseBody
+  @PostMapping(value="/addReserve.do", produces="application/json")
+  public Map<String, Object> addReserve(HttpServletRequest request, RedirectAttributes redirectAttributes) throws Exception {
+    return reserveService.addReserve(request);
+  }
+  
+  @PostMapping("/addTourist.do")
+  public String addTourist(HttpServletRequest request, RedirectAttributes redirectAttributes) throws Exception {
+    int addTouristResult = reserveService.addTourist(request);
+    redirectAttributes.addFlashAttribute("addTouristResult", addTouristResult);
+    return "redirect:/reserve/detail.do?reserveNo=" + request.getParameter("reserveNo");
+  }
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  @PostMapping("/modifyReserve.do")
+  public String modifyBlog(HttpServletRequest request, RedirectAttributes redirectAttributes) {
+    int modifyResult = reserveService.modifyReserve(request);
+    redirectAttributes.addFlashAttribute("modifyResult", modifyResult);
+    return "redirect:/reserve/detail.do?reserveNo=" + request.getParameter("reserveNo");
+  }
+  
   
   @PostMapping("/delete.do")
   public String removeReserve(HttpServletRequest request, RedirectAttributes redirectAttributes) {
