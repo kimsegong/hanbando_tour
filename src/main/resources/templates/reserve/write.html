@@ -401,11 +401,11 @@
     }
   
     function fnRegInputMobile(){
-      var inputM = document.getElementsByName("tourContact");
+      var inputM = document.getElementsByName("tourMobile");
       var hasEmptyM = false;
         for (var i = 0; i < inputM.length; i++) {
           var inputValue = inputM[i].value.trim();
-          let regMobile = /^010[0-9]{8}$/;
+          let regMobile = /^01[0-9]{9}$/;
           mobilePassed = regMobile.test(inputM.value);
           if (inputValue === "" && !mobilePassed) {
             hasEmptyM = true;

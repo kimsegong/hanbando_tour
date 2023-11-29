@@ -135,7 +135,7 @@ public class ReserveServiceImpl implements ReserveService {
   
   
   
-  
+  @Transactional(readOnly=true)
   @Override
   public void loadReserveList(HttpServletRequest request, Model model) {
     Optional<String> opt = Optional.ofNullable(request.getParameter("page"));
@@ -177,6 +177,7 @@ public class ReserveServiceImpl implements ReserveService {
     
   }
   
+  @Transactional(readOnly=true)
   @Override
   public ReserveDto loadReserve(int reserveNo) {
     return reserveMapper.getReserve(reserveNo);
