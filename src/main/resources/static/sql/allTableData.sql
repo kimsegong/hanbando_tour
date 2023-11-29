@@ -129,7 +129,7 @@ CREATE TABLE USER_T (
 
 -- 접속 기록
 CREATE TABLE ACCESS_T (
-    EMAIL    VARCHAR2(100 BYTE) NOT NULL,  -- 접속한 회원 (FK)
+    EMAIL    VARCHAR2(100 BYTE) NOT NULL,  -- 접속한 회원 (PK/FK)
     LOGIN_AT VARCHAR2(30 BYTE)  NULL,      -- 로그인 일시
     CONSTRAINT FK_USER_ACCESS FOREIGN KEY(EMAIL) REFERENCES USER_T(EMAIL) ON DELETE CASCADE
 );
@@ -241,9 +241,9 @@ CREATE TABLE HOTEL_T (
     CONSTRAINT FK_REGION_HOTEL FOREIGN KEY(REGION_NO) REFERENCES REGION_T(REGION_NO) ON DELETE SET NULL
 );
 
--- 호텔 시설 테이블
+-- 호텔 편의시설 테이블
 CREATE TABLE FACILITIES_T (
-    HOTEL_NO           NUMBER   NOT NULL, -- 호텔 번호   (FK)
+    HOTEL_NO           NUMBER   NOT NULL, -- 호텔 번호   (PK/FK)
     POOL               NUMBER   NULL,     -- 수영장 (0:없음, 1:있음)
     MORNING            NUMBER   NULL,     -- 조식
     SAUNA              NUMBER   NULL,     -- 사우나
@@ -253,16 +253,16 @@ CREATE TABLE FACILITIES_T (
 );
 
 
--- 호텔 객실 테이블
+-- 호텔 객실타입 테이블
 CREATE TABLE ROOMTYPE_T (
-    ROOM_NO       NUMBER               NOT NULL,   -- 방번호     (PK)
+    ROOM_NO       NUMBER               NOT NULL,   -- 객실 번호  (PK)
     HOTEL_NO      NUMBER               NOT NULL,   -- 호텔 번호  (FK)
-    ROOM_DETAIL   CLOB                 NULL,       -- 룸 설명
-    ROOM_NAME     VARCHAR2(100 BYTE)   NOT NULL,   -- 룸 이름
-    ROOM_MANY     NUMBER               NOT NULL,   -- 룸 개수 
+    ROOM_DETAIL   CLOB                 NULL,       -- 객실 설명
+    ROOM_NAME     VARCHAR2(100 BYTE)   NOT NULL,   -- 객실 이름
+    ROOM_MANY     NUMBER               NOT NULL,   -- 객실 개수 
     R_VIEW        VARCHAR2(100 BYTE)   NULL,       -- 시티뷰 오션뷰 
     BLEAKFAST     NUMBER               NOT NULL,   -- 조식여부 
-    SMOKE         NUMBER               NOT NULL,   -- 흡연
+    SMOKE         NUMBER               NOT NULL,   -- 흡연가능여부 (0:불가, 1:가능)
     PEOPLE        NUMBER               NOT NULL,   -- 방 인원수  
     BED           VARCHAR2(100 BYTE)   NOT NULL,   -- 침대 종류 
     SHOWER        VARCHAR2(100 BYTE)   NOT NULL,   -- 샤워실인가 욕조인가 
@@ -273,8 +273,8 @@ CREATE TABLE ROOMTYPE_T (
 
 -- 호텔, 객실 이미지 테이블
 CREATE TABLE HOTEL_IMAGE_T (
-    HOTEL_NO          NUMBER           NOT NULL,  -- 호텔 번호  (FK)
-    ROOM_NO           NUMBER           NULL,      -- 룸 번호    (FK)
+    HOTEL_NO          NUMBER           NOT NULL,  -- 호텔 번호  (PK/FK)
+    ROOM_NO           NUMBER           NULL,      -- 객실 번호  (FK)
     THUMBNAIL         NUMBER           NULL,      -- 썸네일 유무 (0:없음, 1:있음) 
     FILESYSTEM_NAME   VARCHAR2(300)    NOT NULL,  -- 시스템 이름
     IMAGE_PATH        VARCHAR2(300)    NOT NULL,  -- 경로 
@@ -284,7 +284,7 @@ CREATE TABLE HOTEL_IMAGE_T (
 
 -- 객실 특성 테이블
 CREATE TABLE ROOM_FEATURE_T (
-    ROOM_NO    NUMBER      NOT NULL,  -- 방번호   (FK)
+    ROOM_NO    NUMBER      NOT NULL,  -- 객실 번호   (PK/FK)
     TOWEL      NUMBER      NULL,      -- 수건 (0:없음, 1:있음)
     WATER      NUMBER      NULL,      -- 생수
     COFFEE     NUMBER      NULL,      -- 커피/티
@@ -296,7 +296,7 @@ CREATE TABLE ROOM_FEATURE_T (
 
 -- 객실 기간 별 가격 테이블
 CREATE TABLE ROOMPRICE_T (
-    ROOM_NO          NUMBER              NOT NULL,  -- 방번호    (FK)
+    ROOM_NO          NUMBER              NOT NULL,  -- 방번호    (PK/FK)
     BI_PRICE         NUMBER              NULL,      -- 비성수기 요금
     BS_DATE          VARCHAR2(100 BYTE)  NULL,      -- 비성수기 시작
     BE_DATE          VARCHAR2(100 BYTE)  NULL,      -- 비성수기 끝
