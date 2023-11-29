@@ -21,7 +21,7 @@ public interface UserService {
   
 //회원가입 시 본인 인증
 //인증번호(전화번호, 인증번호)
-  public void certifiedPhoneNumber(String phoneNumber, String cerNum) throws Exception;
+  public Map<String, Object> certifiedPhoneNumber(String phoneNumber) throws Exception;
   
 
   public UserDto getUser(String email);
