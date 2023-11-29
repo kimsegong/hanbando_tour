@@ -1,6 +1,6 @@
 package com.tour.hanbando.controller;
 
-import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -16,6 +17,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.tour.hanbando.dto.PackageDto;
+import com.tour.hanbando.dto.ReserveDto;
 import com.tour.hanbando.service.PackageService;
 
 
@@ -29,8 +31,8 @@ public class PackageController {
   private final PackageService packageService;
   
   @GetMapping("/list.do")
-    public String list() {
-     //model.addAttribute("count", packageService.getTotalpackageCount());
+    public String list(Model model) {
+     model.addAttribute("count", packageService.getTotalPackageCount());
      return "package/list"; 
     }
   
@@ -41,12 +43,20 @@ public class PackageController {
   }  
 
   @GetMapping("/write.form")
-  public String write(Model model) {
-	 Map<String, Object> result = packageService.getRegionAndTheme(new HashMap<>());	    
-	 model.addAttribute("regionList", result.get("regionList"));
-	 model.addAttribute("themeList", result.get("themeList"));
+  public String write(HttpServletRequest request, Model model) {
+	 packageService.getRegionAndTheme(request, model);
 	 return "package/write"; 
 	}
+  
+  @PostMapping("/edit.do")
+  public String edit(@RequestParam(value="packageNo", required=false, defaultValue="0") int packageNo, 
+      HttpServletRequest request, Model model) {
+    PackageDto packageDto = packageService.getPackage(packageNo);
+    packageService.getRegionAndTheme(request, model);    
+    model.addAttribute("packageDto", packageDto);
+    return "package/edit";
+  }
+  
   
   @GetMapping("/regionWrite.form")
   public String regionWrite() {
@@ -81,13 +91,28 @@ public class PackageController {
     return "redirect:/package/write.form";
   }
   
+  @ResponseBody
+  @PostMapping(value="/imageUpload.do", produces="application/json")
+  public Map<String, Object> imageUpload(MultipartHttpServletRequest multipartRequest) {
+    return packageService.imageUpload(multipartRequest);
+  }
+  
   @GetMapping("/detail.do")
   public String detail(@RequestParam(value="packageNo", required=false, defaultValue="0") int packageNo
-          , Model model) {
+          , HttpServletRequest request, Model model) {
+      packageService.getReserveUser(request, model);
     	PackageDto packageDto = packageService.getPackage(packageNo);
     	model.addAttribute("packageDto", packageDto);
+
     	return "package/detail"; 
 	}
+  
+  @PostMapping("/modifyPackage.do")
+  public String modifyProduct(HttpServletRequest request, RedirectAttributes redirectAttributes) {
+    int modifyResult = packageService.modifyPackage(request);
+    redirectAttributes.addFlashAttribute("modifyResult", modifyResult);
+    return "redirect:/package/detail.do?packageNo=" + request.getParameter("packageNo"); 
+  }
   
   @GetMapping("/increseHit.do")
   public String increseHit(@RequestParam(value="packageNo", required=false, defaultValue="0") int packageNo) {
@@ -105,6 +130,32 @@ public class PackageController {
     return packageService.getHit(request);
   }
   
+  @PostMapping("/remove.do")
+  public String remove(@RequestParam(value="packageNo", required=false, defaultValue="0") int packageNo
+                     , RedirectAttributes redirectAttributes) {
+    int removeResult = packageService.removePackage(packageNo);
+    redirectAttributes.addFlashAttribute("removeResult", removeResult);
+    return "redirect:/package/list.do";
+  }
 
+  @ResponseBody
+  @PostMapping(value="/addReview.do", produces="application/json")
+  public Map<String, Object> addReview(HttpServletRequest request) {
+    return packageService.addReview(request);
+  }
+  
+  
+  
+  @ResponseBody
+  @GetMapping(value="/reviewList.do", produces="application/json")
+  public Map<String, Object> ReviewList(HttpServletRequest request){
+    return packageService.loadReviewList(request);
+  }
+  
+  @ResponseBody
+  @PostMapping(value="/removeReview.do", produces="application/json")
+  public Map<String, Object> removeReview(@RequestParam(value="reviewNo", required=false, defaultValue="0") int reviewNo) {
+    return packageService.removeReview(reviewNo);
+  }
 
 }

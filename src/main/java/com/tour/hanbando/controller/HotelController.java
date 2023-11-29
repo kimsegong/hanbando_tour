@@ -14,10 +14,7 @@ import lombok.RequiredArgsConstructor;
 public class HotelController {
   private final HotelService hotelService;
   
-  @GetMapping("/bannerList.do")
-  public String banner() {
-    return "manage/bannerList";
-  }
+ 
   
   @GetMapping("list.do")
   public String hotelList() {

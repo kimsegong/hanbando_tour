@@ -22,12 +22,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.fasterxml.jackson.databind.util.JSONPObject;
 import com.tour.hanbando.dao.UserMapper;
 import com.tour.hanbando.dto.InactiveUserDto;
 import com.tour.hanbando.dto.UserDto;
 import com.tour.hanbando.util.MyJavaMailUtils;
 import com.tour.hanbando.util.MySecurityUtils;
 
+import kotlinx.serialization.json.Json;
 import lombok.RequiredArgsConstructor;
 import net.nurigo.sdk.NurigoApp;
 import net.nurigo.sdk.message.model.Message;
@@ -46,35 +48,36 @@ public class UserServiceImpl implements UserService {
   
   private final String client_id = "RTJMyHb54a63lvLzPh7A";
   private final String client_secret = "0xR9yv0oo3";
+  private final String kakao_id = "9ac35c110f888ef0213ea4dbd3fab619";
+  private final String kakao_secret = "oSTQjBnyEhgcUN8Xioh6Y5ZiRfKYRe0m";
+  
+  
+  
   private DefaultMessageService messageService;
   
  
   //인증번호
   @Override
-  public void certifiedPhoneNumber(String phoneNumber, String cerNum) throws Exception {
+  public Map<String, Object> certifiedPhoneNumber(String phoneNumber) throws Exception {
     
       String api_key = "NCS9YET2CLIIXCUL";
       String api_secret = "CTWEHCPFCPLEM2AVYQY02UDN8LXROBCQ";
       messageService = NurigoApp.INSTANCE.initialize(api_key, api_secret,"https://api.coolsms.co.kr");
       
-      //Message coolsms = new Message(api_key, api_secret);
-      /*
-      HashMap<String, String> params = new HashMap<>();
-      params.put("to", phoneNumber);    // 수신전화번호
-      params.put("from", "본인 휴대번호");    // 발신전화번호
-      params.put("type", "SMS");
-      params.put("text", "빵야빵야(屋) 인증번호 " + "["+cerNum+"]" + "를 입력하세요.");
-      params.put("app_version", "test app 1.2"); // application name and version
-  */
+      int cerNum = Integer.parseInt(mySecurityUtils.getRandomString(5, false, true));
+      
       Message message = new Message();
       // 발신번호 및 수신번호는 반드시 01012345678 형태로 입력되어야 합니다.
       message.setFrom("01062316858");
       message.setTo(phoneNumber);
-      message.setText("한글 45자, 영자 90자 이하 입력되면 자동으로 SMS타입의 메시지가 추가됩니다.");
+      message.setText("[한반도투어] 본인확인 인증번호는 [" + cerNum + "] 입니다.");
       
       
       SingleMessageSentResponse response = this.messageService.sendOne(new SingleMessageSendingRequest(message));
       System.out.println(response);
+      
+      return Map.of("cerNum", cerNum);
+      
   }
     
   
@@ -118,6 +121,7 @@ public class UserServiceImpl implements UserService {
     
   }
   
+  ////////////////네이버/////////////////////////
   @Override
   public String getNaverLoginURL(HttpServletRequest request) throws Exception {
     
@@ -232,30 +236,8 @@ public class UserServiceImpl implements UserService {
     
   }
   
-  /*
-  @Override
-  public String getKakaoLoginURL(HttpServletRequest request) throws Exception {
-    // 카카오로그인-1
-    // 카카오 로그인 연동 URL 생성하기를 위해 redirect_uri(URLEncoder), state(SecureRandom) 값의 전달이 필요하다.
-    // redirect_uri : 카카오로그인-2를 처리할 서버 경로를 작성한다.
-    // redirect_uri 값은 카카오 로그인 Callback URL에도 동일하게 등록해야 한다.
-    
-    String apiURL = "https://kauth.kakao.com/oauth/authorize";
-    String response_type = "code";
-    String redirect_uri = URLEncoder.encode("http://localhos:8080" + request.getContextPath() + "/user/kakao_join.html", "UTF-8");
-    String state = new BigInteger(130, new SecureRandom()).toString();
+
   
-    StringBuilder sb = new StringBuilder();
-    sb.append(apiURL);
-    sb.append("?response_type=").append(response_type);
-    sb.append("&client_id=").append(client_id);
-    sb.append("&redirect_uri=").append(redirect_uri);
-    sb.append("&state=").append(state);
-    
-    return sb.toString();
-    
-  }
-  */
   
   @Override
   public UserDto getUser(String email) {
@@ -325,6 +307,198 @@ public class UserServiceImpl implements UserService {
     }
     
   }
+  
+  ///////////////////////////////////카카오////////////////////////////////////////////////////
+  @Override
+  public void kakaoJoin(HttpServletRequest request, HttpServletResponse response) throws Exception {
+    String mobile = request.getParameter("mobile");
+    String email = request.getParameter("email");
+    String pw = request.getParameter("pw");
+    String name = request.getParameter("name");
+    String gender = request.getParameter("gender");
+    
+    UserDto user = UserDto.builder()    
+                          .mobile(mobile)
+                          .email(email)
+                          .pw(pw)
+                          .name(name)
+                          .gender(gender)
+                          .build();
+    
+    int kakaoJoinResult = userMapper.insertKakaoUser(user);
+    
+   try {
+      
+      response.setContentType("text/html; charset=UTF-8");
+      PrintWriter out = response.getWriter();
+      out.println("<script>");
+      if(kakaoJoinResult == 1) {
+        request.getSession().setAttribute("user", userMapper.getUser(Map.of("email", email)));
+        userMapper.insertAccess(email);
+        out.println("alert('카카오 간편가입이 완료되었습니다.')");
+      } else {
+        out.println("alert('카카오 간편가입이 실패했습니다.')");
+      }
+      out.println("location.href='" + request.getContextPath() + "/main.do'");
+      out.println("</script>");
+      out.flush();
+      out.close();
+      
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+    
+  }
+  
+  
+  @Override
+  public String getKakaoLoginURL(HttpServletRequest request) throws Exception {
+    // 카카오로그인-1
+    // 카카오 로그인 연동 URL 생성하기를 위해 redirect_uri(URLEncoder), state(SecureRandom) 값의 전달이 필요하다.
+    // redirect_uri : 카카오로그인-2를 처리할 서버 경로를 작성한다.
+    // redirect_uri 값은 카카오 로그인 Callback URL에도 동일하게 등록해야 한다.
+    
+    String apiURL = "https://kauth.kakao.com/oauth/authorize";
+    String response_type = "code";
+    String redirect_uri = URLEncoder.encode("http://localhost:8080" + request.getContextPath() + "/user/kakao/getAccessToken.do", "UTF-8");
+    String state = new BigInteger(130, new SecureRandom()).toString();
+  
+    StringBuilder sb = new StringBuilder();
+    sb.append(apiURL);
+    sb.append("?response_type=").append(response_type);
+    sb.append("&client_id=").append(kakao_id);
+    sb.append("&redirect_uri=").append(redirect_uri);
+    sb.append("&state=").append(state);
+    
+    return sb.toString();
+    
+  }
+  
+  //카카오로그인-2(토큰 발급 요청)
+  @Override
+  public String getKakaoLoginAccessToken(HttpServletRequest request) throws Exception {
+    
+    String code = request.getParameter("code");
+    String state = request.getParameter("state");
+    
+    String apiURL = "https://kauth.kakao.com/oauth/token";
+    String grant_type = "authorization_code";
+
+    StringBuilder sb = new StringBuilder();
+    sb.append(apiURL);
+    sb.append("?grant_type=").append(grant_type);
+    sb.append("&client_id=").append(kakao_id);
+    sb.append("&client_secret=").append(kakao_secret);
+    sb.append("&code=").append(code);
+    sb.append("&state=").append(state);
+    
+    
+    // 요청
+    URL url = new URL(sb.toString());
+    HttpURLConnection con = (HttpURLConnection)url.openConnection();
+    con.setRequestMethod("GET");  // 반드시 대문자로 작성
+    
+    // 응답
+    BufferedReader reader = null;
+    int responseCode = con.getResponseCode();
+    if(responseCode == 200) {
+      reader = new BufferedReader(new InputStreamReader(con.getInputStream()));
+    } else {
+      reader = new BufferedReader(new InputStreamReader(con.getErrorStream()));
+    }
+    
+    String line = null;
+    StringBuilder responseBody = new StringBuilder();
+    while ((line = reader.readLine()) != null) {
+      responseBody.append(line);
+    }
+    
+    JSONObject obj = new JSONObject(responseBody.toString());
+    return obj.getString("access_token");
+    
+  }
+  
+  
+  @Override
+  public UserDto getKakaoProfile(String accessToken) throws Exception {
+    
+    // 카카오 로그인-3
+    // 접근 토큰을 전달한 뒤 사용자의 프로필 정보(이름, 이메일, 성별, 휴대전화번호) 받아오기
+    // 요청 헤더에 Authorization: Bearer accessToken 정보를 저장하고 요청함
+    
+    // 요청
+    String apiURL = "https://kapi.kakao.com/v2/user/me";
+    URL url = new URL(apiURL);
+    HttpURLConnection con = (HttpURLConnection)url.openConnection();
+    con.setRequestMethod("GET");
+    con.setRequestProperty("Authorization", "Bearer " + accessToken);
+    
+    // 응답
+    BufferedReader reader = null;
+    int responseCode = con.getResponseCode();
+    if(responseCode == 200) {
+      reader = new BufferedReader(new InputStreamReader(con.getInputStream()));
+    } else {
+      reader = new BufferedReader(new InputStreamReader(con.getErrorStream()));
+    }
+    
+    String line = null;
+    StringBuilder responseBody = new StringBuilder();
+    while ((line = reader.readLine()) != null) {
+      responseBody.append(line);
+    }
+    
+    // 응답 결과(프로필을 JSON으로 응답) -> UserDto 객체
+    JSONObject obj = new JSONObject(responseBody.toString());
+    
+   
+    
+   
+    JSONObject kakao_account = obj.getJSONObject("kakao_account");
+    JSONObject profile = kakao_account.getJSONObject("profile");
+    
+    String nickname = profile.getString("nickname");
+    String email = kakao_account.getString("email");
+    
+    
+    UserDto user = UserDto.builder()    
+                          .email(email)
+                          .name(nickname)
+                          .build();
+    
+   
+    
+    return user;
+    
+  }
+  
+    
+    
+    
+    
+  @Override
+  public void kakaoLogin(HttpServletRequest request, HttpServletResponse response, UserDto kakaoProfile)
+      throws Exception {
+    String email = kakaoProfile.getEmail();
+    UserDto user = userMapper.getUser(Map.of("email", email));
+    
+    if(user != null) {
+      request.getSession().setAttribute("user", user);
+      userMapper.insertAccess(email);
+    } else {
+      response.setContentType("text/html; charset=UTF-8");
+      PrintWriter out = response.getWriter();
+      out.println("<script>");
+      out.println("alert('일치하는 회원 정보가 없습니다.')");
+      out.println("location.href='" + request.getContextPath() + "/main.do'");
+      out.println("</script>");
+      out.flush();
+      out.close();
+    }
+    
+  }
+    
+  
   
   @Override
   public void logout(HttpServletRequest request, HttpServletResponse response) {
