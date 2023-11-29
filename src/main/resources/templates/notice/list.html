@@ -12,6 +12,14 @@
     height:70px;
   }    
   
+  .wrap1 > .box3{
+  height:70px;
+  }    
+
+  .wrap1 > .box4{
+  height:70px;
+  }      
+  
   .btn-outline-primary {
     padding: 10px 24px !important; /* 버튼 내부의 여백을 조절합니다. */
     font-size: 14px !important; /* 글자 크기를 조절합니다. */
@@ -20,6 +28,7 @@
 
 
 <body>
+  
   <div th:replace="~{/layout/header::header}"></div>
   
   <div class="main_wrap">
@@ -39,7 +48,7 @@
     <div class="col-4" style="display: flex; justify-content: flex-end;">
       <div class="home">
         <a th:href="@{/layout/main.do}"><i class="fa-solid fa-house" style="font-size:15px; margin-right: 5px;"></i></a>
-         &nbsp;고객센터  &nbsp;  <   &nbsp; 공지사항
+         &nbsp;고객센터  &nbsp;  >   &nbsp; 공지사항
       </div>
     </div>
        
@@ -57,14 +66,14 @@
     </div>
     
     <div class="col-4">
-      <div class = "title_search">
-      <form method="get" th:action="@{/notice/search.do}">
-        <input type="radio" class="btn-check" name="options-base" id="option5" autocomplete="off" checked>
+     <form method="get" th:action="@{/notice/search.do}">
+        <div class = "title_search">
+        <input type="radio" class="btn-check" id="option5" name="column" value="TITLE" autocomplete="off" checked>
         <label class="btn" for="option5">제목</label>
         <input type="text" name="query" placeholder="검색어 입력" class="search_input">
         <button type="submit" class="btn btn-outline-success search_btn">검색</button>
-      </form>
       </div>        
+     </form>
     </div>
     
     <div class = "wrap1">
@@ -105,23 +114,39 @@
         </tr>
       </thead>
     <tbody>
-      <c:forEach items="${noticeList}"  var="n" varStatus="vs">
-        <tr>
-          <th scope="row">${beginNo - vs.index}</th>
+      <th:block th:each="n,vs:${noticeList}">
+        <tr class="align-bottom">
+          <td th:text="${beginNo - vs.index}"></td>
             <td>
-             <a href="${contextPath}/notice/detail.do?noticeNo=${n.noticeNo}">${n.title}</a>
+             <a th:href="@{|/notice/detail.do?noticeNo=${n.noticeNo}|}" th:text="${n.title}"></a>
             </td>
-            <td>${n.createdAt}</td>
-            <td>${n.modifiedAt}</td>
+            <td th:text="${n.createdAt}"></td>
+            <td th:text="${n.modifiedAt}"></td>
         </tr>
-      </c:forEach>
+      </th:block>
     </tbody>
   </table>
   
+    <div class = "wrap1">
+      <div class="box3"></div>
+    </div>
+  
+  <tbody>
+    <tr>
+      <td cplspan="5" th:utext="${paging}"></td>
+    </tr>
+  </tbody>
+
   
   
   
-  <div colspan="5">${paging}</div>
+  <div class = "wrap1">
+    <div class="box4"></div>
+  </div>  
+  
+  
+  
+  
   </div>  
   </div>
 
