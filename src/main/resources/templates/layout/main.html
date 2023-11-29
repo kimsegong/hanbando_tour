@@ -15,6 +15,8 @@
             <div class="item1"><img class="owl_img" src="image/404.jpg" ></div>
             <div class="item2"><img class="owl_img" src="image/logol.jpg" ></div>
             <div class="item3"><img class="owl_img" src="image/logou.jpg" ></div>
+            <div class="item3"><img class="owl_img" src="image/logou.jpg" ></div>
+            <div class="item3"><img class="owl_img" src="image/logou.jpg" ></div>
         </div>   
       </div>     
 	  </div>
@@ -27,75 +29,12 @@
 		      	<!--/*여기에 작성 */-->
 		    <div class="card_wrapper1">
 					<h3> 베스트 패키지 기획전</h3>
-					<div class="cards">
-						<div class="mycard position-relative">
-							<a src="">
-								<img class="card_image" src="image/404.jpg">
-									<h4>title</h4>
-									<h4>price</h4>
-							</a>
-							<button type="button" class="btn-heart position-absolute top-0 end-0"><i class="fa-regular fa-heart fa-xl" style="color: #adc4ce;"></i></button>
-						</div>
-						<div class="mycard position-relative">
-							<a src="">
-								<img class="card_image" src="image/404.jpg">
-									<h4>title</h4>
-									<h4>price</h4>
-							</a>
-							<button type="button" class="btn-heart position-absolute top-0 end-0"><i class="fa-regular fa-heart fa-xl" style="color: #adc4ce;"></i></button>
-						</div>
-						<div class="mycard position-relative">
-							<a src="">
-								<img class="card_image" src="image/404.jpg">
-									<h4>title</h4>
-									<h4>price</h4>
-							</a>
-							<button type="button" class="btn-heart position-absolute top-0 end-0"><i class="fa-regular fa-heart fa-xl" style="color: #adc4ce;"></i></button>
-						</div>
-						<div class="mycard position-relative">
-							<a src="">
-								<img class="card_image" src="image/404.jpg">
-									<h4>title</h4>
-									<h4>price</h4>
-							</a>
-							<button type="button" class="btn-heart position-absolute top-0 end-0"><i class="fa-regular fa-heart fa-xl" style="color: #adc4ce;"></i></button>
-						</div>
+					<div id="best_cards" class="cards">
 					</div>
 				<div class="card_wrapper2">
 					<h3> 테마별 패키지 기획전</h3>
-					<div class="cards">
-						<div class="mycard position-relative">
-							<a src="">
-								<img class="card_image" src="image/404.jpg">
-									<h4>title</h4>
-									<h4>price</h4>
-							</a>
-							<button type="button" class="btn-heart position-absolute top-0 end-0"><i class="fa-regular fa-heart fa-xl" style="color: #adc4ce;"></i></button>
-						</div>
-						<div class="mycard position-relative">
-							<a src="">
-								<img class="card_image" src="image/404.jpg">
-									<h4>title</h4>
-									<h4>price</h4>
-							</a>
-							<button type="button" class="btn-heart position-absolute top-0 end-0"><i class="fa-regular fa-heart fa-xl" style="color: #adc4ce;"></i></button>
-						</div>
-						<div class="mycard position-relative">
-							<a src="">
-								<img class="card_image" src="image/404.jpg">
-									<h4>title</h4>
-									<h4>price</h4>
-							</a>
-							<button type="button" class="btn-heart position-absolute top-0 end-0"><i class="fa-regular fa-heart fa-xl" style="color: #adc4ce;"></i></button>
-						</div>
-						<div class="mycard position-relative">
-							<a src="">
-								<img class="card_image" src="image/404.jpg">
-									<h4>title</h4>
-									<h4>price</h4>
-							</a>
-							<button type="button" class="btn-heart position-absolute top-0 end-0"><i class="fa-regular fa-heart fa-xl" style="color: #adc4ce;"></i></button>
-						</div>
+					<div id="theme_cards" class="theme_cards">
+						
 					</div>
 					
 				</div>  	
@@ -114,7 +53,7 @@
 	</div>
 
 	
-	<script>
+	<script th:inline="javascript">
 		 $(document).ready(function(){
               var owl = $('.owl-carousel');
               owl.owlCarousel({
@@ -126,6 +65,55 @@
               });           
             });
 		
+		const fnBestPackage = () => {
+      $.ajax({
+        type: 'get',
+        url: '/main/getBest.do', 
+        dataType: 'json',
+        success: (resData) => {  
+          if (resData.bestPackageList != null && resData.bestPackageList.length > 0) {
+            $.each(resData.bestPackageList, (i, package) => {  
+              let str = '<div class="mycard position-relative">';
+                  str += '<a href="' + '/package/increseHit.do?packageNo=' + package.packageNo+'">';
+                  str += '<img src="https://github.com/skal48/portfolio/blob/main/hanla.jpg?raw=true" class="card_image" alt="Package Image">';
+                  str += '<h4>'+package.packageTitle+'</h4>';
+                  str += '<h4>'+package.price+'</h4></a>';
+                  str += '<button type="button" class="btn-heart position-absolute top-0 end-0"><i class="fa-regular fa-heart fa-xl" style="color: #adc4ce;"></i></button>';
+                  str += '</div>';
+            $('#best_cards').append(str);
+             })
+           }
+         }
+		  })
+		 }
+	const fnThemePackage = () => {
+      $.ajax({
+        type: 'get',
+        url: '/main/getTheme.do', 
+        dataType: 'json',
+        success: (resData) => {  
+          if (resData.themePackageList != null && resData.themePackageList.length > 0) {
+            $.each(resData.themePackageList, (i, package) => {  
+              let str = '<div class="mycard position-relative">';
+                  str += '<a href="' + '/package/increseHit.do?packageNo=' + package.packageNo+'">';
+                  str += '<img src="https://github.com/skal48/portfolio/blob/main/hanla.jpg?raw=true" class="card_image" alt="Package Image">';
+                  str += '<h4>'+package.packageTitle+'</h4>';
+                  str += '<h4>'+package.price+'</h4></a>';
+                  str += '<button type="button" class="btn-heart position-absolute top-0 end-0"><i class="fa-regular fa-heart fa-xl" style="color: #adc4ce;"></i></button>';
+                  str += '</div>';
+            $('#theme_cards').append(str);
+             })
+           }
+         }
+      })
+     }	 
+		 
+		 
+		 
+		 
+		 
+  fnBestPackage();
+  fnThemePackage();
 	</script>
 	
 	

@@ -30,7 +30,7 @@
    <div class="container text-center header_top">
 		  <div class="row">
 		    <div class="col-3">
-		       <div class="logo"><a th:href="@{/}" ><img src="image/logol.jpg"></a></div>
+		       <div class="logo"><a th:href="@{/}"><div class="logom"></div></a></div>
 		    </div>
 		    <div class="col-8">
 		       <div class="header_search">
@@ -41,22 +41,21 @@
 		    <div class="col-1">
 		      <div  class="user">
 						<a th:href="@{/user/login.form}"><i class="fa-regular fa-user fa-2xl" style="color: #96b6c5;"></i><div>&emsp;로그인&emsp;</div></a> 
-						<a th:href="@{/reserve/reserveList.do}"><i class="fa-regular fa-calendar-check fa-2xl" style="color: #96b6c5;"></i><div>내일정</div></a> 		 
+						<a th:href="@{/reserve/reserveList.do?userNo=${session.user.userNo}}"><i class="fa-regular fa-calendar-check fa-2xl" style="color: #96b6c5;"></i><div>내일정</div></a> 		 
 					</div>  
 					<div class="user">
             <a th:href="@{/user/mypage.form}"><i class="fa-solid fa-user fa-2xl" style="color: #96b6c5;"></i><div>마이페이지</div></a> 
-            <a th:href="@{/reserve/reserveList.do}"><i class="fa-regular fa-calendar-check fa-2xl" style="color: #96b6c5;"></i><div>내일정</div></a>   
+            <a th:href="@{/reserve/reserveList.do?userNo=${session.user.userNo}}"><i class="fa-regular fa-calendar-check fa-2xl" style="color: #96b6c5;"></i><div>내일정</div></a>   
             <a href=""><i class="fa-solid fa-right-from-bracket fa-2xl" style="color: #96b6c5;"></i><div>로그아웃</div></a>   
           </div>
 					<div class="user">
             <a th:href="@{/manage/userList.do}"><i class="fa-solid fa-user fa-2xl" style="color: #96b6c5;"></i><div>관리페이지</div></a> 
-            <a th:href="@{/reserve/reserveList.do}"><i class="fa-regular fa-calendar-check fa-2xl" style="color: #96b6c5;"></i><div>내일정</div></a>
-            <a href=""><i class="fa-solid fa-right-from-bracket fa-2xl" style="color: #96b6c5;"></i><div>로그아웃</div></a>       
+            <a th:href="@{/reserve/reserveList.do?userNo=${session.user.userNo}}"><i class="fa-regular fa-calendar-check fa-2xl" style="color: #96b6c5;"></i><div>내일정</div></a>
+            <a th:href="@{/main/bannerList.do}"><i class="fa-solid fa-right-from-bracket fa-2xl" style="color: #96b6c5;"></i><div>로그아웃</div></a>       
           </div>	
 		    </div>
 		  </div>
 		</div>
-
 	  <nav class="navbar navbar-expand-lg bg-body-tertiary">
   <div class="container-fluid">    
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">

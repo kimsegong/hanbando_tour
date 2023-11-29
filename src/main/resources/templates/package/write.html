@@ -47,28 +47,40 @@
         <!-- 추천라디오 -->
         <div style="text-align: left;">
             <div class="form-check">
-                <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
-                <label class="form-check-label" for="flexRadioDefault1">
+                <input class="form-check-input" type="radio" name="recommendStatus" id="recommendStatusInput" th:value="1">
+                <label class="form-check-label" for="recommendStatus">
                     추천
                 </label>
             </div>
             <div class="form-check">
-                <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" checked>
-                <label class="form-check-label" for="flexRadioDefault2">
+                <input class="form-check-input" type="radio" name="recommendStatus" id="recommendStatusInput" th:value="2" checked>
+                <label class="form-check-label" for="recommendStatus">
                     안추천
                 </label>
             </div>
         </div>
-        <!-- 선택박스 -->
-        <div class="w-25 p-3" id="selectBox">
+           <div class="w-25 p-3">
+			    <select id="regionSelect" class="form-select" aria-label="Default select example" name="regionNo">
+			        <option selected>-지역-</option>
+			        <option th:each="region : ${regionList}" th:value="${region.regionNo}" th:text="${region.regionName}"></option>
+			    </select>
+			    <select id="themeSelect" class="form-select" aria-label="Default select example" name="themeNo">
+			        <option selected>-테마-</option>
+			        <option th:each="theme : ${themeList}" th:value="${theme.themeNo}" th:text="${theme.themeName}"></option>
+			    </select>
+		   </div>
 
-		     </div>
+
 		    </div>
 		</div>
     	   <div>
 	        <label for="packageTitle" class="form-label"></label>
 	        <input type="text" name="packageTitle" id="packageTitle" class="form-control" placeholder="패키지제목을 작성해주세요">
 	       </div>
+	       <div>
+          <label for="maxPeople" class="form-label"></label>
+          <input type="text" name="maxPeople" id="maxPeople" class="form-control" placeholder="최대인원수">
+         </div>   
     	   <div>
 	        <label for="miniOne" class="form-label"></label>
 	        <input type="text" name="miniOne" id="miniOne" class="form-control" placeholder="패키지를 표현해주세요 ex) 신혼여행">
@@ -108,18 +120,7 @@
     	  	<label for="danger" class="form-label"></label>
     	  	<textarea class="form-control" id="danger" name="danger" rows="10" placeholder="유의사항 작성해주세요"></textarea>
     	  </div>    
-    	  	  
-    	  <div>
-    	  	<label for="maxPeople" class="form-label"></label>
-	        <input type="text" name="maxPeople" id="maxPeople" class="form-control" placeholder="최대인원수">
-    	  </div>    	  
-    	  <div>
-    	  	<label for="recommendStatus" class="form-label"></label>
-	        <input type="text" name="recommendStatus" id="recommendStatus" class="form-control" placeholder="임시추천">
-    	  </div>    	  
-
-
-		  <div class="d-grid gap-2 col-6 mx-auto">
+		    <div class="d-grid gap-2 col-6 mx-auto">
 		      <input type="hidden" name="userNo" th:value="${session.user.userNo}">
 		      <button type="submit" class="btn btn-primary" style="margin: 32px;">작성완료</button>
 	      </div>
@@ -179,40 +180,19 @@
       });
   }
 
-  var page = 1;
-  var totalPage = 0;
-
- // const packageNo = $('#packageNo').val();
-
-  const fnRegionList = () => { 
-    $.ajax({
-      type: 'get',
-      url: '/package/regionList.do',
-      data: 'page=' + page,
-      dataType: 'json',
-      success: (resData) => {
-        totalPage = resData.totalPage;
-        if (resData.regionListList != null && resData.regionList.length > 0) {         
-                const selectBox = $('#selectBox');
-                selectBox.empty();              
-                const select = $('<select class="form-select" aria-label="Default select example"></select>');
-                resData.regionList.forEach((i, region) => {
-                    const option = $('<option></option>');
-                    option.attr('value', region.regionNo);
-                    option.text(region.regionName);
-                    select.append(option);
-                });
-                selectBox.append(select);
-            } else {
-                $('#selectBox').append('<div class="text-center">없습니다.</div>');
+  
+	$(document).ready(function () {
+        $('input[type=radio][name=recommendStatus]').change(function() {
+            if (this.value === '1') {
+                $('#recommendStatusInput').val('1'); // 추천
+            } else if (this.value === '2') {
+                $('#recommendStatusInput').val('2'); // 안추천
             }
-        },
-        error: (error) => {
-            console.error('Ajax 요청 에러:', error);
-        }
+        });
     });
+    
 
-  fnRegionList();
+ 
   fnCkeditor();
   
   </script>

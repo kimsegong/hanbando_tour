@@ -19,11 +19,11 @@
 	<dependencies>
     
     <!-- CoolSMS(Maven) -->
-  <dependency>
-      <groupId>net.nurigo</groupId>
-      <artifactId>javaSDK</artifactId>
-      <version>2.2</version>
-   </dependency>
+    <dependency>
+        <groupId>net.nurigo</groupId>
+        <artifactId>sdk</artifactId>
+        <version>4.3.0</version>
+    </dependency>
 
     <!-- jasypt(Java Simplified Encryption) -->
     <dependency>

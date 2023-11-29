@@ -1,7 +1,11 @@
 package com.tour.hanbando.controller;
 
+import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
 
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.tour.hanbando.dto.InactiveUserDto;
 import com.tour.hanbando.dto.UserDto;
 import com.tour.hanbando.service.ManageService;
 
@@ -30,8 +35,8 @@ public class ManageController {
   }
   
   /* 기존 회원 검색 */
-  @GetMapping("/userSearchList.do")
-  public String userSearchList(HttpServletRequest request, Model model) {
+  @GetMapping("/searchUserList.do")
+  public String searchUserList(HttpServletRequest request, Model model) {
     manageService.loadSearchUserList(request, model);
     return "manage/userList";
   }
@@ -46,6 +51,10 @@ public class ManageController {
   }
   
   /* 기존 회원 정보 수정 */
+  @PostMapping(value="/modifyUser.do", produces=MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<Map<String, Object>> modifyUser(HttpServletRequest request){
+    return manageService.modifyUser(request);
+  }
   
   /* 기존 회원 비밀번호 수정 폼으로 이동 */
   
@@ -54,18 +63,27 @@ public class ManageController {
   /* 기존 회원 탈퇴 */
   
   /* 휴면 회원 목록 */
-  @GetMapping("/inactiveUserList.do")
-  public String inactiveUserList(HttpServletRequest request, Model model) {
+  @GetMapping("/inactiveList.do")
+  public String inactiveList(HttpServletRequest request, Model model) {
+    manageService.loadInactiveList(request, model);
     return "manage/inactiveUserList";
   }
   
   /* 휴면 회원 검색 */
-  @GetMapping("/inactiveUserSearchList.do")
-  public String inactiveUserSearchList(HttpServletRequest request, Model model) {
+  @GetMapping("/searchInactiveList.do")
+  public String searchInactiveList(HttpServletRequest request, Model model) {
+    manageService.loadSearchInactiveList(request, model);
     return "manage/inactiveUserList";
   }
   
   /* 휴면 회원 상세 */
+  @GetMapping("/inactiveDetail.do")
+  public String inactiveDetail(@RequestParam(value="userNo", required=false, defaultValue="0") int userNo
+                             , Model model) {
+    InactiveUserDto inactiveUser = manageService.getInactiveUser(userNo);
+    model.addAttribute("inactiveUser", inactiveUser);
+    return "manage/inactiveDetail";
+  }
   
   /* 탈퇴 회원 목록 */
   @GetMapping("/leaveUserList.do")
@@ -74,8 +92,8 @@ public class ManageController {
   }
   
   /* 탈퇴 회원 검색 */
-  @GetMapping("/leaveUserSearchList.do")
-  public String leaveUserSearchList(HttpServletRequest request, Model model) {
+  @GetMapping("/searchLeaveList.do")
+  public String searchLeaveList(HttpServletRequest request, Model model) {
     return "manage/leaveUserList";
   }
   

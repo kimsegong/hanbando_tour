@@ -1,7 +1,5 @@
 package com.tour.hanbando.dto;
 
-import java.util.Date;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,6 +11,6 @@ import lombok.NoArgsConstructor;
 @Builder
 public class LeaveUserDto {
   private String leavedEmail;
-  private Date joinedAt;
-  private Date leavedAt;
+  private String joinedAt;
+  private String leavedAt;
 }

@@ -184,14 +184,7 @@
 		  <div class="row">
 		    <div class="col-1">	      
 		    </div>
-		    <div class="col-10" style="border:1px gray dotted">
-		      	<!--/*여기에 작성/ 다 만들고 style 지워주세요  */-->
-		   
-		      
-		   
-		   
-		   
-		   
+		    <div class="col-10">
         		         
           <div class="second_main_wrap">
               
@@ -212,7 +205,7 @@
                   <a th:href="@{/manage/reviewList.do}">리뷰관리</a>
                 </div>
                 <div id="bannerList">
-                  <a th:href="@{/manage/reviewList.do}">배너관리</a>
+                  <a th:href="@{/main/bannerList.do}">배너관리</a>
                 </div>
               </div>
                 
@@ -227,7 +220,7 @@
                   <a th:href="@{/manage/userList.do}">일반회원관리</a>
                 </div>
                 <div id="inactiveUser">
-                  <a th:href="@{/manage/inactiveUserList.do}">휴면회원관리</a>
+                  <a th:href="@{/manage/inactiveList.do}">휴면회원관리</a>
                 </div>
                 <div id="leaveUser">
                   <a th:href="@{/manage/leaveUserList.do}">탈퇴회원관리</a>
@@ -235,10 +228,10 @@
               </div>
                 
         
-              <!--/* 관리 회원목록이 표시될 div */-->
+              <!--/* 관리 휴면회원 목록이 표시될 div */-->
               <div class="listMainWrap">
                   
-                <!--/* 총 회원 수를 표시 */-->
+                <!--/* 총 휴면회원 수를 표시 */-->
                 <div style="text-align: left;" th:text="|총 ${total}명|"></div>
                   
                 <!--/* 전체 목록을 나타내는 테이블 */-->
@@ -253,37 +246,37 @@
                         <th scope="col">성별</th>
                         <th scope="col">가입형태</th>
                         <th scope="col">가입일</th>
-                        <th scope="col">권한</th>
+                        <th scope="col">전환일</th>
                       </tr>
                     </thead>
                     <tbody class="table-group-divider table_to_detail">
-                      <th:block th:each="u:${userList}">
+                      <th:block th:each="ina:${inactiveList}">
                         <tr>
-                          <th scope="row" th:text="${u.userNo}"></th>
+                          <th scope="row" th:text="${ina.userNo}"></th>
                           <td>
-                            <a th:href="@{/manage/inactiveDetail.do(userNo=${u.userNo})}" th:text="${u.email}"></a>
+                            <a th:href="@{/manage/inactiveDetail.do(userNo=${ina.userNo})}" th:text="${ina.email}"></a>
                           </td>
                           <td>
-                            <a th:href="@{/manage/inactiveDetail.do(userNo=${u.userNo})}" th:text="${u.name}"></a>
+                            <a th:href="@{/manage/inactiveDetail.do(userNo=${ina.userNo})}" th:text="${ina.name}"></a>
                           </td>
                           <td>
-                            <a th:href="@{/manage/inactiveDetail.do(userNo=${u.userNo})}" th:text="${u.mobile}"></a>
+                            <a th:href="@{/manage/inactiveDetail.do(userNo=${ina.userNo})}" th:text="${ina.mobile}"></a>
                           </td>
                           <td>
-                            <a th:href="@{/manage/inactiveDetail.do(userNo=${u.userNo})}" th:if="${u.gender == 'F'}">여자</a>
-                            <a th:href="@{/manage/inactiveDetail.do(userNo=${u.userNo})}" th:if="${u.gender == 'M'}">남자</a>
+                            <a th:href="@{/manage/inactiveDetail.do(userNo=${ina.userNo})}" th:if="${ina.gender == 'NO'}">선택안함</a>
+                            <a th:href="@{/manage/inactiveDetail.do(userNo=${ina.userNo})}" th:if="${ina.gender == 'F'}">여자</a>
+                            <a th:href="@{/manage/inactiveDetail.do(userNo=${ina.userNo})}" th:if="${ina.gender == 'M'}">남자</a>
                           </td>
                           <td>
-                            <a th:href="@{/manage/inactiveDetail.do(userNo=${u.userNo})}" th:if="${u.state == 0}">일반회원</a>
-                            <a th:href="@{/manage/inactiveDetail.do(userNo=${u.userNo})}" th:if="${u.state == 1}">네이버 간편로그인</a>
-                            <a th:href="@{/manage/inactiveDetail.do(userNo=${u.userNo})}" th:if="${u.state == 2}">카카오 간편로그인</a>
+                            <a th:href="@{/manage/inactiveDetail.do(userNo=${ina.userNo})}" th:if="${ina.state == 0}">일반회원</a>
+                            <a th:href="@{/manage/inactiveDetail.do(userNo=${ina.userNo})}" th:if="${ina.state == 1}">네이버 간편로그인</a>
+                            <a th:href="@{/manage/inactiveDetail.do(userNo=${ina.userNo})}" th:if="${ina.state == 2}">카카오 간편로그인</a>
                           </td>
                           <td>
-                            <a th:href="@{/manage/inactiveDetail.do(userNo=${u.userNo})}" th:text="${u.joinedAt}"></a>
+                            <a th:href="@{/manage/inactiveDetail.do(userNo=${ina.userNo})}" th:text="${ina.joinedAt}"></a>
                           </td>
                           <td>
-                            <th:block th:if="${u.auth != 1}">관리자</th:block>
-                            <th:block th:if="${u.auth == 1}">회원</th:block>
+                            <a th:href="@{/manage/inactiveDetail.do(userNo=${ina.userNo})}" th:text="${ina.inactivedAt}"></a>
                           </td>
                         </tr>
                       </th:block>
@@ -291,14 +284,14 @@
                     <!--/* 페이징 처리 */-->
                     <tfoot>
                       <tr>
-                        <td colspan="8" th:utext="${paging}"></td>
+                        <td colspan="8" th:utext="${paging}" class="paging"></td>
                       </tr>
                     </tfoot>
                   </table>
                     
                   <!--/* 검색기능 */-->
                   <div>
-                    <form id="frm_search" method="get" th:action="@{/manage/inactiveUserSearchList.do}" >
+                    <form id="frm_search" method="get" th:action="@{/manage/searchInactiveList.do}" >
                       <select name="column" id="column" >
                         <option value="USER_NO">회원번호</option>
                         <option value="EMAIL">이메일</option>
@@ -319,13 +312,6 @@
           </div>
         
 
-        
-		   
-		   
-		   
-		   
-		   
-		   
 		      	
 		      	
 		    </div>
