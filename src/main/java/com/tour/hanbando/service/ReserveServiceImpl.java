@@ -47,14 +47,19 @@ public class ReserveServiceImpl implements ReserveService {
     ReserveDto reserve =
     
     */
-    String requestedTerm = request.getParameter("reqTerm");
+    String requestedTerm = null;
+    if(request.getParameter("reqTerm") == null) {
+      requestedTerm = "N/A";
+    } else {
+      requestedTerm = request.getParameter("reqTerm");
+    }
     int agree = Integer.parseInt(request.getParameter("chkAgree"));
     String departureLoc = request.getParameter("departureLoc");
     int reserveStatus = Integer.parseInt(request.getParameter("resStatus"));
-    String reserveStart = request.getParameter("resStart");
-    String reserveFinish = request.getParameter("resFinish");
+//    String reserveStart = "null";
+//    String reserveFinish = "null";
     int reservePerson = Integer.parseInt(request.getParameter("reservePerson"));
-    int reservePrice = Integer.parseInt(request.getParameter(""));
+    int reservePrice = Integer.parseInt(request.getParameter("totalReservePrice"));
     int userNo = Integer.parseInt(request.getParameter("userNo"));
     int packageNo = Integer.parseInt(request.getParameter("packageNo"));
     
@@ -63,8 +68,8 @@ public class ReserveServiceImpl implements ReserveService {
                             .agree(agree)
                             .departureLoc(departureLoc)
                             .reserveStatus(reserveStatus)
-                            .reserveStart(reserveStart)
-                            .reserveFinish(reserveFinish)
+//                            .reserveStart(reserveStart)
+//                            .reserveFinish(reserveFinish)
                             .reservePerson(reservePerson)
                             .reservePrice(reservePrice)
                             .userDto(UserDto.builder()
@@ -114,10 +119,8 @@ public class ReserveServiceImpl implements ReserveService {
                 .reserveNo(reserveNo)
                 .build())
             .build();
+        System.out.println(tourist);
         result += reserveMapper.insertTourist(tourist);
-//      } else {
-//        System.out.println(bDates[i].toString());
-//      }
     }
     return result;
   }
@@ -188,7 +191,22 @@ public class ReserveServiceImpl implements ReserveService {
   }
   
   
-  
+  @Override
+  public int modifyReserve(HttpServletRequest request) {
+    int reserveNo = Integer.parseInt(request.getParameter("reserveNo"));
+    
+    String requestedTerm = request.getParameter("reqTerm");
+    String departureLoc = request.getParameter("departureLoc");
+    
+    ReserveDto reserve = ReserveDto.builder()
+                                   .requestedTerm(requestedTerm)
+                                   .departureLoc(departureLoc)
+                                   .reserveNo(reserveNo)
+                                   .build();
+    
+    int modifyResult = reserveMapper.updateReserve(reserve);
+    return modifyResult;
+  }
   
   @Override
   public int removeReserve(HttpServletRequest request) {
