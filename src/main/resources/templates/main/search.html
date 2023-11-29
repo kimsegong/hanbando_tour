@@ -53,7 +53,7 @@
 					
 		      <div style="display: flex; justify-content: space-between; align-items: center;">
 		        <div style="display: inline-block;"> 
-		         <span th:text="${count}"></span>a개의 상품
+		         <span th:text="${count}"></span>개의 상품
 		        </div>
 		        <div class="btn-group btn-group-sm" role="group" aria-label="Small button group" style="display: inline-block;">
 		          <button type="button" class="btn btn-outline-kong" id="recommend">추천순</button>
@@ -73,7 +73,7 @@
 			  <div class="tab-pane fade" id="hotel" role="tabpanel" aria-labelledby="hotel" tabindex="0">
 					 <div style="display: flex; justify-content: space-between; align-items: center;">
 		        <div style="display: inline-block;"> 
-		         <span th:text="${count}"></span>e개의 상품
+		         <span th:text="${count}"></span>개의 상품
 		        </div>
 		        <div class="btn-group btn-group-sm" role="group" aria-label="Small button group" style="display: inline-block;">
 		          <button type="button" class="btn btn-outline-kong" id="recommend">추천순</button>
@@ -84,17 +84,22 @@
 		      </div>
 		      <hr>
 		      <div class="container">
-		        <div class="row" id="package_list"> 
+		        <div class="row" id="hotel_list"> 
 		          
 		        </div>
 		      </div>
 					
 				</div>
 			</div>
-			
+      
+    </div>
+    <div class="col-1">      
+    </div>
+  </div>
+  </div>
       
 <script th:inline="javascript">
-	let key = '${param.key}';
+  let key = '${param.key}';
       console.log(key);
       if (key === 'package') {
         $('#hotel-tab').removeClass('active');
@@ -109,36 +114,88 @@
         $('#package').removeClass('show active');
         $('#hotel').addClass('show active');
       }
-	
-	 // 전역 변수
+  
+   // 전역 변수
     var page = 1;
     var totalPage = 0;
     
-	 const fnsearchList = () => {
+     var product = $('#package-tab').text();
+     $('#package-tab').click(() => {
+        product = $('#package-tab').text(); 
+        
+     }); 
+     $('#hotel-tab').click(() => {
+       console.log($('#hotel_list').text());
+       
+        
+        
+     }); 
+       
+    
+   const fnsearchPackageList = () => {
      let query=$('#query').val();
+    
       $.ajax({
         type: 'get',
-        url: '/main/searchlist.do', 
-        data: {page: page, query: query},
+        url: '/main/searchPackage.do', 
+        data: {page : page, query : query},
         dataType: 'json',
         success: (resData) => {  
-          totalPage = resData.totalPage;
-          if (resData.sPackageList != null && resData.sPackageList.length > 0) {
-            $.each(resData.sPackageList, (i, package) => {           
+          totalPage = resData.totalPage;    
+          if (resData.searchPackageList != null && resData.searchPackageList.length > 0) {
+            $.each(resData.searchPackageList, (i, package) => {           
               let str = '<div class="col-md-4">';
               str += '<div class="card">';
               str += '<img src="https://github.com/skal48/portfolio/blob/main/hanla.jpg?raw=true" style="height: 150px;" class="card-img-top" alt="Package Image">';
               str += '<div class="card-body">';
               str += '<h5 class="card-title card-font">' + package.packageTitle + '</h5>';
               str += '<p class="card-text"></p>';
-              str += '<a th:href="' + '/package/increseHit.do?packageNo=' + package.packageNo + '" class="btn btn-kong">여행가기</a>';           
+              str += '<a href="' + '/package/increseHit.do?packageNo=' + package.packageNo + '" class="btn btn-kong">여행가기</a>';           
               str += '</div>';
               str += '</div>';
               str += '</div>';
               $('#package_list').append(str);
-            });
-          } else {
-            console.log('데이터가 없습니다.');
+              })
+              
+          } else if(resData.searchPackageList.length == 0) {            
+           $('#package_list').append("검색 결과가 없습니다.") ;
+          }  
+        },
+        error: (error) => {
+          console.error('Ajax 요청 에러:', error);
+        }
+      });
+      
+    };
+  
+      const fnsearchHotelList = () => {
+     let query=$('#query').val();
+    
+      $.ajax({
+        type: 'get',
+        url: '/main/searchHotel.do', 
+        data: {page : page, query : query},
+        dataType: 'json',
+        success: (resData) => {  
+          totalPage = resData.totalPage;    
+          if (resData.searchHotelList != null && resData.searchHotelList.length > 0) {
+            if(product === '패키지'){  console.log(resData);
+            $.each(resData.searchHotelList, (i, hotel) => {           
+              let str = '<div class="col-md-4">';
+              str += '<div class="card">';
+              str += '<img src="https://github.com/skal48/portfolio/blob/main/hanla.jpg?raw=true" style="height: 150px;" class="card-img-top" alt="Package Image">';
+              str += '<div class="card-body">';
+              str += '<h5 class="card-title card-font">' + hotel.hotelName + '</h5>';
+              str += '<p class="card-text"></p>';
+              str += '<a href="' + '/hotel/increseHit.do?hotelNo=' + hotel.hotelNo + '" class="btn btn-kong">여행가기</a>';           
+              str += '</div>';
+              str += '</div>';
+              str += '</div>';
+              $('#hotel_list').append(str);
+              })
+            }
+          } else if(resData.searchHotelList.length == 0) {
+           $('#hotel_list').append("검색 결과가 없습니다.") ;
           }
         },
         error: (error) => {
@@ -147,11 +204,9 @@
       });
       
     };
-	
-	
-	
-	
-	const fnScroll = () => {
+  
+
+  const fnScroll = () => {
         var timerId;  // 최초 undefined 상태
         $(window).on('scroll', () => {
           if(timerId) {  // timerId가 undefined이면 false로 인식, timerId가 값을 가지면 true로 인식
@@ -166,29 +221,21 @@
                   return;              // 마지막 페이지를 보여준 이후에는 아래 코드를 수행하지 말 것 
                 }
                 page++;
-                fnsearchList();
+                fnsearchHotelList();
+                fnsearchPackageList();  
+                
               }
           }, 200);  // 200밀리초(0.2초) 후 동작(시간은 임의로 조정 가능함)
         })
     }
-	
-	fnsearchList();
-	fnScroll();
-	
+    
+  
+  fnsearchHotelList();
+  fnsearchPackageList();
+  fnScroll();
+  
 </script>      
       
-     
-    
-      
-      
-
-      
-    </div>
-    <div class="col-1">      
-    </div>
-  </div>
-  </div>
-
 
 
     <div th:replace="~{/layout/footer::footer}"></div>
