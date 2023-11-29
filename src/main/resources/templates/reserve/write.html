@@ -20,7 +20,7 @@
 		      </div>
 		      
 		      <div>
-            <h3>상품명표시하기</h3>
+            <h3 th:text="${pack.packageTitle}">상품명??</h3>
 		      </div>
 		      <div>예약자 정보</div>
 		      <div>
@@ -67,18 +67,18 @@
               <tbody>
                 <tr>
                   <td></td>
-                  <td id="adultPrice">${product.price}</td> <!-- 상품가격 -->
-                  <td id="childPrice">${product.price}</td> <!-- 성인요금에서 금액변동 적용하기 -->
+                  <td id="adultPrice" th:text="${pack.price}"></td> <!-- 상품가격 -->
+                  <td id="childPrice" th:text="${pack.price}"></td> <!-- 성인요금에서 금액변동 적용하기 -->
                   <td>
                     <select name="adultCnt">
-                      <th:block th:each="cnt:${#numbers.sequence(0,20,1)}"> <!-- end값으로 최대인원수 적용하기 -->
+                      <th:block th:each="cnt:${#numbers.sequence(0, 20,1)}"> 
                         <option class="adtCnt" th:value="${cntStat.index}" th:text="|${cntStat.index}명|"></option>
                       </th:block>
                     </select>
                   </td>
                   <td>
                     <select name="childCnt">
-                      <th:block th:each="cnt:${#numbers.sequence(0,20,1)}"> <!-- end값으로 최대인원수 적용하기 -->
+                      <th:block th:each="cnt:${#numbers.sequence(0, 20, 1)}"> 
                         <option class="cldCnt" th:value="${cntStat.index}" th:text="|${cntStat.index}명|"></option>
                       </c:forEach>
                     </select>
@@ -133,12 +133,13 @@
 		      
 		      <!-- 예약 정보 -->
           <!-- 받아올 정보 : userNo, packageNo -->  
-          <form id="frm_reserve" >
+          <form id="frm_reserve">
             
-            <input type="hidden" name="userNo" value="${session.user.userNo}">
-            <input type="hidden" name="packageNo" value="${package.packageNo}">
-            <input type="hidden" name="resStart" value="${resDate}">
+            <input type="hidden" name="userNo" th:value="${session.user.userNo}">
+            <input type="hidden" name="packageNo" th:value="${pack.packageNo}">
+            <input type="hidden" name="resStatus" th:value="0">
             <!-- 
+            <input type="hidden" name="resStart" value="${resDate}">
             <input type="hidden" name="resFinish">
             -->
           
@@ -153,19 +154,19 @@
             <div class="d-grid gap-2 col-2 mx-auto">
               <ul class="list-group">
                 <li class="list-group-item">
-                  <input class="form-check-input me-1" type="radio" name="departureLoc" id="byOwn" value="자차" checked>
+                  <input class="form-check-input me-1" type="radio" name="departureLoc" id="byOwn" th:value="byOwn" checked>
                   <label class="form-check-label" for="byOwn">자차 이용</label> 
                 </li>
                 <li class="list-group-item">
-                  <input class="form-check-input me-1" type="radio" name="departureLoc" id="departSeoul" value="서울역" >
+                  <input class="form-check-input me-1" type="radio" name="departureLoc" id="departSeoul" th:value="seoulStation" >
                   <label class="form-check-label" for="departSeoul">서울역</label> 
                 </li>
                 <li class="list-group-item">
-                  <input class="form-check-input me-1" type="radio" name="departureLoc" id="departDDP" value="동대문">
+                  <input class="form-check-input me-1" type="radio" name="departureLoc" id="departDDP" th:value="DDP">
                   <label class="form-check-label" for="departDDP">동대문</label> 
                 </li>
                 <li class="list-group-item">
-                  <input class="form-check-input me-1" type="radio" name="departureLoc" id="departJamsil" value="잠실">
+                  <input class="form-check-input me-1" type="radio" name="departureLoc" id="departJamsil" th:value="Jamsil">
                   <label class="form-check-label" for="departJamsil">잠실</label> 
                 </li>
               </ul>
@@ -185,7 +186,7 @@
                       <td>
                         <div>
                           <span>
-                            <input type="checkbox" id="chkAgree" name="chkAgree" value="0" class="chk_each">
+                            <input type="checkbox" id="chkAgree" name="chkAgree" th:value="0" class="chk_each">
                             <label for="chkAgree">개인정보 수집에 동의합니다(필수)</label>
                           </span>
                         </div>
@@ -198,7 +199,7 @@
                       <td>
                         <div>
                           <span>
-                            <input type="checkbox" id="chkMarketing" name="chkAgree" value="1" class="chk_each">
+                            <input type="checkbox" id="chkMarketing" name="chkAgree" th:value="1" class="chk_each">
                             <label for="chkMarketing">마케팅 이용 정보 수집에 동의합니다(선택)</label>
                           </span>
                         </div>
@@ -228,6 +229,9 @@
               <button type="button" id="btn_reserve" class="btn btn-success">예약하기</button>
               
             </div>
+            <div>
+              <input type="hidden" name="totalReservePrice" class="totalPrice">
+            </div>
           </form>
 		      	
 		    </div>
@@ -243,12 +247,7 @@
     
     function fnAddReserve(){
       $('#btn_reserve').click(function(ev){
-          /*
-          fnRegTotalPerson();
-          fnRegInputName();
-          fnRegInputMobile();
-          fnRegAgree();
-          */
+        console.log($('#frm_reserve').serialize());
         $.ajax({
           type: 'post',
           url: '/reserve/addReserve.do',
@@ -256,6 +255,7 @@
           dataType: 'json',
           success: function(resData){
             if(resData.addReserveResult === 1){
+              console.log(resData)
               alert('예약이 등록되었습니다.');
               fnAddTourist(resData.reserveNo);
             }
@@ -328,6 +328,30 @@
         });
     }
     
+    
+      //  요금 옵션 선택시 총금액, 총인원수 반영
+    function fnChangeTotalPrice(){
+      $(document).ready(function() {
+        $('select[name="adultCnt"], select[name="childCnt"]').change(function() {
+          var adultCount = parseInt($('select[name="adultCnt"]').val());
+          var childCount = parseInt($('select[name="childCnt"]').val());
+          
+          var adultPrice = parseInt($('#adultPrice').text());
+          var childPrice = parseInt($('#childPrice').text());
+          
+          var totalPrice = (adultCount * adultPrice) + (childCount * childPrice);
+          $('#totalPriceOne').text(totalPrice);
+          $('#totalPrice').text(totalPrice);
+          $('.totalPrice').val(totalPrice);
+          $('.adultCntVal').text(adultCount);
+          $('.childCntVal').text(childCount);
+          $('.totalPerson').text(adultCount + childCount);
+          $('.totalPerson').attr('value', (adultCount + childCount));
+        });
+      });
+    }
+    
+    
     function fnChkAll(){
       $('#chkAll').click(function(){
         $('#chkAgree').prop('checked', $(this).prop('checked'));
@@ -345,6 +369,8 @@
       })
     } 
   
+    fnAddReserve();
+    fnChangeTotalPrice();
     fnAddTouristForm();
     fnChkAll();
     fnChkEach();
