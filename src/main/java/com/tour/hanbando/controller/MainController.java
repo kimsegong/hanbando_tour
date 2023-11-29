@@ -66,6 +66,16 @@ public class MainController {
     return "redirect:/main/bannerList.do";
   }
   
+  @ResponseBody
+  @PostMapping("changeAddress.do")
+  public int modifyAddress(HttpServletRequest request) {
+    return mainService.modifyAddress(request);
+  }
   
+  @ResponseBody
+  @GetMapping("getBanner.do")
+  public Map<String, Object> mainBanner(){
+    return mainService.getMainBannerList();
+  }
   
 }

@@ -10,13 +10,9 @@
 		<div class="ad_back">
 			<div class="ad_wrapper">
 		     <!--/* 캐러셀 및 이미지  */-->
-        <div class="owl-carousel owl-theme">
+        <div class="owl-carousel owl-theme" id="imageWrapper">
           <!--/* 이미지의 위치에 맞게 src 경로 설정. 여기서는 index.html과 image1,2,3이 같은 폴더 내에 같은 위계에 위치     */-->
-            <div class="item1"><img class="owl_img" src="image/404.jpg" ></div>
-            <div class="item2"><img class="owl_img" src="image/logol.jpg" ></div>
-            <div class="item3"><img class="owl_img" src="image/logou.jpg" ></div>
-            <div class="item3"><img class="owl_img" src="image/logou.jpg" ></div>
-            <div class="item3"><img class="owl_img" src="image/logou.jpg" ></div>
+            
         </div>   
       </div>     
 	  </div>
@@ -54,16 +50,25 @@
 
 	
 	<script th:inline="javascript">
-		 $(document).ready(function(){
-              var owl = $('.owl-carousel');
-              owl.owlCarousel({
-                items: 1, // 한번에 보여지는 이미지 수
-                loop: true, // 항목들을 무한으로 반복하여 보여줄지 여부
-                autoplay: true, // 자동으로 슬라이드 쇼를 시작할지 여부
-                autoplayTimeout: 4000, // 다음 이미지로 넘어가는 시간 (단위 : 밀리초)
-                autoplayHoverPause: true, // 마우스가 이미지에 위에 있을 때 자동 슬라이드를 일시중지 할지 여부
-              });           
-            });
+	 const fnBannerImage = () => {
+			 $.ajax({
+			  type: 'get',
+        url: '/main/getBanner.do', 
+        dataType: 'json',
+        success: (resData) => {  
+					if (resData.banner != null && resData.banner.length > 0) {
+            $.each(resData.banner, (i, banner) => {  
+							 let str = '<div class="item'+banner.bannerNo+'"><a href="'+banner.linkedAddress+'">';
+                   str += '<img class="owl_img" src="'+ banner.bannerPath +'/'+ banner.filesystemName+'" ></a></div>';
+										
+							$('#imageWrapper').append(str);			
+			 	})
+		 	 }
+			} 
+		})
+	}	 
+	
+ 
 		
 		const fnBestPackage = () => {
       $.ajax({
@@ -81,6 +86,16 @@
                   str += '<button type="button" class="btn-heart position-absolute top-0 end-0"><i class="fa-regular fa-heart fa-xl" style="color: #adc4ce;"></i></button>';
                   str += '</div>';
             $('#best_cards').append(str);
+            $(document).ready(function() {
+			          var owl = $('.owl-carousel');
+			          owl.owlCarousel({
+			            items: 1, // 한번에 보여지는 이미지 수
+			            loop: true, // 항목들을 무한으로 반복하여 보여줄지 여부
+			            autoplay: true, // 자동으로 슬라이드 쇼를 시작할지 여부
+			            autoplayTimeout: 4000, // 다음 이미지로 넘어가는 시간 (단위 : 밀리초)
+			            autoplayHoverPause: true, // 마우스가 이미지에 위에 있을 때 자동 슬라이드를 일시중지 할지 여부
+			          });           
+			        });
              })
            }
          }
@@ -108,10 +123,9 @@
       })
      }	 
 		 
-		 
-		 
-		 
-		 
+		
+ 
+	fnBannerImage();		 
   fnBestPackage();
   fnThemePackage();
 	</script>

@@ -21,4 +21,5 @@ public interface MainMapper {
   public List<BannerImageDto> getBannerImage();
   public BannerImageDto getNoBannerImage(int bannerNo);
   public int updateBannerImage(BannerImageDto bannerImageDto);
+  public int updateAddress(BannerImageDto bannerImageDto);
 }
