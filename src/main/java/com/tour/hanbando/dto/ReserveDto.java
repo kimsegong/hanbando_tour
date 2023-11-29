@@ -1,5 +1,9 @@
 package com.tour.hanbando.dto;
 
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -25,5 +29,8 @@ public class ReserveDto {
   private PackageDto packageDto;
   private HotelDto hotelDto;
   private RoomtypeDto roomtypeDto;
+  
+  @JsonManagedReference
+  private List<TouristDto> touristList;
   
 }

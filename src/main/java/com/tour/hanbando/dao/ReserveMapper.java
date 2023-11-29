@@ -11,6 +11,9 @@ import com.tour.hanbando.dto.TouristDto;
 @Mapper
 public interface ReserveMapper {
   
+  public int insertReserve(ReserveDto reserve);
+  public int insertTourist(TouristDto tourist);
+  
   public int getReserveCount();
   public int getReserveCountByUserNo(int userNo);
   
@@ -20,5 +23,6 @@ public interface ReserveMapper {
   
   public List<TouristDto> getTourists(int reserveNo);
   
+  public int updateReserve(ReserveDto reserve);
   public int deleteReserve(int reserveNo);
 }
