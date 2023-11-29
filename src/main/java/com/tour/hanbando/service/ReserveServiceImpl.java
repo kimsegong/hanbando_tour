@@ -1,5 +1,6 @@
 package com.tour.hanbando.service;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -11,8 +12,10 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 
 import com.tour.hanbando.dao.ReserveMapper;
+import com.tour.hanbando.dto.PackageDto;
 import com.tour.hanbando.dto.ReserveDto;
 import com.tour.hanbando.dto.TouristDto;
+import com.tour.hanbando.dto.UserDto;
 import com.tour.hanbando.util.MyPageUtils;
 
 import lombok.RequiredArgsConstructor;
@@ -24,6 +27,111 @@ public class ReserveServiceImpl implements ReserveService {
 
   private final ReserveMapper reserveMapper;
   private final MyPageUtils myPageUtils;
+  
+  
+  SimpleDateFormat sdf = new SimpleDateFormat();
+  
+  @Override
+  public Map<String, Object> addReserve(HttpServletRequest request) throws Exception {
+    /*
+    String oldFormat = "MM/dd/yyyy";
+    String newFormat = "yyyy/MM/dd";
+
+    String resStart = req.getParameter("resStart"); 
+    
+    SimpleDateFormat sdf = new SimpleDateFormat(oldFormat);
+    Date d = sdf.parse(resStart); 
+    sdf.applyPattern(newFormat);
+    String reserveStart = sdf.format(d); // 20231115
+    
+    ReserveDto reserve =
+    
+    */
+    String requestedTerm = request.getParameter("reqTerm");
+    int agree = Integer.parseInt(request.getParameter("chkAgree"));
+    String departureLoc = request.getParameter("departureLoc");
+    int reserveStatus = Integer.parseInt(request.getParameter("resStatus"));
+    String reserveStart = request.getParameter("resStart");
+    String reserveFinish = request.getParameter("resFinish");
+    int reservePerson = Integer.parseInt(request.getParameter("reservePerson"));
+    int reservePrice = Integer.parseInt(request.getParameter(""));
+    int userNo = Integer.parseInt(request.getParameter("userNo"));
+    int packageNo = Integer.parseInt(request.getParameter("packageNo"));
+    
+    ReserveDto reserve = ReserveDto.builder()
+                            .requestedTerm(requestedTerm)
+                            .agree(agree)
+                            .departureLoc(departureLoc)
+                            .reserveStatus(reserveStatus)
+                            .reserveStart(reserveStart)
+                            .reserveFinish(reserveFinish)
+                            .reservePerson(reservePerson)
+                            .reservePrice(reservePrice)
+                            .userDto(UserDto.builder()
+                                          .userNo(userNo)
+                                          .build())
+                            .packageDto(PackageDto.builder()
+                                          .packageNo(packageNo)
+                                          .build())
+                            .build();
+    
+    int addReserveResult = reserveMapper.insertReserve(reserve);
+    
+    return Map.of("addReserveResult", addReserveResult, "reserveNo", reserve.getReserveNo());
+  }
+  
+  @Override
+  public int addTourist(HttpServletRequest request) throws Exception {
+
+//    String oldFormat = "yyyy-MM-dd";
+//    String newFormat = "yyyy/MM/dd";
+//    SimpleDateFormat sdf = new SimpleDateFormat(oldFormat);
+    
+
+    String[] names = request.getParameterValues("touristName");
+    String[] bDates = request.getParameterValues("birthDate");
+    String[] genders = request.getParameterValues("gender");
+    String[] mobiles = request.getParameterValues("tourMobile");
+    String[] ageCases = request.getParameterValues("ageCase");
+    int reserveNo = Integer.parseInt(request.getParameter("reserveNo"));
+    
+    int result = 0;
+    for (int i = 0; i < names.length; i++) {
+//      if (bDates[i] != null && !bDates[i].isEmpty()) {
+//        Date d = sdf.parse(bDates[i]);
+//        sdf.applyPattern(newFormat);
+//        String birthDate = sdf.format(d); 
+        
+        int ageCase = Integer.parseInt(ageCases[i]);
+        
+        TouristDto tourist = TouristDto.builder()
+            .name(names[i])
+            .birthDate(bDates[i])
+            .gender(genders[i])
+            .mobile(mobiles[i])
+            .ageCase(ageCase)
+            .reserveDto(ReserveDto.builder()
+                .reserveNo(reserveNo)
+                .build())
+            .build();
+        result += reserveMapper.insertTourist(tourist);
+//      } else {
+//        System.out.println(bDates[i].toString());
+//      }
+    }
+    return result;
+  }
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
   
   @Override
   public void loadReserveList(HttpServletRequest request, Model model) {
