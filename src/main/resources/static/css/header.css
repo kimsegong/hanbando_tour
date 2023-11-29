@@ -5,8 +5,16 @@
 
 
 .logo {
-  background-size: 100%;
+  background-size: 100%; 
   cursor: pointer;
+}
+.logom {
+   background-image: url(../../image/newlogo.png);
+   background-size: contain;
+   background-repeat: no-repeat;
+   width: 330px;
+   height: 100px;
+   
 }
 
 .header_search {	

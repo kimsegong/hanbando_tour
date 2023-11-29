@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 
+import com.tour.hanbando.dto.BannerImageDto;
 import com.tour.hanbando.dto.HotelDto;
 import com.tour.hanbando.dto.PackageDto;
 
@@ -17,6 +18,7 @@ public interface MainMapper {
   public List<PackageDto> getBestPackage();
   public int countTheme();
   public List<PackageDto> getThemePackage(int themeNo);
-  
-  
+  public List<BannerImageDto> getBannerImage();
+  public BannerImageDto getNoBannerImage(int bannerNo);
+  public int updateBannerImage(BannerImageDto bannerImageDto);
 }

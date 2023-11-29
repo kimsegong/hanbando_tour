@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 
- <head th:replace="~{/layout/header::head('검색 결과')}"></head>
+ <head th:replace="~{/layout/header::head('배너 관리')}"></head>
 <style>
    .second_main_wrap {
     display: flex;
@@ -79,12 +79,31 @@
     width: 90%;
   }
   
-
-
-  
+  .bannerWrapper {
+    margin-top: 18px;
+  }
+  .image_wrapper {
+   display: inline-block;
+   text-align: center;
+   margin-bottom: 20px;
+  }
+  .input-group-text {
+    width: 560px;
+  }
+  .banner_option > *{
+   margin: 0 5px 0 5px;
+  }
+  .address {
+    width: 300px;
+  }
+  .complete{
+    display: block;
+    margin: auto;
+    margin-top: 20px;
+  }
   
 </style>
-</style>  
+  
 <body>
 
   <div th:replace="~{/layout/header::header}"></div>
@@ -121,35 +140,45 @@
                   <a th:href="@{/manage/reviewList.do}">리뷰관리</a>
                 </div>
                 <div id="bannerList">
-                  <a th:href="@{/manage/bannerList.do}">배너관리</a>
+                  <a th:href="@{/main/bannerList.do}">배너관리</a>
                 </div>
               </div>
              </div> 
               <div class="split2">
                 
-            	 <form class="banner" method="post" name="bannerImage" th:action="@{/hotel/bannerAdd.do}" enctype="multipart/form-data" style = "border: 1px gray solid;" >
-			           <div class="image_wrapper">
-			             <div id="previewId"></div>
-					         <input type="file" id="image" name="files" class="input-group-text" onchange="previewImage(this,'previewId')" accept="image/gif,image/jpeg,image/png" required/>
-			           </div>		               
-			           <div>
-				           <select>
-										 <option value="1" selected>게시하기</option>
-										 <option value="0">내리기</option>
-									 </select>
-				                   
-						       <button type="submit" class="btn btn-secondary">완료</button>
-			           </div>
-				    	</form>
-				    	<form class="bannerLink" method="post" name="bannerLink" th:action="@{/hotel/bannerLinkAdd.do}">
-								<input type="text" name="linkedAdress" placeholder="기본설정으로 메인페이지 입니다. ">
-								<button type="submit" >주소 저장</button>
-								
-							</form>      
-
-
-
-
+                
+                <th:block th:each="b,vs:${bannerList}">
+                  
+                  <div class="bannerWrapper" style = "border: 1px gray solid;" >
+                     <form class="banner" method="post" name="bannerImage" th:action="@{/main/bannerAdd.do}" enctype="multipart/form-data"  >
+                       <div class="image_wrapper">
+                         <div th:id="'previewId'+${b.bannerNo}"></div>
+                         <input type="file" th:id="'image'+${b.bannerNo}" name="files" class="input-group-text image-input"  th:onchange="previewImage(this, [['previewId' + ${b.bannerNo}]])" accept="image/gif,image/jpeg,image/png" required/>
+                         <input type="hidden" th:id="'filesystemName'+${b.bannerNo}" name="filesystemName" th:value="${b.filesystemName}">
+                         <input type="hidden" th:id="'originalName'+${b.bannerNo}" name="originalName" th:value="${b.originalName}">
+                         <input type="hidden" th:id="'bannerPath'+${b.bannerNo}" name="bannerPath" th:value="${b.bannerPath}">
+                       </div>                  
+                       <div class="banner_option">
+                         <select name="state">
+                           <option value="1" th:selected="${b.state == 1}">게시하기</option>
+                           <option value="0" th:selected="${b.state == 0}">숨기기</option>
+                         </select>
+                                 
+                          <input type="text" class="address" name="linkedAdress" placeholder="기본설정으로 메인페이지 입니다." th:value="${b.linkedAddress}" >
+                          <input type="hidden"id="bannerNo" name="bannerNo" th:value="${b.bannerNo}" > 
+                          <button type="button" >주소 저장</button>
+                          <button type="submit" class="complete">완료</button>
+                       </div>
+                    </form>
+                  </div>
+                  
+                </th:block>
+               
+                
+                
+                
+                
+                
 	            </div>
 	          <div class="col-1">	      
 			    </div>
@@ -160,44 +189,59 @@
      
       
 <script th:inline="javascript">
+  
 	function previewImage(targetObj, previewId) {
-		
-		  var preview = document.getElementById(previewId); //div id   
-	     var ua = window.navigator.userAgent;
-	
-	     var files = targetObj.files;
-	     for ( var i = 0; i < files.length; i++) {
-	
-	         var file = files[i];
-	
-	         var imageType = /image.*/; //이미지 파일일경우만.. 뿌려준다.
-	         if (!file.type.match(imageType))
-	             continue;
-	
-	         var prevImg = document.getElementById("prev_" + previewId); //이전에 미리보기가 있다면 삭제
-	         if (prevImg) {
-	             preview.removeChild(prevImg);
-	         }
-	         var img = document.createElement("img"); //크롬은 div에 이미지가 뿌려지지 않는다. 그래서 자식Element를 만든다.
-	         img.id = "prev_" + previewId;
-	         img.classList.add("obj");
-	         img.file = file;
-	         img.style.width = '560px'; //기본설정된 div의 안에 뿌려지는 효과를 주기 위해서 div크기와 같은 크기를 지정해준다.
-	         img.style.height = '270px';
-	         
-	         preview.appendChild(img);
-	
-	         if (window.FileReader) { // FireFox, Chrome, Opera 확인.
-	             var reader = new FileReader();
-	             reader.onloadend = (function(aImg) {
-	                 return function(e) {
-	                     aImg.src = e.target.result;
-	                 };
-	             })(img);
-	             reader.readAsDataURL(file);
-	         }   
-	     }       
-	  }
+		   
+       var preview = document.getElementById(previewId); //div id   
+       var ua = window.navigator.userAgent;
+       var files = targetObj.files;
+       
+       for ( var i = 0; i < files.length; i++) {
+  
+           var file = files[i];
+           var imageType = /image.*/; //이미지 파일일경우만.. 뿌려준다.
+           
+           if (!file.type.match(imageType))
+               continue;
+  
+           var prevImg = document.getElementById("prev_" + previewId); //이전에 미리보기가 있다면 삭제
+           if (prevImg) {
+               preview.removeChild(prevImg);
+           }
+           var img = document.createElement("img"); //크롬은 div에 이미지가 뿌려지지 않는다. 그래서 자식Element를 만든다.
+           img.id = "prev_" + previewId;
+           img.classList.add("obj");
+           img.file = file;
+           img.style.width = '560px'; //기본설정된 div의 안에 뿌려지는 효과를 주기 위해서 div크기와 같은 크기를 지정해준다.
+           img.style.height = '270px';
+           
+           preview.appendChild(img);
+  
+           if (window.FileReader) { // FireFox, Chrome, Opera 확인.
+             var reader = new FileReader();
+             reader.onloadend = (function(aImg) {
+                 return function(e) {
+                     aImg.src = e.target.result;
+                 };
+             })(img);
+             reader.readAsDataURL(file);
+             
+         }
+         console.log($('#filesystemName').val())
+         
+         var filename;
+         if (window.FileReader){
+              filename = ($('#image')[0]).files[0].name;
+            }
+         
+         if(filename !== $('#filesystemName').val()){
+           $('#filesystemName').removeAttr('value');
+         }
+         
+         console.log($('#filesystemName').val())
+         }   
+      }     
+        
 
 	 const fnFileCheck = () => {
 		    $('#image').change((ev) => {
@@ -220,9 +264,47 @@
 		      }
 		    })
 		  }
+		  
+		   
+       
+       const fnLoadimage = () => {
+        for (let i = 1; i < 4; i++){
+          // 사진 올리는 부분
+           var bannerPath = $('#bannerPath'+i).val();
+           var filesysName = $('#filesystemName'+i).val();
+         
+           var str = '<img src="' + bannerPath +'/'+ filesysName+'" id="getImage">';
+           $('#previewId'+i).append(str); 
+           //파일 이름 넣는 부분
+           // Get a reference to our file input
+          const fileInput = document.querySelector('#image'+i);
+    
+          // Create a new File object
+          const myFile = new File([], originalName, {
+              type: 'image/x-icon',
+              lastModified: new Date(),
+          });
+    
+          // Now let's create a DataTransfer to get a FileList
+          const dataTransfer = new DataTransfer();
+          dataTransfer.items.add(myFile);
+          fileInput.files = dataTransfer.files; 
+         
+         }
+             
+             
+       
+        }
+		  
+		 		  
+     
+  	
+  	
+  	
+  	
   	
   fnFileCheck();
-  	
+  fnLoadimage();
 </script>      
       
 
