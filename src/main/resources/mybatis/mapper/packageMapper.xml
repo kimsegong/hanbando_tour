@@ -64,7 +64,68 @@
             <result column="HOTEL_NAME" property="hotelName"/>      
        </association>
     </resultMap>
-
+    
+    <resultMap type="ReserveDto" id="ReserveMap">
+    <id column="RESERVE_NO" property="reserveNo"/>
+    <result column="RESERVED_AT" property="reservedAt"/>
+    <result column="REQUESTED_TERM" property="requestedTerm"/>
+    <result column="AGREE" property="agree"/>
+    <result column="DEPARTURE_LOC" property="departureLoc"/>
+    <result column="RESERVE_STATUS" property="reserveStatus"/>
+    <result column="RESERVE_START" property="reserveStart"/>
+    <result column="RESERVE_FINISH" property="reserveFinish"/>
+    <result column="RESERVE_PERSON" property="reservePerson"/>
+    <result column="RESERVE_PRICE" property="reservePrice"/>
+    <association javaType="UserDto" property="userDto">
+      <id column="USER_NO" property="userNo"/>
+      <result column="EMAIL" property="email" />
+      <result column="PW" property="pw" />
+      <result column="NAME" property="name" />
+      <result column="GENDER" property="gender" />
+      <result column="MOBILE" property="mobile" />
+      <result column="POSTCODE" property="postcode" />
+      <result column="ROAD_ADDRESS" property="roadAddress" />
+      <result column="JIBUN_ADDRESS" property="jibunAddress" />
+      <result column="DETAIL_ADDRESS" property="detailAddress" />
+      <result column="AGREE" property="agree" />
+      <result column="STATE" property="state" />
+      <result column="AUTH" property="auth" />
+      <result column="PW_MODIFIED_AT" property="pwModifiedAt" />
+      <result column="JOINED_AT" property="joinedAt" />  
+    </association>
+    <association property="packageDto" resultMap="PackageMap"/>
+    <association javaType="HotelDto" property="hotelDto">
+      <id column="HOTEL_NO" property="hotelNo"/>
+      <result column="REGION_NO" property="regionNo"/>
+      <result column="HOTEL_NAME" property="hotelName"/>
+      <result column="HOTEL_ADDRESS" property="hotelAddress"/>
+      <result column="LATITUDE" property="latitude"/>
+      <result column="LONGITUDE" property="longitude"/>
+      <result column="HOTEL_DETAIL" property="hotelDetail"/>
+      <result column="PHONE_NUMBER" property="phoneNumber"/>
+      <result column="H_EMAIL" property="HEmail"/>
+      <result column="CREATED_AT" property="createdAt"/>
+      <result column="MODIFIED_AT" property="modifiedAt"/>
+      <result column="HIT" property="hit"/>
+      <result column="STATUS" property="status"/>
+      <result column="RECOMMEND_STATUS" property="recommendStatus"/>
+    </association>
+    <association javaType="RoomtypeDto" property="roomtypeDto">
+      <id column="ROOM_NO" property="roomNo"/>
+      <result column="HOTEL_NO" property="hotelNo"/>
+      <result column="ROOM_DETAIL" property="roomDetail"/>
+      <result column="ROOM_NAME" property="roomName"/>
+      <result column="ROOM_MANY" property="roomMany"/>
+      <result column="VIEW" property="view"/>
+      <result column="BREAKFAST" property="breakfast"/>
+      <result column="SMOKE" property="smoke"/>
+      <result column="PEOPLE" property="people"/>
+      <result column="BED" property="bed"/>
+      <result column="SHOWER" property="shower"/>
+      <result column="SIZE" property="size"/>
+    </association>
+  </resultMap> 
+  
     <select id="getPackageCount" resultType="int">
       SELECT COUNT(*)
         FROM PACKAGE_T
@@ -133,16 +194,14 @@
         P.RN BETWEEN #{begin} AND #{end}
     </select>
 
-    <select id="getRegion" parameterType="Map" resultType="regionDto">
+    <select id="getRegion" resultType="regionDto">
       SELECT REGION_NO, REGION_NAME
-        FROM REGION_T
-       WHERE REGION_NO = ${regionNo}     
+        FROM REGION_T     
     </select>
     
-    <select id="getTheme" parameterType="Map" resultType="themeDto">
+    <select id="getTheme" resultType="themeDto">
       SELECT THEME_NO, THEME_NAME
-        FROM THEME_T
-       WHERE THEME_NO = ${themeNo}     
+        FROM THEME_T    
     </select>
 
     <insert id="insertPackage" parameterType="PackageDto">
@@ -273,11 +332,43 @@
         LEFT JOIN THEME_T T ON P.THEME_NO = T.THEME_NO
         WHERE P.PACKAGE_NO = #{packageNo}
       </select>
+      
+      <select id="getPackageImageList" parameterType="int" resultType="ProductImageDto">
+        SELECT PACKAGE_NO, IMAGE_NO, THUMBNAIL, IMAGE_PATH, FILESYSTEM_NAME
+          FROM PRODUCT_IMAGE_T
+         WHERE PACKAGE_NO = #{packageNo}  
+      </select>
 
+      <update id="updatePackage" parameterType="PackageDto">
+        UPDATE PACKAGE_T
+           SET REGION_NO = #{regionDto.regionNo},
+               THEME_NO = #{themeDto.themeNo},
+               PACKAGE_TITLE = #{packageTitle},
+               MINI_ONE = #{miniOne},
+               MINI_TWO = #{miniTwo},
+               MINI_THREE = #{miniThree},
+               PACKAGE_PLAN = #{packagePlan},
+               PACKAGE_CONTENTS = #{packageContents},
+               HOTEL_CONTENTS = #{hotelContents},
+               PRICE = #{price},
+               DANGER = #{danger},
+               MODIFIED_AT = TO_CHAR(SYSDATE,'YYYY/MM/DD'),
+               MAX_PEOPLE = #{maxPeople},
+               RECOMMEND_STATUS = #{recommendStatus}
+         WHERE
+             PACKAGE_NO = #{packageNo}
+      </update>
       
+      <select id="getReserve" parameterType="int" resultMap="ReserveMap">
+          SELECT RES.RESERVE_NO, RES.RESERVED_AT, RES.REQUESTED_TERM, RES.AGREE, RES.DEPARTURE_LOC, RES.RESERVE_STATUS, RES.RESERVE_START, RES.RESERVE_FINISH, RES.RESERVE_PERSON, RES.RESERVE_PRICE
+               , U.USER_NO, U.NAME, U.EMAIL, U.GENDER, U.MOBILE, U.AUTH
+               , P.PACKAGE_NO, P.PACKAGE_TITLE, P.PACKAGE_PLAN, P.PRICE, P.MAX_PEOPLE, P.DANGER
+            FROM USER_T U INNER JOIN RESERVE_T RES
+              ON U.USER_NO = RES.USER_NO INNER JOIN PACKAGE_T P
+              ON P.PACKAGE_NO = RES.PACKAGE_NO
+            WHERE RES.PACKAGE_NO = #{packageNo} 
+       </select>
       
-      
-
       
       
       <update id="packageHit" parameterType="int">
@@ -291,6 +382,66 @@
         FROM PACKAGE_T
         ORDER BY HIT DESC
       </select>
+
+      
+      <insert id="insertReview" parameterType="ReviewDto">
+        INSERT INTO REVIEW_T (
+            REVIEW_NO
+          , RESERVE_NO 
+          , PACKAGE_NO
+          , USER_NO
+          , REVIEW_CONTENTS
+          , REGIST_AT
+          , STAR
+        ) VALUES (
+            REVIEW_SEQ.NEXTVAL
+          , #{reserveNo}
+          , #{packageNo}
+          , #{userDto.userNo}
+          , #{reviewContents}
+          , TO_CHAR(SYSDATE,'YYYY/MM/DD')
+          , #{star}
+        )
+      </insert>
+  
+      <select id="getReviewCount" parameterType="int" resultType="int">
+        SELECT COUNT(*)
+          FROM REVIEW_T
+         WHERE PACKAGE_NO = #{packageNo}
+      </select>
+
+      <select id="getReviewList" parameterType="Map" resultMap="ReviewMap">
+        SELECT A.REVIEW_NO, A.PACKAGE_NO, A.USER_NO, A.REVIEW_CONTENTS, A.REGIST_AT, A.NAME
+          FROM (SELECT ROW_NUMBER() OVER(ORDER BY REVIEW_NO DESC) AS RN, C.REVIEW_NO, C.REVIEW_CONTENTS, C.PACKAGE_NO, C.REGIST_AT, U.USER_NO, U.NAME
+                  FROM USER_T U INNER JOIN REVIEW_T C
+                    ON U.USER_NO = C.USER_NO
+                 WHERE C.PACKAGE_NO = #{packageNo}) A
+         WHERE A.RN BETWEEN #{begin} AND #{end}
+      </select>
+
+      <delete id="deleteReview" parameterType="int">
+         DELETE 
+           FROM REVIEW_T
+          WHERE REVIEW_NO = #{reviewNo}
+      </delete>
+      
+      <delete id="deletePackage" parameterType="int">
+         DELETE 
+           FROM PACKAGE_T 
+          WHERE PACKAGE_NO = #{packageNo}
+      </delete>
+    
+      <delete id="deletePackageImageList" parameterType="int">
+        DELETE
+          FROM PRODUCT_IMAGE_T
+         WHERE PACKAGE_NO = #{packageNo}
+      </delete>      
+      
+      <delete id="deletePackageImage" parameterType="String">
+        DELETE
+          FROM PRODUCT_IMAGE_T
+         WHERE FILESYSTEM_NAME = #{filesystemName}
+      </delete>
       
 </mapper>
 

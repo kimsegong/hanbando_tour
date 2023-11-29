@@ -17,16 +17,26 @@ public interface UserService {
   public String getNaverLoginAccessToken(HttpServletRequest request) throws Exception;
   public UserDto getNaverProfile(String accessToken) throws Exception;
   //카카오톡 로그인
-  public String getKakaoLoginURL(HttpServletRequest request) throws Exception;
+  //public String getKakaoLoginURL(HttpServletRequest request) throws Exception;
   
 //회원가입 시 본인 인증
 //인증번호(전화번호, 인증번호)
-  public void certifiedPhoneNumber(String phoneNumber, String cerNum) throws Exception;
+  public Map<String, Object> certifiedPhoneNumber(String phoneNumber) throws Exception;
   
 
   public UserDto getUser(String email);
+  
+  //네이버
   public void naverJoin(HttpServletRequest request, HttpServletResponse response);
   public void naverLogin(HttpServletRequest request, HttpServletResponse response, UserDto naverProfile) throws Exception;
+  
+  
+  //카카오톡
+  public String getKakaoLoginURL(HttpServletRequest request) throws Exception; //로그인 url
+  public void kakaoJoin(HttpServletRequest request, HttpServletResponse response) throws Exception; //카카오 간편가입
+  public String getKakaoLoginAccessToken(HttpServletRequest request) throws Exception; //토큰
+  public UserDto getKakaoProfile(String accessToken) throws Exception; //카카오로그인 후속
+  public void kakaoLogin(HttpServletRequest request, HttpServletResponse respone, UserDto kakaoProfile) throws Exception; //카카오 로그인
   public void logout(HttpServletRequest request, HttpServletResponse response);
   public ResponseEntity<Map<String, Object>> checkEmail(String email);
   public ResponseEntity<Map<String, Object>> sendCode(String email);

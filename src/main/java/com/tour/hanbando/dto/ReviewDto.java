@@ -12,8 +12,8 @@ import lombok.NoArgsConstructor;
 public class ReviewDto {
   private int reviewNo;
   private int reserveNo;
-  private String reviewContents;
   private int packageNo;
+  private String reviewContents;
   private int hotelNo;
   private int star;
   private String registAt;

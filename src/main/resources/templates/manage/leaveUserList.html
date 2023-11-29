@@ -192,7 +192,7 @@
                   <a th:href="@{/manage/reviewList.do}">리뷰관리</a>
                 </div>
                 <div id="bannerList">
-                  <a th:href="@{/manage/reviewList.do}">배너관리</a>
+                  <a th:href="@{/main/bannerList.do}">배너관리</a>
                 </div>
               </div>
                 
@@ -207,7 +207,7 @@
                   <a th:href="@{/manage/userList.do}">일반회원관리</a>
                 </div>
                 <div id="inactiveUser">
-                  <a th:href="@{/manage/inactiveUserList.do}">휴면회원관리</a>
+                  <a th:href="@{/manage/inactiveList.do}">휴면회원관리</a>
                 </div>
                 <div id="leaveUser">
                   <a th:href="@{/manage/leaveUserList.do}">탈퇴회원관리</a>
@@ -251,14 +251,14 @@
                     <!--/* 페이징 처리 */-->
                     <tfoot>
                       <tr>
-                        <td colspan="4" th:utext="${paging}"></td>
+                        <td colspan="4" th:utext="${paging}" class="paging"></td>
                       </tr>
                     </tfoot>
                   </table>
                     
                   <!--/* 검색기능 */-->
                   <div>
-                    <form id="frm_search" method="get" th:action="@{/manage/leaveUserSearchList.do}" >
+                    <form id="frm_search" method="get" th:action="@{/manage/searchLeaveList.do}" >
                       <select name="column" id="column" >
                         <option value="LEAVED_EMAIL">이메일</option>
                         <option value="JOINED_AT">가입일</option>

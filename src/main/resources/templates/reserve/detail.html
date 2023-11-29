@@ -104,7 +104,10 @@
                 
                 <tr>
                   <td>출발지</td>
-                  <td th:text="${reserve.departureLoc}"></td>
+                  <td th:if="${reserve.departureLoc == 'byOwn'}">자차 이용</td>
+                  <td th:if="${reserve.departureLoc == 'seoulStation'}">서울역</td>
+                  <td th:if="${reserve.departureLoc == 'DDP'}">동대문</td>
+                  <td th:if="${reserve.departureLoc == 'Jamsil'}">잠실</td>
                 </tr>
                 <tr>
                   <td>예약상태</td>
@@ -128,9 +131,11 @@
             <div>
               <form id="frm_btn" method="post">
                 <input type="hidden" name="reserveNo" th:value="${reserve.reserveNo}">
-                <input type="hidden" name="userNo" th:value="${session.user.userNo}">
-                <input type="hidden" name="request" th:value="${reserve.requestedTerm}">
-                <input type="hidden" name="pickupLoc" th:value="${reserve.departureLoc}">
+                <input type="hidden" name="userNo" th:value="${reserve.userDto.userNo}">
+                <input type="hidden" name="userName" th:value="${reserve.userDto.name}">
+                <input type="hidden" name="userMobile" th:value="${reserve.userDto.mobile}">
+                <input type="hidden" name="requestedTerm" th:value="${reserve.requestedTerm}">
+                <input type="hidden" name="departureLoc" th:value="${reserve.departureLoc}">
                 <div th:if="${reserve.reserveStatus == 0}"><button class="btn btn-primary" type="button">결제하기</button></div>
                 <button class="btn btn-success" type="button" th:onclick="|location.href='@{/package/list.do}'|">다른상품 예약하러가기</button>
                 <button type="button" th:onclick="|location.href='@{/reserve/reserveList.do(userNo=${reserve.userDto.userNo})}'|" class="btn btn-success">나의예약목록</button>
@@ -148,6 +153,7 @@
 	</div>
 
   <script th:inline="javascript">
+    
     function fnShowTourist(){
       $('#btn_peopleInfo').click(function(){
         fnBlind();

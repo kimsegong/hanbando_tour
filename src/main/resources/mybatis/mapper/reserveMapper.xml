@@ -194,8 +194,6 @@
       , RESERVE_PRICE
       , USER_NO
       , PACKAGE_NO
-      , HOTEL_NO
-      , ROOM_NO
     ) VALUES (
         #{reserveNo}
       , TO_CHAR(SYSDATE, 'YYYYMMDD') 
@@ -203,14 +201,26 @@
       , #{agree}
       , #{departureLoc}
       , #{reserveStatus}
-      , #{reserveStart}
-      , #{reserveFinish}
+      , <choose>
+            <when test="reserveStart != null">
+                #{reserveStart}
+            </when>
+            <otherwise>
+                NULL
+            </otherwise>
+        </choose>
+      , <choose>
+            <when test="reserveFinish != null">
+                #{reserveFinish}
+            </when>
+            <otherwise>
+                NULL
+            </otherwise>
+        </choose>
       , #{reservePerson}
       , #{reservePrice}
       , #{userDto.userNo}
-      , #{packageDto.productNo}  
-      , #{hotelDto.hotelNo}  
-      , #{roomDto.roomNo}  
+      , #{packageDto.packageNo}  
     )
   </insert>
   
@@ -280,7 +290,12 @@
   
   
   
-  
+  <update id="updateReserve" parameterType="ReserveDto">
+    UPDATE RESERVE_T
+       SET REQUESTED_TERM = #{requestedTerm}
+         , DEPARTURE_LOC = #{departureLoc}
+     WHERE RESERVE_NO = #{reserveNo}
+  </update>
   
   <delete id="deleteReserve" parameterType="int">
     DELETE 
@@ -299,6 +314,7 @@
   
   
   
+
 
 
 </mapper>

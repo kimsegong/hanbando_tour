@@ -175,7 +175,7 @@
                   <a th:href="@{/manage/reviewList.do}">리뷰관리</a>
                 </div>
                 <div id="bannerList">
-                  <a th:href="@{/manage/reviewList.do}">배너관리</a>
+                  <a th:href="@{/main/bannerList.do}">배너관리</a>
                 </div>
               </div>
                 
@@ -251,7 +251,7 @@
                     <!--/* 페이징 처리 */-->
                     <tfoot>
                       <tr>
-                        <td colspan="8" th:utext="${paging}"></td>
+                        <td colspan="8" th:utext="${paging}" class="paging"></td>
                       </tr>
                     </tfoot>
                   </table>
