@@ -25,4 +25,6 @@ public interface UserMapper {
   public int insertActiveUser(String email);
   public int deleteInactiveUser(String email);
   public int insertNaverUser(UserDto user);
+  //카카오
+  public int insertKakaoUser(UserDto user);
 }

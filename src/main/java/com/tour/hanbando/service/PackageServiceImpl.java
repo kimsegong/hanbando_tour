@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -16,15 +17,20 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.ui.Model;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.tour.hanbando.dao.PackageMapper;
+import com.tour.hanbando.dao.ReserveMapper;
 import com.tour.hanbando.dto.PackageDto;
 import com.tour.hanbando.dto.ProductImageDto;
 import com.tour.hanbando.dto.RegionDto;
+import com.tour.hanbando.dto.ReserveDto;
+import com.tour.hanbando.dto.ReviewDto;
 import com.tour.hanbando.dto.ThemeDto;
 import com.tour.hanbando.dto.UserDto;
+import com.tour.hanbando.util.MyFileUtils;
 import com.tour.hanbando.util.MyPackageUtils;
 import com.tour.hanbando.util.MyPageUtils;
 
@@ -40,6 +46,7 @@ public class PackageServiceImpl implements PackageService {
   private final MyPackageUtils myPackageUtils;
   
   // 패키지 리스트 불러오기
+  @Transactional(readOnly=true)
   @Override
   public Map<String, Object> getPackageList(HttpServletRequest request) {
     Optional<String> opt = Optional.ofNullable(request.getParameter("page"));
@@ -78,10 +85,19 @@ public class PackageServiceImpl implements PackageService {
    return editorImageList;
   }
   
+    @Transactional(readOnly=true)
+    @Override
+    public int getTotalPackageCount() {
+        return packageMapper.getPackageCount();
+    }
+  
   // 패키지 추가하기
+    
   @Override
   public int addPackage(MultipartHttpServletRequest multipartRequest) throws Exception {
       String packageContents = multipartRequest.getParameter("packageContents");
+      int regionNo = Integer.parseInt(multipartRequest.getParameter("regionNo"));
+      int themeNo = Integer.parseInt(multipartRequest.getParameter("themeNo"));
       
       try {
           String userNoStr = multipartRequest.getParameter("userNo");
@@ -98,8 +114,8 @@ public class PackageServiceImpl implements PackageService {
               .userDto(UserDto.builder()
                             .userNo(userNo)
                             .build())
-                  .regionDto(RegionDto.builder().regionNo(1).build())
-                  .themeDto(ThemeDto.builder().themeNo(1).build())
+                  .regionDto(RegionDto.builder().regionNo(regionNo).build())
+                  .themeDto(ThemeDto.builder().themeNo(themeNo).build())
                   .packageTitle(multipartRequest.getParameter("packageTitle"))
                   .miniOne(multipartRequest.getParameter("miniOne"))
                   .miniTwo(multipartRequest.getParameter("miniTwo"))
@@ -177,18 +193,22 @@ public class PackageServiceImpl implements PackageService {
   @Override
   public int addRegion(HttpServletRequest request) {
         String regionName = request.getParameter("regionName");
-    
+        int regionNo = Integer.parseInt(request.getParameter("regionNo"));
+        
         RegionDto regionDto = new RegionDto();
         regionDto.setRegionName(regionName);
+        regionDto.setRegionNo(regionNo);
     
         return packageMapper.insertRegion(regionDto);
     }
    @Override
    public int addTheme(HttpServletRequest request) {
         String themeName = request.getParameter("themeName");
-
+        int themeNo = Integer.parseInt(request.getParameter("themeNo"));
+        
         ThemeDto themeDto = new ThemeDto();
         themeDto.setThemeName(themeName);
+        themeDto.setThemeNo(themeNo);
 
         return packageMapper.insertTheme(themeDto);
     }
@@ -200,12 +220,112 @@ public class PackageServiceImpl implements PackageService {
     public PackageDto getPackage(int packageNo) {
       return packageMapper.getPackage(packageNo);
     }
+    
+    @Override
+    public Map<String, Object> imageUpload(MultipartHttpServletRequest multipartRequest) {
+        // 이미지가 저장될 경로
+        String imagePath = myPackageUtils.getPackageImagePath();
+        File dir = new File(imagePath);
+        if (!dir.exists()) {
+            dir.mkdirs();
+        }
+
+        // 이미지 파일 (CKEditor는 이미지를 upload라는 이름으로 보냄)
+        MultipartFile upload = multipartRequest.getFile("upload");
+
+        // 이미지가 저장될 이름
+        String filesystemName = myPackageUtils.getFilesystemName(upload.getOriginalFilename());
+
+        // 이미지 File 객체
+        File file = new File(dir, filesystemName);
+        // 저장
+        try {
+            upload.transferTo(file);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        // CKEditor로 저장된 이미지의 경로를 JSON 형식으로 반환해야 함
+        return Map.of("uploaded", true
+                , "url", multipartRequest.getContextPath() + imagePath + "/" + filesystemName);
+    }
+    
+    // 수정
+    @Override
+    public int modifyPackage(HttpServletRequest request) {
+              
+        // 수정할 제목/내용/블로그번호
+        int packageNo = Integer.parseInt(request.getParameter("packageNo"));
+        int regionNo = Integer.parseInt(request.getParameter("regionNo"));
+        int themeNo = Integer.parseInt(request.getParameter("themeNo"));
+        String packageContents = request.getParameter("packageContents");
+          
+        List<ProductImageDto> packageImageDtoList = packageMapper.getPackageImageList(packageNo);
+        List<String> packageImageList = packageImageDtoList.stream()
+                                      .map(packageImageDto -> packageImageDto.getFilesystemName())
+                                      .collect(Collectors.toList());
+            
+        // Editor에 포함된 이미지 이름(filesystemName)
+        List<String> editorImageList = getEditorImageList(packageContents);
+
+        // Editor에 포함되어 있으나 기존 이미지에 없는 이미지는 IMAGE_T에 추가해야 함
+        editorImageList.stream()
+          .filter(editorImage -> !packageImageList.contains(editorImage))        
+          .map(editorImage -> ProductImageDto.builder()                      
+                                .packageNo(packageNo)
+                                .imagePath(myPackageUtils.getPackageImagePath())
+                                .filesystemName(editorImage)
+                                .build())
+          .forEach(packageImageDto -> packageMapper.insertPackageImage(packageImageDto)); 
+             
+        // 기존 이미지에 있으나 Editor에 포함되지 않은 이미지는 삭제해야 함
+        List<ProductImageDto> removeList = packageImageDtoList.stream()
+                                          .filter(packageImageDto -> !editorImageList.contains(packageImageDto.getFilesystemName())) 
+                                          .collect(Collectors.toList());                                                       
+
+        for(ProductImageDto packageImageDto : removeList) {
+          // IMAGE_T에서 삭제
+          packageMapper.deletePackageImage(packageImageDto.getFilesystemName());  // 파일명은 UUID로 만들어졌으므로 파일명의 중복은 없다고 생각하면 된다.
+          // 파일 삭제
+          File file = new File(packageImageDto.getImagePath(), packageImageDto.getFilesystemName());
+          if(file.exists()) {
+            file.delete();
+          }
+        }
+        
+        
+        PackageDto packageDto = PackageDto.builder()
+                              .packageNo(packageNo)
+                              .regionDto(RegionDto.builder().regionNo(regionNo).build())
+                              .themeDto(ThemeDto.builder().themeNo(themeNo).build())
+                              .packageTitle(request.getParameter("packageTitle"))
+                              .miniOne(request.getParameter("miniOne"))
+                              .miniTwo(request.getParameter("miniTwo"))
+                              .miniThree(request.getParameter("miniThree"))
+                              .packagePlan(request.getParameter("packagePlan"))
+                              .packageContents(packageContents)                  
+                              .hotelContents(request.getParameter("hotelContents"))
+                              .price(Integer.parseInt(request.getParameter("price")))
+                              .danger(request.getParameter("danger"))
+                              .maxPeople(Integer.parseInt(request.getParameter("maxPeople")))
+                              .recommendStatus(Integer.parseInt(request.getParameter("recommendStatus")))
+                              .build();
+        
+        
+        int modifyResult = packageMapper.updatePackage(packageDto);
+        return modifyResult;
+        
+    } 
+
+    
+    
     // 조회수
+    @Transactional(readOnly=true)
     @Override
     public int increseHit(int packageNo) {
       return packageMapper.packageHit(packageNo);
     }
     // 조회수 불러오기
+    @Transactional(readOnly=true)
     @Override
     public Map<String, Object> getHit(HttpServletRequest request) {
           
@@ -223,19 +343,128 @@ public class PackageServiceImpl implements PackageService {
             return Map.of("hitList", hitList,
                           "totalPage", myPageUtils.getTotalPage());
     }
-    
+    @Transactional(readOnly=true)
     @Override
-    public Map<String, Object> getRegionAndTheme(Map<String, Object> map) {
-        Map<String, Object> resultMap = new HashMap<>();
+    public void getRegionAndTheme(HttpServletRequest request, Model model) {
+      
+        String regionNo = request.getParameter("regionNo");
+        String themeNo = request.getParameter("themeNo");
+
         
+        Map<String, Object> map = new HashMap<>();
+        
+        map.put("regionNo", regionNo);
+        map.put("themeNo", themeNo);
+      
         List<RegionDto> regionList = packageMapper.getRegion(map);
         List<ThemeDto> themeList = packageMapper.getTheme(map);
+ 
         
-        resultMap.put("regionList", regionList);
-        resultMap.put("themeList", themeList);
-        
-        return resultMap;
+        model.addAttribute("regionList", regionList);
+        model.addAttribute("themeList", themeList);
     }
+    
+    // 패키지 삭제
+    @Override
+    public int removePackage(int packageNo) {   
+        
+      List<ProductImageDto> productImageList = packageMapper.getPackageImageList(packageNo);
+        for(ProductImageDto productImage : productImageList) {
+          File file = new File(productImage.getImagePath(), productImage.getFilesystemName());
+          if(file.exists()) {
+            file.delete();
+          }
+        }     
+        
+        packageMapper.deletePackageImageList(packageNo);
+        
+        return packageMapper.deletePackage(packageNo);
+    }
+    
+    // 리뷰넣기
+    @Override
+    public Map<String, Object> addReview(HttpServletRequest request) {
+    
+      String reviewContents = request.getParameter("reviewContents");
+      int userNo = Integer.parseInt(request.getParameter("userNo"));
+      int packageNo = Integer.parseInt(request.getParameter("packageNo"));
+      int reserveNo = Integer.parseInt(request.getParameter("reserveNo"));
+      
+      ReviewDto review = ReviewDto.builder()
+                            .reviewContents(reviewContents)
+                            .packageNo(packageNo)
+                            .reserveNo(reserveNo)
+                            .userDto(UserDto.builder()
+                                      .userNo(userNo)
+                                      .build())                            
+                            .build();
 
+      int addReviewResult = packageMapper.insertReview(review);
+      
+      return Map.of("addReviewResult", addReviewResult);
+      
+    }
+    
+    // 리뷰 리스트 
+    @Transactional(readOnly=true)
+    @Override
+    public Map<String, Object> loadReviewList(HttpServletRequest request) {
+    
+      
+      int packageNo = Integer.parseInt(request.getParameter("packageNo"));
+
+      
+      String pageParameter = request.getParameter("page");
+      int page = 1;  // 기본값 설정
+      if (pageParameter != null && !pageParameter.isEmpty()) {
+          try {
+              page = Integer.parseInt(pageParameter);
+          } catch (NumberFormatException e) {             
+              e.printStackTrace();  
+          }
+      }
+      int total = packageMapper.getReviewCount(packageNo);
+      int display = 10;
+      
+      myPageUtils.setPaging(page, total, display);
+      
+      Map<String, Object> map = Map.of("packageNo", packageNo
+                                     , "begin", myPageUtils.getBegin()
+                                     , "end", myPageUtils.getEnd());
+      
+      List<ReviewDto> reviewList = packageMapper.getReviewList(map);
+      String paging = myPageUtils.getAjaxPaging();
+      Map<String, Object> result = new HashMap<String, Object>();
+      result.put("reviewList", reviewList);
+      result.put("paging", paging);
+      return result;
+      
+    }
+    @Transactional(readOnly=true)
+    @Override
+    public void getReserveUser(HttpServletRequest request, Model model) {
+            
+      int reservoNo = Integer.parseInt(request.getParameter("reservoNo"));
+      int userNo = Integer.parseInt(request.getParameter("userNo"));
+      int packageNo = Integer.parseInt(request.getParameter("packageNo"));
+
+      
+      Map<String, Object> map = new HashMap<>();
+      
+      map.put("reservoNo", reservoNo);
+      map.put("userNo", userNo);
+      map.put("packageNo", packageNo);
+    
+      List<ReserveDto> reserveUserList = packageMapper.getReserve(map);
+
+      
+      model.addAttribute("reserveUserList", reserveUserList);
+  }
+    
+    @Override
+    public Map<String, Object> removeReview(int reviewNo) {
+        int removeResult = packageMapper.deleteReview(reviewNo);
+        return Map.of("removeResult", removeResult);
+      }
 
 }
