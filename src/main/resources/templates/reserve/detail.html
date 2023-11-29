@@ -104,10 +104,10 @@
                 
                 <tr>
                   <td>출발지</td>
-                  <td th:if="${reserve.departureLoc == 'byOwn'}" th:text="자차 이용"></td>
-                  <td th:if="${reserve.departureLoc == 'seoulStation'}" th:text="서울역"></td>
-                  <td th:if="${reserve.departureLoc == 'DDP'}" th:text="동대문"></td>
-                  <td th:if="${reserve.departureLoc == 'Jamsil'}" th:text="잠실"></td>
+                  <td th:if="${reserve.departureLoc == 'byOwn'}">자차 이용</td>
+                  <td th:if="${reserve.departureLoc == 'seoulStation'}">서울역</td>
+                  <td th:if="${reserve.departureLoc == 'DDP'}">동대문</td>
+                  <td th:if="${reserve.departureLoc == 'Jamsil'}">잠실</td>
                 </tr>
                 <tr>
                   <td>예약상태</td>
@@ -206,7 +206,7 @@
     function fnGoModify(){
       $('#btn_res_modify').click(function(){
         if(confirm('예약 수정화면으로 이동하시겠습니까? 여행자 정보는 수정 불가능합니다.')){
-          $('#frm_btn').attr('action', '/reserve/edit.form?reserveNo=[[${reserve.reserveNo}]]');
+          $('#frm_btn').attr('action', '/reserve/edit.form');
           $('#frm_btn').submit();
         } 
       })
