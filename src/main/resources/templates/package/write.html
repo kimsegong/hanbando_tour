@@ -77,6 +77,10 @@
 	        <label for="packageTitle" class="form-label"></label>
 	        <input type="text" name="packageTitle" id="packageTitle" class="form-control" placeholder="패키지제목을 작성해주세요">
 	       </div>
+	       <div>
+          <label for="maxPeople" class="form-label"></label>
+          <input type="text" name="maxPeople" id="maxPeople" class="form-control" placeholder="최대인원수">
+         </div>   
     	   <div>
 	        <label for="miniOne" class="form-label"></label>
 	        <input type="text" name="miniOne" id="miniOne" class="form-control" placeholder="패키지를 표현해주세요 ex) 신혼여행">
@@ -116,15 +120,7 @@
     	  	<label for="danger" class="form-label"></label>
     	  	<textarea class="form-control" id="danger" name="danger" rows="10" placeholder="유의사항 작성해주세요"></textarea>
     	  </div>    
-    	  	  
-    	  <div>
-    	  	<label for="maxPeople" class="form-label"></label>
-	        <input type="text" name="maxPeople" id="maxPeople" class="form-control" placeholder="최대인원수">
-    	  </div>    	  
-  
-
-
-		  <div class="d-grid gap-2 col-6 mx-auto">
+		    <div class="d-grid gap-2 col-6 mx-auto">
 		      <input type="hidden" name="userNo" th:value="${session.user.userNo}">
 		      <button type="submit" class="btn btn-primary" style="margin: 32px;">작성완료</button>
 	      </div>
@@ -195,28 +191,6 @@
         });
     });
     
-	function submitForm() {
-    var themeSelect = document.getElementById("themeSelect");
-    var regionSelect = document.getElementById("regionSelect");
-
-    if (themeSelect.value === "-테마-") {
-        themeSelect.value = null;
-    }
-    if (regionSelect.value === "-지역-") {
-        regionSelect.value = null;
-    }
-
-    // 폼 제출
-    document.getElementById("frm_package_add").submit();
-}
- 
-	$(document).ready(function () {
-    $("#regionSelect, #themeSelect").change(function () {
-        var selectedValue = $(this).val();
-        console.log(selectedValue);
-    });
-});
-
 
  
   fnCkeditor();
