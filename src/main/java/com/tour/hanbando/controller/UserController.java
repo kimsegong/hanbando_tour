@@ -61,9 +61,12 @@ public class UserController {
     model.addAttribute("referer", ret.isEmpty() ? referer : ret);
     // 네이버로그인-1
     model.addAttribute("naverLoginURL", userService.getNaverLoginURL(request));
-    //model.addAttribute("kakaoLoginURL", userService.getKakaoLoginURL(request));
+    // 카카오로그인-1
+    model.addAttribute("kakaoLoginURL", userService.getKakaoLoginURL(request));
     return "user/login";
   }
+  
+  /////////////////네이버 로그인////////////////////////////////
   
   @GetMapping("/naver/getAccessToken.do")
   public String getAccessToken(HttpServletRequest request) throws Exception {
@@ -93,6 +96,40 @@ public class UserController {
   public void naverJoin(HttpServletRequest request, HttpServletResponse response) {
     userService.naverJoin(request, response);
   }
+  
+  ///////////////////카카오 로그인////////////////////////
+  
+  @PostMapping("/kakao/join.do")
+  public void kakaoJoin(HttpServletRequest request, HttpServletResponse response) throws Exception {
+    userService.kakaoJoin(request, response);
+  }
+  
+  @GetMapping("/kakao/getAccessToken.do")
+  public String getKakaoAccessToken(HttpServletRequest request) throws Exception {
+    String accessToken = userService.getKakaoLoginAccessToken(request);
+    return "redirect:/user/kakao/getProfile.do?accessToken=" + accessToken;
+  }
+  
+  //카카오 토큰 발급
+  @GetMapping("/kakao/getProfile.do")
+  public String getKakaoProfile(HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
+    UserDto kakaoProfile = userService.getKakaoProfile(request.getParameter("accessToken"));
+    UserDto user = userService.getUser(kakaoProfile.getEmail());
+    
+    if(user == null) {
+      // 카카오 간편가입 페이지로 이동
+      model.addAttribute("kakaoProfile", kakaoProfile);
+      return "user/kakao_join";
+    } else {
+      // kakaoProfile로 로그인 처리하기
+      userService.kakaoLogin(request, response, kakaoProfile);
+      return "redirect:/main.do";
+    }
+  }
+    
+  
+  
+  
   
   @PostMapping("/login.do")
   public void login(HttpServletRequest request, HttpServletResponse response) throws Exception {
