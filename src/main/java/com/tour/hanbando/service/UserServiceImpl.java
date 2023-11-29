@@ -12,7 +12,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-import javax.mail.Message;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -30,7 +29,11 @@ import com.tour.hanbando.util.MyJavaMailUtils;
 import com.tour.hanbando.util.MySecurityUtils;
 
 import lombok.RequiredArgsConstructor;
-import net.nurigo.java_sdk.exceptions.CoolsmsException;
+import net.nurigo.sdk.NurigoApp;
+import net.nurigo.sdk.message.model.Message;
+import net.nurigo.sdk.message.request.SingleMessageSendingRequest;
+import net.nurigo.sdk.message.response.SingleMessageSentResponse;
+import net.nurigo.sdk.message.service.DefaultMessageService;
 
 @Transactional
 @RequiredArgsConstructor
@@ -43,6 +46,7 @@ public class UserServiceImpl implements UserService {
   
   private final String client_id = "RTJMyHb54a63lvLzPh7A";
   private final String client_secret = "0xR9yv0oo3";
+  private DefaultMessageService messageService;
   
  
   //인증번호
@@ -51,22 +55,26 @@ public class UserServiceImpl implements UserService {
     
       String api_key = "NCS9YET2CLIIXCUL";
       String api_secret = "CTWEHCPFCPLEM2AVYQY02UDN8LXROBCQ";
+      messageService = NurigoApp.INSTANCE.initialize(api_key, api_secret,"https://api.coolsms.co.kr");
+      
       //Message coolsms = new Message(api_key, api_secret);
-
+      /*
       HashMap<String, String> params = new HashMap<>();
       params.put("to", phoneNumber);    // 수신전화번호
       params.put("from", "본인 휴대번호");    // 발신전화번호
       params.put("type", "SMS");
       params.put("text", "빵야빵야(屋) 인증번호 " + "["+cerNum+"]" + "를 입력하세요.");
       params.put("app_version", "test app 1.2"); // application name and version
-
-     // try {
-          //JSONObject obj = coolsms.send(params);  // 문자 보내기
-          //System.out.println(obj.toString());
-      //} catch (CoolsmsException e) {  // 문자전송 실패 시 메세지
-          //System.out.println(e.getMessage());
-          //System.out.println(e.getCode());
-      //}
+  */
+      Message message = new Message();
+      // 발신번호 및 수신번호는 반드시 01012345678 형태로 입력되어야 합니다.
+      message.setFrom("01062316858");
+      message.setTo(phoneNumber);
+      message.setText("한글 45자, 영자 90자 이하 입력되면 자동으로 SMS타입의 메시지가 추가됩니다.");
+      
+      
+      SingleMessageSentResponse response = this.messageService.sendOne(new SingleMessageSendingRequest(message));
+      System.out.println(response);
   }
     
   
@@ -223,6 +231,31 @@ public class UserServiceImpl implements UserService {
     return user;
     
   }
+  
+  /*
+  @Override
+  public String getKakaoLoginURL(HttpServletRequest request) throws Exception {
+    // 카카오로그인-1
+    // 카카오 로그인 연동 URL 생성하기를 위해 redirect_uri(URLEncoder), state(SecureRandom) 값의 전달이 필요하다.
+    // redirect_uri : 카카오로그인-2를 처리할 서버 경로를 작성한다.
+    // redirect_uri 값은 카카오 로그인 Callback URL에도 동일하게 등록해야 한다.
+    
+    String apiURL = "https://kauth.kakao.com/oauth/authorize";
+    String response_type = "code";
+    String redirect_uri = URLEncoder.encode("http://localhos:8080" + request.getContextPath() + "/user/kakao_join.html", "UTF-8");
+    String state = new BigInteger(130, new SecureRandom()).toString();
+  
+    StringBuilder sb = new StringBuilder();
+    sb.append(apiURL);
+    sb.append("?response_type=").append(response_type);
+    sb.append("&client_id=").append(client_id);
+    sb.append("&redirect_uri=").append(redirect_uri);
+    sb.append("&state=").append(state);
+    
+    return sb.toString();
+    
+  }
+  */
   
   @Override
   public UserDto getUser(String email) {
