@@ -67,7 +67,28 @@
   
   <div th:replace="~{/layout/header::header}"></div>
   
-
+         <th:block th:if="${session.user.auth == 0}">
+         <form id="frm_btn" method="post">
+            <input type="hidden" name="packageNo" class="heart" th:value="${packageDto.packageNo}"> 
+            <input type="hidden" name="userNo" class="heart2" th:value="${session.user.userNo}">  
+            <input type="hidden" name="regionNo" th:value="${packageDto.regionDto.regionNo}">
+            <input type="hidden" name="themeNo" th:value="${packageDto.themeDto.themeNo}">
+            <input type="hidden" name="packageTitle" th:value="${packageDto.packageTitle}">
+            <input type="hidden" name="miniOne" th:value="${packageDto.miniOne}">
+            <input type="hidden" name="miniTwo" th:value="${packageDto.miniTwo}">
+            <input type="hidden" name="miniThree" th:value="${packageDto.miniThree}">
+            <input type="hidden" name="packagePlan" th:value="${packageDto.packagePlan}">
+            <input type="hidden" name="packageContents" th:value="${packageDto.packageContents}">
+            <input type="hidden" name="hotelContents" th:value="${packageDto.hotelContents}">
+            <input type="hidden" name="price" th:value="${packageDto.price}">       
+            <input type="hidden" name="danger" th:value="${packageDto.danger}">
+            <input type="hidden" name="packagePlan" th:value="${packageDto.packagePlan}">                  
+            <input type="hidden" name="maxPeople" th:value="${packageDto.maxPeople}">
+            <input type="hidden" name="recommendStatus" th:value="${packageDto.recommendStatus}">
+           <button type="button" id="btn_edit">편집</button> 
+           <button type="button" id="btn_remove">삭제</button> 
+         </form>
+         </th:block>  
   <div class="container text-center">
    <div class="row">
     <div class="col-8">
@@ -194,9 +215,14 @@
           </fieldset>
           
             <div>
-              <input type="hidden" name="userNo" value="${sessionScope.user.userNo}">
-                  <input type="hidden" name="productNo" value="${product.productNo}">
-              <textarea class="col-auto form-control" id="contents" name="contents" placeholder="행복했던 여행후기를 남겨보세요🙂"></textarea>   <!-- 예약한사람만 보이게 -->
+              <input type="hidden" id="sessionUserNo" name="userNo" th:value="${session.user.userNo}">
+              <th:block th:each="r,vs:${reserveDto}">
+                <div th:text="${r.userDto.userNo}"></div>
+                
+              </th:block>
+       <!--/*       <input type="hidden" id="reserveUserNo" name="userNo" th:value="${reserveDto.userDto.userNo}(0)">  */-->
+              <input type="hidden" name="packageNo" value="${packageDto.packageNo}">
+              <textarea class="col-auto form-control" id="reviewContents" name="reviewContents" placeholder="행복했던 여행후기를 남겨보세요🙂"></textarea>   <!-- 예약한사람만 보이게 -->
               <button type="button" class="btn btn-kong" id="btn_review_add" style="margin-top: 20px; margin-left: 750px">작성완료</button>
             </div>
            </form>
@@ -211,8 +237,8 @@
             </div>
         </div>
         <div id="reviewAccordion">
-             <input type="hidden" id="productNo" name="productNo" value="${product.productNo}">     
-                  
+             <input type="hidden" id="packageNo" name="packageNo" th:value="${packageDto.packageNo}">     
+             
         </div>  
     </div>    
     
@@ -246,17 +272,144 @@
   </div>
 
   
-  <script>   
+  <script th:inline="javascript">   
     function fnGoReserve(){
       $('#btn_reserve').click(function(){
-         location.href='/reserve/write.form?packageNo=${packageDto.packageNo}';
+         location.href='/reserve/write.form?packageNo=[[${packageDto.packageNo}]]';
       })
    }
    
+     var frmBtn = $('#frm_btn');
+    
+     const fnEditPackage = () => {
+      $('#btn_edit').click(() => {
+        frmBtn.attr('action', '/package/edit.do');
+        frmBtn.submit();
+      })
+    }
+
+   const fnRemovePackage = () => {
+      $('#btn_remove').click(() => {
+        if(confirm('패키지를 삭제할까요?')){
+          frmBtn.attr('action', '/package/remove.do');
+          frmBtn.submit();          
+        }
+      })
+    }
    
+    // 리뷰  
+    const fnReviewAdd = () => {
+        $('#btn_review_add').click(() => {
+          if('${session.user}' === ''){
+            if(confirm('로그인이 필요한 기능입니다. 로그인할까요?')){
+              location.href = '/user/login.form';
+            } else {
+              return;
+            }
+          }
+          $.ajax({
+            // 요청
+            type: 'post',
+            url: '/package/addReview.do',
+            data: $('.frm_review_add').serialize(),
+            // 응답
+            dataType: 'json',
+            success: (resData) => {             
+              if(resData.addReviewResult === 1){
+                alert('리뷰가 등록되었습니다.');
+                $('#reviewContents').val('');
+                fnReviewList();
+              }
+            }
+          })
+        })
+      }
+      
+      
+      
    
-   
+      
+    var page = 1;
+    var totalPage = 0;
+  
+    const packageNo = $('#packageNo').val();
+  
+    const fnReviewList = () => { 
+      $.ajax({
+        type: 'get',
+        url: '/package/reviewList.do',
+        data: { page: page, packageNo: packageNo},
+        dataType: 'json',
+        success: (resData) => {
+          totalPage = resData.totalPage;
+          $('#reviewAccordion').empty();
+          if (resData.reviewList != null && resData.reviewList.length > 0) {
+            $.each(resData.reviewList, (i, review)=> {
+              let str = '<div class="accordion accordion-flush">';
+              str += '<div class="accordion-item">';
+              str += '<h2 class="accordion-header">';
+              str += '<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapse' + i + '" aria-expanded="false" aria-controls="flush-collapse' + i + '">' + review.userDto.name + '님의 리뷰</button>';
+              str += '</h2>';
+              str += '<div id="flush-collapse' + i + '" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">';
+              str += '<div class="accordion-body">' + review.reviewContents + '</div>';
+              str += '  <div>';
+              if('${session.user.userNo}' == review.userDto.userNo){                
+                    str += '  <input type="hidden" value="' + review.reviewNo + '">';
+                    str += '  <button type="button" class="btn remove_Review" style="margin-left: 550px;">삭제하기</button>';
+                  }
+                    str += '  </div>';
+              str += '</div>';
+              str += '</div>';
+              str += '</div>';
+                $('#reviewAccordion').append(str);         
+            });
+          } else {
+            // 리뷰가 없을 때
+            $('#reviewAccordion').append('<div class="text-center">등록된 리뷰가 없습니다.</div>');
+          }
+        },
+        error: (error) => {
+          console.error('Ajax 요청 에러:', error);
+          console.log('packageNo:', packageNo);
+        }
+      });
+    };
+
+     $(document).ready(function () {
+        // 문서가 준비되면 실행되는 부분
+
+        // textarea 보이기/숨기기 함수
+        function toggleTextarea() {
+            var sessionUserNo = $('#sessionUserNo').val();
+            var reserveUserNo = $('#reserveUserNo').val();
+
+            if (sessionUserNo === reserveUserNo) {
+                // 세션 사용자와 예약 사용자가 일치하면 textarea를 보이게 함
+                $('#reviewContents').show();
+            } else {
+                // 일치하지 않으면 textarea를 숨김
+                $('#reviewContents').hide();
+            }
+        }
+
+        // 페이지 로딩 시 초기 상태 설정
+        toggleTextarea();
+
+        // 작성완료 버튼 클릭 시
+        $('#btn_review_add').click(function () {
+            // 여기에서 리뷰 작성 등의 로직을 수행
+
+            // 작성 완료 후 다시 textarea 상태 업데이트
+            toggleTextarea();
+        });
+    });
+    
    fnGoReserve();
+   fnEditPackage();
+   fnRemovePackage();
+   fnReviewAdd();
+   fnReviewList();
+   
   </script>
 
 
