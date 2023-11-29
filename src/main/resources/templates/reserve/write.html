@@ -247,6 +247,10 @@
     
     function fnAddReserve(){
       $('#btn_reserve').click(function(ev){
+        fnRegTotalPerson();
+        fnRegInputName();
+        fnRegInputMobile();
+        fnRegAgree();
         console.log($('#frm_reserve').serialize());
         $.ajax({
           type: 'post',
@@ -368,6 +372,63 @@
         $('#chkAll').prop('checked', total === $('.chk_each').length);
       })
     } 
+  
+    function fnRegTotalPerson(){
+      var reservePerson = parseInt($('#reservePerson').val());
+      if(isNaN(reservePerson) || reservePerson < 1){
+        alert('여행 인원을 선택해주세요');
+        ev.preventDefault();
+        return;
+      }
+    }
+    
+  
+    function fnRegInputName(){
+      var inputs = document.getElementsByName("touristName");
+      var hasEmptyValue = false;
+        for (var i = 0; i < inputs.length; i++) {
+          var inputValue = inputs[i].value.trim();
+          if (inputValue === "") {
+            hasEmptyValue = true;
+            break;
+          }
+        }
+        if (hasEmptyValue) {
+          alert("이름은 필수 항목입니다.");
+          ev.preventDefault();
+          return;
+        }
+    }
+  
+    function fnRegInputMobile(){
+      var inputM = document.getElementsByName("tourContact");
+      var hasEmptyM = false;
+        for (var i = 0; i < inputM.length; i++) {
+          var inputValue = inputM[i].value.trim();
+          let regMobile = /^010[0-9]{8}$/;
+          mobilePassed = regMobile.test(inputM.value);
+          if (inputValue === "" && !mobilePassed) {
+            hasEmptyM = true;
+            break;
+          }
+        }
+        if (hasEmptyM) {
+          alert("연락처를 확인해주세요.");
+          ev.preventDefault();
+          return;
+        }
+    }
+    
+    
+    function fnRegAgree(){
+      if(!$('#chkAgree').is(':checked')){
+        alert('필수 약관에 동의하세요.');
+        ev.preventDefault();
+        return;
+      }
+    }
+  
+  
   
     fnAddReserve();
     fnChangeTotalPrice();
