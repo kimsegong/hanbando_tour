@@ -165,7 +165,7 @@
       FROM USER_T U INNER JOIN RESERVE_T RES
         ON U.USER_NO = RES.USER_NO INNER JOIN PACKAGE_T P
         ON P.PACKAGE_NO = RES.PACKAGE_NO
-      WHERE RES.RESERVE_NO = #{reserveNo} 
+     WHERE RES.RESERVE_NO = #{reserveNo} 
   </select>
   
   <select id="getTourists" parameterType="int" resultMap="TouristMap">
