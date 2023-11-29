@@ -20,30 +20,52 @@ var pwPassed = false;
 var pw2Passed = false;
 var namePassed = false;
 var mobilePassed = false;
+var smsPassed = false;
 
 
 /* 함수 정의 */
 
+/*인증번호 입력 후 확인하는 곳*/
+
+
+
 const fnCheckSms = () => {
   $('#goSMS').click(() => {
-  let sms = $('#userPhoneNum').val();
-  alert("test");
-
-   $.ajax({
-        // 요청
-        type: 'get',
-        url: '/user/execute.form',
-        data: 'userPhoneNum=' + sms,
-        // 응답
-        dataType: 'json'
-       })
-       })
-       }
+    let sms = $('#userPhoneNum').val();
+    alert("인증번호가 발송되었습니다.");
+    $.ajax({
+      // 요청
+      type: 'get',
+      url: '/user/execute.form',
+      data: 'userPhoneNum=' + sms,
+      // 응답
+      dataType: 'json',
+      success: (resData) => {
+        $('#authNumber').prop('disabled',false);
+        $('#confirmBnt').prop('disabled',false);
+        $('#confirmBnt').click(() => {
+          smsPassed = $('authNumber').val() === resData.cerNum;
+          if(smsPassed){
+           alert('핸드폰이 인증되었습니다.');
+            } else {
+            alert('핸드폰 인증이 실패했습니다.');
+          }
+        })
+      }
+    })
+  }).catch((state) => {
+      smsPassed = false;
+      switch(state){
+      case 1: $('#confirmBnt').text('인증번호 형식이 올바르지 않습니다.'); break;
+      case 2: $('#confirmBnt').text('이미 인증된 번호입니다. '); break;
+      }
+    })
+  }
 
 const fnCheckEmail = () => {
   $('#btn_get_code').click(() => {
     let email = $('#email').val();
-    // 연속된 ajax() 함수 호출의 실행 순서를 보장하는 JavaScript 객체 Promise
+  // 연속된 ajax() 함수 호출의 실행 순서를 보장하는 JavaScript 객체 Promise
     new Promise((resolve, reject) => {
       // 성공했다면 resolve() 함수 호출 -> then() 메소드에 정의된 화살표 함수 호출
       // 실패했다면 reject() 함수 호출 -> catch() 메소드에 정의된 화살표 함수 호출
