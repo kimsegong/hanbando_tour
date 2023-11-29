@@ -44,7 +44,9 @@ const fnCheckSms = () => {
         $('#authNumber').prop('disabled',false);
         $('#confirmBnt').prop('disabled',false);
         $('#confirmBnt').click(() => {
-          smsPassed = $('authNumber').val() === resData.cerNum;
+
+        
+           smsPassed = $('#authNumber').val() === resData.cerNum;
           if(smsPassed){
            alert('핸드폰이 인증되었습니다.');
             } else {
