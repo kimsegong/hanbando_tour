@@ -1,9 +1,13 @@
 package com.tour.hanbando.service;
 
+import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 
+import com.tour.hanbando.dto.InactiveUserDto;
 import com.tour.hanbando.dto.UserDto;
 
 public interface ManageService {
@@ -18,16 +22,20 @@ public interface ManageService {
     public UserDto getUser(int userNo);
     
     /* 기존 회원 정보 수정 */
+    public ResponseEntity<Map<String, Object>> modifyUser(HttpServletRequest request);
     
     /* 기존 회원 비밀번호 수정 */
     
     /* 기존 회원 탈퇴 */
     
     /* 휴면 회원 목록 */
+    public void loadInactiveList(HttpServletRequest request, Model model);
     
     /* 휴면 회원 검색 */
+    public void loadSearchInactiveList(HttpServletRequest request, Model model);
     
     /* 휴면 회원 상세 */
+    public InactiveUserDto getInactiveUser(int userNo);
     
     /* 탈퇴 회원 목록 */
     

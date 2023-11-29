@@ -1,7 +1,5 @@
 package com.tour.hanbando.dto;
 
-import java.util.Date;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -24,8 +22,8 @@ public class InactiveUserDto {
   private String detailAddress;
   private int agree;
   private int state;
-  private Date pwModifiedAt;
-  private Date joinedAt;
-  private Date inactivedAt;
+  private String pwModifiedAt;
+  private String joinedAt;
+  private String inactivedAt;
 }
 

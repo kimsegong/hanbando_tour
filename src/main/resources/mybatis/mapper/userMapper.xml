@@ -171,7 +171,32 @@
   </insert>
   
   
-  
+  <!-- 카카오 가입 -->
+   <insert id="insertKakaoUser" parameterType="UserDto">
+    INSERT INTO USER_T (
+        USER_NO
+      , EMAIL
+      , NAME
+      , GENDER
+      , MOBILE
+      , AGREE
+      , STATE
+      , AUTH
+      , PW_MODIFIED_AT
+      , JOINED_AT
+    ) VALUES (
+        USER_SEQ.NEXTVAL
+      , #{email}
+      , #{name}
+      , #{gender}
+      , #{mobile}
+      , #{agree}
+      , 0
+      , 1
+      , TO_CHAR(SYSDATE,'YYYY-MM-DD_HH24:MI:SS')
+      , TO_CHAR(SYSDATE,'YYYY-MM-DD_HH24:MI:SS')
+    )
+  </insert>
   
 
 </mapper>
