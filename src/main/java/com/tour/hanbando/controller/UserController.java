@@ -33,22 +33,11 @@ public class UserController {
   
  //인증번호
   @ResponseBody
-  @GetMapping("/execute.form")
-  public String sendSMS(@RequestParam String userPhoneNum) throws Exception{
-      // 5자리 인증번호 만들기
-      Random random  = new Random();
-      String numStr = "";
-      for(int i=0; i<5; i++) {
-          String ranNum = Integer.toString(random.nextInt(10));   // 0부터 9까지 랜덤으로 숫자를 뽑는다.
-          numStr += ranNum;   // 랜덤으로 나온 숫자를 하나씩 누적해서 담는다.
-      }
-      // 확인용
-      System.out.println("수신자 번호 : " + userPhoneNum);
-      System.out.println("인증번호 : " + numStr);
-
+  @GetMapping(value="/execute.form", produces="application/json")
+  public Map<String, Object> sendSMS(@RequestParam String userPhoneNum) throws Exception {
       // 문자 보내기
-      userService.certifiedPhoneNumber(userPhoneNum , numStr);
-      return numStr;    // 인증번호 반환
+      return userService.certifiedPhoneNumber(userPhoneNum);
+      // 인증번호 반환 {"cerNum": 12345}
   }
 
 
