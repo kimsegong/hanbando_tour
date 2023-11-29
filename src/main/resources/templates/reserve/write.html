@@ -10,7 +10,7 @@
 	
 		 <div class="container text-center">
 		  <div class="row">
-		    <div class="col-1">	      
+		    <div class="col-1">	        
 		    </div>
 		    <div class="col-10" style="border:1px gray dotted">
 		      	<!--/*여기에 작성/ 다 만들고 style 지워주세요  */-->
@@ -136,7 +136,7 @@
           <form id="frm_reserve" >
             
             <input type="hidden" name="userNo" value="${session.user.userNo}">
-            <input type="hidden" name="productNo" value="${product.productNo}">
+            <input type="hidden" name="packageNo" value="${package.packageNo}">
             <input type="hidden" name="resStart" value="${resDate}">
             <!-- 
             <input type="hidden" name="resFinish">
@@ -153,20 +153,20 @@
             <div class="d-grid gap-2 col-2 mx-auto">
               <ul class="list-group">
                 <li class="list-group-item">
-                  <input class="form-check-input me-1" type="radio" name="pickupLoc" id="byOwn" value="자차" checked>
+                  <input class="form-check-input me-1" type="radio" name="departureLoc" id="byOwn" value="자차" checked>
                   <label class="form-check-label" for="byOwn">자차 이용</label> 
                 </li>
                 <li class="list-group-item">
-                  <input class="form-check-input me-1" type="radio" name="pickupLoc" id="pickupSeoul" value="서울역" >
-                  <label class="form-check-label" for="pickupSeoul">서울역</label> 
+                  <input class="form-check-input me-1" type="radio" name="departureLoc" id="departSeoul" value="서울역" >
+                  <label class="form-check-label" for="departSeoul">서울역</label> 
                 </li>
                 <li class="list-group-item">
-                  <input class="form-check-input me-1" type="radio" name="pickupLoc" id="pickupDDP" value="동대문">
-                  <label class="form-check-label" for="pickupDDP">동대문</label> 
+                  <input class="form-check-input me-1" type="radio" name="departureLoc" id="departDDP" value="동대문">
+                  <label class="form-check-label" for="departDDP">동대문</label> 
                 </li>
                 <li class="list-group-item">
-                  <input class="form-check-input me-1" type="radio" name="pickupLoc" id="pickupJamsil" value="잠실">
-                  <label class="form-check-label" for="pickupJamsil">잠실</label> 
+                  <input class="form-check-input me-1" type="radio" name="departureLoc" id="departJamsil" value="잠실">
+                  <label class="form-check-label" for="departJamsil">잠실</label> 
                 </li>
               </ul>
             </div>
@@ -241,14 +241,47 @@
 	
 	<script th:inline="javascript">
     
+    function fnAddReserve(){
+      $('#btn_reserve').click(function(ev){
+          /*
+          fnRegTotalPerson();
+          fnRegInputName();
+          fnRegInputMobile();
+          fnRegAgree();
+          */
+        $.ajax({
+          type: 'post',
+          url: '/reserve/addReserve.do',
+          data: $('#frm_reserve').serialize(),
+          dataType: 'json',
+          success: function(resData){
+            if(resData.addReserveResult === 1){
+              alert('예약이 등록되었습니다.');
+              fnAddTourist(resData.reserveNo);
+            }
+          }
+        })
+      })
+    } 
+    
+    function fnAddTourist(reserveNo){  // reserveNo를 인수로 받음
+      $('#frm_tourist').append($('<input>').attr({
+        type: 'hidden',
+        name: 'reserveNo',
+        value: reserveNo  // reserveNo를 폼에 추가
+      }));
+      $('#frm_tourist').attr('action', '/reserve/addTourist.do');
+      $('#frm_tourist').submit();
+    }
+
+    
     // 성인, 소아 선택한 만큼 입력창 생성메소드
     function fnAddTouristForm(){
       $(document).ready(function() {
         $('select[name="adultCnt"], select[name="childCnt"]').change(function() {
-            var adultCount = parseInt($('select[name="adultCnt"]').val());
-            var childCount = parseInt($('select[name="childCnt"]').val());
-            
-            $('#inp_tourist').empty();
+          var adultCount = parseInt($('select[name="adultCnt"]').val());
+          var childCount = parseInt($('select[name="childCnt"]').val());
+          $('#inp_tourist').empty();
           let str = '';
           if(adultCount !== 0){
             for(let i = 1; i <= adultCount; i++){
@@ -265,7 +298,7 @@
                     str += '     </select>';
                     str += '  </td>';
                   str += '  <td>'; 
-                str += '    <input type="text" class="inpMob tourContact" name="tourContact" maxlength="11">';
+                str += '    <input type="text" class="inpMob tourMobile" name="tourMobile" maxlength="11">';
                 str += '  </td>';
                   str += '</tr>';
               }
@@ -285,7 +318,7 @@
                   str += '     </select>';
                   str += '  </td>';
                 str += '  <td>'; 
-                str += '    <input type="text" class="inpMob tourContact" name="tourContact" maxlength="11">';
+                str += '    <input type="text" class="inpMob tourMobile" name="tourMobile" maxlength="11">';
               str += '  </td>';
                 str += '</tr>';
                 }
