@@ -15,9 +15,79 @@
 		    <div class="col-10" style="border:1px gray dotted">
 		      	<!--/*여기에 작성/ 다 만들고 style 지워주세요  */-->
 		   
-		      	
-		      	
-		    </div>
+  		    <div id="contents">
+            <div class="subtitle_wrap">
+              <h2>예약수정하기</h2>
+            </div>
+            <hr>
+            
+            <!-- 예약 정보 -->
+            <form id="frm_modify" method="post">
+              <div>
+                <h4>예약자 정보</h4>
+              </div>
+              <div class="d-grid gap-2 col-8  mx-auto">
+                <table class="table">
+                  <colgroup>
+                    <col style="width:20%;">
+                    <col>
+                  </colgroup>
+                  <tbody>
+                    <tr>
+                      <td>예약자명</td>
+                      <td th:text="${userName}"></td>
+                    </tr>
+                    <tr>
+                      <td>연락처</td>
+                      <td>
+                        <span th:text="${userMobile}"></span>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>요청사항</td>
+                      <td>
+                        <textarea class="textarea form-control" name="reqTerm" id="reqTerm" cols="30" rows="5" th:text="${reserve.requestedTerm}"></textarea>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <input type="hidden" name="userNo" th:value="${userNo}">
+              <input type="hidden" name="reserveNo" th:value="${reserve.reserveNo}">
+            
+                
+               <!-- 픽업장소 선택 -->
+              <div>
+                <h4>출발지 선택</h4>
+              </div>
+    
+              <div class="d-grid gap-2 col-2 mx-auto">
+                <ul class="list-group">
+                  <li class="list-group-item">
+                    <input class="form-check-input me-1" type="radio" name="departureLoc" id="byOwn" value="byOwn" checked>
+                    <label class="form-check-label" for="byOwn">자차 이용</label> 
+                  </li>
+                  <li class="list-group-item">
+                    <input class="form-check-input me-1" type="radio" name="departureLoc" id="departSeoul" value="seoulStation" >
+                    <label class="form-check-label" for="departSeoul">서울역</label> 
+                  </li>
+                  <li class="list-group-item">
+                    <input class="form-check-input me-1" type="radio" name="departureLoc" id="departDDP" value="DDP">
+                    <label class="form-check-label" for="departDDP">동대문</label> 
+                  </li>
+                  <li class="list-group-item">
+                    <input class="form-check-input me-1" type="radio" name="departureLoc" id="departJamsil" value="Jamsil">
+                    <label class="form-check-label" for="departJamsil">잠실</label> 
+                  </li>
+                </ul>
+              </div>
+                  
+              <div style="margin-top: 20px;">
+                <button class="btn btn-success btn-lg" type="button" id="btn_modify">수정하기</button>
+              </div>
+            </form>
+          
+  		    </div>
 		    <div class="col-1">	      
 		    </div>
 		  </div>
@@ -27,6 +97,22 @@
 
 	
 	
+  <script>
+  
+    function fnResModify(){
+      $('#btn_modify').click(function(){
+        if(confirm('수정하시겠습니까?')){
+          $('#frm_modify').attr('action', '/reserve/modifyReserve.do');
+          $('#frm_modify').submit();
+        } else {
+          return;
+        }
+      })
+    }
+  
+    fnResModify();
+  
+  </script>   	
 	
 	<div th:replace="~{/layout/footer::footer}"></div>
 </body>
