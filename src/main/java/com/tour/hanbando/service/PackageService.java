@@ -9,6 +9,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.tour.hanbando.dto.PackageDto;
+import com.tour.hanbando.dto.ReserveDto;
 
 public interface PackageService {
   public Map<String, Object> getPackageList(HttpServletRequest request);
@@ -27,6 +28,6 @@ public interface PackageService {
   public Map<String, Object> addReview(HttpServletRequest request);
   public Map<String, Object> loadReviewList(HttpServletRequest request);
   public Map<String, Object> removeReview(int reviewNo);
-  public void getReserveUser(HttpServletRequest request, Model model);
+  public List<ReserveDto> getReserveUser(int packageNo);
   
 }
