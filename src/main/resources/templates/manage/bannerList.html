@@ -101,7 +101,11 @@
     margin: auto;
     margin-top: 20px;
   }
-  
+  img {
+		width:500px;
+		height: 300px;
+		margin-bottom: 20px;
+	}
 </style>
   
 <body>
@@ -164,9 +168,9 @@
                            <option value="0" th:selected="${b.state == 0}">숨기기</option>
                          </select>
                                  
-                          <input type="text" class="address" name="linkedAdress" placeholder="기본설정으로 메인페이지 입니다." th:value="${b.linkedAddress}" >
-                          <input type="hidden"id="bannerNo" name="bannerNo" th:value="${b.bannerNo}" > 
-                          <button type="button" >주소 저장</button>
+                          <input type="hidden" th:id="'bannerNo'+${b.bannerNo}" name="bannerNo" th:value="${b.bannerNo}" > 
+                          <input type="text" class="address" th:id="'address'+${b.bannerNo}" name="linkedAdress" placeholder="기본설정으로 메인페이지 입니다." th:value="${b.linkedAddress}" >
+                          <button type="button" th:id="'btn_address'+${b.bannerNo}" class="btn_address" >주소 저장</button>
                           <button type="submit" class="complete">완료</button>
                        </div>
                     </form>
@@ -227,18 +231,18 @@
              reader.readAsDataURL(file);
              
          }
-         console.log($('#filesystemName').val())
+         console.log($('#filesystemName1').val())
          
          var filename;
          if (window.FileReader){
               filename = ($('#image')[0]).files[0].name;
             }
          
-         if(filename !== $('#filesystemName').val()){
-           $('#filesystemName').removeAttr('value');
+         if(filename !== $('#filesystemName1').val()){
+           $('#filesystemName1').removeAttr('value');
          }
          
-         console.log($('#filesystemName').val())
+         console.log($('#filesystemName1').val())
          }   
       }     
         
@@ -272,6 +276,7 @@
           // 사진 올리는 부분
            var bannerPath = $('#bannerPath'+i).val();
            var filesysName = $('#filesystemName'+i).val();
+           var originalName = $('#originalName'+i).val();
          
            var str = '<img src="' + bannerPath +'/'+ filesysName+'" id="getImage">';
            $('#previewId'+i).append(str); 
@@ -296,6 +301,45 @@
        
         }
 		  
+		  const fnChangeAddress = () => {
+				var address
+				var bannerNo
+				$('#btn_address1').click(() => {
+					 address = $('#address1').val();
+					 bannerNo = $('#bannerNo1').val();
+					 fnAjax(address, bannerNo);
+					console.log(address + '//' + bannerNo);
+				})
+					
+			 $('#btn_address2').click()
+					 address = $('#address2').val();
+					 bannerNo = $('#bannerNo2').val();
+			 $('#btn_address3').click()
+					 address = $('#address3').val();
+					 bannerNo = $('#bannerNo3').val();
+				}
+				
+			
+			
+			const fnAjax = (address, bannerNo) => {
+				$.ajax({
+						type: 'post',
+						 url: 'changeAddress.do',
+						data: {address: address, bannerNo: bannerNo},
+						dataType:'json',
+						success:(resData) => {
+							if(resData != ''){
+								if(resData == 1){
+									alert("주소가 수정되었습니다.");
+								} else if(resData == 0){
+									alert("주소 수정을 실패 했습니다. ");
+								}
+							}
+						}
+					})
+				
+				
+			}
 		 		  
      
   	
@@ -305,6 +349,7 @@
   	
   fnFileCheck();
   fnLoadimage();
+  fnChangeAddress();
 </script>      
       
 

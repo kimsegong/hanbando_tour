@@ -2,26 +2,142 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 
 <head th:replace="~{/layout/header::head('한반도 투어')}"></head> <!-- 이거 알맞게 바꿔주세요-->
+
 <style>
+  .wrap1 > .box1{
+    height:40px;
+  }  
+
+  .wrap1 > .box2{
+    height:40px;
+  }    
+  
+  .col-9 {
+    text-align: left;
+  }
+  
+  .wrap1 > .box3{
+  height:70px;
+  }    
+
+  .wrap1 > .box4{
+  height:70px;
+  }      
+  
 
 </style>
 
+
 <body>
+  
   <div th:replace="~{/layout/header::header}"></div>
   
   <div class="main_wrap">
   
   
-     <div class="container text-center">
+    <div class="container text-center">
       <div class="row">
         <div class="col-1">       
         </div>
         <div class="col-10" style="border:1px gray dotted">
             <!--/*여기에 작성/ 다 만들고 style 지워주세요  */-->
+            
+
+    <div class="wrap1">
+      <div class="box1"></div>      
+    </div> 
+            
+    <div class="row">
+    <div class="col-7"></div>
+    <div class="col-4" style="display: flex; justify-content: flex-end;">
+      <div class="home">
+        <a th:href="@{/layout/main.do}"><i class="fa-solid fa-house" style="font-size:15px; margin-right: 5px;"></i></a>
+         &nbsp;고객센터  &nbsp;  >   &nbsp; 공지사항
+      </div>
+    </div>
+    <div class="col-1"></div>
+       
+    <div class = "wrap1">
+      <div class="box2"></div>
+    </div>
     
-            
-            
+   
+    <div class="col-3"> 
+      <div>
+      <a th:href="@{/notice/list.do}">
+      <button type="button" class="btn btn btn-primary" style="width:125px; height:45px">&nbsp;&nbsp;&nbsp;&nbsp;공지사항&nbsp;&nbsp;&nbsp;&nbsp;</button>  
+      </a>
+      </div> 
+    
+    <div>
+      <a th:href="@{/notice/faq.do}">
+      <button type="button" class="btn btn-outline-primary">자주묻는질문</button>  
+      </a>
+    </div>
+    
+    <div>
+      <a th:href="@{/notice/inquiry.form}">
+      <button type="button" class="btn btn-outline-primary">&nbsp;1:1문의하기&nbsp;</button>  
+      </a>
+    </div>
+    </div>
+    
+    
+    
+    <div class="col-9">  
+      <h2>공지사항</h2>
+       <hr style="border: 1px solid black;">
+    </div>
+    
+      <div>
+        <h1 class="title mt-4" th:text="${notice.title}"></h1>
+        <div th:text="|작성일 : ${notice.createdAt}|"></div>
+        <div class="mt-3" th:utext="${notice.contents}"></div>
+      </div>    
         
+  
+  
+  
+  
+  
+  
+  </div>  
+  </div>
+
+    
+
+
+
+
+
+    
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+      
+      </div>
+      </div>
+      </div>
+      
+      
+      
+      
+      
+      <script>
+
+      
+      </script>
+      
+            
             
             
             
