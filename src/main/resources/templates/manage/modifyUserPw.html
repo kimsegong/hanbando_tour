@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{/layout/header::head(|${user.userNo}번 회원 비밀번호 변경|)}"></head> 
+<style>
+  
+ .container {
+    margin-top: 20px; 
+  }
+  
+  #pw_label {
+    font-weight: bold;
+    font-size: 20px;
+  }
+  
+  #pw {
+    font-size: 16px;
+    width: 300px; 
+    padding: 10px;
+  }
+  
+  #check_pw {
+    font-size: 14px; 
+  }
+  
+  .modified_date {
+    margin-top: 1%;
+    margin-left: 5%;
+  }
+  
+  .btns {
+    margin: 8% auto
+  }
+  
+  #btn_modify_pw {
+    height: 38px; 
+    color: #96B6C5;         /* 텍스트 색상 */
+    background-color: #fff; /* 기본 배경 색상 */
+    border-color: #96B6C5;  /* 테두리 색상 */
+    border-radius: 10px;      /* 테두리를 둥글게 만듭니다. */
+    transition: all 0.3s;     /* 모든 속성에 대해 0.3초 동안 트랜지션 효과 적용 */
+    margin-right: 5%;
+  }
+  
+    #btn_list {
+    height: 38px; 
+    color: #fff;               /* 텍스트 색상 */
+    background-color: #96B6C5; /* 기본 배경 색상 */
+    border-color: #96B6C5;     /* 테두리 색상 */
+    border-radius: 10px;         /* 테두리를 둥글게 만듭니다. */
+    transition: all 0.3s;        /* 모든 속성에 대해 0.3초 동안 트랜지션 효과 적용 */
+  }
+  
+  #btn_modify_pw:hover
+  {
+    color: #fff;               /* 호버 시 텍스트 색상 */
+    background-color: #96B6C5; /* 호버 시 배경 색상 */
+  }
+
+
+</style>
+<script th:inline="javascript">
+  
+  $(() => {
+    fnCheckPw();
+    fnModifyResult();
+    fnModifyDate();
+    fnList();
+  })
+  
+  /* 비밀번호 빈문자열 방지 */
+  const fnCheckPw = () => {
+    $('#frm_modify_pw').submit((ev) => {
+      if($('#pw').val().trim() === ''){
+        ev.preventDefault();
+        alert('변경할 회원의 비밀번호는 한글자 이상 입력해야합니다.');
+        return;
+      }
+    })
+  }
+  
+  /* 비밀번호 변경 성공 유무 */
+  const fnModifyResult = () => {
+    let modifyPwResult = /*[[${modifyPwResult}]]*/ null;
+    if(modifyPwResult !== ''){
+      if(modifyPwResult === 1){
+        alert('회원의 비밀번호가 변경되었습니다.');
+        fnModifyDate();
+      } 
+    }
+  }
+  
+  /* 가장 최근 비밀번호 변경일 가져오기 */
+  const fnModifyDate = () => {
+    $('#m_date').text('최근 비밀번호 변경일 : [[${user.pwModifiedAt}]]');
+  }
+  
+  /* 회원 상세보기로 돌아가기 */
+  const fnList = () => {
+    $('#btn_list').click(() => {
+      location.href = '/manage/userDetail.do?userNo=[[${user.userNo}]]';
+    })
+  }
+  
+</script>
+
+<body>
+	<div th:replace="~{/layout/header::header}"></div>
+	
+	<div class="main_wrap">
+	
+	
+		 <div class="container text-center">
+		  <div class="row">
+		    <div class="col-1">	      
+		    </div>
+        <div class="col-10">
+		   
+		   
+          <div>
+            
+            <form id="frm_modify_pw" method="post" th:action="@{/manage/modifyUserPw.do}">
+
+              
+              
+              <div class="container">
+                <div class="row justify-content-center">
+                  <div class="col-auto">
+                    <label id="pw_label" for="pw" class="col-form-label">새 비밀번호</label>
+                  </div>
+                  <div class="col-auto">
+                    <input type="text" name="pw" id="pw" class="form-control" placeholder="변경할 비밀번호 입력">
+                  </div>
+                </div>
+              </div>
+              
+              <div class="modified_date">
+                <span id="m_date"></span>
+              </div>
+              
+              <div class="btns">
+                <input type="hidden" name="userNo" th:value="${user.userNo}">
+                <button type="submit" id="btn_modify_pw">비밀번호변경</button>
+                <button type="button" id="btn_list">회원상세보기</button>
+              </div>
+                
+            </form>
+            
+          </div>
+        
+        
+		      	
+		    </div>
+		    <div class="col-1">	      
+		    </div>
+		  </div>
+	  </div>
+	
+	</div>
+
+	
+	
+	
+	<div th:replace="~{/layout/footer::footer}"></div>
+</body>
+</html>
+

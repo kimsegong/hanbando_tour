@@ -11,7 +11,6 @@ import lombok.NoArgsConstructor;
 @Builder
 public class HotelDto {
   private int hotelNo;
-  private int regionNo;
   private String hotelName;
   private String hotelAddress;
   private double latitude;
@@ -24,4 +23,5 @@ public class HotelDto {
   private int hit;
   private int status;
   private int recommendStatus;
+  private RegionDto regionDto;
 }

@@ -1,6 +1,5 @@
 package com.tour.hanbando.service;
 
-import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -17,6 +16,7 @@ import com.tour.hanbando.dto.ReserveDto;
 import com.tour.hanbando.dto.TouristDto;
 import com.tour.hanbando.dto.UserDto;
 import com.tour.hanbando.util.MyPageUtils;
+import com.tour.hanbando.util.MySecurityUtils;
 
 import lombok.RequiredArgsConstructor;
 
@@ -27,9 +27,7 @@ public class ReserveServiceImpl implements ReserveService {
 
   private final ReserveMapper reserveMapper;
   private final MyPageUtils myPageUtils;
-  
-  
-  SimpleDateFormat sdf = new SimpleDateFormat();
+  private final MySecurityUtils mySecurityUtils;
   
   @Override
   public Map<String, Object> addReserve(HttpServletRequest request) throws Exception {
@@ -51,9 +49,16 @@ public class ReserveServiceImpl implements ReserveService {
     if(request.getParameter("reqTerm") == null) {
       requestedTerm = "";
     } else {
-      requestedTerm = request.getParameter("reqTerm");
+      requestedTerm = mySecurityUtils.preventXSS(request.getParameter("reqTerm"));
     }
-    int agree = Integer.parseInt(request.getParameter("chkAgree"));
+    
+    int agree = 0;
+    String requiredA = request.getParameter("requiredA");
+    String marketingA = request.getParameter("marketingA");
+    if(marketingA != null && requiredA.equals("0")) {
+      agree = 1;
+    }
+    
     String departureLoc = request.getParameter("departureLoc");
     int reserveStatus = Integer.parseInt(request.getParameter("resStatus"));
 //    String reserveStart = "null";
@@ -88,11 +93,6 @@ public class ReserveServiceImpl implements ReserveService {
   @Override
   public int addTourist(HttpServletRequest request) throws Exception {
 
-//    String oldFormat = "yyyy-MM-dd";
-//    String newFormat = "yyyy/MM/dd";
-//    SimpleDateFormat sdf = new SimpleDateFormat(oldFormat);
-    
-
     String[] names = request.getParameterValues("touristName");
     String[] bDates = request.getParameterValues("birthDate");
     String[] genders = request.getParameterValues("gender");
@@ -102,18 +102,14 @@ public class ReserveServiceImpl implements ReserveService {
     
     int result = 0;
     for (int i = 0; i < names.length; i++) {
-//      if (bDates[i] != null && !bDates[i].isEmpty()) {
-//        Date d = sdf.parse(bDates[i]);
-//        sdf.applyPattern(newFormat);
-//        String birthDate = sdf.format(d); 
         
         int ageCase = Integer.parseInt(ageCases[i]);
-        
+        String birthDate = bDates[i].replace("-", "/");
         TouristDto tourist = TouristDto.builder()
-            .name(names[i])
-            .birthDate(bDates[i])
+            .name(mySecurityUtils.preventXSS(names[i]))
+            .birthDate(birthDate)
             .gender(genders[i])
-            .mobile(mobiles[i])
+            .mobile(mySecurityUtils.preventXSS(mobiles[i]))
             .ageCase(ageCase)
             .reserveDto(ReserveDto.builder()
                 .reserveNo(reserveNo)

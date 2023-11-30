@@ -26,9 +26,9 @@
   </insert>
   
   <select id="getLeaveUser" parameterType="Map" resultType="LeaveUserDto">
-    SELECT EMAIL, JOINED_AT, LEAVED_AT
+    SELECT LEAVED_EMAIL, JOINED_AT, LEAVED_AT
       FROM LEAVE_USER_T
-     WHERE EMAIL = #{email}
+     WHERE LEAVED_EMAIL = #{leavedEmail}
   </select>
 
   <select id="getInactiveUser" parameterType="Map" resultType="InactiveUserDto">
@@ -96,11 +96,11 @@
 
   <insert id="insertLeaveUser" parameterType="UserDto">
     INSERT INTO LEAVE_USER_T (
-        EMAIL
+        LEAVED_EMAIL
       , JOINED_AT
       , LEAVED_AT
     ) VALUES (
-        #{email}
+        #{leavedEmail}
       , #{joinedAt}
       , SYSDATE
     ) 

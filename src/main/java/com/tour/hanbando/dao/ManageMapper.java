@@ -6,6 +6,7 @@ import java.util.Map;
 import org.apache.ibatis.annotations.Mapper;
 
 import com.tour.hanbando.dto.InactiveUserDto;
+import com.tour.hanbando.dto.LeaveUserDto;
 import com.tour.hanbando.dto.UserDto;
 
 @Mapper
@@ -30,7 +31,17 @@ public interface ManageMapper {
   /* 휴면회원 상세 */
   public InactiveUserDto getInactiveUser(int userNo);
   
+  /* 탈퇴회원 관리 목록 */
+  public int getLeaveUserCount();
+  public List<LeaveUserDto> getLeaveUserList(Map<String, Object> map);
   
+  /* 탈퇴회원 검색결과 목록 */
+  public int getSearchLeaveCount(Map<String, Object> map);
+  public List<LeaveUserDto> getSearchLeaveList(Map<String, Object> map);
+  
+  /*  */
+  
+  /*  */
   
 
 }

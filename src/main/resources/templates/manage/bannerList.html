@@ -308,16 +308,18 @@
 					 address = $('#address1').val();
 					 bannerNo = $('#bannerNo1').val();
 					 fnAjax(address, bannerNo);
-					console.log(address + '//' + bannerNo);
 				})
-					
-			 $('#btn_address2').click()
+			 $('#btn_address2').click(() => {
 					 address = $('#address2').val();
 					 bannerNo = $('#bannerNo2').val();
-			 $('#btn_address3').click()
+				})
+					 fnAjax(address, bannerNo);
+			 $('#btn_address3').click(() => {
 					 address = $('#address3').val();
 					 bannerNo = $('#bannerNo3').val();
-				}
+					 fnAjax(address, bannerNo);
+				})	 
+			}
 				
 			
 			
