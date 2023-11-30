@@ -11,7 +11,6 @@ import lombok.NoArgsConstructor;
 @Builder
 public class ReviewDto {
   private int reviewNo;
-  private int reserveNo;
   private int packageNo;
   private String reviewContents;
   private int hotelNo;
