@@ -58,14 +58,27 @@
         success: (resData) => {  
 					if (resData.banner != null && resData.banner.length > 0) {
             $.each(resData.banner, (i, banner) => {  
+                 if(banner.state == 1){
 							 let str = '<div class="item'+banner.bannerNo+'"><a href="'+banner.linkedAddress+'">';
                    str += '<img class="owl_img" src="'+ banner.bannerPath +'/'+ banner.filesystemName+'" ></a></div>';
 										
-							$('#imageWrapper').append(str);			
+							$('#imageWrapper').append(str);		
+						 } else {}
+								
 			 	})
-		 	 }
-			} 
-		})
+			 	  $(document).ready(function() {
+               var owl = $('.owl-carousel');
+                owl.owlCarousel({
+                  items: 1, // 한번에 보여지는 이미지 수
+                  loop: true, // 항목들을 무한으로 반복하여 보여줄지 여부
+                  autoplay: true, // 자동으로 슬라이드 쇼를 시작할지 여부
+                  autoplayTimeout: 4000, // 다음 이미지로 넘어가는 시간 (단위 : 밀리초)
+                  autoplayHoverPause: true, // 마우스가 이미지에 위에 있을 때 자동 슬라이드를 일시중지 할지 여부
+                });           
+              });
+			    }
+		    }
+	   })
 	}	 
 	
  
@@ -78,6 +91,7 @@
         success: (resData) => {  
           if (resData.bestPackageList != null && resData.bestPackageList.length > 0) {
             $.each(resData.bestPackageList, (i, package) => {  
+            
               let str = '<div class="mycard position-relative">';
                   str += '<a href="' + '/package/increseHit.do?packageNo=' + package.packageNo+'">';
                   str += '<img src="https://github.com/skal48/portfolio/blob/main/hanla.jpg?raw=true" class="card_image" alt="Package Image">';
@@ -85,22 +99,13 @@
                   str += '<h4>'+package.price+'</h4></a>';
                   str += '<button type="button" class="btn-heart position-absolute top-0 end-0"><i class="fa-regular fa-heart fa-xl" style="color: #adc4ce;"></i></button>';
                   str += '</div>';
-            $('#best_cards').append(str);
-            $(document).ready(function() {
-			          var owl = $('.owl-carousel');
-			          owl.owlCarousel({
-			            items: 1, // 한번에 보여지는 이미지 수
-			            loop: true, // 항목들을 무한으로 반복하여 보여줄지 여부
-			            autoplay: true, // 자동으로 슬라이드 쇼를 시작할지 여부
-			            autoplayTimeout: 4000, // 다음 이미지로 넘어가는 시간 (단위 : 밀리초)
-			            autoplayHoverPause: true, // 마우스가 이미지에 위에 있을 때 자동 슬라이드를 일시중지 할지 여부
-			          });           
-			        });
+            $('#best_cards').append(str); 
              })
-           }
          }
-		  })
+		  }
+		 })
 		 }
+		 
 	const fnThemePackage = () => {
       $.ajax({
         type: 'get',

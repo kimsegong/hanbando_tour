@@ -4,6 +4,79 @@
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.tour.hanbando.dao.HotelMapper">
+  
+  <resultMap type="HotelDto" id="HotelMap">
+    <id column="HOTEL_NO" property="hotelNo"/>
+    <result column="HOTEL_NAME" property="hotelName"/>
+    <result column="HOTEL_ADDRESS" property="hotelAddress"/>
+    <result column="LATITUDE" property="latitude"/>
+    <result column="LONGITUDE" property="longitude"/>
+    <result column="HOTEL_DETAIL" property="hotelDetail"/>
+    <result column="PHONE_NUMBER" property="phoneNumber"/>
+    <result column="H_EMAIL" property="HEmail"/>
+    <result column="CREATED_AT" property="createdAt"/>
+    <result column="MODIFIED_AT" property="modifiedAt"/>
+    <result column="HIT" property="hit"/>
+    <result column="STATUS" property="status"/>
+    <result column="RECOMMEND_STATUS" property="recommendStatus"/>
+     <association javaType="RegionDto" property="regionDto">
+          <id column="REGION_NO" property="regionNo"/>
+          <result column="REGION_NAME" property="regionName"/>
+      </association>
+  </resultMap>
+  <select id="selectHotelList" parameterType="Map" resultMap="HotelMap">
+    SELECT  H.HOTEL_NO,
+        H.REGION_NO,
+        H.HOTEL_NAME,
+        H.HOTEL_ADDRESS,
+        H.LATITUDE,
+        H.LONGITUDE,
+        H.HOTEL_DETAIL,
+        H.PHONE_NUMBER,
+        H.H_EMAIL,
+        H.CREATED_AT,
+        H.MODIFIED_AT,
+        H.HIT,
+        H.STATUS,
+        H.RECOMMEND_STATUS,
+        HI.THUMBNAIL,
+        HI.FILESYSTEM_NAME,
+        HI.IMAGE_PATH
+ FROM (  
+    SELECT
+        HT.HOTEL_NO,
+        HT.REGION_NO,
+        HT.HOTEL_NAME,
+        HT.HOTEL_ADDRESS,
+        HT.LATITUDE,
+        HT.LONGITUDE,
+        HT.HOTEL_DETAIL,
+        HT.PHONE_NUMBER,
+        HT.H_EMAIL,
+        HT.CREATED_AT,
+        HT.MODIFIED_AT,
+        HT.HIT,
+        HT.STATUS,
+        HT.RECOMMEND_STATUS,
+        ROW_NUMBER() OVER (ORDER BY HOTEL_NO DESC) AS RN
+     FROM
+       HOTEL_T HT
+     ) H
+     LEFT JOIN HOTEL_IMAGE_T HI ON H.HOTEL_NO = HI.HOTEL_NO
+     LEFT JOIN REGION_T R ON H.REGION_NO = R.REGION_NO
+     WHERE (H.RN BETWEEN #{begin} AND #{end}) AND HI.THUMBNAIL = 1
+    
+  </select>
+  <select id="countHotel" resultType="int">
+    SELECT COUNT(*)
+      FROM HOTEL_T
+     WHERE STATUS = 1
+  </select>
+  
+  
+  
+  
+  
 
 </mapper>
 
