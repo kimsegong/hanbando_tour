@@ -193,6 +193,130 @@
     WHERE
         P.RN BETWEEN #{begin} AND #{end}
     </select>
+    
+    
+
+    
+    <select id="getPackageRecommendList" resultMap="PackageMap">
+        SELECT
+        P.PACKAGE_NO,
+        P.USER_NO,
+        P.REGION_NO,
+        P.THEME_NO,
+        P.PACKAGE_TITLE,
+        P.PACKAGE_PLAN,
+        P.PACKAGE_CONTENTS,
+        P.HOTEL_CONTENTS,
+        P.PRICE,
+        P.DANGER,
+        P.CREATED_AT,
+        P.MODIFIED_AT,
+        P.HIT,
+        P.STATUS,
+        P.MAX_PEOPLE,
+        P.RECOMMEND_STATUS,
+        I.IMAGE_NO,
+        I.THUMBNAIL,
+        I.FILESYSTEM_NAME,
+        I.IMAGE_PATH
+    FROM (
+        SELECT
+            ROW_NUMBER() OVER (ORDER BY PT.PACKAGE_NO DESC) AS RN,
+            PT.PACKAGE_NO,
+            PT.USER_NO,
+            PT.REGION_NO,
+            PT.THEME_NO,
+            PT.PACKAGE_TITLE,
+            PT.PACKAGE_PLAN,
+            PT.PACKAGE_CONTENTS,
+            PT.HOTEL_CONTENTS,
+            PT.PRICE,
+            PT.DANGER,
+            PT.CREATED_AT,
+            PT.MODIFIED_AT,
+            PT.HIT,
+            PT.STATUS,
+            PT.MAX_PEOPLE,
+            PT.RECOMMEND_STATUS
+        FROM
+            PACKAGE_T PT
+        WHERE
+            PT.RECOMMEND_STATUS = 1
+        ) P
+        LEFT JOIN PRODUCT_IMAGE_T I ON P.PACKAGE_NO = I.PACKAGE_NO
+        WHERE
+            P.RN BETWEEN #{begin} AND #{end}
+    </select>
+    
+    <select id="getPackagePriceHighList" resultMap="PackageMap">
+        SELECT
+            P.PACKAGE_NO,
+            P.REGION_NO,
+            P.THEME_NO,
+            P.PACKAGE_TITLE,
+            P.PRICE,
+            P.HIT,
+            P.STATUS,
+            P.RECOMMEND_STATUS,
+            I.IMAGE_NO,
+            I.THUMBNAIL,
+            I.FILESYSTEM_NAME,
+            I.IMAGE_PATH
+        FROM (
+            SELECT
+                ROW_NUMBER() OVER (ORDER BY P.PRICE DESC) AS RN,
+                P.PACKAGE_NO,
+                P.REGION_NO,
+                P.THEME_NO,
+                P.PACKAGE_TITLE,
+                P.PRICE,
+                P.HIT,
+                P.STATUS,
+                P.RECOMMEND_STATUS
+            FROM
+                PACKAGE_T P
+        ) P
+        LEFT JOIN
+            PRODUCT_IMAGE_T I ON P.PACKAGE_NO = I.PACKAGE_NO
+        WHERE
+            P.RN BETWEEN #{begin} AND #{end}
+    </select>
+    
+    <select id="getPackagePriceLowList" resultMap="PackageMap">
+        SELECT
+            P.PACKAGE_NO,
+            P.REGION_NO,
+            P.THEME_NO,
+            P.PACKAGE_TITLE,
+            P.PRICE,
+            P.HIT,
+            P.STATUS,
+            P.RECOMMEND_STATUS,
+            I.IMAGE_NO,
+            I.THUMBNAIL,
+            I.FILESYSTEM_NAME,
+            I.IMAGE_PATH
+        FROM (
+            SELECT
+                ROW_NUMBER() OVER (ORDER BY P.PRICE ASC) AS RN,
+                P.PACKAGE_NO,
+                P.REGION_NO,
+                P.THEME_NO,
+                P.PACKAGE_TITLE,
+                P.PRICE,
+                P.HIT,
+                P.STATUS,
+                P.RECOMMEND_STATUS
+            FROM
+                PACKAGE_T P
+        ) P
+        LEFT JOIN
+            PRODUCT_IMAGE_T I ON P.PACKAGE_NO = I.PACKAGE_NO
+        WHERE
+            P.RN BETWEEN #{begin} AND #{end}
+    </select>
+
+    
 
     <select id="getRegion" resultType="regionDto">
       SELECT REGION_NO, REGION_NAME
@@ -248,6 +372,8 @@
         )
     </insert>
 
+
+
      <insert id="insertThumbnail" parameterType="productImageDto">
         INSERT INTO PRODUCT_IMAGE_T (
             IMAGE_NO
@@ -263,7 +389,7 @@
           , #{imagePath}
         )
       </insert>
-    
+      
     
       <insert id="insertPackageImage" parameterType="productImageDto">
         INSERT INTO PRODUCT_IMAGE_T (
@@ -387,7 +513,6 @@
       <insert id="insertReview" parameterType="ReviewDto">
         INSERT INTO REVIEW_T (
             REVIEW_NO
-          , RESERVE_NO 
           , PACKAGE_NO
           , USER_NO
           , REVIEW_CONTENTS
@@ -395,7 +520,6 @@
           , STAR
         ) VALUES (
             REVIEW_SEQ.NEXTVAL
-          , #{reserveNo}
           , #{packageNo}
           , #{userDto.userNo}
           , #{reviewContents}
@@ -411,14 +535,49 @@
       </select>
 
       <select id="getReviewList" parameterType="Map" resultMap="ReviewMap">
-        SELECT A.REVIEW_NO, A.PACKAGE_NO, A.USER_NO, A.REVIEW_CONTENTS, A.REGIST_AT, A.NAME
-          FROM (SELECT ROW_NUMBER() OVER(ORDER BY REVIEW_NO DESC) AS RN, C.REVIEW_NO, C.REVIEW_CONTENTS, C.PACKAGE_NO, C.REGIST_AT, U.USER_NO, U.NAME
+        SELECT A.REVIEW_NO, A.PACKAGE_NO, A.STAR, A.USER_NO, A.REVIEW_CONTENTS, A.REGIST_AT, A.NAME
+          FROM (SELECT ROW_NUMBER() OVER(ORDER BY REVIEW_NO DESC) AS RN, C.REVIEW_NO, C.REVIEW_CONTENTS, C.STAR, C.PACKAGE_NO, C.REGIST_AT, U.USER_NO, U.NAME
                   FROM USER_T U INNER JOIN REVIEW_T C
                     ON U.USER_NO = C.USER_NO
                  WHERE C.PACKAGE_NO = #{packageNo}) A
          WHERE A.RN BETWEEN #{begin} AND #{end}
       </select>
-
+              
+      <select id="getReviewStarList" parameterType="Map" resultMap="ReviewMap">
+          SELECT A.REVIEW_NO, A.PACKAGE_NO, A.STAR, A.USER_NO, A.REVIEW_CONTENTS, A.REGIST_AT, A.NAME
+          FROM (
+              SELECT ROW_NUMBER() OVER(ORDER BY STAR DESC) AS RN, C.REVIEW_NO, C.REVIEW_CONTENTS, C.STAR, C.PACKAGE_NO, C.REGIST_AT, U.USER_NO, U.NAME
+              FROM USER_T U
+              INNER JOIN REVIEW_T C ON U.USER_NO = C.USER_NO
+              WHERE C.PACKAGE_NO = #{packageNo}
+          ) A
+          WHERE A.RN BETWEEN #{begin} AND #{end}
+      </select>
+        
+              
+      <select id="starList" parameterType="int" resultMap="ReviewMap">
+        SELECT REVIEW_NO, STAR, USER_NO
+          FROM REVIEW_T
+         WHERE PACKAGE_NO = #{packageNo}
+         ORDER BY STAR ASC;    
+      </select>
+      
+      <select id="starAve" resultType="int">
+        SELECT AVG(STAR) AS AVERAGE_RATING
+          FROM REVIEW_T
+         WHERE PACKAGE_NO = #{packageNo}      
+      </select>
+      
+      <insert id="heartProduct" parameterType="HeartDto">
+        INSERT INTO HEART_T (
+          PACKAGE_NO  
+        , USER_NO
+        )VALUES(
+          #{packageDto.packageNo}
+        , #{userNo}
+         )
+      </insert>
+      
       <delete id="deleteReview" parameterType="int">
          DELETE 
            FROM REVIEW_T
