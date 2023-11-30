@@ -58,9 +58,6 @@
         </div>
       </div>
       
-      
-
-      
     </div>
     <div class="col-1">      
     </div>
@@ -93,7 +90,7 @@
               str += '<img src="https://github.com/skal48/portfolio/blob/main/hanla.jpg?raw=true" style="height: 150px;" class="card-img-top" alt="Package Image">';
               str += '<div class="card-body">';
               str += '<p class="card-title">' + hotel.hotelName + '</p>';
-              str += '<p class="card-text">가격</p>';
+              str += '<p class="card-text">최저 '+resData.price[i] +'원 부터~</p>';
               str += '</div>';
               str += '</div>';
               str += '</div>';
@@ -113,13 +110,7 @@
       var btnVal; 
       $('#recommend').click(() => {
         btnval = $(this).val();
-      })
-        
-      
-      
-      
-      
-      
+      })     
     }
     
     const fnSortedList = () => {
