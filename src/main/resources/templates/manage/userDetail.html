@@ -230,7 +230,7 @@
             <!--/* 비밀번호 변경과 찜 목록으로 이동 가능한 좌측 메뉴 버튼 */-->
             <div id="split1">
               <div >
-                <a th:href="@{/manage/modifyPw.form}">
+                <a th:href="@{/manage/modifyPw.form(userNo=${user.userNo})}">
                   <button type="button" id="btn_modify_pw">회원 비밀번호 변경</button>
                 </a>
               </div>
