@@ -20,11 +20,13 @@
 		      </div>
 		      
 		      <div>
-            <h3 th:text="${pack.packageTitle}">상품명??</h3>
+            <h3 th:text="${pack.packageTitle}" class="col-8" style="margin-left: 30px;">상품명??</h3>
 		      </div>
-		      <div>예약자 정보</div>
 		      <div>
-  		      <table>
+            <h4>예약자 정보</h4>
+          </div>
+		      <div class="col-8" style="margin: 0 auto;">
+  		      <table class="table">
               <tbody>
                 <tr>
                   <td>이름</td>
@@ -42,7 +44,7 @@
                 <tr>
                   <td>요청사항</td>
                   <td>
-                    <textarea id="reqTerm" name="reqTerm" placeholder="내용을 입력해주세요"></textarea>
+                    <textarea id="reqTerm" name="reqTerm" rows="3" cols="20" placeholder="내용을 입력해주세요"></textarea>
                   </td>
                 </tr>
               </tbody>
@@ -52,8 +54,8 @@
 		      <div>
             <h4>요금 및 여행인원</h4>
           </div>
-          <div>
-            <table>
+          <div class="col-10" style="margin: 0 auto;">
+            <table class="table">
               <thead>
                 <tr>
                   <th>요금구분</th>
@@ -61,7 +63,7 @@
                   <th>소아요금</th>
                   <th>성인인원</th>
                   <th>소아인원</th>
-                  <th>합계</th>
+                  <th style="width: 12%;">합계</th>
                 </tr>
               </thead>
               <tbody>
@@ -109,9 +111,9 @@
 		      <!-- 여행자 정보 -->
           <form id="frm_tourist"  method="post">
             <div>
-              <div>
-                <h4>여행자 정보</h4>
-              </div>
+              <h4>여행자 정보</h4>
+            </div>
+            <div class="col-10" style="margin: 0 auto;">
               <table class="table">
                 <thead>
                   <tr>
@@ -186,9 +188,9 @@
             <div class="agreeFrom">
               <h4>약관 동의</h4>
             </div>
-              <div>
+              <div class="col-8" style="margin: 0 auto;">
                 <table class="table">
-                  <tbody class="d-grid gap-2 col-6 mx-auto">
+                  <tbody class="d-grid gap-2 col-8 mx-auto">
                     <tr>
                       <td>
                         <div>
@@ -216,7 +218,7 @@
                       </td>
                     </tr>
                   </tbody>
-                  <tfoot class="d-grid gap-2 col-6 mx-auto">
+                  <tfoot class="d-grid gap-2 col-8 mx-auto">
                     <tr>
                       <td>
                         <div>
@@ -233,32 +235,30 @@
               <div>
                 <h4>예약정보</h4>
               </div>
-              <table >
-                <colgroup>
-                  <col style="width:13%;">
-                  <col >
-                </colgroup>
-                <tbody>
-                  <tr>
-                    <th>총 여행인원</th>
-                    <td>
-                      성인 : 
-                      <span class="adultCntVal">0</span>
-                       명 / 소아 : 
-                      <span class="childCntVal">0</span>
-                       명
-                    </td>
-                  </tr>
-                  <tr>
-                    <th>최종결제가격</th>
-                    <td>
-                      <input type="hidden" name="totalReservePrice" class="totalPrice">
-                      <span id="totalPrice"></span>
-                      원
-                    </td>
-                  </tr>
-                </tbody>
+              <div class="col-5" style="margin: 0 auto;">
+                <table class="table">
+                  <tbody>
+                    <tr>
+                      <th>총 여행인원</th>
+                      <td>
+                        성인 : 
+                        <span class="adultCntVal">0</span>
+                         명 / 소아 : 
+                        <span class="childCntVal">0</span>
+                         명
+                      </td>
+                    </tr>
+                    <tr>
+                      <th>최종결제가격</th>
+                      <td>
+                        <input type="hidden" name="totalReservePrice" class="totalPrice">
+                        <span id="totalPrice"></span>
+                        원
+                      </td>
+                    </tr>
+                  </tbody>
               </table>
+              </div>
             <div class="d-grid gap-2 col-6 mx-auto" >
               <button type="button" id="btn_reserve" class="btn btn-success">예약하기</button>
             </div>
@@ -446,7 +446,7 @@
         }
       }
       if (hasEmptyM) {
-        alert("휴대폰번호는 필수 항목입니다. 기호(-)를 제외한 11자리 번호를 입력해주세요");
+        alert("휴대폰번호는 필수 항목입니다.                                               기호(-)를 제외한 11자리 번호를 입력해주세요");
         ev.preventDefault();
         return;
       }
