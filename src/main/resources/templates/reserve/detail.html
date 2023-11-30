@@ -42,7 +42,8 @@
                 </tr>
                 <tr>
                   <td>성별</td>
-                  <td th:text="${reserve.userDto.gender}"></td>
+                  <td th:if="${reserve.userDto.gender == 'M'}" >남</td>
+                  <td th:if="${reserve.userDto.gender == 'F'}" >여</td>
                 </tr>
                 <tr>
                   <td>이메일</td>
@@ -138,7 +139,7 @@
                 <input type="hidden" name="departureLoc" th:value="${reserve.departureLoc}">
                 <div th:if="${reserve.reserveStatus == 0}"><button class="btn btn-primary" type="button">결제하기</button></div>
                 <button class="btn btn-success" type="button" th:onclick="|location.href='@{/package/list.do}'|">다른상품 예약하러가기</button>
-                <button type="button" th:onclick="|location.href='@{/reserve/reserveList.do(userNo=${reserve.userDto.userNo})}'|" class="btn btn-success">나의예약목록</button>
+                <button type="button" th:onclick="|location.href='@{/reserve/reserveList.do(userNo=${session.user.userNo})}'|" class="btn btn-success">나의예약목록</button>
                 <button th:if="${reserve.reserveStatus != 1}" class="btn btn-outline-secondary" type="button" id="btn_res_modify">예약 수정하러가기</button>
                 <button th:if="${reserve.reserveStatus != 2}" class="btn btn-outline-danger" type="button" id="btn_res_cancel">예약 취소하기</button>
               </form>
@@ -236,7 +237,13 @@
       }
     }
   
-  
+    function fnChkModify(){
+      if('${modifyResult}' == 1){
+        alert('수정되었습니다.');
+      } 
+    }
+    
+    fnChkModify();
     fnGoModify();
     fnShowTourist();
     fnChkCancel();

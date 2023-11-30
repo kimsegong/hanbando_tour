@@ -8,7 +8,6 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -98,14 +97,16 @@ public class PackageController {
   }
   
   @GetMapping("/detail.do")
-  public String detail(@RequestParam(value="packageNo", required=false, defaultValue="0") int packageNo
-          , HttpServletRequest request, Model model) {
-      packageService.getReserveUser(request, model);
-    	PackageDto packageDto = packageService.getPackage(packageNo);
-    	model.addAttribute("packageDto", packageDto);
+  public String detail(
+          @RequestParam(value = "packageNo", required = false, defaultValue = "0") int packageNo, 
+          HttpServletRequest request, Model model) {
+      List<ReserveDto> reserve = packageService.getReserveUser(packageNo);
+      PackageDto packageDto = packageService.getPackage(packageNo);
+      model.addAttribute("reserve", reserve);
+      model.addAttribute("packageDto", packageDto);
+      return "package/detail";
+  }
 
-    	return "package/detail"; 
-	}
   
   @PostMapping("/modifyPackage.do")
   public String modifyProduct(HttpServletRequest request, RedirectAttributes redirectAttributes) {

@@ -16,6 +16,7 @@ import org.springframework.ui.Model;
 import com.tour.hanbando.dao.ManageMapper;
 import com.tour.hanbando.dao.UserMapper;
 import com.tour.hanbando.dto.InactiveUserDto;
+import com.tour.hanbando.dto.LeaveUserDto;
 import com.tour.hanbando.dto.UserDto;
 import com.tour.hanbando.util.MyPageUtils;
 import com.tour.hanbando.util.MySecurityUtils;
@@ -148,8 +149,30 @@ public class ManageServiceImpl implements ManageService {
                     .userNo(userNo)
                     .build();
     int modifyResult = userMapper.updateUser(user);
+    
     return new ResponseEntity<Map<String, Object>>(Map.of("modifyResult", modifyResult), HttpStatus.OK);
     
+  }
+  
+  /**
+   * 기존회원 탈퇴
+   * 기존회원 정보를 탈퇴회원에 추가한뒤,
+   * 기존회원의 탈퇴를 진행한다.
+   * 
+   * @author 심희수
+   * @param userNo 탈퇴할 회원번호
+   * @return 탈퇴된 회원의 데이터 수를 반환
+   */
+  @Override
+  public int leaveUser(int userNo) {
+    UserDto user = userMapper.getUser(Map.of("userNo", userNo));
+    int addLeaveUserResult = userMapper.insertLeaveUser(user);
+    int leaveUserResult = userMapper.deleteUser(user);
+    if(addLeaveUserResult == 1 && leaveUserResult ==1) {
+      return leaveUserResult;
+    } else {
+      return 0;
+    }
   }
   
   
@@ -232,6 +255,77 @@ public class ManageServiceImpl implements ManageService {
   @Override
   public InactiveUserDto getInactiveUser(int userNo) {
     return manageMapper.getInactiveUser(userNo);
+  }
+  
+  /**
+   * 탈퇴회원 목록
+   * MVC페이징 처리
+   * @author 심희수
+   * @param request
+   * @param model
+   * @return 탈퇴한 회원 리스트, 페이징 정보, 총 탈퇴 회원수를 반환
+   */
+  @Transactional(readOnly=true)
+  @Override
+  public void loadLeaveUserList(HttpServletRequest request, Model model) {
+    
+    Optional<String> opt = Optional.ofNullable(request.getParameter("page"));
+    int page = Integer.parseInt(opt.orElse("1"));
+    int total = manageMapper.getLeaveUserCount();
+    int display = 20;
+    
+    myPageUtils.setPaging(page, total, display);
+    
+    Map<String, Object> map = Map.of("begin", myPageUtils.getBegin()
+                                   , "end", myPageUtils.getEnd());
+    
+    List<LeaveUserDto> leaveUserList = manageMapper.getLeaveUserList(map);
+    
+    model.addAttribute("leaveUserList", leaveUserList);
+    model.addAttribute("paging", myPageUtils.getMvcPaging(request.getContextPath() + "/manage/leaveUserList.do"));
+    model.addAttribute("beginNo", total - (page - 1) * display);
+    model.addAttribute("total", total);
+    
+  }
+  
+  /**
+   * 탈퇴 회원 검색
+   * 
+   * @author 심희수
+   * @param request
+   * @param model
+   * @return 검색된 탈퇴 회원 목록, 페이징 정보, 검색된 총 탈퇴 회원수를 반환
+   */
+  @Transactional(readOnly=true)
+  @Override
+  public void loadSearchLeaveList(HttpServletRequest request, Model model) {
+
+    String column = request.getParameter("column");
+    String query = request.getParameter("query");
+    
+    Map<String, Object> map = new HashMap<>();
+    map.put("column", column);
+    map.put("query", query);
+    
+    int total = manageMapper.getSearchLeaveCount(map);
+    
+    Optional<String> opt = Optional.ofNullable(request.getParameter("page"));
+    int page = Integer.parseInt(opt.orElse("1"));
+    
+    int display = 20;
+    
+    myPageUtils.setPaging(page, total, display);
+    
+    map.put("begin", myPageUtils.getBegin());
+    map.put("end", myPageUtils.getEnd());
+    
+    List<LeaveUserDto> leaveUserList = manageMapper.getSearchLeaveList(map);
+    
+    model.addAttribute("leaveUserList", leaveUserList);
+    model.addAttribute("paging", myPageUtils.getMvcPaging(request.getContextPath() + "/manage/searchLeaveList.do", "column=" + column + "&query=" + query));
+    model.addAttribute("beginNo", total - (page - 1) * display);
+    model.addAttribute("total", total);
+    
   }
   
 }

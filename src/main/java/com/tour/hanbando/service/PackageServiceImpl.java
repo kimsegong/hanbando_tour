@@ -22,7 +22,6 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.tour.hanbando.dao.PackageMapper;
-import com.tour.hanbando.dao.ReserveMapper;
 import com.tour.hanbando.dto.PackageDto;
 import com.tour.hanbando.dto.ProductImageDto;
 import com.tour.hanbando.dto.RegionDto;
@@ -30,7 +29,6 @@ import com.tour.hanbando.dto.ReserveDto;
 import com.tour.hanbando.dto.ReviewDto;
 import com.tour.hanbando.dto.ThemeDto;
 import com.tour.hanbando.dto.UserDto;
-import com.tour.hanbando.util.MyFileUtils;
 import com.tour.hanbando.util.MyPackageUtils;
 import com.tour.hanbando.util.MyPageUtils;
 
@@ -442,24 +440,13 @@ public class PackageServiceImpl implements PackageService {
     }
     @Transactional(readOnly=true)
     @Override
-    public void getReserveUser(HttpServletRequest request, Model model) {
-            
-      int reservoNo = Integer.parseInt(request.getParameter("reservoNo"));
-      int userNo = Integer.parseInt(request.getParameter("userNo"));
-      int packageNo = Integer.parseInt(request.getParameter("packageNo"));
+    public List<ReserveDto> getReserveUser(int packageNo) {
+        List<ReserveDto> reserve = packageMapper.getReserve(packageNo);
+        return reserve ;
+    }
 
-      
-      Map<String, Object> map = new HashMap<>();
-      
-      map.put("reservoNo", reservoNo);
-      map.put("userNo", userNo);
-      map.put("packageNo", packageNo);
-    
-      List<ReserveDto> reserveUserList = packageMapper.getReserve(map);
 
-      
-      model.addAttribute("reserveUserList", reserveUserList);
-  }
+
     
     @Override
     public Map<String, Object> removeReview(int reviewNo) {

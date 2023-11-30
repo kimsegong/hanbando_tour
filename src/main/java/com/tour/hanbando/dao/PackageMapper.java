@@ -51,5 +51,5 @@ public interface PackageMapper {
   public int deleteReview(int reviewNo);
   
   // 아몰랑
-  public List<ReserveDto> getReserve(Map<String, Object> map);
+  public List<ReserveDto> getReserve(int packageNo);
 }
