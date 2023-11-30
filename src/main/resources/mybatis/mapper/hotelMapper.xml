@@ -73,7 +73,37 @@
      WHERE STATUS = 1
   </select>
   
-  
+  <select id="getListPrice"  resultType="RoompriceDto">"
+    SELECT HOTEL_NO,
+           ROOM_NO,
+           BI_PRICE,
+           BS_DATE,
+           BE_DATE,
+           JUN_PRICE,
+           JS_DATE,
+           JE_DATE,
+           SUNG_PRICE,
+           SS_DATE,
+           SE_DATE
+   FROM (SELECT HOTEL_NO,
+                ROOM_NO,
+                BI_PRICE,
+                BS_DATE,
+                BE_DATE,
+                JUN_PRICE,
+                JS_DATE,
+                JE_DATE,
+                SUNG_PRICE,
+                SS_DATE,
+                SE_DATE,
+                ROW_NUMBER() OVER(PARTITION BY HOTEL_NO ORDER BY BI_PRICE ASC) AS RN
+           FROM ROOMPRICE_T) PRICE
+    <where>
+      <foreach item="item" index="index" collection="List" open="ID in (" separator="," close=")">
+        WHERE  RN = 1 AND HOTEL_NO = #{hotelNo}
+      </foreach>
+    </where>       
+  </select>
   
   
   
