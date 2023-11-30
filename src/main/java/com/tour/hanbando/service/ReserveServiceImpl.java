@@ -16,6 +16,7 @@ import com.tour.hanbando.dto.ReserveDto;
 import com.tour.hanbando.dto.TouristDto;
 import com.tour.hanbando.dto.UserDto;
 import com.tour.hanbando.util.MyPageUtils;
+import com.tour.hanbando.util.MySecurityUtils;
 
 import lombok.RequiredArgsConstructor;
 
@@ -26,6 +27,7 @@ public class ReserveServiceImpl implements ReserveService {
 
   private final ReserveMapper reserveMapper;
   private final MyPageUtils myPageUtils;
+  private final MySecurityUtils mySecurityUtils;
   
   @Override
   public Map<String, Object> addReserve(HttpServletRequest request) throws Exception {
@@ -47,7 +49,7 @@ public class ReserveServiceImpl implements ReserveService {
     if(request.getParameter("reqTerm") == null) {
       requestedTerm = "";
     } else {
-      requestedTerm = request.getParameter("reqTerm");
+      requestedTerm = mySecurityUtils.preventXSS(request.getParameter("reqTerm"));
     }
     
     int agree = 0;
@@ -104,10 +106,10 @@ public class ReserveServiceImpl implements ReserveService {
         int ageCase = Integer.parseInt(ageCases[i]);
         String birthDate = bDates[i].replace("-", "/");
         TouristDto tourist = TouristDto.builder()
-            .name(names[i])
+            .name(mySecurityUtils.preventXSS(names[i]))
             .birthDate(birthDate)
             .gender(genders[i])
-            .mobile(mobiles[i])
+            .mobile(mySecurityUtils.preventXSS(mobiles[i]))
             .ageCase(ageCase)
             .reserveDto(ReserveDto.builder()
                 .reserveNo(reserveNo)
