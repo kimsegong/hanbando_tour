@@ -202,5 +202,6 @@
       SET LINKED_ADDRESS = #{linkedAddress}
     WHERE BANNER_NO = #{bannerNo}     
  </update>
+ 
 </mapper>
 

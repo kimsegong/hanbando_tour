@@ -136,6 +136,7 @@ public class MainServiceImpl implements MainService {
         String existOriginalName = mainMapper.getNoBannerImage(bannerNo).getOriginalName();
         String existFileSystemName = mainMapper.getNoBannerImage(bannerNo).getFilesystemName();
         int state = Integer.parseInt(multipartRequest.getParameter("state"));
+        
         if(!existOriginalName.equals(originalName)) {
           
           filesystemName = mainFileUtil.getFilesystemName(files.getOriginalFilename());
