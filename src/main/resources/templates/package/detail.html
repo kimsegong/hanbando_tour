@@ -196,6 +196,10 @@
             aria-labelledby="profile-tab" th:text="${packageDto.hotelContents}"></div>
         </div>
         
+        <div th:each="reservation : ${reserve}">
+			    <p th:text="${reservation.reserveNo}"></p>
+			    <p th:text="${reservation.userDto.userNo}"></p>
+	    </div>
         
         <div class="choice">여행 후기</div>
          <c:if test="${sessionScope.user.userNo != null}">
@@ -215,14 +219,8 @@
           </fieldset>
           
             <div>
-              <input type="hidden" id="sessionUserNo" name="userNo" th:value="${session.user.userNo}">
-              <th:block th:each="r,vs:${reserveDto}">
-                <div th:text="${r.userDto.userNo}"></div>
-                
-              </th:block>
-       <!--/*       <input type="hidden" id="reserveUserNo" name="userNo" th:value="${reserveDto.userDto.userNo}(0)">  */-->
               <input type="hidden" name="packageNo" value="${packageDto.packageNo}">
-              <textarea class="col-auto form-control" id="reviewContents" name="reviewContents" placeholder="행복했던 여행후기를 남겨보세요🙂"></textarea>   <!-- 예약한사람만 보이게 -->
+              <textarea class="col-auto form-control" name="reviewContents" placeholder="행복했던 여행후기를 남겨보세요🙂"></textarea>   <!-- 예약한사람만 보이게 -->
               <button type="button" class="btn btn-kong" id="btn_review_add" style="margin-top: 20px; margin-left: 750px">작성완료</button>
             </div>
            </form>
@@ -374,35 +372,9 @@
         }
       });
     };
+	
+	
 
-     $(document).ready(function () {
-        // 문서가 준비되면 실행되는 부분
-
-        // textarea 보이기/숨기기 함수
-        function toggleTextarea() {
-            var sessionUserNo = $('#sessionUserNo').val();
-            var reserveUserNo = $('#reserveUserNo').val();
-
-            if (sessionUserNo === reserveUserNo) {
-                // 세션 사용자와 예약 사용자가 일치하면 textarea를 보이게 함
-                $('#reviewContents').show();
-            } else {
-                // 일치하지 않으면 textarea를 숨김
-                $('#reviewContents').hide();
-            }
-        }
-
-        // 페이지 로딩 시 초기 상태 설정
-        toggleTextarea();
-
-        // 작성완료 버튼 클릭 시
-        $('#btn_review_add').click(function () {
-            // 여기에서 리뷰 작성 등의 로직을 수행
-
-            // 작성 완료 후 다시 textarea 상태 업데이트
-            toggleTextarea();
-        });
-    });
     
    fnGoReserve();
    fnEditPackage();

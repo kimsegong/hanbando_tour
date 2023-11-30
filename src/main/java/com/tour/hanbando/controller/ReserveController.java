@@ -91,14 +91,6 @@ public class ReserveController {
   }
 
   
-  
-  
-  
-  
-  
-  
-  
-  
   @PostMapping("/modifyReserve.do")
   public String modifyBlog(HttpServletRequest request, RedirectAttributes redirectAttributes) {
     int modifyResult = reserveService.modifyReserve(request);

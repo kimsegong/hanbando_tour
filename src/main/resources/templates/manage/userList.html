@@ -156,25 +156,7 @@
   }
 
 </style>
-<script th:inline="javascript">
 
-  $(() => {
-   fnRemoveMember();
-  })
-  
-  const fnRemoveMember = () => {
-    let removeResult = /*[[${removeResult}]]*/ null;
-    if(removeResult !== null){
-      if(reremoveResult === 1){
-      alert('회원이 탈퇴되었습니다.');
-      } else {
-      alert('회원이 탈퇴되지 않았습니다.');
-      }
-    }
-  }
- 
-  
-</script>
 <body>
 	<div th:replace="~{/layout/header::header}"></div>
 	

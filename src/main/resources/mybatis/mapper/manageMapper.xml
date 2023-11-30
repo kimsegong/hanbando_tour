@@ -66,7 +66,31 @@
      WHERE USER_NO = #{userNo}
   </select>
 
+  <!-- 탈퇴 회원 관리 목록 -->
+  <select id="getLeaveUserCount" resultType="int">
+    SELECT COUNT(*)
+      FROM LEAVE_USER_T
+  </select>
+  <select id="getLeaveUserList" parameterType="Map" resultType="LeaveUserDto">
+    SELECT LEAVED_EMAIL, JOINED_AT, LEAVED_AT
+      FROM (SELECT ROW_NUMBER() OVER(ORDER BY LEAVED_AT DESC) AS RN, LEAVED_EMAIL, JOINED_AT, LEAVED_AT
+              FROM LEAVE_USER_T)
+     WHERE RN BETWEEN #{begin} AND #{end}
+  </select>
   
+  <!-- 탈퇴 회원 검색 목록 -->
+  <select id="getSearchLeaveCount" parameterType="Map" resultType="int">
+    SELECT COUNT(*)
+      FROM LEAVE_USER_T
+     WHERE ${column} LIKE '%' || #{query} || '%'
+  </select>
+  <select id="getSearchLeaveList" parameterType="Map" resultType="LeaveUserDto">
+    SELECT LEAVED_EMAIL, JOINED_AT, LEAVED_AT
+      FROM (SELECT ROW_NUMBER() OVER(ORDER BY LEAVED_AT DESC) AS RN, LEAVED_EMAIL, JOINED_AT, LEAVED_AT
+              FROM LEAVE_USER_T
+             WHERE ${column} LIKE '%' || #{query} || '%')
+     WHERE RN BETWEEN #{begin} AND #{end}
+  </select>
   
   
   
