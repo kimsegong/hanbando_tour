@@ -14,5 +14,7 @@ public interface MainService {
   public Map<String, Object> getThemePackage();
   public void bannerList(Model model);
   public int addBannerImage(MultipartHttpServletRequest multipartRequest) throws Exception;
+  public int modifyAddress(HttpServletRequest request);
+  public Map<String, Object> getMainBannerList();
   
 }

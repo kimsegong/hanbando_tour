@@ -186,7 +186,7 @@
                       <td>
                         <div>
                           <span>
-                            <input type="checkbox" id="chkAgree" name="chkAgree" th:value="0" class="chk_each">
+                            <input type="checkbox" id="chkAgree" name="chkAgree" value="0" class="chk_each">
                             <label for="chkAgree">개인정보 수집에 동의합니다(필수)</label>
                           </span>
                         </div>
@@ -199,7 +199,7 @@
                       <td>
                         <div>
                           <span>
-                            <input type="checkbox" id="chkMarketing" name="chkAgree" th:value="1" class="chk_each">
+                            <input type="checkbox" id="chkMarketing" name="chkAgree" value="1" class="chk_each">
                             <label for="chkMarketing">마케팅 이용 정보 수집에 동의합니다(선택)</label>
                           </span>
                         </div>
@@ -223,18 +223,40 @@
                   </tfoot>
                 </table>
               </div>
-           
-            
+              <div>
+                <h4>예약정보</h4>
+              </div>
+              <table >
+                <colgroup>
+                  <col style="width:13%;">
+                  <col >
+                </colgroup>
+                <tbody>
+                  <tr>
+                    <th>총 여행인원</th>
+                    <td>
+                      성인 : 
+                      <span class="adultCntVal">0</span>
+                       명 / 소아 : 
+                      <span class="childCntVal">0</span>
+                       명
+                    </td>
+                  </tr>
+                  <tr>
+                    <th>최종결제가격</th>
+                    <td>
+                      <input type="hidden" name="totalReservePrice" class="totalPrice">
+                      <span id="totalPrice"></span>
+                      원
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
             <div class="d-grid gap-2 col-6 mx-auto" >
               <button type="button" id="btn_reserve" class="btn btn-success">예약하기</button>
-              
-            </div>
-            <div>
-              <input type="hidden" name="totalReservePrice" class="totalPrice">
             </div>
           </form>
-		      	
-		    </div>
+          
 		    <div class="col-1">	      
 		    </div>
 		  </div>
@@ -244,6 +266,9 @@
 
 	
 	<script th:inline="javascript">
+    
+    var namePassed = false;
+    var mobilePassed = false;
     
     function fnAddReserve(){
       $('#btn_reserve').click(function(ev){
@@ -399,6 +424,7 @@
           return;
         }
     }
+    
   
     function fnRegInputMobile(){
       var inputM = document.getElementsByName("tourMobile");
@@ -418,7 +444,7 @@
           return;
         }
     }
-    
+   
     
     function fnRegAgree(){
       if(!$('#chkAgree').is(':checked')){

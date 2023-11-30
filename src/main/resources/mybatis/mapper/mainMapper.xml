@@ -180,7 +180,7 @@
 	<select id="getBannerImage" resultType="BannerImageDto">
     SELECT BANNER_NO, ORIGINAL_NAME, FILESYSTEM_NAME, BANNER_PATH, STATE, LINKED_ADDRESS
       FROM BANNER_IMAGE_T
-     ORDER BY BANNER_NO DESC
+     ORDER BY BANNER_NO ASC
   </select>
  
  <select id="getNoBannerImage" parameterType="int" resultType="BannerImageDto">
@@ -197,8 +197,10 @@
           STATE = #{state} 
     WHERE BANNER_NO = #{bannerNo}     
  </update>
- 
- 
-   
- </mapper>
+ <update id="updateAddress" parameterType="BannerImageDto">
+   UPDATE BANNER_IMAGE_T
+      SET LINKED_ADDRESS = #{linkedAddress}
+    WHERE BANNER_NO = #{bannerNo}     
+ </update>
+</mapper>
 
