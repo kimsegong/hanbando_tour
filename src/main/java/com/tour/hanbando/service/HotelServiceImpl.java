@@ -1,19 +1,14 @@
 package com.tour.hanbando.service;
 
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
-import java.util.Formatter;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.xml.crypto.Data;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -50,45 +45,50 @@ public class HotelServiceImpl implements HotelService {
     Map<String, Object> map = Map.of("begin", begin
                                    , "end", end);
               
-    List<HotelDto> hotelDto = hotelMapper.selectHotelList(map);
-    List<RoompriceDto> roompriceDto = hotelMapper.getListPrice(hotelDto);
-    
-    /* 요금 구하기 */
-    Date date = new Date();
-    SimpleDateFormat sdf = new SimpleDateFormat("MMdd");
-    String sToday = sdf.format(date);
-    int today = Integer.parseInt(sToday);
-    int price = 0;
     List<Integer> hPrice = new ArrayList<>();
+    List<HotelDto> hotelDto = hotelMapper.selectHotelList(map);
     
-    for(int i = 0; i < hotelDto.size(); i++) {
-      int biStart = Integer.parseInt(roompriceDto.get(i).getBsDate().replace("/", ""));
-      int biEnd = Integer.parseInt(roompriceDto.get(i).getBeDate().replace("/", ""));
+    if(hotelDto.size() != 0) {
+     
+      List<RoompriceDto> roompriceDto = hotelMapper.getListPrice(hotelDto);
       
-      int jsStart = Integer.parseInt(roompriceDto.get(i).getJsDate().replace("/", ""));
-      int jsEnd = Integer.parseInt(roompriceDto.get(i).getJeDate().replace("/", ""));
+      /* 요금 구하기 */
+      Date date = new Date();
+      SimpleDateFormat sdf = new SimpleDateFormat("MMdd");
+      String sToday = sdf.format(date);
+      int today = Integer.parseInt(sToday);
+      int price = 0;
       
-      int ssStart = Integer.parseInt(roompriceDto.get(i).getSsDate().replace("/", ""));
-      int ssEnd = Integer.parseInt(roompriceDto.get(i).getSeDate().replace("/", ""));
-      
-      if(biStart > biEnd ) {
-        biEnd += 1200;
-      }else if(jsStart > jsEnd){
-        jsEnd += 1200;
-      }else if(ssStart > ssEnd) {
-        ssEnd += 1200;
+      for(int i = 0; i < hotelDto.size(); i++) {
+        int biStart = Integer.parseInt(roompriceDto.get(i).getBsDate().replace("/", ""));
+        int biEnd = Integer.parseInt(roompriceDto.get(i).getBeDate().replace("/", ""));
+        
+        int jsStart = Integer.parseInt(roompriceDto.get(i).getJsDate().replace("/", ""));
+        int jsEnd = Integer.parseInt(roompriceDto.get(i).getJeDate().replace("/", ""));
+        
+        int ssStart = Integer.parseInt(roompriceDto.get(i).getSsDate().replace("/", ""));
+        int ssEnd = Integer.parseInt(roompriceDto.get(i).getSeDate().replace("/", ""));
+        
+        if(biStart > biEnd ) {
+          biEnd += 1200;
+        }else if(jsStart > jsEnd){
+          jsEnd += 1200;
+        }else if(ssStart > ssEnd) {
+          ssEnd += 1200;
+        }
+        
+        if(biStart <= today && today <= biEnd) {
+         price = roompriceDto.get(i).getBiPrice();
+        }else if(jsStart <= today && today <= jsEnd) {
+         price = roompriceDto.get(i).getJunPrice();
+        }else if(ssStart <= today && today <= ssEnd) {
+         price = roompriceDto.get(i).getSungPrice();
+        }
+        hPrice.add(price);
       }
-      
-      if(biStart <= today && today <= biEnd) {
-       price = roompriceDto.get(i).getBiPrice();
-      }else if(jsStart <= today && today <= jsEnd) {
-       price = roompriceDto.get(i).getJunPrice();
-      }else if(ssStart <= today && today <= ssEnd) {
-       price = roompriceDto.get(i).getSungPrice();
-      }
-      hPrice.add(price);
+    } else {
+      hPrice.clear();
     }
-    
     Collections.reverse(hPrice);
     
     Map<String, Object> hotel = Map.of("hotelList", hotelDto
