@@ -160,12 +160,25 @@ public class MainServiceImpl implements MainService {
         }  // if
         
         return attachCount;
+  }
+  @Override
+  public int modifyAddress(HttpServletRequest request) {
+    int bannerNo = Integer.parseInt(request.getParameter("bannerNo"));
+    String linkedAddress = request.getParameter("address");
     
+    BannerImageDto bannerImageDto = BannerImageDto.builder()
+                                       .bannerNo(bannerNo)
+                                       .linkedAddress(linkedAddress)
+                                       .build();
+    int modifyResult = mainMapper.updateAddress(bannerImageDto);
     
-    
-    
-    
-    
+    return modifyResult;
+  }
+  
+  @Override
+  public Map<String, Object> getMainBannerList() {
+    Map<String, Object> map = Map.of("banner",mainMapper.getBannerImage());
+    return map;
   }
   
 }
