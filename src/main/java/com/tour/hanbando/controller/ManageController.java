@@ -58,6 +58,11 @@ public class ManageController {
   }
   
   /* 기존 회원 비밀번호 수정 폼으로 이동 */
+  @GetMapping("/modifyPw.form")
+  public String modifyPwForm(@RequestParam(value="userNo") int userNo, Model model) {
+    model.addAttribute("userNo", userNo);
+    return "manage/modifyUserPw";
+  }
   
   /* 기존 회원 비밀번호 수정하기 */
   
