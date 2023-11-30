@@ -97,6 +97,8 @@
     </div>
     
     <div class="col-1" style="font-size:18px;">
+      
+      
     <div>
     분류
     </div>
@@ -119,6 +121,9 @@
     </div>  
     
     
+    
+    
+    <form id="frm_inquiry_add" method="post" th:action="@{/notice/addInquiry.do}">
     <div class="col-5"> 
       <div>
       <select class="form-select" aria-label="Default select example">
@@ -134,7 +139,7 @@
       </div>
       
       <div class="title_input">
-        <input type="text" name="query" placeholder="제목 입력" class="search_input" style="width:450px">
+        <input type="text" name="title" id="title" placeholder="제목 입력" class="search_input" style="width:450px">
       </div>
       
       <div class = "wrap1">
@@ -142,9 +147,9 @@
       </div>
       
       <div class="contents_input">
-        <input type="text" name="query" placeholder="내용 입력" class="search_input" style="width:450px; height:290px;">
+        <textarea name="conents" id="contents" placeholder="내용 입력" class="search_input" style="width: 450px; height: 290px;"></textarea>
       </div>  
-    
+
       <div class = "wrap1">
       <div class="box7"></div>    
       </div>
@@ -164,6 +169,7 @@
 
       
     </div>
+    </form>
  
     
     

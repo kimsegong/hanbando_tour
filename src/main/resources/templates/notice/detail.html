@@ -16,13 +16,18 @@
     text-align: left;
   }
   
+  .title mt-4 {
+    text-align: left;
+  }
+  
+
   .wrap1 > .box3{
-  height:70px;
+  height:20px;
   }    
 
   .wrap1 > .box4{
-  height:70px;
-  }      
+   height:30px;
+  }
   
 
 </style>
@@ -39,7 +44,7 @@
       <div class="row">
         <div class="col-1">       
         </div>
-        <div class="col-10" style="border:1px gray dotted">
+        <div class="col-10" style="border:1px gray dotted;">
             <!--/*여기에 작성/ 다 만들고 style 지워주세요  */-->
             
 
@@ -71,30 +76,62 @@
     
     <div>
       <a th:href="@{/notice/faq.do}">
-      <button type="button" class="btn btn-outline-primary">자주묻는질문</button>  
+      <button type="button" class="btn btn-outline-primary" style="font-size: 14.5px; padding: 10px 22px;">자주묻는질문</button>  
       </a>
     </div>
     
     <div>
       <a th:href="@{/notice/inquiry.form}">
-      <button type="button" class="btn btn-outline-primary">&nbsp;1:1문의하기&nbsp;</button>  
+      <button type="button" class="btn btn-outline-primary" style="font-size: 14.5px; padding: 10px 22px;">&nbsp;1:1문의하기&nbsp;</button>  
       </a>
     </div>
     </div>
     
     
     
-    <div class="col-9">  
+    <div class="col-9" style=" margin-top: 50px;">
       <h2>공지사항</h2>
-       <hr style="border: 1px solid black;">
+      <hr style="border: 1px solid black; margin-bottom: 0; margin-top: 10px;">
+    </div>
+
+
+    <div class="col-3"></div>
+
+    
+    <div class="col-9">   
+    <div class="row">
+      <h4 class="notice-text" style="font-size: 16px; font-weight: bold;" th:text="|공지사항 : ${notice.title}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${notice.createdAt}|"></h4>
+    </div>
+      <hr style="border: 1px solid black; margin-bottom: 0; margin-top: 10px;">    
     </div>
     
-      <div>
-        <h1 class="title mt-4" th:text="${notice.title}"></h1>
-        <div th:text="|작성일 : ${notice.createdAt}|"></div>
-        <div class="mt-3" th:utext="${notice.contents}"></div>
+
+    
+   
+    <div class="col-3"></div>
+      <div class="col-9">   
+      
+      <div class="wrap1">
+        <div class="box3"></div>
       </div>    
+      
+      <div class="contents" th:text="${notice.contents}"></div>
         
+       
+      </div>
+      
+      <div class="wrap1">
+        <div class="box4"></div>        
+      </div>
+      
+      
+    
+
+
+       
+ 
+      
+
   
   
   
