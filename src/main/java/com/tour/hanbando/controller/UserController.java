@@ -36,7 +36,9 @@ public class UserController {
   @GetMapping(value="/execute.form", produces="application/json")
   public Map<String, Object> sendSMS(@RequestParam String userPhoneNum) throws Exception {
       // 문자 보내기
-      return userService.certifiedPhoneNumber(userPhoneNum);
+    Map<String, Object> map = userService.certifiedPhoneNumber(userPhoneNum);
+    System.out.println("####################"+map);
+      return map;
       // 인증번호 반환 {"cerNum": 12345}
   }
 

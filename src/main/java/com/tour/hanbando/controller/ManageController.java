@@ -3,6 +3,7 @@ package com.tour.hanbando.controller;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -57,10 +58,36 @@ public class ManageController {
   }
   
   /* 기존 회원 비밀번호 수정 폼으로 이동 */
+  @GetMapping("/modifyPw.form")
+  public String modifyPwForm(@RequestParam(value="userNo") int userNo, Model model) {
+    UserDto user = manageService.getUser(userNo);
+    model.addAttribute("user", user);
+    return "manage/modifyUserPw";
+  }
   
   /* 기존 회원 비밀번호 수정하기 */
+  @PostMapping("/modifyUserPw.do")
+  public String modifyUserPw(HttpServletRequest request, RedirectAttributes redirectAttributes) {
+    int modifyPwResult = manageService.modifyPw(request);
+    int userNo = Integer.parseInt(request.getParameter("userNo"));
+    redirectAttributes.addFlashAttribute("modifyPwResult", modifyPwResult);
+    return "redirect:/manage/modifyPw.form?userNo=" + userNo;
+  }
+  
+  /* 기존 회원 찜목록 상세 */
+  @GetMapping("/heartList.do")
+  public String heartList() {
+    return "manage/heartList";
+  }
   
   /* 기존 회원 탈퇴 */
+  @PostMapping("/leaveUser.do")
+  public String leaveUser(@RequestParam(value="userNo",required=false, defaultValue="0") int userNo
+                        , RedirectAttributes redirectAttributes) {
+    int leaveUserResult = manageService.leaveUser(userNo);
+    redirectAttributes.addFlashAttribute("leaveUserResult", leaveUserResult);
+    return "redirect:/manage/leaveUserList.do";
+  }
   
   /* 휴면 회원 목록 */
   @GetMapping("/inactiveList.do")
@@ -88,12 +115,14 @@ public class ManageController {
   /* 탈퇴 회원 목록 */
   @GetMapping("/leaveUserList.do")
   public String leaveUserList(HttpServletRequest request, Model model) {
+    manageService.loadLeaveUserList(request, model);
     return "manage/leaveUserList";
   }
   
   /* 탈퇴 회원 검색 */
   @GetMapping("/searchLeaveList.do")
   public String searchLeaveList(HttpServletRequest request, Model model) {
+    manageService.loadSearchLeaveList(request, model);
     return "manage/leaveUserList";
   }
   

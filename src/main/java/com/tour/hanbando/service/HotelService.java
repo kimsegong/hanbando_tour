@@ -1,5 +1,9 @@
 package com.tour.hanbando.service;
 
-public interface HotelService {
+import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
+public interface HotelService {
+  public Map<String, Object> getHotelList(HttpServletRequest request);
 }
