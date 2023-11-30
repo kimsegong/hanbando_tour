@@ -45,6 +45,8 @@ public class NoticeServiceImpl implements NoticeService {
     model.addAttribute("beginNo", total - (page - 1) * display);  
     }
   
+  
+  
   @Override
   public int addNotice(HttpServletRequest request) {
     String title = request.getParameter("title");
