@@ -96,11 +96,11 @@
 
   <insert id="insertLeaveUser" parameterType="UserDto">
     INSERT INTO LEAVE_USER_T (
-        EMAIL
+        LEAVED_EMAIL
       , JOINED_AT
       , LEAVED_AT
     ) VALUES (
-        #{email}
+        #{leavedEmail}
       , #{joinedAt}
       , SYSDATE
     ) 
