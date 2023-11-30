@@ -42,7 +42,7 @@
                       <a th:href="@{/reserve/detail.do(reserveNo=${res.reserveNo})}" th:text="|${res.reservedAt} - ${res.reserveNo}|"></a>
                     </td>
                     <td>
-                      <a th:href="@{/reserve/detail.do(reserveNo=${res.reserveNo})}" th:text="${res.packageDto.packageTitle}"></a>
+                      <a th:href="@{/package/detail.do(packageNo=${res.packageDto.packageNo})}" th:text="${res.packageDto.packageTitle}"></a>
                     </td>
                     <td th:text="${res.reservePerson}"></td>
                     <td th:text="${res.reserveStart}"></td>
@@ -75,7 +75,7 @@
 	
 	</div>
 	
-	
+
 	<div th:replace="~{/layout/footer::footer}"></div>
 </body>
 </html>
