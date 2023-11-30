@@ -33,36 +33,48 @@ const fnCheckSms = () => {
   $('#goSMS').click(() => {
     let sms = $('#userPhoneNum').val();
     alert("인증번호가 발송되었습니다.");
+
     $.ajax({
-      // 요청
       type: 'get',
       url: '/user/execute.form',
       data: 'userPhoneNum=' + sms,
-      // 응답
       dataType: 'json',
       success: (resData) => {
-        $('#authNumber').prop('disabled',false);
-        $('#confirmBnt').prop('disabled',false);
-        $('#confirmBnt').click(() => {
-
+        $('#authNumber').prop('disabled', false);
+        $('#confirmBnt').prop('disabled', false);
         
-           smsPassed = $('#authNumber').val() === resData.cerNum;
-          if(smsPassed){
-           alert('핸드폰이 인증되었습니다.');
-            } else {
+        // Move the click event binding outside the AJAX success callback
+        // to avoid multiple bindings.
+        $('#confirmBnt').off('click').on('click', () => {
+          console.log(resData.cerNum);
+          //let smsPassed = $('#authNumber').val() === resData.cerNum;
+
+          if (smsPassed = $('#authNumber').val() == resData.cerNum) {
+            alert('핸드폰이 인증되었습니다.');
+          } else {
             alert('핸드폰 인증이 실패했습니다.');
           }
-        })
+        });
+      },
+      // Use the error callback to handle AJAX request errors.
+      error: (jqXHR, textStatus, errorThrown) => {
+        let smsPassed = false;
+
+        switch (jqXHR.status) {
+          case 400:
+            $('#confirmBnt').text('인증번호 형식이 올바르지 않습니다.');
+            break;
+          case 403:
+            $('#confirmBnt').text('이미 인증된 번호입니다.');
+            break;
+          default:
+            // Handle other errors as needed.
+            break;
+        }
       }
-    })
-  }).catch((state) => {
-      smsPassed = false;
-      switch(state){
-      case 1: $('#confirmBnt').text('인증번호 형식이 올바르지 않습니다.'); break;
-      case 2: $('#confirmBnt').text('이미 인증된 번호입니다. '); break;
-      }
-    })
-  }
+    });
+  });
+};
 
 const fnCheckEmail = () => {
   $('#btn_get_code').click(() => {
