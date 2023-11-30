@@ -230,21 +230,22 @@
              })(img);
              reader.readAsDataURL(file);
              
-         }
-         console.log($('#filesystemName1').val())
+         	}
          
+         }
+         /* 왜인지 자꾸 오류 남
          var filename;
          if (window.FileReader){
-              filename = ($('#image')[0]).files[0].name;
+              filename = previewId[0].files[0].name();
             }
          
          if(filename !== $('#filesystemName1').val()){
            $('#filesystemName1').removeAttr('value');
          }
+         */
          
-         console.log($('#filesystemName1').val())
          }   
-      }     
+         
         
 
 	 const fnFileCheck = () => {
@@ -278,7 +279,7 @@
            var filesysName = $('#filesystemName'+i).val();
            var originalName = $('#originalName'+i).val();
          
-           var str = '<img src="' + bannerPath +'/'+ filesysName+'" id="getImage">';
+           var str = '<img src="' + bannerPath +'/'+ filesysName+'" id="prev_previewId'+i+'">';
            $('#previewId'+i).append(str); 
            //파일 이름 넣는 부분
            // Get a reference to our file input
@@ -312,8 +313,8 @@
 			 $('#btn_address2').click(() => {
 					 address = $('#address2').val();
 					 bannerNo = $('#bannerNo2').val();
-				})
 					 fnAjax(address, bannerNo);
+				})
 			 $('#btn_address3').click(() => {
 					 address = $('#address3').val();
 					 bannerNo = $('#bannerNo3').val();
@@ -326,7 +327,7 @@
 			const fnAjax = (address, bannerNo) => {
 				$.ajax({
 						type: 'post',
-						 url: 'changeAddress.do',
+						 url: '/main/changeAddress.do',
 						data: {address: address, bannerNo: bannerNo},
 						dataType:'json',
 						success:(resData) => {
