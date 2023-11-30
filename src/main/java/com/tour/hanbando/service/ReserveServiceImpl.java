@@ -1,6 +1,5 @@
 package com.tour.hanbando.service;
 
-import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -28,9 +27,6 @@ public class ReserveServiceImpl implements ReserveService {
   private final ReserveMapper reserveMapper;
   private final MyPageUtils myPageUtils;
   
-  
-  SimpleDateFormat sdf = new SimpleDateFormat();
-  
   @Override
   public Map<String, Object> addReserve(HttpServletRequest request) throws Exception {
     /*
@@ -53,7 +49,14 @@ public class ReserveServiceImpl implements ReserveService {
     } else {
       requestedTerm = request.getParameter("reqTerm");
     }
-    int agree = Integer.parseInt(request.getParameter("chkAgree"));
+    
+    int agree = 0;
+    String requiredA = request.getParameter("requiredA");
+    String marketingA = request.getParameter("marketingA");
+    if(marketingA != null && requiredA.equals("0")) {
+      agree = 1;
+    }
+    
     String departureLoc = request.getParameter("departureLoc");
     int reserveStatus = Integer.parseInt(request.getParameter("resStatus"));
 //    String reserveStart = "null";
@@ -88,11 +91,6 @@ public class ReserveServiceImpl implements ReserveService {
   @Override
   public int addTourist(HttpServletRequest request) throws Exception {
 
-//    String oldFormat = "yyyy-MM-dd";
-//    String newFormat = "yyyy/MM/dd";
-//    SimpleDateFormat sdf = new SimpleDateFormat(oldFormat);
-    
-
     String[] names = request.getParameterValues("touristName");
     String[] bDates = request.getParameterValues("birthDate");
     String[] genders = request.getParameterValues("gender");
@@ -102,16 +100,12 @@ public class ReserveServiceImpl implements ReserveService {
     
     int result = 0;
     for (int i = 0; i < names.length; i++) {
-//      if (bDates[i] != null && !bDates[i].isEmpty()) {
-//        Date d = sdf.parse(bDates[i]);
-//        sdf.applyPattern(newFormat);
-//        String birthDate = sdf.format(d); 
         
         int ageCase = Integer.parseInt(ageCases[i]);
-        
+        String birthDate = bDates[i].replace("-", "/");
         TouristDto tourist = TouristDto.builder()
             .name(names[i])
-            .birthDate(bDates[i])
+            .birthDate(birthDate)
             .gender(genders[i])
             .mobile(mobiles[i])
             .ageCase(ageCase)
