@@ -3,7 +3,6 @@ package com.tour.hanbando.service;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
@@ -26,6 +25,10 @@ public interface ManageService {
     public ResponseEntity<Map<String, Object>> modifyUser(HttpServletRequest request);
     
     /* 기존 회원 비밀번호 수정 */
+    public int modifyPw(HttpServletRequest request);
+    
+    /* 기존 회원 찜목록 상세 */
+    
     
     /* 기존 회원 탈퇴 */
     public int leaveUser(int userNo);
