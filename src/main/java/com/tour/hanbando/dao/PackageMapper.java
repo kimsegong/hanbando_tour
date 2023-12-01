@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 
+import com.tour.hanbando.dto.HeartDto;
 import com.tour.hanbando.dto.PackageDto;
 import com.tour.hanbando.dto.ProductImageDto;
 import com.tour.hanbando.dto.RegionDto;
@@ -18,6 +19,9 @@ public interface PackageMapper {
   // 패키지상품 리스트 불러오기
   public int getPackageCount();
   public List<PackageDto> getPackageList(Map<String, Object> map);
+  public List<PackageDto> getPackageRecommendList(Map<String, Object> map);
+  public List<PackageDto> getPackagePriceHighList(Map<String, Object> map);
+  public List<PackageDto> getPackagePriceLowList(Map<String, Object> map);
   public List<ProductImageDto> getPackageImageList(int packageNo);
   
   // 패키지상품 작성하기
@@ -48,8 +52,13 @@ public interface PackageMapper {
   public int insertReview(ReviewDto review);
   public int getReviewCount(int productNo);
   public List<ReviewDto> getReviewList(Map<String, Object> map);
+  public List<ReviewDto> getReviewStarList(Map<String, Object> map);
+  public int starAve(int packageNo);
   public int deleteReview(int reviewNo);
   
   // 아몰랑
   public List<ReserveDto> getReserve(int packageNo);
+  
+  // 찜 
+  public int heartProduct(HeartDto heart);
 }

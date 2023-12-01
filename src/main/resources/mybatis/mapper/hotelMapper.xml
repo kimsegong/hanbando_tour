@@ -4,6 +4,150 @@
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.tour.hanbando.dao.HotelMapper">
+  
+  <resultMap type="HotelDto" id="HotelMap">
+    <id column="HOTEL_NO" property="hotelNo"/>
+    <result column="HOTEL_NAME" property="hotelName"/>
+    <result column="HOTEL_ADDRESS" property="hotelAddress"/>
+    <result column="LATITUDE" property="latitude"/>
+    <result column="LONGITUDE" property="longitude"/>
+    <result column="HOTEL_DETAIL" property="hotelDetail"/>
+    <result column="PHONE_NUMBER" property="phoneNumber"/>
+    <result column="H_EMAIL" property="HEmail"/>
+    <result column="CREATED_AT" property="createdAt"/>
+    <result column="MODIFIED_AT" property="modifiedAt"/>
+    <result column="HIT" property="hit"/>
+    <result column="STATUS" property="status"/>
+    <result column="RECOMMEND_STATUS" property="recommendStatus"/>
+     <association javaType="RegionDto" property="regionDto">
+          <id column="REGION_NO" property="regionNo"/>
+          <result column="REGION_NAME" property="regionName"/>
+      </association>
+  </resultMap>
+  
+  <!-- 리뷰테이블 -->
+    <resultMap type="ReviewDto" id="ReviewMap">
+            <id column="REVIEW_NO" property="reviewNo"/>            
+            <result column="RESERVE_NO" property="reserveNo"/>
+            <result column="REVIEW_CONTENTS" property="reviewContents"/>
+            <result column="PACKAGE_NO" property="packageNo"/>
+            <result column="HOTEL_NO" property="hotelNo"/>
+            <result column="STAR" property="star"/>
+            <result column="REGIST_AT" property="registAt"/>   
+        <association javaType="UserDto" property="userDto">
+            <id column="USER_NO" property="userNo"/>
+            <result column="EMAIL" property="email"/>
+            <result column="NAME" property="name"/>    
+        </association>
+     </resultMap>   
+     
+   <!-- 찜테이블 -->
+    <resultMap type="HeartDto" id="HeartMap">            
+            <result column="USER_NO" property="userNo"/>
+      <association javaType="PackageDto" property="packageDto">
+            <id column="PACKAGE_NO" property="packageNo"/>            
+            <result column="PACKAGE_TITLE" property="packageTitle"/>      
+       </association>
+      <association javaType="HotelDto" property="hotelDto">
+            <id column="HOTEL_NO" property="hotelNo"/>            
+            <result column="HOTEL_NAME" property="hotelName"/>      
+       </association>
+    </resultMap>     
+     
+  <select id="selectHotelList" parameterType="Map" resultMap="HotelMap">
+    SELECT  H.HOTEL_NO,
+        H.REGION_NO,
+        H.HOTEL_NAME,
+        H.HOTEL_ADDRESS,
+        H.LATITUDE,
+        H.LONGITUDE,
+        H.HOTEL_DETAIL,
+        H.PHONE_NUMBER,
+        H.H_EMAIL,
+        H.CREATED_AT,
+        H.MODIFIED_AT,
+        H.HIT,
+        H.STATUS,
+        H.RECOMMEND_STATUS,
+        HI.THUMBNAIL,
+        HI.FILESYSTEM_NAME,
+        HI.IMAGE_PATH
+ FROM (  
+    SELECT
+        HT.HOTEL_NO,
+        HT.REGION_NO,
+        HT.HOTEL_NAME,
+        HT.HOTEL_ADDRESS,
+        HT.LATITUDE,
+        HT.LONGITUDE,
+        HT.HOTEL_DETAIL,
+        HT.PHONE_NUMBER,
+        HT.H_EMAIL,
+        HT.CREATED_AT,
+        HT.MODIFIED_AT,
+        HT.HIT,
+        HT.STATUS,
+        HT.RECOMMEND_STATUS,
+        ROW_NUMBER() OVER (ORDER BY HOTEL_NO DESC) AS RN
+     FROM
+       HOTEL_T HT
+     ) H
+     LEFT JOIN HOTEL_IMAGE_T HI ON H.HOTEL_NO = HI.HOTEL_NO
+     LEFT JOIN REGION_T R ON H.REGION_NO = R.REGION_NO
+     WHERE (H.RN BETWEEN #{begin} AND #{end}) AND HI.THUMBNAIL = 1
+    
+  </select>
+  <select id="countHotel" resultType="int">
+    SELECT COUNT(*)
+      FROM HOTEL_T
+     WHERE STATUS = 1
+  </select>
+  
+  <select id="getListPrice"  resultType="RoompriceDto">
+    SELECT HOTEL_NO,
+           ROOM_NO,
+           BI_PRICE,
+           BS_DATE,
+           BE_DATE,
+           JUN_PRICE,
+           JS_DATE,
+           JE_DATE,
+           SUNG_PRICE,
+           SS_DATE,
+           SE_DATE
+   FROM (
+   			SELECT  HOTEL_NO,
+                ROOM_NO,
+                BI_PRICE,
+                BS_DATE,
+                BE_DATE,
+                JUN_PRICE,
+                JS_DATE,
+                JE_DATE,
+                SUNG_PRICE,
+                SS_DATE,
+                SE_DATE,
+                ROW_NUMBER() OVER(PARTITION BY HOTEL_NO ORDER BY BI_PRICE ASC) AS RN
+           FROM ROOMPRICE_T
+    ) 
+    WHERE RN = 1 AND HOTEL_NO 
+		<foreach item="item" index="index" collection="list" open="in(" separator="," close=")">
+     #{item.hotelNo}
+      </foreach>
+  </select>
+  
+	<update id="hotelHit" parameterType="int">
+      UPDATE HOTEL_T
+         SET HIT = HIT + 1
+       WHERE HOTEL_NO = #{hotelNo}  
+    </update>
+
+    <select id="getHitList" parameterType="Map" resultType="HotelDto">
+      SELECT HOTEL_NO, HOTEL_NAME, HIT 
+      	FROM HOTEL_T
+       ORDER BY HIT DESC
+    </select>
+  
 
 </mapper>
 

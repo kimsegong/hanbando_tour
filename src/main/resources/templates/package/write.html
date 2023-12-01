@@ -108,7 +108,7 @@
     	    <label for="packageContents">상품내용</label>
 			      <textarea name="packageContents" id="packageContents" style="display: none;"></textarea>
             <div id="toolbar-container"></div>
-            <div id="ckeditor"></div>  
+            <div id="ckeditor"></div>
            </div>	     	    
     	  
     	  <div>
@@ -135,53 +135,29 @@
 
   <script th:inline="javascript">
     
-    const fnCkeditor = () => {
+   const fnCkeditor = () => {
     DecoupledEditor
-      .create(document.getElementById('ckeditor'), {
-        ckfinder: {
-          // 이미지 업로드 경로
-          uploadUrl: '/package/imageUpload.do'
-        }
-      })
-      .then(editor => {
-        const toolbarContainer = document.getElementById('toolbar-container');
-        toolbarContainer.appendChild(editor.ui.view.toolbar.element);
+        .create(document.getElementById('ckeditor'), {
+            ckfinder: {
+                uploadUrl: '/package/imageUpload.do'
+            }
+        })
+        .then(editor => {
+            const toolbarContainer = document.getElementById('toolbar-container');
+            toolbarContainer.appendChild(editor.ui.view.toolbar.element);
 
-        // 이미지 초기화 시에 style 및 다른 속성 제거
-        editor.model.schema.extend('$image', { allowAttributes: ['style'] });
-        editor.model.schema.setAttribute('image', 'style', true);
-
-        // 이미지 크기 조절 옵션 추가
-        editor.ui.componentFactory.add('resizeImage', locale => {
-          const view = new ButtonView(locale);
-
-          view.set({
-            label: 'Resize Image',
-            tooltip: true
-          });
-
-          // 클릭 이벤트 핸들러
-          view.on('execute', () => {
-            // 이미지 크기 조절 로직 추가
-            // 아래는 예시로 50%로 크기를 조절하는 코드
-            const imageElement = editor.model.document.selection.getSelectedElement();
-            const newSize = '50%';
-
-            editor.model.change(writer => {
-              writer.setAttribute('style', `width: ${newSize}`, imageElement);
+            editor.model.document.on('change:data', () => {
+                const data = editor.getData();
+                document.getElementById('packageContents').value = data;
             });
-          });
-
-          return view;
+        })
+        .catch(error => {
+            console.error(error);
         });
-      })
-      .catch(error => {
-        console.error(error);
-      });
-  }
-
+     }     
   
 	$(document).ready(function () {
+  
         $('input[type=radio][name=recommendStatus]').change(function() {
             if (this.value === '1') {
                 $('#recommendStatusInput').val('1'); // 추천
@@ -191,6 +167,7 @@
         });
     });
     
+   console.log($('#packageContents').text());  
 
  
   fnCkeditor();
