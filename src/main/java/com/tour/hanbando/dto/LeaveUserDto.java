@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Data
 @Builder
 public class LeaveUserDto {
-  private String leavedEmail;
+  private String email;
   private String joinedAt;
   private String leavedAt;
 }
