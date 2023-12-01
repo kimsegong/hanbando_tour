@@ -82,11 +82,8 @@ public class ManageController {
   
   /* 기존 회원 탈퇴 */
   @PostMapping("/leaveUser.do")
-  public String leaveUser(@RequestParam(value="userNo",required=false, defaultValue="0") int userNo
-                        , RedirectAttributes redirectAttributes) {
-    int leaveUserResult = manageService.leaveUser(userNo);
-    redirectAttributes.addFlashAttribute("leaveUserResult", leaveUserResult);
-    return "redirect:/manage/leaveUserList.do";
+  public void leaveUser(HttpServletRequest request, HttpServletResponse response) {
+    manageService.leaveUser(request, response);
   }
   
   /* 휴면 회원 목록 */
