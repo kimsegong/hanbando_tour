@@ -90,13 +90,15 @@
     </div>
     
     <div>
-      <a th:href="@{/notice/inquiry.form}">
+      <a th:href="@{/notice/inquirywrite.form}">
       <button type="button" class="btn btn btn-primary" style="height:40px;">&nbsp;1:1문의하기&nbsp;</button>  
       </a>
     </div>
     </div>
     
     <div class="col-1" style="font-size:18px;">
+      
+      
     <div>
     분류
     </div>
@@ -119,6 +121,9 @@
     </div>  
     
     
+
+    
+    
     <div class="col-5"> 
       <div>
       <select class="form-select" aria-label="Default select example">
@@ -133,8 +138,10 @@
       <div class="box5"></div>
       </div>
       
+      <form id="frm_inquiry_add" method="post" th:action="@{/notice/addInquiry.do}">
+
       <div class="title_input">
-        <input type="text" name="query" placeholder="제목 입력" class="search_input" style="width:450px">
+        <input type="text" name="title" id="title" placeholder="제목 입력" class="search_input" style="width:450px">
       </div>
       
       <div class = "wrap1">
@@ -142,9 +149,9 @@
       </div>
       
       <div class="contents_input">
-        <input type="text" name="query" placeholder="내용 입력" class="search_input" style="width:450px; height:290px;">
+        <textarea name="contents" id="contents" placeholder="내용 입력" class="search_input" style="width: 450px; height: 290px;"></textarea>
       </div>  
-    
+
       <div class = "wrap1">
       <div class="box7"></div>    
       </div>
@@ -154,9 +161,11 @@
       <button type="button" class="btn btn-secondary btn-sm">작성 취소</button>&nbsp;&nbsp;&nbsp;
       </a>
       <a th:href = "@{/notice/inquirylist.do}">
-      <button type="button" class="btn btn-outline-primary">문의 완료</button>  
+      <button type="submit" class="btn btn-outline-primary">문의 완료</button>  
       </a> 
       </div>
+      
+      </form>
       
       <div class = "wrap1">
       <div class="box8"></div>    
@@ -164,7 +173,8 @@
 
       
     </div>
- 
+
+
     
     
 
