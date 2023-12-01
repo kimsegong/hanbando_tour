@@ -3,14 +3,47 @@
 
 <head th:replace="~{/layout/header::head(|번 회원 찜목록|)}"></head> 
 <style>
- 
+  .main_wrapper {
+    display: flex;
+  }
+  .left_btn {
+    flex: 0 0 20%;
+  }
+  .right_list {
+    flex: 0 0 80%;
+  }
+  
+  #btn_show_detail {
+    cursor: pointer;
+    height: 38px; 
+    color: #96B6C5;
+    background-color: #fff;
+    border-color: #96B6C5;
+    border-radius: 10px;
+    transition: all 0.3s;
+    margin: 5% auto;
+  }
+
+  #btn_show_list {
+    cursor: pointer;
+    height: 38px; 
+    color: #fff;
+    background-color: #96B6C5;
+    border-color: #96B6C5;
+    border-radius: 10px;
+    transition: all 0.3s;
+    margin: 5% auto;
+  }
+  
+  #btn_show_detail:hover {
+    color: #fff;
+    background-color: #96B6C5;
+  }
+  
+  
 
 </style>
-<script th:inline="javascript">
-  
 
-  
-</script>
 
 <body>
 	<div th:replace="~{/layout/header::header}"></div>
@@ -25,8 +58,53 @@
         <div class="col-10" style="border:1px gray dotted">
             <!--/*여기에 작성/ 다 만들고 style 지워주세요  */-->
 		   
-          <div>
-           찜목록
+          <div class="main_wrapper">
+           
+            <div class="left_btn">
+              <div><a th:href="@{/manage/userList.do}"><button type="button" id="btn_show_detail">회원상세보기</button></a></div>
+              <div><a th:href="@{/manage/userList.do}"><button type="button" id="btn_show_list">회원목록보기</button></a></div>
+
+            </div>
+           
+            <div class="right_list">
+               
+             <div>찜목록</div>
+             <div>찜목록</div>
+             <div>찜목록</div>
+             <div>찜목록</div>
+             <div>찜목록</div>
+             <div>찜목록</div>
+             <div>찜목록</div>
+             <div>찜목록</div>
+             <div>찜목록</div>
+             <div>찜목록</div>
+             <div>찜목록</div>
+             <div>찜목록</div>
+             <div>찜목록</div>
+             <div>찜목록</div>
+             <div>찜목록</div>
+             <div>찜목록</div>
+             <div>찜목록</div>
+             <div>찜목록</div>
+             <div>찜목록</div>
+             <div>찜목록</div>
+             <div>찜목록</div>
+             <div>찜목록</div>
+             <div>찜목록</div>
+             <div>찜목록</div>
+             <div>찜목록</div>
+             <div>찜목록</div>
+             <div>찜목록</div>
+             <div>찜목록</div>
+             <div>찜목록</div>
+             <div>찜목록</div>
+             <div>찜목록</div>
+             <div>찜목록</div>
+             <div>찜목록</div>
+               
+            </div>
+            
+           
           </div>
         
         

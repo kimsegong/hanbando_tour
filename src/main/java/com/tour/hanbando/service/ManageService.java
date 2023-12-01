@@ -3,6 +3,7 @@ package com.tour.hanbando.service;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
@@ -31,7 +32,7 @@ public interface ManageService {
     
     
     /* 기존 회원 탈퇴 */
-    public int leaveUser(int userNo);
+    public void leaveUser(HttpServletRequest request, HttpServletResponse response);
     
     /* 휴면 회원 목록 */
     public void loadInactiveList(HttpServletRequest request, Model model);
