@@ -13,11 +13,14 @@ import com.tour.hanbando.dto.ReserveDto;
 
 public interface PackageService {
   public Map<String, Object> getPackageList(HttpServletRequest request);
+  public Map<String, Object> getPackageRecommendList(HttpServletRequest request);
+  public Map<String, Object> getPackagePriceHighList(HttpServletRequest request);
+  public Map<String, Object> getPackagePriceLowList(HttpServletRequest request);
   public int getTotalPackageCount();
   public int addPackage(MultipartHttpServletRequest multipartRequest) throws Exception;
   public int addRegion(HttpServletRequest request);
   public int addTheme(HttpServletRequest request);
-  public List<String> getEditorImageList(String contents);
+  public List<String> getEditorImageList(String packageContents);
   public PackageDto getPackage(int packageNo);
   public Map<String, Object> imageUpload(MultipartHttpServletRequest multipartRequest);
   public int modifyPackage(HttpServletRequest request);
@@ -27,6 +30,9 @@ public interface PackageService {
   public int removePackage(int packageNo);
   public Map<String, Object> addReview(HttpServletRequest request);
   public Map<String, Object> loadReviewList(HttpServletRequest request);
+  public Map<String, Object> loadReviewStarList(HttpServletRequest request);
+  public int getAverageRating(int packageNo);
+  public int addHeart(HttpServletRequest request);
   public Map<String, Object> removeReview(int reviewNo);
   public List<ReserveDto> getReserveUser(int packageNo);
   

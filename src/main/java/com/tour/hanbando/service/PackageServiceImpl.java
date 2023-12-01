@@ -22,6 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.tour.hanbando.dao.PackageMapper;
+import com.tour.hanbando.dto.HeartDto;
 import com.tour.hanbando.dto.PackageDto;
 import com.tour.hanbando.dto.ProductImageDto;
 import com.tour.hanbando.dto.RegionDto;
@@ -62,14 +63,66 @@ public class PackageServiceImpl implements PackageService {
                 , "totalPage", myPageUtils.getTotalPage());
     
   }
+  
+  @Override
+  public Map<String, Object> getPackageRecommendList(HttpServletRequest request) {
+    Optional<String> opt = Optional.ofNullable(request.getParameter("page"));
+    int page = Integer.parseInt(opt.orElse("1"));
+    int total = packageMapper.getPackageCount();
+    int display = 9;
+    
+    myPageUtils.setPaging(page, total, display);
+    
+    Map<String, Object> map = Map.of("begin", myPageUtils.getBegin()
+                                   , "end", myPageUtils.getEnd());
+              
+    List<PackageDto> packageRecommendList = packageMapper.getPackageRecommendList(map);
+    return Map.of("packageRecommendList", packageRecommendList
+                , "totalPage", myPageUtils.getTotalPage());
+  }
+  
+  @Override
+  public Map<String, Object> getPackagePriceHighList(HttpServletRequest request) {
+    Optional<String> opt = Optional.ofNullable(request.getParameter("page"));
+    int page = Integer.parseInt(opt.orElse("1"));
+    int total = packageMapper.getPackageCount();
+    int display = 9;
+    
+    myPageUtils.setPaging(page, total, display);
+    
+    Map<String, Object> map = Map.of("begin", myPageUtils.getBegin()
+        , "end", myPageUtils.getEnd());
+    
+    List<PackageDto> packagePriceHighList = packageMapper.getPackagePriceHighList(map);
+    return Map.of("packagePriceHighList", packagePriceHighList
+        , "totalPage", myPageUtils.getTotalPage());
+  }
+  
+  @Override
+  public Map<String, Object> getPackagePriceLowList(HttpServletRequest request) {
+    Optional<String> opt = Optional.ofNullable(request.getParameter("page"));
+    int page = Integer.parseInt(opt.orElse("1"));
+    int total = packageMapper.getPackageCount();
+    int display = 9;
+    
+    myPageUtils.setPaging(page, total, display);
+    
+    Map<String, Object> map = Map.of("begin", myPageUtils.getBegin()
+        , "end", myPageUtils.getEnd());
+    
+    List<PackageDto> packagePriceLowList = packageMapper.getPackagePriceLowList(map);
+    return Map.of("packagePriceLowList", packagePriceLowList
+        , "totalPage", myPageUtils.getTotalPage());
+  }
+  
   // 패키지의 이미지 추가하기
   @Transactional(readOnly=true)
   @Override
-  public List<String> getEditorImageList(String contents) {
+  public List<String> getEditorImageList(String packageContents) {
     
     List<String> editorImageList = new ArrayList<>();
         
-      Document document = Jsoup.parse(contents);
+      Document document = Jsoup.parse(packageContents);
       Elements elements =  document.getElementsByTag("img");
         
      if(elements != null) {
@@ -95,17 +148,8 @@ public class PackageServiceImpl implements PackageService {
   public int addPackage(MultipartHttpServletRequest multipartRequest) throws Exception {
       String packageContents = multipartRequest.getParameter("packageContents");
       int regionNo = Integer.parseInt(multipartRequest.getParameter("regionNo"));
-      int themeNo = Integer.parseInt(multipartRequest.getParameter("themeNo"));
-      
-      try {
-          String userNoStr = multipartRequest.getParameter("userNo");
-          if (userNoStr == null || userNoStr.isEmpty()) {
-              return 0; // Invalid user number
-          }
-
-          int userNo = Integer.parseInt(userNoStr);
-
-          // 다른 파라미터들에 대한 유사한 방어 코드 추가
+      int themeNo = Integer.parseInt(multipartRequest.getParameter("themeNo"));   
+      int userNo = Integer.parseInt(multipartRequest.getParameter("userNo"));
 
           // PackageDto 생성
           PackageDto packageDto = PackageDto.builder()
@@ -181,12 +225,9 @@ public class PackageServiceImpl implements PackageService {
               }           
           }
           // 성공 시 1, 실패 시 0 반환
-          return addResult == 1 && files.size() == thumbnailCount ? 1 : 0;
-      } catch (NumberFormatException e) {
-          e.printStackTrace();
-          return 0; // Invalid number format
+          return addResult == 1 && files.size() == thumbnailCount ? 1 : 0;              
       }
-  }
+
     // 지역/테마 넣기
   @Override
   public int addRegion(HttpServletRequest request) {
@@ -386,12 +427,12 @@ public class PackageServiceImpl implements PackageService {
       String reviewContents = request.getParameter("reviewContents");
       int userNo = Integer.parseInt(request.getParameter("userNo"));
       int packageNo = Integer.parseInt(request.getParameter("packageNo"));
-      int reserveNo = Integer.parseInt(request.getParameter("reserveNo"));
+      int star = Integer.parseInt(request.getParameter("star"));
       
-      ReviewDto review = ReviewDto.builder()
+      ReviewDto review = ReviewDto.builder()                            
                             .reviewContents(reviewContents)
                             .packageNo(packageNo)
-                            .reserveNo(reserveNo)
+                            .star(star)
                             .userDto(UserDto.builder()
                                       .userNo(userNo)
                                       .build())                            
@@ -410,7 +451,6 @@ public class PackageServiceImpl implements PackageService {
     
       
       int packageNo = Integer.parseInt(request.getParameter("packageNo"));
-
       
       String pageParameter = request.getParameter("page");
       int page = 1;  // 기본값 설정
@@ -438,15 +478,64 @@ public class PackageServiceImpl implements PackageService {
       return result;
       
     }
+    
+    @Override
+    public Map<String, Object> loadReviewStarList(HttpServletRequest request) {
+       int packageNo = Integer.parseInt(request.getParameter("packageNo"));
+      
+      String pageParameter = request.getParameter("page");
+      int page = 1;  // 기본값 설정
+      if (pageParameter != null && !pageParameter.isEmpty()) {
+          try {
+              page = Integer.parseInt(pageParameter);
+          } catch (NumberFormatException e) {             
+              e.printStackTrace();  
+          }
+      }
+      int total = packageMapper.getReviewCount(packageNo);
+      int display = 10;
+      
+      myPageUtils.setPaging(page, total, display);
+      
+      Map<String, Object> map = Map.of("packageNo", packageNo
+                                     , "begin", myPageUtils.getBegin()
+                                     , "end", myPageUtils.getEnd());
+      
+      List<ReviewDto> reviewList = packageMapper.getReviewStarList(map);
+      String paging = myPageUtils.getAjaxPaging();
+      Map<String, Object> result = new HashMap<String, Object>();
+      result.put("reviewList", reviewList);
+      result.put("paging", paging);
+      return result;
+    }
+    
+    @Override
+    public int getAverageRating(int packageNo) {
+      return packageMapper.starAve(packageNo);
+    }
+    
+    @Override
+    public int addHeart(HttpServletRequest request) {
+    
+      int userNo = Integer.parseInt(request.getParameter("userNo"));
+      int packageNo = Integer.parseInt(request.getParameter("packageNo"));
+
+      HeartDto heart = HeartDto.builder()
+              .packageDto(PackageDto.builder()
+                          .packageNo(packageNo)
+                          .build())
+              .userNo(userNo)
+                  .build();
+      System.out.println(heart);
+    return packageMapper.heartProduct(heart);
+    }
+    
     @Transactional(readOnly=true)
     @Override
     public List<ReserveDto> getReserveUser(int packageNo) {
         List<ReserveDto> reserve = packageMapper.getReserve(packageNo);
         return reserve ;
     }
-
-
-
     
     @Override
     public Map<String, Object> removeReview(int reviewNo) {

@@ -1,13 +1,11 @@
 package com.tour.hanbando.service;
 
-import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -124,6 +122,7 @@ public class ManageServiceImpl implements ManageService {
    * 
    * @author 심희수
    * @param request
+   * @return 
    */
   @Override
   public ResponseEntity<Map<String, Object>> modifyUser(HttpServletRequest request) {
@@ -157,13 +156,35 @@ public class ManageServiceImpl implements ManageService {
   }
   
   /**
+   * 기존회원 비밀번호 변경
+   * 
+   * @author 심희수
+   * @param request
+   * @return 변경된 값(비밀번호)의 데이터를 전달
+   */
+  @Override
+  public int modifyPw(HttpServletRequest request) {
+    
+    String pw = mySecurityUtils.getSHA256(request.getParameter("pw"));
+    int userNo = Integer.parseInt(request.getParameter("userNo"));
+    
+    UserDto user = UserDto.builder()
+                    .pw(pw)
+                    .userNo(userNo)
+                    .build();
+    int modifyPwResult = userMapper.updateUserPw(user);
+    
+    return modifyPwResult;
+  }
+  
+  /**
    * 기존회원 탈퇴
    * 기존회원 정보를 탈퇴회원에 추가한뒤,
    * 기존회원의 탈퇴를 진행한다.
    * 
    * @author 심희수
    * @param userNo 탈퇴할 회원번호
-   * @return 탈퇴된 회원의 데이터 수를 반환
+   * @return 탈퇴된 회원의 데이터를 반환
    */
   @Override
   public int leaveUser(int userNo) {
