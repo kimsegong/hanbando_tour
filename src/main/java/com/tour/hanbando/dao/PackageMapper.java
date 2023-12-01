@@ -19,15 +19,13 @@ public interface PackageMapper {
   // 패키지상품 리스트 불러오기
   public int getPackageCount();
   public List<PackageDto> getPackageList(Map<String, Object> map);
-  public List<PackageDto> getPackageRecommendList(Map<String, Object> map);
-  public List<PackageDto> getPackagePriceHighList(Map<String, Object> map);
-  public List<PackageDto> getPackagePriceLowList(Map<String, Object> map);
   public List<ProductImageDto> getPackageImageList(int packageNo);
+  public ProductImageDto getImage(int imageNo);
   
   // 패키지상품 작성하기
   public int insertPackage(PackageDto packageDto);
   public int insertPackageImage(ProductImageDto image);
-  public int insertThumbnail(ProductImageDto image);
+  public int insertImageList(ProductImageDto image);
   public int insertRegion(RegionDto region);
   public int insertTheme(ThemeDto theme);
   
