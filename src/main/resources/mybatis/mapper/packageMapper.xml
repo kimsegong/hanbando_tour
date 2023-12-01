@@ -35,6 +35,11 @@
           <result column="EMAIL" property="email"/>
           <result column="NAME" property="name"/>
       </association>
+      <association javaType="ProductImageDto" property="productImageDto">
+          <id column="IMAGE_NO" property="imageNo"/>
+          <result column="THUMBNAIL" property="thumbnail"/>
+          <result column="IMAGE_PATH" property="imagePath"/>
+      </association>
     </resultMap>
     <!-- 리뷰테이블 -->
     <resultMap type="ReviewDto" id="ReviewMap">

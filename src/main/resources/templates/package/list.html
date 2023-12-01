@@ -74,8 +74,6 @@
     // 전역 변수
     var page = 1;
     var totalPage = 0;
-    var orderBy = 'new';
-
     
     const fnGetPackageList = () => {
   $.ajax({
@@ -83,7 +81,6 @@
     url: '/package/getList.do',
     data: {
       page: page,
-      condition: orderBy 
     },
     dataType: 'json',
     success: (resData) => {
@@ -92,7 +89,7 @@
         $.each(resData.packageList, (i, package) => {
           let str = '<div class="col-md-4">';
           str += '<div class="card">';
-          str += '<img src="https://github.com/skal48/portfolio/blob/main/hanla.jpg?raw=true" style="height: 150px;" class="card-img-top" alt="Package Image">';
+          str += '<img src="'+ package.productImageDto.imagePath +'/'+ package.productImageDto.thumbnail +'" style="height: 150px;" class="card-img-top" alt="Package Image">';
           str += '<div class="card-body">';
           str += '<p class="card-title">' + package.packageTitle + '</p>';
           str += '<p class="card-text"></p>';
