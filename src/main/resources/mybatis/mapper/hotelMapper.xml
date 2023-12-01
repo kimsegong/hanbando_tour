@@ -55,46 +55,46 @@
     </resultMap>     
      
   <select id="selectHotelList" parameterType="Map" resultMap="HotelMap">
-    SELECT  H.HOTEL_NO,
-        H.REGION_NO,
-        H.HOTEL_NAME,
-        H.HOTEL_ADDRESS,
-        H.LATITUDE,
-        H.LONGITUDE,
-        H.HOTEL_DETAIL,
-        H.PHONE_NUMBER,
-        H.H_EMAIL,
-        H.CREATED_AT,
-        H.MODIFIED_AT,
-        H.HIT,
-        H.STATUS,
-        H.RECOMMEND_STATUS,
-        HI.THUMBNAIL,
-        HI.FILESYSTEM_NAME,
-        HI.IMAGE_PATH
- FROM (  
-    SELECT
-        HT.HOTEL_NO,
-        HT.REGION_NO,
-        HT.HOTEL_NAME,
-        HT.HOTEL_ADDRESS,
-        HT.LATITUDE,
-        HT.LONGITUDE,
-        HT.HOTEL_DETAIL,
-        HT.PHONE_NUMBER,
-        HT.H_EMAIL,
-        HT.CREATED_AT,
-        HT.MODIFIED_AT,
-        HT.HIT,
-        HT.STATUS,
-        HT.RECOMMEND_STATUS,
-        ROW_NUMBER() OVER (ORDER BY HOTEL_NO DESC) AS RN
-     FROM
-       HOTEL_T HT
-     ) H
-     LEFT JOIN HOTEL_IMAGE_T HI ON H.HOTEL_NO = HI.HOTEL_NO
-     LEFT JOIN REGION_T R ON H.REGION_NO = R.REGION_NO
-     WHERE (H.RN BETWEEN #{begin} AND #{end}) AND HI.THUMBNAIL = 1
+        SELECT  H.HOTEL_NO,
+            H.REGION_NO,
+            H.HOTEL_NAME,
+            H.HOTEL_ADDRESS,
+            H.LATITUDE,
+            H.LONGITUDE,
+            H.HOTEL_DETAIL,
+            H.PHONE_NUMBER,
+            H.H_EMAIL,
+            H.CREATED_AT,
+            H.MODIFIED_AT,
+            H.HIT,
+            H.STATUS,
+            H.RECOMMEND_STATUS,
+            HI.THUMBNAIL,
+            HI.FILESYSTEM_NAME,
+            HI.IMAGE_PATH
+     FROM (  
+        SELECT
+            HT.HOTEL_NO,
+            HT.REGION_NO,
+            HT.HOTEL_NAME,
+            HT.HOTEL_ADDRESS,
+            HT.LATITUDE,
+            HT.LONGITUDE,
+            HT.HOTEL_DETAIL,
+            HT.PHONE_NUMBER,
+            HT.H_EMAIL,
+            HT.CREATED_AT,
+            HT.MODIFIED_AT,
+            HT.HIT,
+            HT.STATUS,
+            HT.RECOMMEND_STATUS,
+            ROW_NUMBER() OVER (ORDER BY HOTEL_NO DESC) AS RN
+         FROM
+           HOTEL_T HT
+         ) H
+         LEFT JOIN HOTEL_IMAGE_T HI ON H.HOTEL_NO = HI.HOTEL_NO
+         LEFT JOIN REGION_T R ON H.REGION_NO = R.REGION_NO
+         WHERE (H.RN BETWEEN #{begin} AND #{end}) AND HI.THUMBNAIL = 1
     
   </select>
   <select id="countHotel" resultType="int">
@@ -134,20 +134,104 @@
 		<foreach item="item" index="index" collection="list" open="in(" separator="," close=")">
      #{item.hotelNo}
       </foreach>
+      ORDER BY DECODE(HOTEL_NO,
+    <foreach item="item" index="index" collection="list" separator="," close=")">  
+     #{item.hotelNo}, (9 - ${index})  
+    </foreach>  
   </select>
   
 	<update id="hotelHit" parameterType="int">
       UPDATE HOTEL_T
          SET HIT = HIT + 1
        WHERE HOTEL_NO = #{hotelNo}  
-    </update>
+  </update>
 
-    <select id="getHitList" parameterType="Map" resultType="HotelDto">
-      SELECT HOTEL_NO, HOTEL_NAME, HIT 
-      	FROM HOTEL_T
-       ORDER BY HIT DESC
-    </select>
+  <select id="getHitList" parameterType="Map" resultType="HotelDto">
+    SELECT HOTEL_NO, HOTEL_NAME, HIT 
+    	FROM HOTEL_T
+     ORDER BY HIT DESC
+  </select>
   
+  <sql id="countReview">
+     WITH COUNT_REVIEW AS(
+                SELECT HOTEL_NO,
+                       COUNT(REVIEW_NO) AS CR
+                  FROM REVIEW_T
+                 WHERE HOTEL_NO IS NOT NULL
+              GROUP BY HOTEL_NO
+      )      
+  </sql>
+  
+  <select id="getReviewHotelList" parameterType="Map" resultMap="HotelMap">  
+    SELECT 
+            A.CR,
+            A.HOTEL_NO,
+            A.REGION_NO,
+            A.HOTEL_NAME,
+            A.CREATED_AT,
+            A.MODIFIED_AT,
+            A.HIT,
+            A.STATUS,
+            A.RECOMMEND_STATUS,
+            A.THUMBNAIL,
+            A.FILESYSTEM_NAME,
+            A.IMAGE_PATH
+     FROM ( 
+          <include refid="countReview"/>
+         SELECT DISTINCT  
+            R.CR,
+            H.HOTEL_NO,
+            H.REGION_NO,
+            H.HOTEL_NAME,
+            H.CREATED_AT,
+            H.MODIFIED_AT,
+            H.HIT,
+            H.STATUS,
+            H.RECOMMEND_STATUS,
+            HI.THUMBNAIL,
+            HI.FILESYSTEM_NAME,
+            HI.IMAGE_PATH
+            FROM 
+     HOTEL_T H
+         LEFT JOIN COUNT_REVIEW R ON H.HOTEL_NO = R.HOTEL_NO 
+         LEFT JOIN HOTEL_IMAGE_T HI ON H.HOTEL_NO = HI.HOTEL_NO
+         LEFT JOIN REGION_T R ON H.REGION_NO = R.REGION_NO 
+         WHERE HI.THUMBNAIL =1
+         ORDER BY CR DESC NULLS LAST) A
+         WHERE ROWNUM BETWEEN #{begin} AND #{end}
+  </select>  
+ <select id="getRecommendHotelList" parameterType="Map" resultMap="HotelMap">
+    SELECT  DISTINCT
+        H.HOTEL_NO,
+        H.REGION_NO,
+        H.HOTEL_NAME,
+        H.CREATED_AT,
+        H.MODIFIED_AT,
+        H.HIT,
+        H.STATUS,
+        H.RECOMMEND_STATUS,
+        HI.THUMBNAIL,
+        HI.FILESYSTEM_NAME,
+        HI.IMAGE_PATH
+ FROM (  
+    SELECT 
+        HT.HOTEL_NO,
+        HT.REGION_NO,
+        HT.HOTEL_NAME,
+        HT.CREATED_AT,
+        HT.MODIFIED_AT,
+        HT.HIT,
+        HT.STATUS,
+        HT.RECOMMEND_STATUS,
+        ROW_NUMBER() OVER (ORDER BY HOTEL_NO DESC) AS RN
+     FROM
+       HOTEL_T HT
+       WHERE HT.RECOMMEND_STATUS =1
+     ) H
+     LEFT JOIN HOTEL_IMAGE_T HI ON H.HOTEL_NO = HI.HOTEL_NO
+     LEFT JOIN REGION_T R ON H.REGION_NO = R.REGION_NO
+     WHERE (H.RN BETWEEN #{begin} AND #{end}) AND HI.THUMBNAIL = 1
 
+ </select>  
 </mapper>
 

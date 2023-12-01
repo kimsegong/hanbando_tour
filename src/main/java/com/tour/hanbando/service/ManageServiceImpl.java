@@ -1,11 +1,13 @@
 package com.tour.hanbando.service;
 
+import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -187,15 +189,34 @@ public class ManageServiceImpl implements ManageService {
    * @return 탈퇴된 회원의 데이터를 반환
    */
   @Override
-  public int leaveUser(int userNo) {
+  public void leaveUser(HttpServletRequest request, HttpServletResponse response) {
+
+    Optional<String> opt = Optional.ofNullable(request.getParameter("userNo"));
+    int userNo = Integer.parseInt(opt.orElse("0"));
+    
     UserDto user = userMapper.getUser(Map.of("userNo", userNo));
-    int addLeaveUserResult = userMapper.insertLeaveUser(user);
-    int leaveUserResult = userMapper.deleteUser(user);
-    if(addLeaveUserResult == 1 && leaveUserResult ==1) {
-      return leaveUserResult;
-    } else {
-      return 0;
+    int insertLeaveUserResult = userMapper.insertLeaveUser(user);
+    int deleteUserResult = userMapper.deleteUser(user);
+    
+    try {
+      
+      response.setContentType("text/html; charset=UTF-8");
+      PrintWriter out = response.getWriter();
+      out.println("<script>");
+      if(insertLeaveUserResult == 1 && deleteUserResult == 1) {
+        out.println("alert('회원 탈퇴가 완료되었습니다. 탈퇴회원 목록에서 확인 가능합니다.");
+        out.println("location.href='" + request.getContextPath() + "/manage/leaveUserList.do'");  // 회원 탈퇴시킨 뒤 탈퇴회원 관리 목록으로 이동
+      } else {
+        out.println("alert('회원이 탈퇴되지 않았습니다.')");
+      }
+      out.println("</script>");
+      out.flush();
+      out.close();
+      
+    } catch (Exception e) {
+      e.printStackTrace();
     }
+    
   }
   
   

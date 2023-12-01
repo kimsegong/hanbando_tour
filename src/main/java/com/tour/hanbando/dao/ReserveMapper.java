@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 
+import com.tour.hanbando.dto.PaymentDto;
 import com.tour.hanbando.dto.ReserveDto;
 import com.tour.hanbando.dto.TouristDto;
 
@@ -13,6 +14,7 @@ public interface ReserveMapper {
   
   public int insertReserve(ReserveDto reserve);
   public int insertTourist(TouristDto tourist);
+  public int insertPayment(PaymentDto payment);
   
   public int getReserveCount();
   public int getReserveCountByUserNo(int userNo);
@@ -25,4 +27,6 @@ public interface ReserveMapper {
   
   public int updateReserve(ReserveDto reserve);
   public int deleteReserve(int reserveNo);
+  
+  
 }
