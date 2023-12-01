@@ -208,7 +208,7 @@
       
       const fnRemoveNotice = () => {
         $('#btn_remove').click(() => {
-          if(confirm('블로그를 삭제하면 모든 댓글이 함께 삭제됩니다. 삭제할까요?')){
+          if(confirm('공지사항 삭제를 선택하셨습니다. 삭제할까요?')){
           frmBtn.attr('action', '/notice/remove.do');
           frmBtn.submit();
           }
