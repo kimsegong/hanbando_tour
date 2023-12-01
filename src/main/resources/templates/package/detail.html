@@ -103,7 +103,7 @@
       </div>
       <div class="carousel-inner">
         <div th:each="atc : ${attachList.attachList}">
-            <img th:src="@{|${atc.imagePath}/${atc.filesystemName}|}"  class="d-block w-100">
+            <img th:src="@{|${atc.imagePath}/${atc.filesystemName}|}"  class="d-block w-100" alt="image">
         </div>
       </div>
       <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
