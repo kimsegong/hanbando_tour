@@ -14,4 +14,7 @@ public interface HotelMapper {
   public int countHotel();
   public List<RoompriceDto> getListPrice(List<HotelDto> hotelDto);
   public int hotelHit(int hotelNo);
+  public List<HotelDto> getReviewHotelList(Map<String, Object> map);
+  public List<HotelDto> getRecommendHotelList(Map<String, Object> map);
+  
 }
