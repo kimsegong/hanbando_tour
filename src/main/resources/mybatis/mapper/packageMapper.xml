@@ -35,6 +35,11 @@
           <result column="EMAIL" property="email"/>
           <result column="NAME" property="name"/>
       </association>
+      <association javaType="ProductImageDto" property="productImageDto">
+          <id column="IMAGE_NO" property="imageNo"/>
+          <result column="THUMBNAIL" property="thumbnail"/>
+          <result column="IMAGE_PATH" property="imagePath"/>
+      </association>
     </resultMap>
     <!-- 리뷰테이블 -->
     <resultMap type="ReviewDto" id="ReviewMap">
@@ -132,191 +137,54 @@
     </select>
 
     <!-- 패키지리스트불러오기 -->
-    <select id="getPackageList" resultMap="PackageMap">
-    SELECT
+    <select id="getPackageList" parameterType="Map" resultMap="PackageMap">
+      SELECT
         P.PACKAGE_NO,
         P.USER_NO,
         P.REGION_NO,
-        R.REGION_NAME,
         P.THEME_NO,
-        T.THEME_NAME,
         P.PACKAGE_TITLE,
-        P.MINI_ONE,
-        P.MINI_TWO,
-        P.MINI_THREE,
-        P.PACKAGE_PLAN,
-        P.PACKAGE_CONTENTS,
-        P.HOTEL_CONTENTS,
         P.PRICE,
-        P.DANGER,
-        P.CREATED_AT,
-        P.MODIFIED_AT,
         P.HIT,
         P.STATUS,
-        P.MAX_PEOPLE,
         P.RECOMMEND_STATUS,
         PI.IMAGE_NO,
         PI.THUMBNAIL,
         PI.FILESYSTEM_NAME,
         PI.IMAGE_PATH
-    FROM (
+      FROM (
         SELECT
-            PT.PACKAGE_NO,
-            PT.USER_NO,
-            PT.REGION_NO,
-            PT.THEME_NO,
-            PT.PACKAGE_TITLE,
-            PT.MINI_ONE,
-            PT.MINI_TWO,
-            PT.MINI_THREE,
-            PT.PACKAGE_PLAN,
-            PT.PACKAGE_CONTENTS,
-            PT.HOTEL_CONTENTS,
-            PT.PRICE,
-            PT.DANGER,
-            PT.CREATED_AT,
-            PT.MODIFIED_AT,
-            PT.HIT,
-            PT.STATUS,
-            PT.MAX_PEOPLE,
-            PT.RECOMMEND_STATUS,
-            ROW_NUMBER() OVER (ORDER BY PT.PACKAGE_NO DESC) AS RN
-        FROM
-            PACKAGE_T PT
-    ) P
-    LEFT JOIN
-        PRODUCT_IMAGE_T PI ON P.PACKAGE_NO = PI.PACKAGE_NO
-    LEFT JOIN
-        REGION_T R ON P.REGION_NO = R.REGION_NO
-    LEFT JOIN
-        THEME_T T ON P.THEME_NO = T.THEME_NO
-    WHERE
-        P.RN BETWEEN #{begin} AND #{end}
-    </select>
-    
-    
-
-    
-    <select id="getPackageRecommendList" resultMap="PackageMap">
-        SELECT
-        P.PACKAGE_NO,
-        P.USER_NO,
-        P.REGION_NO,
-        P.THEME_NO,
-        P.PACKAGE_TITLE,
-        P.PACKAGE_PLAN,
-        P.PACKAGE_CONTENTS,
-        P.HOTEL_CONTENTS,
-        P.PRICE,
-        P.DANGER,
-        P.CREATED_AT,
-        P.MODIFIED_AT,
-        P.HIT,
-        P.STATUS,
-        P.MAX_PEOPLE,
-        P.RECOMMEND_STATUS,
-        I.IMAGE_NO,
-        I.THUMBNAIL,
-        I.FILESYSTEM_NAME,
-        I.IMAGE_PATH
-    FROM (
-        SELECT
-            ROW_NUMBER() OVER (ORDER BY PT.PACKAGE_NO DESC) AS RN,
-            PT.PACKAGE_NO,
-            PT.USER_NO,
-            PT.REGION_NO,
-            PT.THEME_NO,
-            PT.PACKAGE_TITLE,
-            PT.PACKAGE_PLAN,
-            PT.PACKAGE_CONTENTS,
-            PT.HOTEL_CONTENTS,
-            PT.PRICE,
-            PT.DANGER,
-            PT.CREATED_AT,
-            PT.MODIFIED_AT,
-            PT.HIT,
-            PT.STATUS,
-            PT.MAX_PEOPLE,
-            PT.RECOMMEND_STATUS
-        FROM
-            PACKAGE_T PT
-        WHERE
-            PT.RECOMMEND_STATUS = 1
-        ) P
-        LEFT JOIN PRODUCT_IMAGE_T I ON P.PACKAGE_NO = I.PACKAGE_NO
-        WHERE
-            P.RN BETWEEN #{begin} AND #{end}
-    </select>
-    
-    <select id="getPackagePriceHighList" resultMap="PackageMap">
-        SELECT
-            P.PACKAGE_NO,
-            P.REGION_NO,
-            P.THEME_NO,
-            P.PACKAGE_TITLE,
-            P.PRICE,
-            P.HIT,
-            P.STATUS,
-            P.RECOMMEND_STATUS,
-            I.IMAGE_NO,
-            I.THUMBNAIL,
-            I.FILESYSTEM_NAME,
-            I.IMAGE_PATH
-        FROM (
-            SELECT
-                ROW_NUMBER() OVER (ORDER BY P.PRICE DESC) AS RN,
-                P.PACKAGE_NO,
-                P.REGION_NO,
-                P.THEME_NO,
-                P.PACKAGE_TITLE,
-                P.PRICE,
-                P.HIT,
-                P.STATUS,
-                P.RECOMMEND_STATUS
-            FROM
-                PACKAGE_T P
-        ) P
-        LEFT JOIN
-            PRODUCT_IMAGE_T I ON P.PACKAGE_NO = I.PACKAGE_NO
-        WHERE
-            P.RN BETWEEN #{begin} AND #{end}
-    </select>
-    
-    <select id="getPackagePriceLowList" resultMap="PackageMap">
-        SELECT
-            P.PACKAGE_NO,
-            P.REGION_NO,
-            P.THEME_NO,
-            P.PACKAGE_TITLE,
-            P.PRICE,
-            P.HIT,
-            P.STATUS,
-            P.RECOMMEND_STATUS,
-            I.IMAGE_NO,
-            I.THUMBNAIL,
-            I.FILESYSTEM_NAME,
-            I.IMAGE_PATH
-        FROM (
-            SELECT
-                ROW_NUMBER() OVER (ORDER BY P.PRICE ASC) AS RN,
-                P.PACKAGE_NO,
-                P.REGION_NO,
-                P.THEME_NO,
-                P.PACKAGE_TITLE,
-                P.PRICE,
-                P.HIT,
-                P.STATUS,
-                P.RECOMMEND_STATUS
-            FROM
-                PACKAGE_T P
-        ) P
-        LEFT JOIN
-            PRODUCT_IMAGE_T I ON P.PACKAGE_NO = I.PACKAGE_NO
-        WHERE
-            P.RN BETWEEN #{begin} AND #{end}
-    </select>
-
-    
+          PT.PACKAGE_NO,
+          PT.USER_NO,
+          PT.REGION_NO,
+          PT.THEME_NO,
+          PT.PACKAGE_TITLE,
+          PT.PRICE,
+          PT.HIT,
+          PT.STATUS,
+          PT.MAX_PEOPLE,
+          PT.RECOMMEND_STATUS,
+          ROW_NUMBER() OVER (
+            <choose>
+              <when test="condition == 'rowPrice'">
+                ORDER BY PT.PRICE DESC
+              </when>
+              <when test="condition == 'highPrice'">
+                ORDER BY PT.PRICE ASC
+              </when>
+              <otherwise>
+                ORDER BY PT.PACKAGE_NO DESC
+              </otherwise>
+            </choose>
+          ) AS RN
+        FROM PACKAGE_T PT
+      ) P
+      LEFT JOIN PRODUCT_IMAGE_T PI ON P.PACKAGE_NO = PI.PACKAGE_NO
+      LEFT JOIN REGION_T R ON P.REGION_NO = R.REGION_NO
+      LEFT JOIN THEME_T T ON P.THEME_NO = T.THEME_NO
+      WHERE P.RN BETWEEN #{begin} AND #{end}
+    </select> 
+ 
 
     <select id="getRegion" resultType="regionDto">
       SELECT REGION_NO, REGION_NAME
@@ -374,7 +242,7 @@
 
 
 
-     <insert id="insertThumbnail" parameterType="productImageDto">
+     <insert id="insertImageList" parameterType="productImageDto">
         INSERT INTO PRODUCT_IMAGE_T (
             IMAGE_NO
           , PACKAGE_NO
@@ -390,7 +258,7 @@
         )
       </insert>
       
-    
+     <!-- ck -->
       <insert id="insertPackageImage" parameterType="productImageDto">
         INSERT INTO PRODUCT_IMAGE_T (
             IMAGE_NO
@@ -458,6 +326,13 @@
         LEFT JOIN THEME_T T ON P.THEME_NO = T.THEME_NO
         WHERE P.PACKAGE_NO = #{packageNo}
       </select>
+      
+      <select id="getImage" parameterType="int" resultType="ProductImageDto">
+        SELECT IMAGE_NO, IMAGE_PATH, FILESYSTEM_NAME, THUMBNAIL, PACKAGE_NO
+          FROM PRODUCT_IMAGE_T
+         WHERE IMAGE_NO = #{imageNo}
+      </select>
+      
       
       <select id="getPackageImageList" parameterType="int" resultType="ProductImageDto">
         SELECT PACKAGE_NO, IMAGE_NO, THUMBNAIL, IMAGE_PATH, FILESYSTEM_NAME

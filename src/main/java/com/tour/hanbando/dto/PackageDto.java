@@ -29,5 +29,5 @@ public class PackageDto {
   private RegionDto regionDto;
   private ThemeDto themeDto;
   private UserDto userDto;
-
+  private ProductImageDto productImageDto; 
 }

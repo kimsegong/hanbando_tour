@@ -6,12 +6,14 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.ui.Model;
 
+import com.tour.hanbando.dto.PaymentDto;
 import com.tour.hanbando.dto.ReserveDto;
 
 public interface ReserveService {
 
   public Map<String, Object> addReserve(HttpServletRequest request) throws Exception;
   public int addTourist(HttpServletRequest request) throws Exception;
+  public Map<String, Object> addPayment(HttpServletRequest request, PaymentDto payment, int reserveNo);
   
   public void loadReserveList(HttpServletRequest request, Model model);
   public void loadReserveListByUser(HttpServletRequest request, Model model);
