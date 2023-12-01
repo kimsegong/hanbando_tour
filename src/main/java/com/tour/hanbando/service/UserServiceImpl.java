@@ -27,6 +27,7 @@ import com.tour.hanbando.dao.UserMapper;
 import com.tour.hanbando.dto.InactiveUserDto;
 import com.tour.hanbando.dto.UserDto;
 import com.tour.hanbando.util.MyJavaMailUtils;
+import com.tour.hanbando.util.MyPageUtils;
 import com.tour.hanbando.util.MySecurityUtils;
 
 import kotlinx.serialization.json.Json;
@@ -45,9 +46,11 @@ public class UserServiceImpl implements UserService {
   private final UserMapper userMapper;
   private final MySecurityUtils mySecurityUtils;
   private final MyJavaMailUtils myJavaMailUtils;
+  private final MyPageUtils myPageUtils;
+
   
-  private final String client_id = "RTJMyHb54a63lvLzPh7A";
-  private final String client_secret = "0xR9yv0oo3";
+  private final String client_id = "dteUoZxabIKjJ8XhKGY0";
+  private final String client_secret = "hzj3TKHiSm";
   private final String kakao_id = "9ac35c110f888ef0213ea4dbd3fab619";
   private final String kakao_secret = "oSTQjBnyEhgcUN8Xioh6Y5ZiRfKYRe0m";
   
@@ -94,18 +97,13 @@ public class UserServiceImpl implements UserService {
 
     HttpSession session = request.getSession();
     
-    // 휴면 계정인지 확인하기
-    InactiveUserDto inactiveUser = userMapper.getInactiveUser(map);
-    if(inactiveUser != null) {
-      session.setAttribute("inactiveUser", inactiveUser);
-      response.sendRedirect(request.getContextPath() + "/user/active.form");
-    }
+   
     
     // 정상적인 로그인 처리하기
     UserDto user = userMapper.getUser(map);
     
     if(user != null) {
-      request.getSession().setAttribute("user", user);
+      session.setAttribute("user", user);
       userMapper.insertAccess(email);
       response.sendRedirect(request.getParameter("referer"));
     } else {
