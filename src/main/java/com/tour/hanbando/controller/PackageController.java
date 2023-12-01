@@ -42,24 +42,6 @@ public class PackageController {
     return packageService.getPackageList(request);
   }  
   
-  @ResponseBody
-  @GetMapping(value="/getRecommendList.do", produces="application/json")
-  public Map<String, Object> getRecommendList(HttpServletRequest request){
-    return packageService.getPackageRecommendList(request);
-  }  
-  
-  @ResponseBody
-  @GetMapping(value="/getPriceHighList.do", produces="application/json")
-  public Map<String, Object> getPriceHighList(HttpServletRequest request){
-    return packageService.getPackagePriceHighList(request);
-  }  
-  
-  @ResponseBody
-  @GetMapping(value="/getPriceLowList.do", produces="application/json")
-  public Map<String, Object> getPriceLowList(HttpServletRequest request){
-    return packageService.getPackagePriceLowList(request);
-  }  
-
   @GetMapping("/write.form")
   public String write(HttpServletRequest request, Model model) {
 	 packageService.getRegionAndTheme(request, model);
@@ -88,13 +70,8 @@ public class PackageController {
   
   @PostMapping("/add.do")
   public String add(MultipartHttpServletRequest multipartRequest, RedirectAttributes redirectAttributes) throws Exception {
-      int addResult = packageService.addPackage(multipartRequest);
-
-      if (addResult == 1) {
-          redirectAttributes.addFlashAttribute("successMessage", "package added successfully!");
-      } else {
-          redirectAttributes.addFlashAttribute("errorMessage", "Failed to add package. Please try again.");
-      }
+      boolean addResult = packageService.addPackage(multipartRequest);
+      redirectAttributes.addFlashAttribute("addResult", addResult);
       return "redirect:/package/list.do";
   }
   
@@ -123,6 +100,8 @@ public class PackageController {
       PackageDto packageDto = packageService.getPackage(packageNo);
       model.addAttribute("reserve", reserve);
       model.addAttribute("packageDto", packageDto);
+      model.addAttribute("attachList", packageService.getAttachList(request));  
+      System.out.println("7777777777777777777777777777777" + packageService.getAttachList(request));
       return "package/detail";
   }
 
@@ -202,7 +181,6 @@ public class PackageController {
   public String heart(HttpServletRequest request, RedirectAttributes redirectAttributes) {
     int heartResult = packageService.addHeart(request);
     redirectAttributes.addFlashAttribute("heartResult", heartResult);
-    System.out.println("뭔데" + heartResult);
     return "redirect:/package/detail.do?packageNo=" + request.getParameter("packageNo"); 
   }
   
