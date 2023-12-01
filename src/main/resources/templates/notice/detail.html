@@ -28,6 +28,10 @@
   .wrap1 > .box4{
    height:30px;
   }
+
+  .wrap1 > .box5{
+   height:30px;
+  }  
   
 
 </style>
@@ -56,7 +60,7 @@
     <div class="col-7"></div>
     <div class="col-4" style="display: flex; justify-content: flex-end;">
       <div class="home">
-        <a th:href="@{/layout/main.do}"><i class="fa-solid fa-house" style="font-size:15px; margin-right: 5px;"></i></a>
+        <a th:href="@{http://localhost:8080}"><i class="fa-solid fa-house" style="font-size:15px; margin-right: 5px;"></i></a>
          &nbsp;고객센터  &nbsp;  >   &nbsp; 공지사항
       </div>
     </div>
@@ -100,7 +104,7 @@
     
     <div class="col-9">   
     <div class="row">
-      <h4 class="notice-text" style="font-size: 16px; font-weight: bold;" th:text="|공지사항 : ${notice.title}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${notice.createdAt}|"></h4>
+      <h4 class="notice-text" style="font-size: 16px; font-weight: bold;" th:text="|공지사항 : ${notice.title}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;작성일:&nbsp;&nbsp;&nbsp;${notice.createdAt}|"></h4>
     </div>
       <hr style="border: 1px solid black; margin-bottom: 0; margin-top: 10px;">    
     </div>
@@ -125,12 +129,32 @@
       </div>
       
       
-    
+      <div class="col-3"></div>
+ 
+      <div class="col-9"  style="padding-left:10px; padding-right: 40px;">
+      <div class="text-center">
+      <div>
+        <form id="frm_btn" method="post">
+            <input type="hidden" name="noticeNo" th:value="${notice.noticeNo}">
+            <input type="hidden" name="title" th:value="${notice.title}">
+            <input type="hidden" name="contents" th:value="${notice.contents}">
+            <button type="button" id="btn_edit" class="btn btn-outline-primary">수정</button>
+            <button type="button" id="btn_remove" class="btn btn-outline-danger">삭제</button>
+        </form>
+      </div> 
+      </div>
+      </div>
+        
+      <div class="wrap1">
+        <div class="box5"></div>        
+      </div>
+      
+        
 
 
        
  
-      
+     
 
   
   
@@ -170,7 +194,31 @@
       
       
       <script>
-
+      
+      var frmBtn = $('#frm_btn');
+      
+      const fnEditNotice = () => {
+        $('#btn_edit').click(() => {
+          if(confirm('작성한 내용으로 변경됩니다. 수정할까요?')){
+          frmBtn.attr('action', '/notice/edit.form');
+          frmBtn.submit();
+          }
+        })
+      }
+      
+      const fnRemoveNotice = () => {
+        $('#btn_remove').click(() => {
+          if(confirm('블로그를 삭제하면 모든 댓글이 함께 삭제됩니다. 삭제할까요?')){
+          frmBtn.attr('action', '/notice/remove.do');
+          frmBtn.submit();
+          }
+          
+        })
+      }
+  
+      fnEditNotice();
+      fnRemoveNotice();      
+      
       
       </script>
       

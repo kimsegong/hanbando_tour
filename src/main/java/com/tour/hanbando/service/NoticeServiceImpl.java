@@ -97,4 +97,29 @@ public class NoticeServiceImpl implements NoticeService {
   public NoticeDto loadNotice(int noticeNo) {
     return noticeMapper.getNotice(noticeNo);
   }
+  
+  @Override
+  public int modifyNotice(HttpServletRequest request) {
+    String title = request.getParameter("title");
+    String contents = request.getParameter("contents");
+    int noticeNo = Integer.parseInt(request.getParameter("noticeNo"));
+// 수정할 제목/내용/블로그번호를 가진 BlogDto
+    NoticeDto notice = NoticeDto.builder()
+                    .noticeNo(noticeNo)
+                    .title(title)
+                    .contents(contents)
+                    .build();
+    
+    // BLOG_T 수정
+    int modifyResult = noticeMapper.updateNotice(notice);
+    
+    return modifyResult;
+    
+  }
+  
+  @Override
+  public int removeNotice(int NoticeNo) {
+    
+    return noticeMapper.deleteNotice(NoticeNo);
+  }
 }
