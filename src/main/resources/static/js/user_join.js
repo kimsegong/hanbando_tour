@@ -5,6 +5,7 @@
 /* 함수 호출 */
 $(() => {
   fnCheckEmail();
+
   fnCheckPassword();
   fnCheckPassword2();
   fnCheckName();
@@ -75,11 +76,15 @@ const fnCheckSms = () => {
     });
   });
 };
+//이메일 -> 아이디로 쓰기 
+
+
+/* 함수 정의 */
 
 const fnCheckEmail = () => {
   $('#btn_get_code').click(() => {
     let email = $('#email').val();
-  // 연속된 ajax() 함수 호출의 실행 순서를 보장하는 JavaScript 객체 Promise
+    // 연속된 ajax() 함수 호출의 실행 순서를 보장하는 JavaScript 객체 Promise
     new Promise((resolve, reject) => {
       // 성공했다면 resolve() 함수 호출 -> then() 메소드에 정의된 화살표 함수 호출
       // 실패했다면 reject() 함수 호출 -> catch() 메소드에 정의된 화살표 함수 호출
@@ -106,29 +111,7 @@ const fnCheckEmail = () => {
           }
         }
       })
-    }).then(() => {
-      // 3. 인증코드 전송
-      $.ajax({
-        // 요청
-        type: 'get',
-        url: '/user/sendCode.do',
-        data: 'email=' + email,
-        // 응답
-        dataType: 'json',
-        success: (resData) => {  // resData === {"code": "6자리코드"}
-          alert(email + "로 인증코드를 전송했습니다.");
-          $('#code').prop('disabled', false);
-          $('#btn_verify_code').prop('disabled', false);
-          $('#btn_verify_code').click(() => {
-            emailPassed = $('#code').val() === resData.code;
-            if(emailPassed){
-              alert('이메일이 인증되었습니다.');
-            } else {
-              alert('이메일 인증이 실패했습니다.');
-            }
-          })
-        }
-      })
+    })
     }).catch((state) => {
       emailPassed = false;
       switch(state){
@@ -136,9 +119,28 @@ const fnCheckEmail = () => {
       case 2: $('#msg_email').text('이미 가입한 이메일입니다. 다른 이메일을 입력해 주세요.'); break;
       }
     })
-  })
+  
 }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/////
 const fnCheckPassword = () => {
   $('#pw').keyup((ev) => {
     let pw = $(ev.target).val();

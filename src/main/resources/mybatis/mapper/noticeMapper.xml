@@ -38,6 +38,7 @@
        , TO_CHAR(SYSDATE, 'YYYY-MM-DD') 
        ) 
    </insert>
+   
   
   <delete id="deleteNotice" parameterType="int"> 
   DELETE 
