@@ -31,15 +31,9 @@ public class HotelController {
   @ResponseBody
   @GetMapping("getList.do")
   public Map<String, Object> getHotelist(HttpServletRequest request){
+    
     System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"+hotelService.getHotelList(request));
     return hotelService.getHotelList(request);
-  }
-  
-  
-  
-  @GetMapping("sortedHotelList.do")
-  public Map<String, Object> getSortedHotelList(HttpServletRequest request){
-    return ;
   }
   
   @GetMapping("increseHit.do")
