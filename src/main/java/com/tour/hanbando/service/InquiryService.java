@@ -1,5 +1,14 @@
 package com.tour.hanbando.service;
 
-public interface InquiryService {
+import javax.servlet.http.HttpServletRequest;
 
+import org.springframework.ui.Model;
+
+import com.tour.hanbando.dto.InquiryDto;
+
+public interface InquiryService {
+  public void loadInquiryList(HttpServletRequest request, Model model);
+  public int addInquiry(HttpServletRequest request);
+  public InquiryDto loadInquiry(int inquiryNo);
 }
+

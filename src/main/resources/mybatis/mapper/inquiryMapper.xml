@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.tour.hanbando.dao.InquiryMapper">
+     <select id="getInquiryList" parameterType="Map" resultType="InquiryDto">
+      SELECT INQUIRY_NO, USER_NO, TITLE, CONTENTS, CREATED_AT, SEPARATE
+        FROM INQUIRY_T
+      
+     </select>
+
+     <insert id="insertInquiry" parameterType="InquiryDto"> 
+      INSERT INTO INQUIRY_T( 
+             INQUIRY_NO 
+           , USER_NO  
+           , TITLE 
+           , CONTENTS 
+           , CREATED_AT        
+           , SEPARATE   
+           )
+           VALUES( 
+           INQUIRY_SEQ.NEXTVAL 
+         , 1           
+         , #{title} 
+         , #{contents} 
+         , TO_CHAR(SYSDATE, 'YYYY-MM-DD') 
+         , '여행상품'
+         ) 
+   </insert>
+   
+   <select id="getInquiry" parameterType="int" resultType="InquiryDto"> 
+    SELECT INQUIRY_NO, USER_NO, TITLE, CONTENTS, CREATED_AT, SEPARATE
+      FROM INQUIRY_T 
+     WHERE INQUIRY_NO= #{inquiryNo} 
+   </select>
+
+</mapper>
