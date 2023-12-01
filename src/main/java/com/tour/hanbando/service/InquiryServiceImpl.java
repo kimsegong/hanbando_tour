@@ -12,7 +12,6 @@ import org.springframework.ui.Model;
 
 import com.tour.hanbando.dao.InquiryMapper;
 import com.tour.hanbando.dto.InquiryDto;
-import com.tour.hanbando.dto.NoticeDto;
 
 import lombok.RequiredArgsConstructor;
 
@@ -28,8 +27,6 @@ public class InquiryServiceImpl implements InquiryService {
   
   Map<String, Object> map = new HashMap<>();  
   
-  map.put("title", request.getParameter("title")); 
-  
   List<InquiryDto> inquiryList = inquiryMapper.getInquiryList(map);  
   
   model.addAttribute("inquiryList", inquiryList);
@@ -37,16 +34,16 @@ public class InquiryServiceImpl implements InquiryService {
   }
   
   @Override
-  public int addInquiry(HttpServletRequest request, Model model) {
+  public int addInquiry(HttpServletRequest request) {
     String title = request.getParameter("title");
     String contents = request.getParameter("contents");
     
-    InquiryDto inquire = InquiryDto.builder()
+    InquiryDto inquiry = InquiryDto.builder()
                      .title(title)
                      .contents(contents)
                      .build();
     
-    int addResult = inquiryMapper.insertInquiry(inquire);
+    int addResult = inquiryMapper.insertInquiry(inquiry);
     
     return addResult;
   }

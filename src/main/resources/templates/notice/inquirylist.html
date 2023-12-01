@@ -50,7 +50,7 @@
     <div class="col-3" style="font-weight:bold">조회된 문의 1건</div>
     <div class="col-5"></div>
     <div class="col-2">
-      <a th:href="@{/notice/inquiry.form}">
+      <a th:href="@{/notice/inquirywrite.form}">
       <button type="button" class="btn btn-outline-info">문의하기</button> 
       </a>
     </div>
@@ -59,15 +59,29 @@
     <div class = "wrap1">
       <div class="box2"></div>
     </div>
-    
-   <div class="col-12">
-   <div>
+   </div>
+   
+   <div class="col-2"></div>
+   <div class="col-8">
+   
+   <table class="table">
+     <tbody>
+       <tr th:each="inquiry : ${inquiryList}" class="title_title">
+       <td th:text="${inquiry.title}"></td>
+       </tr>
+     </tbody>
+   </table>    
      
+   </div>
+   <div class="col-2"></div>
+   
+   
+   
+   </div>
+   
 
-   </div>
-   </div>
-   
-   
+
+
    
    <details>
      <summary>펼치기</summary>

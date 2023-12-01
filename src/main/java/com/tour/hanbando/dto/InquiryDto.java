@@ -17,3 +17,4 @@ public class InquiryDto {
   private String createdAt;
   private String separate;
 }
+
