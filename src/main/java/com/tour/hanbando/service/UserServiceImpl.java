@@ -517,7 +517,9 @@ public class UserServiceImpl implements UserService {
   @Override
   public ResponseEntity<Map<String, Object>> checkEmail(String email) {
     
-    Map<String, Object> map = Map.of("email", email);
+    Map<String, Object> map = new HashMap<>();
+    map.put("email", email);
+    map.put("leavedEmail", email);
     
     boolean enableEmail = userMapper.getUser(map) == null
                        && userMapper.getLeaveUser(map) == null
