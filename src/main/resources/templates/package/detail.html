@@ -185,7 +185,7 @@
             class="tab-pane fade show active contents"
             id="home-tab-pane"
             role="tabpanel"
-            aria-labelledby="home-tab" th:text="${packageDto.packageContents}"></div>     
+            aria-labelledby="home-tab" th:utext="${packageDto.packageContents}"></div>     
           <div
             class="tab-pane fade"
             id="profile-tab-pane"
@@ -257,7 +257,7 @@
          <span class="badge text-bg-warning" th:text="${packageDto.miniTwo}"></span>
          <span class="badge text-bg-secondary" th:text="${packageDto.miniThree}"></span>
        </div>
-       <button class="btn btn-kong"  style="margin-left: 250px; margin-top: 50px;">
+       <button class="btn btn-kong"  style="margin-left: 220px; margin-top: 50px;">
          <input type="hidden" id="packageNoHeart" name="packageNo" th:value="${packageDto.packageNo}">
         <div id="heartButton" style="color: white; cursor: pointer;">찜하기♥</div>
        </button>
