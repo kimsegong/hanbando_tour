@@ -34,8 +34,8 @@
          NOTICE_SEQ.NEXTVAL 
        , #{title} 
        , #{contents} 
-       , TO_CHAR(SYSDATE, 'YYYY-MM-DD') 
-       , TO_CHAR(SYSDATE, 'YYYY-MM-DD') 
+       , TO_CHAR(SYSDATE, 'YYYY/MM/DD') 
+       , TO_CHAR(SYSDATE, 'YYYY/MM/DD') 
        ) 
    </insert>
    
@@ -50,8 +50,8 @@
   UPDATE NOTICE_T 
      SET TITLE = #{title} 
    , CONTENTS = #{contents} 
-   , CREATED_AT = TO_CHAR(SYSDATE, 'YYYY-MM-DD') 
-   , MODIFIED_AT = TO_CHAR(SYSDATE, 'YYYY-MM-DD') 
+   , CREATED_AT = TO_CHAR(SYSDATE, 'YYYY/MM/DD') 
+   , MODIFIED_AT = TO_CHAR(SYSDATE, 'YYYY/MM/DD') 
   WHERE NOTICE_NO = #{noticeNo} 
   </update>
     
