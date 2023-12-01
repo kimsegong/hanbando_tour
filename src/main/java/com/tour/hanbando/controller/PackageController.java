@@ -101,7 +101,6 @@ public class PackageController {
       model.addAttribute("reserve", reserve);
       model.addAttribute("packageDto", packageDto);
       model.addAttribute("attachList", packageService.getAttachList(request));  
-      System.out.println("7777777777777777777777777777777" + packageService.getAttachList(request));
       return "package/detail";
   }
 
