@@ -45,8 +45,27 @@ public class HotelServiceImpl implements HotelService {
     Map<String, Object> map = Map.of("begin", begin
                                    , "end", end);
               
+    
     List<Integer> hPrice = new ArrayList<>();
-    List<HotelDto> hotelDto = hotelMapper.selectHotelList(map);
+    List<HotelDto> hotelDto = new ArrayList<>();
+    
+    int btnVal = Integer.parseInt(request.getParameter("btnVal"));
+    
+    switch (btnVal) {
+    case 0 : hotelDto = hotelMapper.selectHotelList(map);
+      break;
+    case 1 : hotelDto = hotelMapper.getRecommendHotelList(map);
+      break;
+    case 2 : hotelDto = hotelMapper.getReviewHotelList(map);
+      break;
+    case 3 : 
+      
+      break;
+    case 4 :
+      
+      break;
+    }
+    System.out.println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%" + hotelDto);
     
     if(hotelDto.size() != 0) {
      
@@ -83,7 +102,11 @@ public class HotelServiceImpl implements HotelService {
          price = roompriceDto.get(i).getJunPrice();
         }else if(ssStart <= today && today <= ssEnd) {
          price = roompriceDto.get(i).getSungPrice();
+        } else {
+          price = roompriceDto.get(i).getBiPrice();
         }
+        
+        
         hPrice.add(price);
       }
     } else {
