@@ -41,8 +41,6 @@ public class ReserveController {
   }
   
   
-
-  // 상품상세에서 요청이 올 때 데이터 받아서 저장하기
   @GetMapping("/write.form")
   public String reserve(HttpServletRequest request, Model model) {
     PackageDto pack = packageService.getPackage(Integer.parseInt(request.getParameter("packageNo")));

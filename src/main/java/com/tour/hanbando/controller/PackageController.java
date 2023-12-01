@@ -1,5 +1,6 @@
 package com.tour.hanbando.controller;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -39,6 +40,24 @@ public class PackageController {
   @GetMapping(value="/getList.do", produces="application/json")
   public Map<String, Object> getList(HttpServletRequest request){
     return packageService.getPackageList(request);
+  }  
+  
+  @ResponseBody
+  @GetMapping(value="/getRecommendList.do", produces="application/json")
+  public Map<String, Object> getRecommendList(HttpServletRequest request){
+    return packageService.getPackageRecommendList(request);
+  }  
+  
+  @ResponseBody
+  @GetMapping(value="/getPriceHighList.do", produces="application/json")
+  public Map<String, Object> getPriceHighList(HttpServletRequest request){
+    return packageService.getPackagePriceHighList(request);
+  }  
+  
+  @ResponseBody
+  @GetMapping(value="/getPriceLowList.do", produces="application/json")
+  public Map<String, Object> getPriceLowList(HttpServletRequest request){
+    return packageService.getPackagePriceLowList(request);
   }  
 
   @GetMapping("/write.form")
@@ -144,13 +163,33 @@ public class PackageController {
   public Map<String, Object> addReview(HttpServletRequest request) {
     return packageService.addReview(request);
   }
-  
-  
-  
+  @ResponseBody
+  @PostMapping(value="/getAverageRating.do", produces="application/json")
+  public Map<String, Object> starAverage(@RequestParam(value="packageNo", required=false, defaultValue="0") int packageNo) {
+      Map<String, Object> response = new HashMap<>();
+
+      try {
+          int averageRating = packageService.getAverageRating(packageNo);
+          response.put("success", true);
+          response.put("averageRating", averageRating);
+      } catch (Exception e) {
+          response.put("success", false);
+          response.put("error", "Failed to get average rating.");
+          e.printStackTrace();
+      }
+      return response;
+  }
+
   @ResponseBody
   @GetMapping(value="/reviewList.do", produces="application/json")
-  public Map<String, Object> ReviewList(HttpServletRequest request){
+  public Map<String, Object> reviewList(HttpServletRequest request){
     return packageService.loadReviewList(request);
+  }
+  
+  @ResponseBody
+  @GetMapping(value="/reviewStarList.do", produces="application/json")
+  public Map<String, Object> reviewStarList(HttpServletRequest request){
+    return packageService.loadReviewStarList(request);
   }
   
   @ResponseBody
@@ -158,5 +197,14 @@ public class PackageController {
   public Map<String, Object> removeReview(@RequestParam(value="reviewNo", required=false, defaultValue="0") int reviewNo) {
     return packageService.removeReview(reviewNo);
   }
+  
+  @PostMapping(value="/heartPackage.do" , produces="application/json")
+  public String heart(HttpServletRequest request, RedirectAttributes redirectAttributes) {
+    int heartResult = packageService.addHeart(request);
+    redirectAttributes.addFlashAttribute("heartResult", heartResult);
+    System.out.println("뭔데" + heartResult);
+    return "redirect:/package/detail.do?packageNo=" + request.getParameter("packageNo"); 
+  }
+  
 
 }

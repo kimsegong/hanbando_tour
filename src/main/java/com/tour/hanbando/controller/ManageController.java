@@ -58,8 +58,27 @@ public class ManageController {
   }
   
   /* 기존 회원 비밀번호 수정 폼으로 이동 */
+  @GetMapping("/modifyPw.form")
+  public String modifyPwForm(@RequestParam(value="userNo") int userNo, Model model) {
+    UserDto user = manageService.getUser(userNo);
+    model.addAttribute("user", user);
+    return "manage/modifyUserPw";
+  }
   
   /* 기존 회원 비밀번호 수정하기 */
+  @PostMapping("/modifyUserPw.do")
+  public String modifyUserPw(HttpServletRequest request, RedirectAttributes redirectAttributes) {
+    int modifyPwResult = manageService.modifyPw(request);
+    int userNo = Integer.parseInt(request.getParameter("userNo"));
+    redirectAttributes.addFlashAttribute("modifyPwResult", modifyPwResult);
+    return "redirect:/manage/modifyPw.form?userNo=" + userNo;
+  }
+  
+  /* 기존 회원 찜목록 상세 */
+  @GetMapping("/heartList.do")
+  public String heartList() {
+    return "manage/heartList";
+  }
   
   /* 기존 회원 탈퇴 */
   @PostMapping("/leaveUser.do")
