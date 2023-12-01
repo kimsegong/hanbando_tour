@@ -20,11 +20,11 @@
 		    <div class="col-10" style="border:1px gray dotted">
 		      	<!--/*여기에 작성/ 다 만들고 style 지워주세요  */-->
 		       <div>
-              <h2>예약내역상세</h2>
+              <h2><strong>예약내역상세</strong></h2>
             </div>
             
             <div>
-              <h4>예약자정보</h4>
+              <h4><strong>예약자정보</strong></h4>
             </div>
             <div class="d-grid gap-2 col-8  mx-auto">
               <table class="table">
@@ -57,10 +57,8 @@
             </div>
             
             <div>
-              <h4>예약상품정보</h4>
+              <h4><strong>예약상품정보</strong></h4>
             </div>
-          
-            
             <div class="d-grid gap-2 col-8  mx-auto">
               <table class="table">
                 <colgroup>
@@ -75,8 +73,6 @@
                   <td>여행기간</td>
                   <td th:text="|${reserve.reserveStart} ~ ${reserve.reserveFinish}|"></td>
                 </tr>
-              
-                
                 <tr>
                   <td>총인원</td>
                   <td>
@@ -102,7 +98,6 @@
                     </div>
                   </td>
                 </tr>
-                
                 <tr>
                   <td>출발지</td>
                   <td th:if="${reserve.departureLoc == 'byOwn'}">자차 이용</td>
@@ -116,19 +111,17 @@
                   <td th:if="${reserve.reserveStatus == 1}">예약완료</td>
                   <td th:if="${reserve.reserveStatus == 2}">취소</td>
                 </tr>
-                
                 <tr>
                   <td>주의사항</td>
                   <td th:text="${reserve.packageDto.danger}"></td>
                 </tr>
                 <tr>
                   <td>결제금액</td>
-                  <td th:text="|${reserve.reservePrice}원|"></td>
+                  <td th:utext="|<strong>${reserve.reservePrice}원</strong>|"></td>
                 </tr>
               </table>
             </div>
             
-            <hr>
             <div>
               <form id="frm_btn" method="post">
                 <input type="hidden" name="reserveNo" th:value="${reserve.reserveNo}">
@@ -137,11 +130,18 @@
                 <input type="hidden" name="userMobile" th:value="${reserve.userDto.mobile}">
                 <input type="hidden" name="requestedTerm" th:value="${reserve.requestedTerm}">
                 <input type="hidden" name="departureLoc" th:value="${reserve.departureLoc}">
-                <div th:if="${reserve.reserveStatus == 0}"><button class="btn btn-primary" type="button">결제하기</button></div>
-                <button class="btn btn-success" type="button" th:onclick="|location.href='@{/package/list.do}'|">다른상품 예약하러가기</button>
-                <button type="button" th:onclick="|location.href='@{/reserve/reserveList.do(userNo=${session.user.userNo})}'|" class="btn btn-success">나의예약목록</button>
+                <div th:if="${reserve.reserveStatus == 0}">
+                  <div class="d-grid gap-2 col-5 mx-auto" style="margin: 10px auto 25px;">
+                    <button class="btn btn-primary" type="button">결제하기</button>
+                  </div>
+                </div>
+                <button class="btn btn-success" type="button" th:onclick="|location.href='@{/package/list.do}'|">패키지 예약하러가기</button>
+                <button type="button" th:onclick="|location.href='@{/reserve/reserveList.do(userNo=${session.user.userNo})}'|" class="btn btn-success">나의 예약목록</button>
                 <button th:if="${reserve.reserveStatus != 1}" class="btn btn-outline-secondary" type="button" id="btn_res_modify">예약 수정하러가기</button>
                 <button th:if="${reserve.reserveStatus != 2}" class="btn btn-outline-danger" type="button" id="btn_res_cancel">예약 취소하기</button>
+                <div class="d-grid gap-2 col-5 mx-auto" style="margin: 20px auto 25px;">
+                    <button class="btn btn-success" type="button">호텔 예약하러가기</button>
+                </div>
               </form>
             </div>
             

@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 @Data
 @Builder
 public class RoompriceDto {
+  private int hotelNo;
   private int roomNo;
   private int biPrice; // 0 또는 양수
   private String bsDate; // Nullable
