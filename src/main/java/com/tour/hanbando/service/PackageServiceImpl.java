@@ -1,7 +1,6 @@
 package com.tour.hanbando.service;
 
 import java.io.File;
-import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -34,7 +33,6 @@ import com.tour.hanbando.util.MyPackageUtils;
 import com.tour.hanbando.util.MyPageUtils;
 
 import lombok.RequiredArgsConstructor;
-import net.coobird.thumbnailator.Thumbnails;
 
 @RequiredArgsConstructor
 @Service
@@ -43,9 +41,7 @@ public class PackageServiceImpl implements PackageService {
   private final PackageMapper packageMapper;
   private final MyPageUtils myPageUtils;
   private final MyPackageUtils myPackageUtils;
-  private int addImageResult;
   
-  // 패키지 리스트 불러오기
   @Transactional(readOnly=true)
   @Override
   public Map<String, Object> getPackageList(HttpServletRequest request) {
@@ -55,15 +51,16 @@ public class PackageServiceImpl implements PackageService {
     int display = 9;
     
     myPageUtils.setPaging(page, total, display);
+    String condition = request.getParameter("condition");
     
     Map<String, Object> map = Map.of("begin", myPageUtils.getBegin()
                                    , "end", myPageUtils.getEnd()
-                                   , "condition", request);
+                                   , "condition", condition);
               
     List<PackageDto> packageList = packageMapper.getPackageList(map);
     return Map.of("packageList", packageList
                 , "totalPage", myPageUtils.getTotalPage());
-    
+ 
   }
 
   
@@ -151,7 +148,7 @@ public class PackageServiceImpl implements PackageService {
                       if (!dir.exists()) {
                           dir.mkdirs();
                       }
-
+                      
                       String filesystemName = myPackageUtils.getFilesystemName(multipartFile.getOriginalFilename());
                       String thumbnail = myPackageUtils.getFilesystemName(multipartFile.getOriginalFilename());
                       File file = new File(dir, filesystemName);
