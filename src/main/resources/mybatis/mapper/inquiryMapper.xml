@@ -5,24 +5,34 @@
 
 <mapper namespace="com.tour.hanbando.dao.InquiryMapper">
      <select id="getInquiryList" parameterType="Map" resultType="InquiryDto">
-      SELECT TITLE, CONTENTS, CREATED_AT
+      SELECT INQUIRY_NO, USER_NO, TITLE, CONTENTS, CREATED_AT, SEPARATE
         FROM INQUIRY_T
-       WHERE TITLE=#{title} 
+      
      </select>
 
      <insert id="insertInquiry" parameterType="InquiryDto"> 
       INSERT INTO INQUIRY_T( 
              INQUIRY_NO 
+           , USER_NO  
            , TITLE 
            , CONTENTS 
-           , CREATED_AT) 
-           
+           , CREATED_AT        
+           , SEPARATE   
+           )
            VALUES( 
            INQUIRY_SEQ.NEXTVAL 
+         , 1           
          , #{title} 
          , #{contents} 
          , TO_CHAR(SYSDATE, 'YYYY-MM-DD') 
+         , '여행상품'
          ) 
    </insert>
+   
+   <select id="getInquiry" parameterType="int" resultType="InquiryDto"> 
+    SELECT INQUIRY_NO, USER_NO, TITLE, CONTENTS, CREATED_AT, SEPARATE
+      FROM INQUIRY_T 
+     WHERE INQUIRY_NO= #{inquiryNo} 
+   </select>
 
 </mapper>
