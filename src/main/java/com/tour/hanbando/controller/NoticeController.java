@@ -42,10 +42,9 @@ public class NoticeController {
     return "notice/list";
   }
   
-  
-  @PostMapping("/edit.form")
-  public String edit() {
-    return "notice/edit";
+  @GetMapping("/write.form")
+  public String write() {
+    return "notice/write";
   }
   
   @GetMapping("/detail.do")
@@ -56,12 +55,25 @@ public class NoticeController {
     return "notice/detail";
   }
   
-  @GetMapping("/write.form")
-  public String write() {
-    return "notice/write";
+  @PostMapping("/modifyNotice.do")
+  public String modifyNotice(HttpServletRequest request, RedirectAttributes redirectAttributes) {
+    int modifyResult = noticeService.modifyNotice(request);
+    redirectAttributes.addFlashAttribute("modifyResult", modifyResult);
+    return "redirect:/notice/detail.do?noticeNo=" + request.getParameter("noticeNo");
   }
-
   
+  @PostMapping("/edit.form")
+  public String edit() {
+    return "notice/edit";
+  }
   
+  @PostMapping("/remove.do")
+  public String remove(@RequestParam(value="noticeNo", required=false, defaultValue="0") int noticeNo
+                     , RedirectAttributes redirectAttributes) {
+    int removeResult = noticeService.removeNotice(noticeNo);
+    redirectAttributes.addFlashAttribute("removeResult", removeResult);
+    return "redirect:/notice/list.do";
+  
+ }
   
 }
