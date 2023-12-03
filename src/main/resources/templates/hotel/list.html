@@ -70,20 +70,17 @@
     var page = 1;
     var totalPage = 0;
   
-    var btnVal=0;
-    $('.btn-outline-kong').click(function(){
-      btnVal = $(this).val();
-      page = 1;
-      totalPage = 0;
-      $('#hotel_list').empty();
-      fnGetHotelList(btnVal);
-      fnScroll(btnVal);
-    })  
-    if(btnVal == 0){
-      $(document).ready(() => {
-        fnGetHotelList(btnVal);
-        //fnScroll(btnVal);
-      })  }
+    
+		var btnVal=0;
+		$(document).ready(function(){
+			///fnGetHotelList(btnVal);
+  		//fnScroll(btnVal);
+  		
+		});    
+		
+   
+      
+    
   
       const fnGetHotelList = (btnVal) => {
       $.ajax({
@@ -118,7 +115,7 @@
           console.error('Ajax 요청 에러:', error);
         }
       });
-    };
+    }
          
      const fnScroll = (btnVal) => {
         var timerId;  // 최초 undefined 상태
@@ -137,9 +134,20 @@
                 page++;
                 fnGetHotelList(btnVal);
               }
-          }, 200);  // 200밀리초(0.2초) 후 동작(시간은 임의로 조정 가능함)
+          }, 200);  // 200밀리초(0.2초) 후 동작(시간은 임의로 조정 가능함) throtting 기법 마지막함수가 실행하고 일정 시간동안 작동 안함
         })
     }
+    
+     $('.btn-outline-kong').click(function(){
+      btnVal = $(this).val();
+      page = 1;
+      totalPage = 0;
+      $('#hotel_list').empty();      
+      
+    });  
+    	fnGetHotelList(btnVal);
+    	fnScroll(btnVal);
+    
   </script>
 
 
