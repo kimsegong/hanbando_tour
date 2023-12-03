@@ -74,154 +74,44 @@
     // 전역 변수
     var page = 1;
     var totalPage = 0;
-  
+    
     const fnGetPackageList = () => {
-      $.ajax({
-        type: 'get',
-        url: '/package/getList.do', 
-        data: 'page=' + page,
-        dataType: 'json',
-        success: (resData) => {  
-          totalPage = resData.totalPage;        
-          if (resData.packageList != null && resData.packageList.length > 0) {
-            $.each(resData.packageList, (i, package) => {          
-              let str = '<div class="col-md-4">';
-              str += '<div class="card">';
-              str += '<img src="https://github.com/skal48/portfolio/blob/main/hanla.jpg?raw=true" style="height: 150px;" class="card-img-top" alt="Package Image">';
-              str += '<div class="card-body">';
-              str += '<p class="card-title">' + package.packageTitle + '</p>';
-              str += '<p class="card-text"></p>';
-              str += '<a href="' + '/package/increseHit.do?packageNo=' + package.packageNo + '" class="btn btn-kong">여행가기</a>';           
-              str += '</div>';
-              str += '</div>';
-              str += '</div>';
-              $('#package_list').append(str);
-            });
-          } else {
-            console.log('데이터가 없습니다.');
-          }
-        },
-        error: (error) => {
-          console.error('Ajax 요청 에러:', error);
-        }
-      });
-      
-    };
-    
-    const fnNew = () => {
-      
-    $('#new').click(() => {
-        $('#package_list').empty();
-        fnGetPackageList();
-    })
+  $.ajax({
+    type: 'get',
+    url: '/package/getList.do',
+    data: {
+      page: page,
+    },
+    dataType: 'json',
+    success: (resData) => {
+      totalPage = resData.totalPage;
+      if (resData.packageList != null && resData.packageList.length > 0) {
+        $.each(resData.packageList, (i, package) => {
+          let str = '<div class="col-md-4">';
+          str += '<div class="card">';
+          str += '<img src="'+ package.productImageDto.imagePath +'/'+ package.productImageDto.thumbnail +'" style="height: 150px;" class="card-img-top" alt="Package Image">';
+          str += '<div class="card-body">';
+          str += '<p class="card-title">' + package.packageTitle + '</p>';
+          str += '<p class="card-text"></p>';
+          str += '<a href="' + '/package/increseHit.do?packageNo=' + package.packageNo + '" class="btn btn-kong">여행가기</a>';
+          str += '</div>';
+          str += '</div>';
+          str += '</div>';
+          $('#package_list').append(str);
+        });
+      } else {
+        console.log('데이터가 없습니다.');
       }
-    
+    },
+    error: (error) => {
+      console.error('Ajax 요청 에러:', error);
+    }
+  });
+};
 
-    $('#recommend').on('click', function () {
-      $.ajax({
-          type: 'get',
-          url: '/package/getRecommendList.do',
-          data: 'page=' + page,
-          dataType: 'json',
-          success: (resData) => {
-              totalPage = resData.totalPage;
-              if (resData.packageRecommendList != null && resData.packageRecommendList.length > 0) {
-                  $('#package_list').empty();
-                  $.each(resData.packageRecommendList, (i, package) => {
-                      let str = '<div class="col-md-4">';
-                      str += '<div class="card">';
-                      str += '<img src="https://github.com/skal48/portfolio/blob/main/hanla.jpg?raw=true" style="height: 150px;" class="card-img-top" alt="Product Image">';
-                      str += '<div class="card-body">';
-                      str += '<p class="card-title">' + package.packageTitle + '</p>';
-                      str += '<p class="card-text"></p>';
-                      str += '<a href="' + '/package/increseHit.do?packageNo=' + package.packageNo + '" class="btn btn-kong">상세보기</a>';
-                      str += '</div>';
-                      str += '</div>';
-                      str += '</div>';
-                      $('#package_list').append(str);
-                  });
-              } else {
-                  console.log('데이터가 없습니다.');
-              }
-          },
-          error: (error) => {
-              console.error('Ajax 요청 에러:', error);
-          }
-      });
-  });
-  
-    $('#priceHigh').on('click', function () {
-      $.ajax({
-          type: 'get',
-          url: '/package/getPriceHighList.do',
-          data: 'page=' + page,
-          dataType: 'json',
-          success: (resData) => {
-              totalPage = resData.totalPage;
-              if (resData.packagePriceHighList != null && resData.packagePriceHighList.length > 0) {
-                  // #package_list의 내용을 새로 가져온 데이터로 대체
-                  $('#package_list').empty();
-                  $.each(resData.packagePriceHighList, (i, package) => {
-                      let str = '<div class="col-md-4">';
-                      str += '<div class="card">';
-                      str += '<img src="https://github.com/skal48/portfolio/blob/main/hanla.jpg?raw=true" style="height: 150px;" class="card-img-top" alt="Product Image">';
-                      str += '<div class="card-body">';
-                      str += '<p class="card-title">' + package.packageTitle + '</p>';
-                      str += '<p class="card-text"></p>';
-                      str += '<a href="' + '/package/increseHit.do?packageNo=' + package.packageNo + '" class="btn btn-kong">상세보기</a>';
-                      str += '</div>';
-                      str += '</div>';
-                      str += '</div>';
-                      $('#package_list').append(str);
-                  });
-              } else {
-                  console.log('데이터가 없습니다.');
-              }
-          },
-          error: (error) => {
-              console.error('Ajax 요청 에러:', error);
-          }
-      });
-  });
-  
-  
-    $('#priceLow').on('click', function () {
-      $.ajax({
-          type: 'get',
-          url: '/package/getPriceLowList.do',
-          data: 'page=' + page,
-          dataType: 'json',
-          success: (resData) => {
-              totalPage = resData.totalPage;
-              if (resData.packagePriceLowList != null && resData.packagePriceLowList.length > 0) {
-                  // #package_list의 내용을 새로 가져온 데이터로 대체
-                  $('#package_list').empty();
-                  $.each(resData.packagePriceLowList, (i, package) => {
-                      let str = '<div class="col-md-4">';
-                      str += '<div class="card">';
-                      str += '<img src="https://github.com/skal48/portfolio/blob/main/hanla.jpg?raw=true" style="height: 150px;" class="card-img-top" alt="Product Image">';
-                      str += '<div class="card-body card-font">';
-                      str += '<p class="card-title">' + package.packageTitle + '</p>';
-                      str += '<p class="card-text"></p>';
-                      str += '<a href="' + '/package/increseHit.do?packageNo=' + package.packageNo + '" class="btn btn-kong">상세보기</a>';
-                      str += '</div>';
-                      str += '</div>';
-                      str += '</div>';
-                      $('#package_list').append(str);
-                  });
-              } else {
-                  console.log('데이터가 없습니다.');
-              }
-          },
-          error: (error) => {
-              console.error('Ajax 요청 에러:', error);
-          }
-      });
-  });
-  
-    
-    
-     const fnScroll = () => {
+
+
+    const fnScroll = () => {
         var timerId;  // 최초 undefined 상태
         $(window).on('scroll', () => {
           if(timerId) {  // timerId가 undefined이면 false로 인식, timerId가 값을 가지면 true로 인식
@@ -241,12 +131,12 @@
           }, 200);  // 200밀리초(0.2초) 후 동작(시간은 임의로 조정 가능함)
         })
     }
+
   
       
     fnGetPackageList();
-    fnNew();
     fnScroll();
-  
+ 
   </script>
 
 

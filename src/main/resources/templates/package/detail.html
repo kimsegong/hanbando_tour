@@ -59,6 +59,10 @@
     width: 80%;
     margin: auto;
  }
+ img {
+  max-width: 100%;
+  height: auto;
+ }
 </style>
 <body>
   
@@ -98,14 +102,8 @@
         <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
       </div>
       <div class="carousel-inner">
-        <div class="carousel-item active">
-          <img src="https://github.com/skal48/portfolio/blob/main/hanla.jpg?raw=true" class="d-block w-100" alt="...">
-        </div>
-        <div class="carousel-item">
-          <img src="https://github.com/skal48/portfolio/blob/main/hanla.jpg?raw=true" class="d-block w-100" alt="...">
-        </div>
-        <div class="carousel-item">
-          <img src="https://github.com/skal48/portfolio/blob/main/hanla.jpg?raw=true" class="d-block w-100" alt="...">
+        <div th:each="atc : ${attachList.attachList}">
+            <img th:src="@{|${atc.imagePath}/${atc.filesystemName}|}"  class="d-block w-100" alt="image">
         </div>
       </div>
       <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
