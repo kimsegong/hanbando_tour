@@ -1,5 +1,7 @@
 package com.tour.hanbando.controller;
 
+import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.stereotype.Controller;
@@ -8,6 +10,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.tour.hanbando.dto.NoticeDto;
@@ -42,10 +46,9 @@ public class NoticeController {
     return "notice/list";
   }
   
-  
-  @PostMapping("/edit.form")
-  public String edit() {
-    return "notice/edit";
+  @GetMapping("/write.form")
+  public String write() {
+    return "notice/write";
   }
   
   @GetMapping("/detail.do")
@@ -56,12 +59,31 @@ public class NoticeController {
     return "notice/detail";
   }
   
-  @GetMapping("/write.form")
-  public String write() {
-    return "notice/write";
+  @PostMapping("/modifyNotice.do")
+  public String modifyNotice(HttpServletRequest request, RedirectAttributes redirectAttributes) {
+    int modifyResult = noticeService.modifyNotice(request);
+    redirectAttributes.addFlashAttribute("modifyResult", modifyResult);
+    return "redirect:/notice/detail.do?noticeNo=" + request.getParameter("noticeNo");
   }
-
   
+  @PostMapping("/edit.form")
+  public String edit() {
+    return "notice/edit";
+  }
   
+  @PostMapping("/remove.do")
+  public String remove(@RequestParam(value="noticeNo", required=false, defaultValue="0") int noticeNo
+                     , RedirectAttributes redirectAttributes) {
+    int removeResult = noticeService.removeNotice(noticeNo);
+    redirectAttributes.addFlashAttribute("removeResult", removeResult);
+    return "redirect:/notice/list.do";
+  
+ }
+  
+  @ResponseBody
+  @PostMapping(value="/imageUpload.do", produces="application/json")
+  public Map<String, Object> imageUpload(MultipartHttpServletRequest multipartRequest) {
+    return noticeService.imageUpload(multipartRequest);
+  }
   
 }

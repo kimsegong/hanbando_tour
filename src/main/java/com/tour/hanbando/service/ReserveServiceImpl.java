@@ -6,12 +6,15 @@ import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 
 import com.tour.hanbando.dao.ReserveMapper;
 import com.tour.hanbando.dto.PackageDto;
+import com.tour.hanbando.dto.PaymentDto;
 import com.tour.hanbando.dto.ReserveDto;
 import com.tour.hanbando.dto.TouristDto;
 import com.tour.hanbando.dto.UserDto;
@@ -121,7 +124,49 @@ public class ReserveServiceImpl implements ReserveService {
     return result;
   }
   
-  
+  @Override
+  public Map<String, Object> addPayment(HttpServletRequest request, PaymentDto payment, int reserveNo) {
+    System.out.println("===============================addPayment 서비스 시작================================");
+    System.out.println(reserveNo + ", " + payment.toString());
+    String errorMsg = null;
+    if(payment.getErrorMsg() == null) {
+      errorMsg = "";
+    } else {
+      errorMsg = payment.getErrorMsg();
+    }
+    String impUid = payment.getImpUid();
+    String payYn = payment.getPayYn();
+    String payMethod = payment.getPayMethod();
+    int paidAmount = payment.getPaidAmount();
+    String paidAt = payment.getPaidAt();
+    String buyerName = payment.getBuyerName();
+    String buyerEmail = payment.getBuyerEmail();
+    String payStatus = payment.getPayStatus();
+    String merchantUid = payment.getMerchantUid();
+    int reserveNo1 = reserveNo;
+    System.out.println("===============================PaymentDto build 준비완료================================");
+    
+    PaymentDto paymentDto = PaymentDto.builder()
+                            .impUid(impUid)
+                            .payYn(payYn)
+                            .payMethod(payMethod)
+                            .paidAmount(paidAmount)
+                            .paidAt(paidAt)
+                            .buyerName(buyerName)
+                            .buyerEmail(buyerEmail)
+                            .errorMsg(errorMsg)
+                            .payStatus(payStatus)
+                            .merchantUid(merchantUid)
+                            .reserveDto(ReserveDto.builder()
+                                                .reserveNo(reserveNo1)
+                                                .build())
+                            .build();
+    
+    int addPaymentResult = reserveMapper.insertPayment(paymentDto);
+    
+    System.out.println("===============================addPayment 서비스 리턴 직전================================");
+    return Map.of("addPaymentResult", addPaymentResult);
+  }
   
   @Transactional(readOnly=true)
   @Override

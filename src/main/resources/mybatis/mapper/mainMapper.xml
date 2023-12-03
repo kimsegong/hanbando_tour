@@ -174,7 +174,7 @@
     SELECT P.PACKAGE_NO, P.PACKAGE_TITLE, P.PRICE, T.THEME_NO, T.THEME_NAME  
       FROM PACKAGE_T P LEFT OUTER JOIN THEME_T T
         ON P.THEME_NO = T.THEME_NO
-     WHERE T.THEME_NO = #{themeNo}     
+     WHERE T.THEME_NO = #{themeNo} AND (ROWNUM BETWEEN 1 AND 4)    
   </select>
 	
 	<select id="getBannerImage" resultType="BannerImageDto">
@@ -202,6 +202,7 @@
       SET LINKED_ADDRESS = #{linkedAddress}
     WHERE BANNER_NO = #{bannerNo}     
  </update>
+
  
 </mapper>
 
