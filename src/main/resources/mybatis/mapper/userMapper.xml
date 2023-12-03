@@ -95,14 +95,14 @@
   </update>
 
   <insert id="insertLeaveUser" parameterType="UserDto">
-    INSERT INTO LEAVE_USER_T (
+       INSERT INTO LEAVE_USER_T (
         EMAIL
       , JOINED_AT
       , LEAVED_AT
     ) VALUES (
         #{email}
       , #{joinedAt}
-      , SYSDATE
+      , TO_CHAR(SYSDATE,'YYYY/MM/DD')
     ) 
   </insert>
   
