@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.ui.Model;
 
 import com.tour.hanbando.dao.HotelMapper;
 import com.tour.hanbando.dto.HotelDto;
@@ -27,7 +28,7 @@ public class HotelServiceImpl implements HotelService {
   private final HotelMapper hotelMapper;
   private final MyPageUtils myPageUtils;
   
-  
+  @Transactional(readOnly = true)
   @Override
   public Map<String, Object> getHotelList(HttpServletRequest request) {
     
@@ -41,15 +42,16 @@ public class HotelServiceImpl implements HotelService {
     int end = myPageUtils.getEnd();
     int begin = myPageUtils.getBegin();
     
+    int btnVal = Integer.parseInt(request.getParameter("btnVal"));
     
     Map<String, Object> map = Map.of("begin", begin
-                                   , "end", end);
+                                   , "end", end
+                                   , "btnVal", btnVal);
               
     
     List<Integer> hPrice = new ArrayList<>();
     List<HotelDto> hotelDto = new ArrayList<>();
     
-    int btnVal = Integer.parseInt(request.getParameter("btnVal"));
     
     switch (btnVal) {
     case 0 : hotelDto = hotelMapper.selectHotelList(map);
@@ -58,11 +60,9 @@ public class HotelServiceImpl implements HotelService {
       break;
     case 2 : hotelDto = hotelMapper.getReviewHotelList(map);
       break;
-    case 3 : 
-      
+    case 3 : hotelDto = hotelMapper.getPriceHotelList(map);
       break;
-    case 4 :
-      
+    case 4 :hotelDto = hotelMapper.getPriceHotelList(map);
       break;
     }
     System.out.println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%" + hotelDto);
@@ -121,15 +121,15 @@ public class HotelServiceImpl implements HotelService {
     
     return hotel;
   }
-
-  @Override
-  public Map<String, Object> getSortedHotelList(HttpServletRequest request) {
-    
-    return null;
-  }  
   
   @Override
   public int increseHit(int hotelNo) {
     return hotelMapper.hotelHit(hotelNo);
   }
+  
+  @Override
+  public void regionList(Model model) {
+    model.addAttribute("region", hotelMapper.getRegion());
+  }
+  
 }
