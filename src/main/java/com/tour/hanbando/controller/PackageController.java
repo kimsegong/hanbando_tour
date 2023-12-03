@@ -38,8 +38,9 @@ public class PackageController {
   
   @ResponseBody
   @GetMapping(value="/getList.do", produces="application/json")
-  public Map<String, Object> getList(HttpServletRequest request){
-    return packageService.getPackageList(request);
+  public Map<String, Object> getList(@RequestParam(value = "condition", required = false, defaultValue = "defaultCondition") String condition, 
+		  @RequestParam(value = "recommendStatus", required = false, defaultValue = "0") int recommendStatus , HttpServletRequest request){	
+	  return packageService.getPackageList(request, condition, recommendStatus);
   }  
   
   @GetMapping("/write.form")
@@ -68,11 +69,24 @@ public class PackageController {
     return "package/themeWrite"; 
   }
   
+  
   @PostMapping("/add.do")
   public String add(MultipartHttpServletRequest multipartRequest, RedirectAttributes redirectAttributes) throws Exception {
-      boolean addResult = packageService.addPackage(multipartRequest);
-      redirectAttributes.addFlashAttribute("addResult", addResult);
-      return "redirect:/package/list.do";
+      redirectAttributes.addFlashAttribute("map", packageService.addPackage(multipartRequest));
+      return "redirect:/package/thumbnail.do";
+  }
+
+  
+  @GetMapping("/thumbnail.do")
+  public String thumbnailWrite() {
+	  return "package/thumbnail"; 
+  }
+  
+  @PostMapping("/addThumbnail.do")
+  public String addThumbnail(MultipartHttpServletRequest multipartRequest, RedirectAttributes redirectAttributes) throws Exception {
+	  boolean addResult = packageService.addThumbnail(multipartRequest);
+	  redirectAttributes.addFlashAttribute("addResult", addResult);
+	  return "redirect:/package/list.do";
   }
   
   @PostMapping("/addRegion.do")

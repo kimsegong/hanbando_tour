@@ -1,6 +1,8 @@
 package com.tour.hanbando.service;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -33,6 +35,7 @@ import com.tour.hanbando.util.MyPackageUtils;
 import com.tour.hanbando.util.MyPageUtils;
 
 import lombok.RequiredArgsConstructor;
+import net.coobird.thumbnailator.Thumbnails;
 
 @RequiredArgsConstructor
 @Service
@@ -44,27 +47,29 @@ public class PackageServiceImpl implements PackageService {
   
   @Transactional(readOnly=true)
   @Override
-  public Map<String, Object> getPackageList(HttpServletRequest request) {
-    Optional<String> opt = Optional.ofNullable(request.getParameter("page"));
-    int page = Integer.parseInt(opt.orElse("1"));
-    int total = packageMapper.getPackageCount();
-    int display = 9;
-    
-    myPageUtils.setPaging(page, total, display);
-    String condition = request.getParameter("condition");
-    
-    Map<String, Object> map = Map.of("begin", myPageUtils.getBegin()
-                                   , "end", myPageUtils.getEnd()
-                                   , "condition", condition);
-              
-    List<PackageDto> packageList = packageMapper.getPackageList(map);
-    return Map.of("packageList", packageList
-                , "totalPage", myPageUtils.getTotalPage());
- 
-  }
+  public Map<String, Object> getPackageList(HttpServletRequest request, String condition, int recommendStatus) {
+	  Optional<String> optPage = Optional.ofNullable(request.getParameter("page"));
+	    int page = Integer.parseInt(optPage.orElse("1"));
+	    int total = packageMapper.getPackageCount();
+	    int display = 9;
 
+	    myPageUtils.setPaging(page, total, display);
+
+	    Map<String, Object> map = Map.of(
+	        "begin", myPageUtils.getBegin(),
+	        "end", myPageUtils.getEnd(),
+	        "condition", condition,
+	        "recommendStatus", recommendStatus
+	    );
+	    List<PackageDto> packageList = packageMapper.getPackageList(map);
+	    
+	    return Map.of(
+	        "packageList", packageList,
+	        "totalPage", myPageUtils.getTotalPage()
+	    );
+	}
   
-  // 패키지의 이미지 추가하기
+  // 패키지의 ck이미지 추가하기
   @Transactional(readOnly=true)
   @Override
   public List<String> getEditorImageList(String packageContents) {
@@ -90,89 +95,168 @@ public class PackageServiceImpl implements PackageService {
     public int getTotalPackageCount() {
         return packageMapper.getPackageCount();
     }
-  
-  // 패키지 추가하기
-  @Override
-  public boolean addPackage(MultipartHttpServletRequest multipartRequest) throws Exception {
-      String packageContents = multipartRequest.getParameter("packageContents");
-      int regionNo = Integer.parseInt(multipartRequest.getParameter("regionNo"));
-      int themeNo = Integer.parseInt(multipartRequest.getParameter("themeNo"));   
-      int userNo = Integer.parseInt(multipartRequest.getParameter("userNo"));
+    
+ // 패키지 추가하기
+    @Override
+    public Map<String, Object> addPackage(MultipartHttpServletRequest multipartRequest) {
+        Map<String, Object> result = new HashMap<>();
 
-          // PackageDto 생성
-          PackageDto packageDto = PackageDto.builder()
-              .userDto(UserDto.builder()
-                            .userNo(userNo)
-                            .build())
-                  .regionDto(RegionDto.builder().regionNo(regionNo).build())
-                  .themeDto(ThemeDto.builder().themeNo(themeNo).build())
-                  .packageTitle(multipartRequest.getParameter("packageTitle"))
-                  .miniOne(multipartRequest.getParameter("miniOne"))
-                  .miniTwo(multipartRequest.getParameter("miniTwo"))
-                  .miniThree(multipartRequest.getParameter("miniThree"))
-                  .packagePlan(multipartRequest.getParameter("packagePlan"))
-                  .packageContents(packageContents)                  
-                  .hotelContents(multipartRequest.getParameter("hotelContents"))
-                  .price(Integer.parseInt(multipartRequest.getParameter("price")))
-                  .danger(multipartRequest.getParameter("danger"))
-                  .maxPeople(Integer.parseInt(multipartRequest.getParameter("maxPeople")))
-                  .recommendStatus(Integer.parseInt(multipartRequest.getParameter("recommendStatus")))
-                  .build();
+        String packageContents = multipartRequest.getParameter("packageContents");
+        int regionNo = Integer.parseInt(multipartRequest.getParameter("regionNo"));
+        int themeNo = Integer.parseInt(multipartRequest.getParameter("themeNo"));   
+        int userNo = Integer.parseInt(multipartRequest.getParameter("userNo"));
 
-          int addResult = packageMapper.insertPackage(packageDto);
-          // CKEditor 이미지 처리
-          List<String> editorImages = getEditorImageList(packageContents);
-          for (String editorImage : editorImages) {
+        // PackageDto 생성
+        PackageDto packageDto = PackageDto.builder()
+                .userDto(UserDto.builder().userNo(userNo).build())
+                .regionDto(RegionDto.builder().regionNo(regionNo).build())
+                .themeDto(ThemeDto.builder().themeNo(themeNo).build())
+                .packageTitle(multipartRequest.getParameter("packageTitle"))
+                .miniOne(multipartRequest.getParameter("miniOne"))
+                .miniTwo(multipartRequest.getParameter("miniTwo"))
+                .miniThree(multipartRequest.getParameter("miniThree"))
+                .packagePlan(multipartRequest.getParameter("packagePlan"))
+                .packageContents(packageContents)                  
+                .hotelContents(multipartRequest.getParameter("hotelContents"))
+                .price(Integer.parseInt(multipartRequest.getParameter("price")))
+                .danger(multipartRequest.getParameter("danger"))
+                .maxPeople(Integer.parseInt(multipartRequest.getParameter("maxPeople")))
+                .recommendStatus(Integer.parseInt(multipartRequest.getParameter("recommendStatus")))
+                .build();
+
+        int addResult = packageMapper.insertPackage(packageDto);
+
+        // CKEditor 이미지 처리
+        List<String> editorImages = getEditorImageList(packageContents);
+        for (String editorImage : editorImages) {
             ProductImageDto packageImage = ProductImageDto.builder()                      
-                      .packageNo(packageDto.getPackageNo())
-                      .filesystemName(editorImage)
-                      .imagePath(myPackageUtils.getPackageImagePath())                      
-                      .build();
-              packageMapper.insertPackageImage(packageImage);
-          }
+                    .packageNo(packageDto.getPackageNo())
+                    .filesystemName(editorImage)
+                    .imagePath(myPackageUtils.getPackageImagePath())                      
+                    .build();
+            packageMapper.insertPackageImage(packageImage);
+        }
+
+        // 파일 업로드 및 이미지 처리
+        List<MultipartFile> files = multipartRequest.getFiles("files");
+
+        int attachCount;
+        if (files.get(0).getSize() == 0) {
+            attachCount = 1;
+        } else {
+            attachCount = 0;
+        }              
+
+        for (MultipartFile multipartFile : files) {
+            if (multipartFile != null && !multipartFile.isEmpty()) {
+                try {
+                    String path = myPackageUtils.getUploadPath();
+                    File dir = new File(path);
+                    if (!dir.exists()) {
+                        dir.mkdirs();
+                    }
+
+                    String filesystemName = myPackageUtils.getFilesystemName(multipartFile.getOriginalFilename());
+                    File file = new File(dir, filesystemName);
+
+                    multipartFile.transferTo(file);
+
+                    // 변수 초기화
+                    ProductImageDto attach = ProductImageDto.builder()
+                            .packageNo(packageDto.getPackageNo())
+                            .filesystemName(filesystemName)
+                            .imagePath(path)
+                            .build();
+
+                    // 이미지 추가 결과 저장
+                    attachCount += packageMapper.insertImageList(attach);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    throw new RuntimeException("이미지 업로드에 실패했습니다.");
+                }
+            }
+        }
+
+        // 성공 시 패키지 번호를 Map에 추가
+        if (addResult == 1 && files.size() == attachCount) {
+            result.put("success", true);
+            result.put("packageNo", packageDto.getPackageNo());
+        } else {
+            result.put("success", false);
+            result.put("message", "패키지 추가에 실패했습니다.");
+        }
+
+        return result;
+    }
+
+
+  
+  @Override
+  public boolean addThumbnail(MultipartHttpServletRequest multipartRequest) throws Exception{
+    
+    String packageTitle = multipartRequest.getParameter("packageTitle");
+    int packageNo = Integer.parseInt(multipartRequest.getParameter("packageNo")); 
+    
+    PackageDto packageDto = PackageDto.builder()
+                                    .packageNo(packageNo)
+                                    .packageTitle(packageTitle)
+                                    .build();
+    
+    int updateResult = packageMapper.insertPackageTh(packageDto);
+    
+    List<MultipartFile> thumbnailFiles = multipartRequest.getFiles("thumbnailFiles");
+    
+    int attachCount;
+    if(thumbnailFiles.get(0).getSize() == 0) {
+      attachCount = 1;
+    } else {
+      attachCount = 0;
+    }
+    
+    for(MultipartFile multipartFile : thumbnailFiles) {
       
-              // 파일 업로드 및 이미지 처리
-              List<MultipartFile> files = multipartRequest.getFiles("files");
-                           
-              int attachCount;
-              if(files.get(0).getSize() == 0) {
-                attachCount = 1;
-              } else {
-                attachCount = 0;
-              }              
-
-              for (MultipartFile multipartFile : files) {
-                  if (multipartFile != null && !multipartFile.isEmpty()) {
-                      String path = myPackageUtils.getUploadPath();
-                      File dir = new File(path);
-                      if (!dir.exists()) {
-                          dir.mkdirs();
-                      }
+      if(multipartFile != null && !multipartFile.isEmpty()) {
+        
+        String path = myPackageUtils.getUploadPath();
+        File dir = new File(path);
+        if(!dir.exists()) {
+          dir.mkdirs();
+        }
+        
+        String filesystemName = myPackageUtils.getFilesystemName(multipartFile.getOriginalFilename());
+        File file = new File(dir, filesystemName);
+        
+        multipartFile.transferTo(file);
+                     
+        String contentType = Files.probeContentType(file.toPath());  // 이미지의 Content-Type은 image/jpeg, image/png 등 image로 시작한다.
+        int hasthumbnail = (contentType != null && contentType.startsWith("image")) ? 1 : 0;
+        
+        if(hasthumbnail == 1) {
+          File thumbnail = new File(dir, "s_" + filesystemName);  
+          Thumbnails.of(file)
+                    .size(100, 100)     
+                    .toFile(thumbnail);
+        }
+                
+        ProductImageDto packageImage = ProductImageDto.builder()
+            .packageNo(packageNo)
+            .filesystemName(filesystemName)
+            .imagePath(path)
+            .thumbnail(hasthumbnail)
+            .build();
                       
-                      String filesystemName = myPackageUtils.getFilesystemName(multipartFile.getOriginalFilename());
-                      String thumbnail = myPackageUtils.getFilesystemName(multipartFile.getOriginalFilename());
-                      File file = new File(dir, filesystemName);
+        attachCount += packageMapper.insertImageList(packageImage);
+        
+        }  // if
+        
+        }  // for
+        return (updateResult == 1) && (thumbnailFiles.size() == attachCount);
+                
 
-                      multipartFile.transferTo(file);
+  }
+  
 
-                      // 변수 초기화
-                      ProductImageDto attach = ProductImageDto.builder()
-                              .packageNo(packageDto.getPackageNo())
-                              .filesystemName(filesystemName)
-                              .thumbnail(thumbnail)
-                              .imagePath(path)
-                              .build();
-
-                      // 이미지 추가 결과 저장
-                      attachCount += packageMapper.insertImageList(attach);
-                  }
-              }         
-
-          // 성공 시 1, 실패 시 0 반환
-          return (addResult == 1) && (files.size() == attachCount);
-      }
-
-    // 지역/테마 넣기
+  // 지역/테마 넣기
   @Override
   public int addRegion(HttpServletRequest request) {
         String regionName = request.getParameter("regionName");
@@ -239,7 +323,6 @@ public class PackageServiceImpl implements PackageService {
     @Override
     public int modifyPackage(HttpServletRequest request) {
               
-        // 수정할 제목/내용/블로그번호
         int packageNo = Integer.parseInt(request.getParameter("packageNo"));
         int regionNo = Integer.parseInt(request.getParameter("regionNo"));
         int themeNo = Integer.parseInt(request.getParameter("themeNo"));
@@ -302,6 +385,7 @@ public class PackageServiceImpl implements PackageService {
         
     } 
     
+    
     @Override
     public Map<String, Object> getAttachList(HttpServletRequest request) {
       
@@ -309,7 +393,7 @@ public class PackageServiceImpl implements PackageService {
       int packageNo = Integer.parseInt(opt.orElse("0"));
       
       return Map.of("attachList", packageMapper.getPackageImageList(packageNo));
-      
+     
     }   
     
     @Override
@@ -368,6 +452,7 @@ public class PackageServiceImpl implements PackageService {
         model.addAttribute("regionList", regionList);
         model.addAttribute("themeList", themeList);
     }
+     
     
     // 패키지 삭제
     @Override
@@ -492,7 +577,6 @@ public class PackageServiceImpl implements PackageService {
                           .build())
               .userNo(userNo)
                   .build();
-      System.out.println(heart);
     return packageMapper.heartProduct(heart);
     }
     
