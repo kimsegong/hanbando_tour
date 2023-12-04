@@ -6,6 +6,7 @@ import java.util.Map;
 import org.apache.ibatis.annotations.Mapper;
 
 import com.tour.hanbando.dto.HotelDto;
+import com.tour.hanbando.dto.RegionDto;
 import com.tour.hanbando.dto.RoompriceDto;
 
 @Mapper
@@ -16,5 +17,8 @@ public interface HotelMapper {
   public int hotelHit(int hotelNo);
   public List<HotelDto> getReviewHotelList(Map<String, Object> map);
   public List<HotelDto> getRecommendHotelList(Map<String, Object> map);
-  
+  public List<HotelDto> getPriceHotelList(Map<String, Object> map);
+  public List<RegionDto> getRegion();
+  public int getHotelNo();
+  public int getRoomNo();
 }

@@ -7,19 +7,24 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.tour.hanbando.service.HotelService;
 
 import lombok.RequiredArgsConstructor;
+import retrofit2.http.GET;
 
 @RequestMapping("/hotel")
 @RequiredArgsConstructor
 @Controller
 public class HotelController {
   private final HotelService hotelService;
+  
   
  /*************************** 리스트 ***************************************************/
   
@@ -32,7 +37,6 @@ public class HotelController {
   @GetMapping("getList.do")
   public Map<String, Object> getHotelist(HttpServletRequest request){
     
-    System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"+hotelService.getHotelList(request));
     return hotelService.getHotelList(request);
   }
   
@@ -50,13 +54,29 @@ public class HotelController {
   public String hotelDetail(
       @RequestParam(value = "packageNo", required = false, defaultValue = "0") int hotelNo, 
       HttpServletRequest request, Model model) {
-    
    return "hotel/detail";
   } 
   
   /*************************** 작성 ***************************************************/  
   @GetMapping("write.form")
-  public String write() {
+  public String write(Model model) {
+    hotelService.regionList(model);
+    hotelService.makeHotelNo(model);
     return "hotel/write";
   }
+  
+  @PostMapping("addHotel.do")
+  public String writeHotel(MultipartHttpServletRequest multipartHttpServletRequest, RedirectAttributes redirectAttributes) {
+    return "redirect:/hotel/list.do";
+  }
+  
+  @GetMapping("addRoom.form")
+  public String HotelRoom(HttpServletRequest request, Model model) {
+    hotelService.makeRoomNo(model);
+    return "hotel/hotelRoom";  
+  }
+  
+  @PostMapping("addRoom.do")
+  public void writeRoom(MultipartHttpServletRequest multipartHttpServletRequest) {}
+  
 }
