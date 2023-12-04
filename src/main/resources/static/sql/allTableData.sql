@@ -1068,11 +1068,11 @@ VALUES (10, 30, 90, '2024-01-01', '2024-03-31', 120, '2024-04-01', '2024-06-30',
 COMMIT;
 
 -- 상품 사진 등록****************************************************************
-INSERT INTO PRODUCT_IMAGE_T VALUES(PRODUCT_IMAGE_SEQ.NEXTVAL, 1, '썸네일사진', '콘텐츠사진', '경로입니다');
-INSERT INTO PRODUCT_IMAGE_T VALUES(PRODUCT_IMAGE_SEQ.NEXTVAL, 2, '썸네일사진', '콘텐츠사진', '경로입니다');
-INSERT INTO PRODUCT_IMAGE_T VALUES(PRODUCT_IMAGE_SEQ.NEXTVAL, 3, '썸네일사진', '콘텐츠사진', '경로입니다');
-INSERT INTO PRODUCT_IMAGE_T VALUES(PRODUCT_IMAGE_SEQ.NEXTVAL, 4, '썸네일사진', '콘텐츠사진', '경로입니다');
-INSERT INTO PRODUCT_IMAGE_T VALUES(PRODUCT_IMAGE_SEQ.NEXTVAL, 5, '썸네일사진', '콘텐츠사진', '경로입니다');
+INSERT INTO PRODUCT_IMAGE_T VALUES(PRODUCT_IMAGE_SEQ.NEXTVAL, 1, 0, '콘텐츠사진', '경로입니다');
+INSERT INTO PRODUCT_IMAGE_T VALUES(PRODUCT_IMAGE_SEQ.NEXTVAL, 2, 0, '콘텐츠사진', '경로입니다');
+INSERT INTO PRODUCT_IMAGE_T VALUES(PRODUCT_IMAGE_SEQ.NEXTVAL, 3, 0, '콘텐츠사진', '경로입니다');
+INSERT INTO PRODUCT_IMAGE_T VALUES(PRODUCT_IMAGE_SEQ.NEXTVAL, 4, 0, '콘텐츠사진', '경로입니다');
+INSERT INTO PRODUCT_IMAGE_T VALUES(PRODUCT_IMAGE_SEQ.NEXTVAL, 5, 0, '콘텐츠사진', '경로입니다');
 COMMIT;
 
 -- ******************************************************************************
