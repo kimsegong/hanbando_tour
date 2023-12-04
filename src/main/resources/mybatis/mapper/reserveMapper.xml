@@ -265,7 +265,7 @@
       , BUYER_EMAIL
       , ERROR_MSG
       , PAY_STATUS
-        RESERVE_NO
+      , RESERVE_NO
     ) VALUES (
         #{paymentNo}
       , #{impUid}  

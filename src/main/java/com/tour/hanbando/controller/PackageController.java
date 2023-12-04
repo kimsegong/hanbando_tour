@@ -38,28 +38,11 @@ public class PackageController {
   
   @ResponseBody
   @GetMapping(value="/getList.do", produces="application/json")
-  public Map<String, Object> getList(HttpServletRequest request){
-    return packageService.getPackageList(request);
+  public Map<String, Object> getList(@RequestParam(value = "condition", required = false, defaultValue = "defaultCondition") String condition, 
+		  @RequestParam(value = "recommendStatus", required = false, defaultValue = "0") int recommendStatus , HttpServletRequest request){	
+	  return packageService.getPackageList(request, condition, recommendStatus);
   }  
   
-  @ResponseBody
-  @GetMapping(value="/getRecommendList.do", produces="application/json")
-  public Map<String, Object> getRecommendList(HttpServletRequest request){
-    return packageService.getPackageRecommendList(request);
-  }  
-  
-  @ResponseBody
-  @GetMapping(value="/getPriceHighList.do", produces="application/json")
-  public Map<String, Object> getPriceHighList(HttpServletRequest request){
-    return packageService.getPackagePriceHighList(request);
-  }  
-  
-  @ResponseBody
-  @GetMapping(value="/getPriceLowList.do", produces="application/json")
-  public Map<String, Object> getPriceLowList(HttpServletRequest request){
-    return packageService.getPackagePriceLowList(request);
-  }  
-
   @GetMapping("/write.form")
   public String write(HttpServletRequest request, Model model) {
 	 packageService.getRegionAndTheme(request, model);
@@ -86,16 +69,24 @@ public class PackageController {
     return "package/themeWrite"; 
   }
   
+  
   @PostMapping("/add.do")
   public String add(MultipartHttpServletRequest multipartRequest, RedirectAttributes redirectAttributes) throws Exception {
-      int addResult = packageService.addPackage(multipartRequest);
+      redirectAttributes.addFlashAttribute("map", packageService.addPackage(multipartRequest));
+      return "redirect:/package/thumbnail.do";
+  }
 
-      if (addResult == 1) {
-          redirectAttributes.addFlashAttribute("successMessage", "package added successfully!");
-      } else {
-          redirectAttributes.addFlashAttribute("errorMessage", "Failed to add package. Please try again.");
-      }
-      return "redirect:/package/list.do";
+  
+  @GetMapping("/thumbnail.do")
+  public String thumbnailWrite() {
+	  return "package/thumbnail"; 
+  }
+  
+  @PostMapping("/addThumbnail.do")
+  public String addThumbnail(MultipartHttpServletRequest multipartRequest, RedirectAttributes redirectAttributes) throws Exception {
+	  boolean addResult = packageService.addThumbnail(multipartRequest);
+	  redirectAttributes.addFlashAttribute("addResult", addResult);
+	  return "redirect:/package/list.do";
   }
   
   @PostMapping("/addRegion.do")
@@ -123,6 +114,7 @@ public class PackageController {
       PackageDto packageDto = packageService.getPackage(packageNo);
       model.addAttribute("reserve", reserve);
       model.addAttribute("packageDto", packageDto);
+      model.addAttribute("attachList", packageService.getAttachList(request));  
       return "package/detail";
   }
 
@@ -202,7 +194,6 @@ public class PackageController {
   public String heart(HttpServletRequest request, RedirectAttributes redirectAttributes) {
     int heartResult = packageService.addHeart(request);
     redirectAttributes.addFlashAttribute("heartResult", heartResult);
-    System.out.println("뭔데" + heartResult);
     return "redirect:/package/detail.do?packageNo=" + request.getParameter("packageNo"); 
   }
   

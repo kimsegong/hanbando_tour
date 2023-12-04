@@ -46,9 +46,9 @@
         </div>
         <div class="btn-group btn-group-sm" role="group" aria-label="Small button group" style="display: inline-block;">
           <button type="button" class="btn btn-outline-kong" id="recommend" value="1">추천순</button>
-          <button type="button" class="btn btn-outline-kong" id="reviewHotel" value="2">리뷰순</button>
-          <button type="button" class="btn btn-outline-kong" id="rowPriceHotel" value="3">가격낮은순</button>
-          <button type="button" class="btn btn-outline-kong" id="highPriceHotel" value="4">가격높은순</button>
+          <button type="button" class="btn btn-outline-kong" id="review" value="2">리뷰순</button>
+          <button type="button" class="btn btn-outline-kong" id="rowPrice" value="3">가격낮은순</button>
+          <button type="button" class="btn btn-outline-kong" id="highPrice" value="4">가격높은순</button>
         </div>
       </div>
       <hr>
@@ -70,11 +70,23 @@
     var page = 1;
     var totalPage = 0;
   
-      const fnGetHotelList = () => {
+    
+		var btnVal=0;
+		$(document).ready(function(){
+			///fnGetHotelList(btnVal);
+  		//fnScroll(btnVal);
+  		
+		});    
+		
+   
+      
+    
+  
+      const fnGetHotelList = (btnVal) => {
       $.ajax({
         type: 'get',
         url: '/hotel/getList.do', 
-        data: 'page=' + page,
+        data: {page: page, btnVal: btnVal}, 
         dataType: 'json',
         success: (resData) => {  
           totalPage = resData.totalPage;
@@ -85,7 +97,6 @@
             $.each(resData.hotelList, (i, hotel) => {           
               let str ='';
               str += '<div class="col-md-4">';
-              //str += '<a href="/hotel/increseHit.do?hotelNo=' + hotel.hotelNo + '></a>'  
               str += '<div class="card" onclick="location.href=\''+address+hotel.hotelNo + '\'">';
               str += '<img src="https://github.com/skal48/portfolio/blob/main/hanla.jpg?raw=true" style="height: 150px;" class="card-img-top" alt="Package Image">';
               str += '<div class="card-body">';
@@ -104,44 +115,9 @@
           console.error('Ajax 요청 에러:', error);
         }
       });
-    };
-    
-    const fnSorting = () => {
-      var btnVal; 
-      $('#recommend').click(() => {
-        btnval = $(this).val();
-      })     
     }
-    
-    const fnSortedList = () => {
-      $.ajax({
-        type:'get',
-        url:'/hotel/sortedHotelList.do'
-        
-      })
-      
-      
-      
-      
-      
-    }
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-     const fnScroll = () => {
+         
+     const fnScroll = (btnVal) => {
         var timerId;  // 최초 undefined 상태
         $(window).on('scroll', () => {
           if(timerId) {  // timerId가 undefined이면 false로 인식, timerId가 값을 가지면 true로 인식
@@ -156,16 +132,22 @@
                   return;              // 마지막 페이지를 보여준 이후에는 아래 코드를 수행하지 말 것 
                 }
                 page++;
-                fnGetHotelList();
+                fnGetHotelList(btnVal);
               }
-          }, 200);  // 200밀리초(0.2초) 후 동작(시간은 임의로 조정 가능함)
+          }, 200);  // 200밀리초(0.2초) 후 동작(시간은 임의로 조정 가능함) throtting 기법 마지막함수가 실행하고 일정 시간동안 작동 안함
         })
     }
-  
+    
+     $('.btn-outline-kong').click(function(){
+      btnVal = $(this).val();
+      page = 1;
+      totalPage = 0;
+      $('#hotel_list').empty();      
       
-    fnGetHotelList();
-    fnScroll();
-  
+    });  
+    	fnGetHotelList(btnVal);
+    	fnScroll(btnVal);
+    
   </script>
 
 

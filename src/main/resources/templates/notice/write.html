@@ -11,13 +11,18 @@
         height: 50px;
       }
       
-      .wrap2 > .box2{
+      .wrap1 > .box2{
         height: 50px;
       }
       
-      .wrap3 > .box3{
+      .wrap1 > .box3{
         height: 30px;
       }
+      
+      .wrap1 > .box4{
+        height: 50px;
+      }
+            
     </style>
 
 <body>
@@ -41,8 +46,8 @@
         <h1 style="text-align: center;">공지사항을 작성하세요</h1>
         
         
-        <div class ="wrap2">
-         <div class="box2"></div>
+        <div class ="wrap1">
+         <div class="box1"></div>
         </div>
         
         
@@ -53,7 +58,7 @@
         </div>
         
         <div class ="wrap1">
-         <div class="box1"></div>
+         <div class="box2"></div>
         </div>
       
         <!-- 내용  -->  
@@ -64,10 +69,28 @@
           <textarea name="contents" id="contents" class="form-control"></textarea>
         </div>
         
-        <div class ="wrap3">
+        <div class ="wrap1">
          <div class="box3"></div>
         </div>
-      
+        
+        <div class="col-1"></div>
+        <div class="col-10">
+          <div class="file_up" style="padding-left:230px">
+          <input type="file" name="files" id="files" class="form-control" style="width:300px;">
+          </div>
+          
+        <div class ="wrap1">
+          <div class="box4"></div>
+        </div>
+         
+        </div>
+        </div>
+        
+
+        
+        
+        
+        
         
         <!-- 작성완료 submit  -->  
         <div>
@@ -84,6 +107,34 @@
             
             
             
+     <script>
+       
+           const fnFileCheck = () => {
+        $('#files').change((ev) => {
+          $('#attached_list').empty();
+          let maxSize = 1024 * 1024 * 100;
+          let maxSizePerFile = 1024 * 1024 * 10;
+          let totalSize = 0;
+          let files = ev.target.files;
+          for(let i = 0; i < files.length; i++){
+            totalSize += files[i].size;
+            if(files[i].size > maxSizePerFile){
+              alert('각 첨부파일의 최대 크기는 10MB입니다.');
+              $(ev.target).val('');
+              $('#attached_list').empty();
+              return;
+            }
+            $('#attached_list').append('<div>' + files[i].name + '</div>');
+          }
+          if(totalSize > maxSize){
+            alert('전체 첨부파일의 최대 크기는 100MB입니다.');
+            $(ev.target).val('');
+            $('#attached_list').empty();
+            return;
+          }
+        })
+      }  
+   
             
             
             
@@ -91,10 +142,10 @@
             
             
             
+     fnFileCheck();      
             
             
-            
-            
+     </script>      
             
             
             
