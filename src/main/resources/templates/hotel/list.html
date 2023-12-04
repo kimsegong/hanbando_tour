@@ -117,7 +117,7 @@
       });
     }
          
-     const fnScroll = (btnVal) => {
+     const fnScroll = () => {
         var timerId;  // 최초 undefined 상태
         $(window).on('scroll', () => {
           if(timerId) {  // timerId가 undefined이면 false로 인식, timerId가 값을 가지면 true로 인식
@@ -144,10 +144,11 @@
       totalPage = 0;
       $('#hotel_list').empty();      
       
-    });  
     	fnGetHotelList(btnVal);
-    	fnScroll(btnVal);
     
+    });  
+    fnGetHotelList(btnVal);
+    fnScroll();
   </script>
 
 
