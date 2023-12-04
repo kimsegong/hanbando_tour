@@ -178,7 +178,7 @@
             aria-labelledby="profile-tab" th:text="${packageDto.hotelContents}"></div>
         </div>        
         
-      <!--  <input type="hidden" name="userNo" id="userNo" th:value="${session.user.userNo}"> -->
+        <input type="hidden" name="userNo" id="userNo" th:value="${session.user.userNo}">
         <div th:each="reservation : ${reserve}">
             <div class="reserveNo" th:text="${reservation.reserveNo}|"th:value="${reservation.reserveNo}"></div>
             <div class="reserveUserNo" th:text="${reservation.userDto.userNo}" th:value="${reservation.userDto.userNo}"></div>
@@ -564,7 +564,7 @@ $.fn.datepicker.dates['ko'] = {
     // 로그인한 경우
     var packageNo = $('#packageNoHeart').val();
     var userNo = $('#userNo').val();
-    var confirmResult = confirm('찜하기 페이지로 이동하시겠습니까?');
+    var confirmResult = confirm('찜하기 성공! 찜하기 페이지로 이동하시겠습니까?');
 
     // 확인 결과에 따라 찜하기 요청을 항상 보냄
     $.ajax({
