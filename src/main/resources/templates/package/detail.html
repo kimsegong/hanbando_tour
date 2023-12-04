@@ -67,6 +67,8 @@
 <body>
   
   <div th:replace="~{/layout/header::header}"></div>
+
+  
   <!--
          <th:block th:if="${session.user.auth == 0}">
          <form id="frm_btn" method="post">
@@ -193,15 +195,13 @@
             id="profile-tab-pane"
             role="tabpanel"
             aria-labelledby="profile-tab" th:text="${packageDto.hotelContents}"></div>
-        </div>
-        
+        </div>        
         
       <!--  <input type="hidden" name="userNo" id="userNo" th:value="${session.user.userNo}"> -->
         <div th:each="reservation : ${reserve}">
             <div class="reserveNo" th:text="${reservation.reserveNo}|"th:value="${reservation.reserveNo}"></div>
             <div class="reserveUserNo" th:text="${reservation.userDto.userNo}" th:value="${reservation.userDto.userNo}"></div>
         </div>
-        
         
         <div class="choice">여행 후기</div>
         
@@ -263,19 +263,56 @@
          <input type="hidden" id="packageNoHeart" name="packageNo" th:value="${packageDto.packageNo}">
         <div id="heartButton" style="color: white; cursor: pointer;">찜하기♥</div>
        </button>
-       <button class="btn btn-kong1"  style="margin-top: 50px;">
-        <div id="calender" style="color: white; cursor: pointer;">출발일선택</div>
-       </button>
-       <button class="btn btn-kong1"  style="margin-top: 50px;" id="btn_reserve">
+       <div style="margin-top: 50px;">
+      <div class="input-group date" data-provide="datepicker" style="width: 220px;">
+    <input type="text" class="form-control">
+    <div class="input-group-addon">
+     <button class="btn btn-kong1">
+       <div id="calender" style="color: white; cursor: pointer;">출발일선택</div>
+     </button>
+    </div>
+   </div>       
+      </div>
+       <button class="btn btn-kong1" id="btn_reserve" style="margin-top: 50px;">
         <div style="color: white; cursor: pointer;">예약하러가기</div>
        </button>
       </div> 
     </div>
    </div>
   </div>
-
   
+
   <script th:inline="javascript">   
+
+
+
+$.fn.datepicker.dates['ko'] = {
+    days: ["일요일", "월요일", "화요일", "수요일", "목요일", "금요일", "토요일"],
+    daysShort: ["일", "월", "화", "수", "목", "금", "토"],
+    daysMin: ["일", "월", "화", "수", "목", "금", "토"],
+    months: ["1월", "2월", "3월", "4월", "5월", "6월", "7월", "8월", "9월", "10월", "11월", "12월"],
+    monthsShort: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"],
+    today: "오늘",
+    clear: "닫기",
+    format: "yyyy-mm-dd",
+    titleFormat: "yyyy MM", 
+    weekStart: 0
+    };
+
+
+     $(".date").datepicker({
+        language: 'ko',        // 한글
+        format: 'yyyy-mm-dd',  // 달력 포맷
+        autoclose: true,       // 선택 시 자동 닫기
+        minViewMode: 0,        // 최소 뷰 모드 (일)
+        maxViewMode: 2,        // 최대 뷰 모드 (년도)
+        startView: 0,          // 달력이 열리면 일부터 선택
+        clearBtn: true,        // 닫기 버튼
+        startDate: new Date(), // 오늘부터 선택 가능
+        endDate: '+2m'         // 2개월 까지만 열어둠
+    });
+
+    
     function fnGoReserve(){
       $('#btn_reserve').click(function(){
          location.href='/reserve/write.form?packageNo=[[${packageDto.packageNo}]]';
