@@ -66,7 +66,7 @@ public class ReserveServiceImpl implements ReserveService {
     
     String departureLoc = request.getParameter("departureLoc");
     int reserveStatus = Integer.parseInt(request.getParameter("resStatus"));
-//    String reserveStart = "null";
+    String reserveStart = request.getParameter("resStart").replace("-", "/");
 //    String reserveFinish = "null";
     int reservePerson = Integer.parseInt(request.getParameter("reservePerson"));
     int reservePrice = Integer.parseInt(request.getParameter("totalReservePrice"));
@@ -78,7 +78,7 @@ public class ReserveServiceImpl implements ReserveService {
                             .agree(agree)
                             .departureLoc(departureLoc)
                             .reserveStatus(reserveStatus)
-//                            .reserveStart(reserveStart)
+                            .reserveStart(reserveStart)
 //                            .reserveFinish(reserveFinish)
                             .reservePerson(reservePerson)
                             .reservePrice(reservePrice)
