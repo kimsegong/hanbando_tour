@@ -39,20 +39,7 @@ public class ReserveServiceImpl implements ReserveService {
   
   @Override
   public Map<String, Object> addReserve(HttpServletRequest request) throws Exception {
-    /*
-    String oldFormat = "MM/dd/yyyy";
-    String newFormat = "yyyy/MM/dd";
 
-    String resStart = req.getParameter("resStart"); 
-    
-    SimpleDateFormat sdf = new SimpleDateFormat(oldFormat);
-    Date d = sdf.parse(resStart); 
-    sdf.applyPattern(newFormat);
-    String reserveStart = sdf.format(d); // 20231115
-    
-    ReserveDto reserve =
-    
-    */
     String requestedTerm = null;
     if(request.getParameter("reqTerm") == null) {
       requestedTerm = "";
@@ -225,7 +212,6 @@ public class ReserveServiceImpl implements ReserveService {
     String params = "userNo=" + request.getParameter("userNo");
     model.addAttribute("paging", myPageUtils.getMvcPaging(request.getContextPath() + "/reserve/reserveList.do", params));
     model.addAttribute("beginNo", total - (page - 1) * display);
-    
   }
   
   @Transactional(readOnly=true)
@@ -246,7 +232,6 @@ public class ReserveServiceImpl implements ReserveService {
   @Override
   public int modifyReserve(HttpServletRequest request) {
     int reserveNo = Integer.parseInt(request.getParameter("reserveNo"));
-    
     String requestedTerm = request.getParameter("reqTerm");
     String departureLoc = request.getParameter("departureLoc");
     
@@ -272,11 +257,6 @@ public class ReserveServiceImpl implements ReserveService {
   public Map<String, Object> modifyReserveStatusByPayStatus(Map<String, String> payload, HttpServletRequest request, RedirectAttributes redirectAttributes) {
     String reserveNoStr = payload.get("reserveNo");
     String payStatus = payload.get("payStatus");
-
-    if (reserveNoStr == null || payStatus == null) {
-        System.out.println("===================파라미터 : [" + reserveNoStr + ", " + payStatus + "] ===============================");
-    }
-
     int reserveNo = Integer.parseInt(reserveNoStr);
     Map<String, Object> map = Map.of("reserveNo", reserveNo, "payStatus", payStatus);
     int modifyResStatusResult = reserveMapper.updateReserveStatus(map);
