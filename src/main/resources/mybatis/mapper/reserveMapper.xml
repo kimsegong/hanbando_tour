@@ -196,7 +196,7 @@
       , PACKAGE_NO
     ) VALUES (
         #{reserveNo}
-      , TO_CHAR(SYSDATE, 'YYYYMMDD') 
+      , TO_CHAR(SYSDATE, 'YYYY/MM/DD') 
       , #{requestedTerm}
       , #{agree}
       , #{departureLoc}
@@ -287,7 +287,14 @@
   
   
   
-  
+  <update id="updateReserveStatus" parameterType="Map">
+    UPDATE RESERVE_T
+       SET RESERVE_STATUS = 1
+     WHERE RESERVE_NO = (SELECT RESERVE_NO
+                           FROM PAYMENT_T 
+                          WHERE PAY_STATUS = #{payStatus} 
+                            AND RESERVE_NO = #{reserveNo})
+  </update> 
   
   
   <update id="updateReserve" parameterType="ReserveDto">

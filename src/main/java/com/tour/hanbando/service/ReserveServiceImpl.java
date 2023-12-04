@@ -1,5 +1,6 @@
 package com.tour.hanbando.service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -11,6 +12,7 @@ import org.json.JSONObject;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.tour.hanbando.dao.ReserveMapper;
 import com.tour.hanbando.dto.PackageDto;
@@ -125,9 +127,8 @@ public class ReserveServiceImpl implements ReserveService {
   }
   
   @Override
-  public Map<String, Object> addPayment(HttpServletRequest request, PaymentDto payment, int reserveNo) {
-    System.out.println("===============================addPayment 서비스 시작================================");
-    System.out.println(reserveNo + ", " + payment.toString());
+  public Map<String, Object> addPayment(HttpServletRequest request, PaymentDto payment) {
+    System.out.println(payment.getReserveDto().getReserveNo() + ", " + payment.toString());
     String errorMsg = null;
     if(payment.getErrorMsg() == null) {
       errorMsg = "";
@@ -143,7 +144,7 @@ public class ReserveServiceImpl implements ReserveService {
     String buyerEmail = payment.getBuyerEmail();
     String payStatus = payment.getPayStatus();
     String merchantUid = payment.getMerchantUid();
-    int reserveNo1 = reserveNo;
+    int reserveNo = payment.getReserveDto().getReserveNo();
     System.out.println("===============================PaymentDto build 준비완료================================");
     
     PaymentDto paymentDto = PaymentDto.builder()
@@ -158,13 +159,12 @@ public class ReserveServiceImpl implements ReserveService {
                             .payStatus(payStatus)
                             .merchantUid(merchantUid)
                             .reserveDto(ReserveDto.builder()
-                                                .reserveNo(reserveNo1)
+                                                .reserveNo(reserveNo)
                                                 .build())
                             .build();
     
     int addPaymentResult = reserveMapper.insertPayment(paymentDto);
     
-    System.out.println("===============================addPayment 서비스 리턴 직전================================");
     return Map.of("addPaymentResult", addPaymentResult);
   }
   
@@ -249,6 +249,21 @@ public class ReserveServiceImpl implements ReserveService {
     return removeResult;
   }
   
+  
+  @Override
+  public Map<String, Object> modifyReserveStatusByPayStatus(Map<String, String> payload, HttpServletRequest request, RedirectAttributes redirectAttributes) {
+    String reserveNoStr = payload.get("reserveNo");
+    String payStatus = payload.get("payStatus");
+
+    if (reserveNoStr == null || payStatus == null) {
+        System.out.println("===================파라미터 : [" + reserveNoStr + ", " + payStatus + "] ===============================");
+    }
+
+    int reserveNo = Integer.parseInt(reserveNoStr);
+    Map<String, Object> map = Map.of("reserveNo", reserveNo, "payStatus", payStatus);
+    int modifyResStatusResult = reserveMapper.updateReserveStatus(map);
+    return Map.of("modifyResStatusResult", modifyResStatusResult);
+  }
   
   
 }
