@@ -38,6 +38,7 @@
       <association javaType="ProductImageDto" property="productImageDto">
           <id column="IMAGE_NO" property="imageNo"/>
           <result column="THUMBNAIL" property="thumbnail"/>
+          <result column="FILESYSTEM_NAME" property="filesystemName"/>
           <result column="IMAGE_PATH" property="imagePath"/>
       </association>
     </resultMap>
@@ -63,6 +64,7 @@
       <association javaType="PackageDto" property="packageDto">
             <id column="PACKAGE_NO" property="packageNo"/>            
             <result column="PACKAGE_TITLE" property="packageTitle"/>      
+            <result column="PRICE" property="price"/>      
        </association>
       <association javaType="HotelDto" property="hotelDto">
             <id column="HOTEL_NO" property="hotelNo"/>            
@@ -138,52 +140,56 @@
 
     <!-- 패키지리스트불러오기 -->
     <select id="getPackageList" parameterType="Map" resultMap="PackageMap">
-      SELECT
-        P.PACKAGE_NO,
-        P.USER_NO,
-        P.REGION_NO,
-        P.THEME_NO,
-        P.PACKAGE_TITLE,
-        P.PRICE,
-        P.HIT,
-        P.STATUS,
-        P.RECOMMEND_STATUS,
-        PI.IMAGE_NO,
-        PI.THUMBNAIL,
-        PI.FILESYSTEM_NAME,
-        PI.IMAGE_PATH
-      FROM (
-        SELECT
-          PT.PACKAGE_NO,
-          PT.USER_NO,
-          PT.REGION_NO,
-          PT.THEME_NO,
-          PT.PACKAGE_TITLE,
-          PT.PRICE,
-          PT.HIT,
-          PT.STATUS,
-          PT.MAX_PEOPLE,
-          PT.RECOMMEND_STATUS,
-          ROW_NUMBER() OVER (
-            <choose>
-              <when test="condition == 'rowPrice'">
-                ORDER BY PT.PRICE DESC
-              </when>
-              <when test="condition == 'highPrice'">
-                ORDER BY PT.PRICE ASC
-              </when>
-              <otherwise>
-                ORDER BY PT.PACKAGE_NO DESC
-              </otherwise>
-            </choose>
-          ) AS RN
-        FROM PACKAGE_T PT
-      ) P
-      LEFT JOIN PRODUCT_IMAGE_T PI ON P.PACKAGE_NO = PI.PACKAGE_NO
-      LEFT JOIN REGION_T R ON P.REGION_NO = R.REGION_NO
-      LEFT JOIN THEME_T T ON P.THEME_NO = T.THEME_NO
-      WHERE P.RN BETWEEN #{begin} AND #{end}
-    </select> 
+	  SELECT
+	    P.PACKAGE_NO,
+	    P.USER_NO,
+	    P.REGION_NO,
+	    P.THEME_NO,
+	    P.PACKAGE_TITLE,
+	    P.PRICE,
+	    P.HIT,
+	    P.STATUS,
+	    P.RECOMMEND_STATUS,
+	    PI.IMAGE_NO,
+	    PI.THUMBNAIL,
+	    PI.FILESYSTEM_NAME,
+	    PI.IMAGE_PATH
+	  FROM (
+	    SELECT
+	      PT.PACKAGE_NO,
+	      PT.USER_NO,
+	      PT.REGION_NO,
+	      PT.THEME_NO,
+	      PT.PACKAGE_TITLE,
+	      PT.PRICE,
+	      PT.HIT,
+	      PT.STATUS,
+	      PT.MAX_PEOPLE,
+	      PT.RECOMMEND_STATUS,
+	      ROW_NUMBER() OVER (
+	        <choose>
+	          <when test="condition == 'rowPrice'">
+	            ORDER BY PT.PRICE ASC
+	          </when>
+	          <when test="condition == 'highPrice'">
+	            ORDER BY PT.PRICE DESC
+	          </when>
+	          <otherwise>
+	            ORDER BY PT.PACKAGE_NO DESC
+	          </otherwise>
+	        </choose>
+	      ) AS RN
+	    FROM PACKAGE_T PT
+	  ) P
+	  LEFT JOIN PRODUCT_IMAGE_T PI ON P.PACKAGE_NO = PI.PACKAGE_NO
+	  LEFT JOIN REGION_T R ON P.REGION_NO = R.REGION_NO
+	  LEFT JOIN THEME_T T ON P.THEME_NO = T.THEME_NO
+	  WHERE P.RN BETWEEN #{begin} AND #{end}
+	    <if test="condition == 'recommendStatus'">
+	      AND P.RECOMMEND_STATUS = 1
+	    </if>
+	</select>
+
  
 
     <select id="getRegion" resultType="regionDto">
@@ -240,25 +246,30 @@
         )
     </insert>
 
-
-
+	 <update id="insertPackageTh" parameterType="PackageDto">
+		  UPDATE PACKAGE_T SET PACKAGE_TITLE= #{packageTitle}  
+		   WHERE PACKAGE_NO = #{packageNo}
+     </update>
+		
+	<!-- 이미지 -->
      <insert id="insertImageList" parameterType="productImageDto">
         INSERT INTO PRODUCT_IMAGE_T (
             IMAGE_NO
           , PACKAGE_NO
-          , THUMBNAIL
           , FILESYSTEM_NAME
+          , THUMBNAIL
           , IMAGE_PATH
         ) VALUES (
             PRODUCT_IMAGE_SEQ.NEXTVAL
           , #{packageNo}
-          , #{thumbnail}
           , #{filesystemName}
+          , #{thumbnail}
           , #{imagePath}
         )
       </insert>
       
-     <!-- ck -->
+      
+     <!-- ck이미지 -->
       <insert id="insertPackageImage" parameterType="productImageDto">
         INSERT INTO PRODUCT_IMAGE_T (
             IMAGE_NO
@@ -335,9 +346,14 @@
       
       
       <select id="getPackageImageList" parameterType="int" resultType="ProductImageDto">
-        SELECT PACKAGE_NO, IMAGE_NO, THUMBNAIL, IMAGE_PATH, FILESYSTEM_NAME
+        SELECT PACKAGE_NO, IMAGE_NO, IMAGE_PATH, FILESYSTEM_NAME
           FROM PRODUCT_IMAGE_T
          WHERE PACKAGE_NO = #{packageNo}  
+      </select>
+      
+      <select id="getPackageThumbnailList" parameterType="int" resultType="ProductImageDto">
+        SELECT PACKAGE_NO, IMAGE_NO, THUMBNAIL, IMAGE_PATH
+          FROM PRODUCT_IMAGE_T  
       </select>
 
       <update id="updatePackage" parameterType="PackageDto">
@@ -476,6 +492,38 @@
           FROM PRODUCT_IMAGE_T
          WHERE FILESYSTEM_NAME = #{filesystemName}
       </delete>
+      
+      <select id="getPackageInfoByReservationStart" parameterType="map" resultType="PackageDto">
+        SELECT
+            PACKAGE_NO,
+            PACKAGE_TITLE,
+            MAX_PEOPLE
+        FROM
+            PACKAGE_T
+        WHERE
+            PACKAGE_NO = #{packageNo}
+            AND MAX_PEOPLE = (
+                SELECT COALESCE(SUM(RESERVE_PERSON), 0)
+                FROM RESERVE_T
+                WHERE RESERVE_START = #{reserveStart}
+                AND PACKAGE_NO = #{packageNo}
+            )
+      </select>
+      
+     <select id="selectHeartList" parameterType="Map" resultMap="HeartMap">
+      SELECT  A.PACKAGE_NO, A.PACKAGE_TITLE, A.PRICE, A.USER_NO
+        FROM (SELECT ROW_NUMBER() OVER(ORDER BY H.PACKAGE_NO DESC) AS RN, H.USER_NO, H.PACKAGE_NO, P.PACKAGE_TITLE, P.PRICE
+                FROM HEART_T H INNER JOIN PACKAGE_T P
+                  ON H.PACKAGE_NO = P.PACKAGE_NO
+               WHERE H.USER_NO = #{userNo}) A
+       WHERE A.RN BETWEEN #{begin} AND #{end}       
+     </select>
+     
+     <select id="getHeartCount" resultType="int">
+      SELECT COUNT(*)
+        FROM HEART_T
+       WHERE USER_NO = #{userNo}
+      </select>
       
 </mapper>
 

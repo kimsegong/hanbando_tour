@@ -233,5 +233,80 @@
      WHERE (H.RN BETWEEN #{begin} AND #{end}) AND HI.THUMBNAIL = 1
 
  </select>  
-</mapper>
+ <select id="getPriceHotelList" parameterType="Map" resultMap="HotelMap">
+	 WITH PRICE AS(
+    SELECT HOTEL_NO,
+           MIN(BI_PRICE) AS MB
+     FROM ROOMPRICE_T
+     GROUP BY HOTEL_NO )    
+	SELECT  A.RN,
+	        A.MB,
+	        A.HOTEL_NO,
+	        A.REGION_NO,
+	        A.HOTEL_NAME,
+	        A.HOTEL_ADDRESS,
+	        A.LATITUDE,
+	        A.LONGITUDE,
+	        A.HOTEL_DETAIL,
+	        A.PHONE_NUMBER,
+	        A.H_EMAIL,
+	        A.CREATED_AT,
+	        A.MODIFIED_AT,
+	        A.HIT,
+	        A.STATUS,
+	        A.RECOMMEND_STATUS,
+	        A.THUMBNAIL,
+	        A.FILESYSTEM_NAME,
+	        A.IMAGE_PATH
+	 FROM ( SELECT
+		        H.HOTEL_NO,
+		        H.REGION_NO,
+		        H.HOTEL_NAME,
+		        H.HOTEL_ADDRESS,
+		        H.LATITUDE,
+		        H.LONGITUDE,
+		        H.HOTEL_DETAIL,
+		        H.PHONE_NUMBER,
+		        H.H_EMAIL,
+		        H.CREATED_AT,
+		        H.MODIFIED_AT,
+		        H.HIT,
+		        H.STATUS,
+		        H.RECOMMEND_STATUS,   
+		        HI.THUMBNAIL,
+		        HI.FILESYSTEM_NAME,
+		        HI.IMAGE_PATH,
+		        P.MB,
+		        ROW_NUMBER() OVER(
+		        <if test="btnVal == 3">
+							ORDER BY P.MB ASC     
+						</if>
+						<if test="btnVal == 4">
+							ORDER BY P.MB DESC    
+						</if>
+		        ) AS RN
+		     FROM HOTEL_T H
+		          LEFT JOIN HOTEL_IMAGE_T HI ON H.HOTEL_NO = HI.HOTEL_NO  
+		          LEFT JOIN REGION_T R ON H.REGION_NO = R.REGION_NO
+		          LEFT JOIN PRICE P ON H.HOTEL_NO = P.HOTEL_NO
+		    WHERE HI.THUMBNAIL = 1
+	          	) A 
+	   WHERE A.RN BETWEEN #{begin} AND #{end}
+ </select>
+ <select id="getRegion" parameterType="RegionDto">
+	 SELECT *
+		 FROM REGION_T
+ </select>
+  
+ <select id="getHotelNo" resultType="int">
+   SELECT HOTEL_SEQUENCE.NEXTVAL
+     FROM DUAL
+ </select>
+ <select id="getRoomNo" resultType="int">
+	 SELECT ROOM_SEQUENCE.NEXTVAL
+		 FROM DUAL
+ </select>
+ 
+ 
+ </mapper>
 

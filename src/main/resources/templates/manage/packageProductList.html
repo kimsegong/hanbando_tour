@@ -181,51 +181,44 @@
               <div class="listMainWrap">
                   
                 <!--/* 총 회원 수를 표시 */-->
-                <div style="text-align: left;" th:text="|총 ${total}명|"></div>
+                <div style="text-align: left;" th:text="|총 ${total}개|"></div>
                   
                 <!--/* 전체 목록을 나타내는 테이블 */-->
                 <div>
                   <table border="1" class="table table-hover">
                     <thead>
                       <tr>
-                        <th scope="col">회원번호</th>
-                        <th scope="col">이메일</th>
-                        <th scope="col">이름</th>
-                        <th scope="col">전화번호</th>
-                        <th scope="col">성별</th>
-                        <th scope="col">가입형태</th>
-                        <th scope="col">가입일</th>
-                        <th scope="col">권한</th>
+                        <th scope="col">패키지번호</th>
+                        <th scope="col">지역</th>
+                        <th scope="col">패키지명</th>
+                        <th scope="col">가격</th>
+                        <th scope="col">예약가능여부</th>
+                        <th scope="col">정원</th>
+                        <th scope="col">등록일</th>
                       </tr>
                     </thead>
                     <tbody class="table-group-divider table_to_detail">
-                      <th:block th:each="u:${userList}">
+                      <th:block th:each="p:${packageList}">
                         <tr>
-                          <th scope="row" th:text="${u.userNo}"></th>
+                          <th scope="row" th:text="${p.packageNo}"></th>
                           <td>
-                            <a th:href="@{/manage/userDetail.do(userNo=${u.userNo})}" th:text="${u.email}"></a>
+                            <a th:href="@{/package/detail.do(packageNo=${p.packageNo})}" th:text="${p.regionDto.regionName}"></a>
                           </td>
                           <td>
-                            <a th:href="@{/manage/userDetail.do(userNo=${u.userNo})}" th:text="${u.name}"></a>
+                            <a th:href="@{/package/detail.do(packageNo=${p.packageNo})}" th:text="${p.packageTitle}"></a>
                           </td>
                           <td>
-                            <a th:href="@{/manage/userDetail.do(userNo=${u.userNo})}" th:text="${u.mobile}"></a>
+                            <a th:href="@{/package/detail.do(packageNo=${p.packageNo})}" th:text="${p.price}"></a>
                           </td>
                           <td>
-                            <a th:href="@{/manage/userDetail.do(userNo=${u.userNo})}" th:if="${u.gender == 'F'}">여자</a>
-                            <a th:href="@{/manage/userDetail.do(userNo=${u.userNo})}" th:if="${u.gender == 'M'}">남자</a>
+                            <a th:href="@{/package/detail.do(packageNo=${p.packageNo})}" th:if="${p.status == 0}">마감</a>
+                            <a th:href="@{/package/detail.do(packageNo=${p.packageNo})}" th:if="${p.status == 1}">예약가능</a>
                           </td>
                           <td>
-                            <a th:href="@{/manage/userDetail.do(userNo=${u.userNo})}" th:if="${u.state == 0}">일반회원</a>
-                            <a th:href="@{/manage/userDetail.do(userNo=${u.userNo})}" th:if="${u.state == 1}">네이버 간편로그인</a>
-                            <a th:href="@{/manage/userDetail.do(userNo=${u.userNo})}" th:if="${u.state == 2}">카카오 간편로그인</a>
+                            <a th:href="@{/package/detail.do(packageNo=${p.packageNo})}" th:text="${p.maxPeople}"></a>
                           </td>
                           <td>
-                            <a th:href="@{/manage/userDetail.do(userNo=${u.userNo})}" th:text="${u.joinedAt}"></a>
-                          </td>
-                          <td>
-                            <th:block th:if="${u.auth != 1}">관리자</th:block>
-                            <th:block th:if="${u.auth == 1}">회원</th:block>
+                            <a th:href="@{/package/detail.do(packageNo=${p.packageNo})}" th:text="${p.createdAt}"></a>
                           </td>
                         </tr>
                       </th:block>
@@ -233,7 +226,7 @@
                     <!--/* 페이징 처리 */-->
                     <tfoot>
                       <tr>
-                        <td colspan="8" th:utext="${paging}" class="paging"></td>
+                        <td colspan="7" th:utext="${paging}" class="paging"></td>
                       </tr>
                     </tfoot>
                   </table>
@@ -242,11 +235,10 @@
                   <div>
                     <form id="frm_search" method="get" th:action="@{/manage/packageProductSearch.do}" >
                       <select name="column" id="column" >
-                        <option value="USER_NO">회원번호</option>
-                        <option value="EMAIL">이메일</option>
-                        <option value="NAME">이름</option>
-                        <option value="MOBILE">전화번호</option>
-                        <option value="JOINED_AT">가입일</option>
+                        <option value="PACKAGE_NO">패키지번호</option>
+                        <option value="PACKAGE_TITLE">패키지명</option>
+                        <option value="PRICE">가격</option>
+                        <option value="CREATED_AT">등록일</option>
                       </select>
                       <input type="text" name="query" id="query" placeholder="검색어 입력" >
                       <button type="submit" id="btn_search_product" >검색</button>

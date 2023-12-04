@@ -59,9 +59,9 @@
     color: #96B6C5; /* hover 시 글씨 색상 변화 */
   }
   
-  #userList a::after,
+  #productList a::after,
   #reserveList a::after,
-  #reviewList a::after,
+  #userList a::after,
   #bannerList a::after {
     content: "";
     display: block;
@@ -74,7 +74,7 @@
     left: 0;
   }
   
-  #userList a:hover::after,
+  #productList a:hover::after,
   #reserveList a:hover::after,
   #reviewList a:hover::after,
   #bannerList a:hover::after {
@@ -99,11 +99,17 @@
     background-color: #96B6C5; /* 호버 시 배경 색상 */
   }
   
+  #search_wrap {
+    margin: 5% auto;
+  }
+  
+  #columnGubun,
   #column,
   #query {
     height: 38px;
   }
   
+  #columnGubun,
   #column {
     flex: 1;           /* 셀렉트 박스가 나머지 영역을 모두 차지하도록 설정 */
     margin-right: 5px; /* 셀렉트 박스와 인풋 사이의 간격을 조절 */
@@ -118,11 +124,86 @@
   justify-content: center; /* 가로 가운데 정렬 */
   align-items: center;     /* 세로 가운데 정렬 */
   margin: 8% 15%;
-}
+  }
 
+  .blind {
+    display: none;
+  }
+  .open_contents {
+    cursor: pointer;
+  }
+  
+  .btn_remove_review {
+    height: 38px; 
+    color: #96B6C5;         /* 텍스트 색상 */
+    background-color: #fff; /* 기본 배경 색상 */
+    border-color: #96B6C5;  /* 테두리 색상 */
+    border-radius: 10px;      /* 테두리를 둥글게 만듭니다. */
+  }
+  .btn_remove_review:hover {
+    color: #fff;               /* 호버 시 텍스트 색상 */
+    background-color: #96B6C5; /* 호버 시 배경 색상 */
+  }
+  .review_content {
+    margin: 3% auto;
+  }
 
 </style>
+<script th:inline="javascript">
 
+  /* 호출 */
+  $(() => {
+  fnSubstring();
+  fnBlind();
+  fnBtnRemoveReview();
+  fnRemoveReview();
+  })
+
+
+  /* 내용의 일부만 보여주기 */
+  const fnSubstring = () => {
+    $('.open_contents').each(function() {
+      var text = $(this).text().trim();
+      var truncatedText = text.length > 12 ? text.substring(0, 12) + '...' : text;
+      $(this).text(truncatedText);
+    })
+  }
+  
+  
+  /* 게시글 내용을 클릭하면 전체 내용 나타내기 */
+  const fnBlind = () => {
+    $('.open_contents').click((ev) => {
+      let openContents = $(ev.target).parent().next();
+      if(openContents.hasClass('blind')){
+      $('.show_content').addClass('blind');
+      openContents.removeClass('blind');
+      } else {
+      openContents.addClass('blind');
+      }
+    })
+  }
+  
+  /* 리뷰 삭제 취소시 서브밋 방지 */
+  const fnBtnRemoveReview = () => {
+    $('.btn_remove_review').click((ev) => {
+      if(!confirm('관리자 권한으로 리뷰를 삭제하시겠습니까?')){
+      ev.preventDefault();
+      return;
+      }
+    })
+  }
+  
+  /* 리뷰 삭제시 전달되는 데이터 값 */
+  const fnRemoveReview = () => {
+    let removeReviewResult = /*[[${removeReviewResult}]]*/ null;
+    if(removeReviewResult !== ''){
+      if(removeReviewResult === 1){
+        alert('댓글이 삭제되었습니다.');
+      }
+    }
+  }
+  
+</script>
 <body>
 	<div th:replace="~{/layout/header::header}"></div>
 	
@@ -133,8 +214,7 @@
 		  <div class="row">
 		    <div class="col-1">	      
 		    </div>
-        <div class="col-10" style="border:1px gray dotted">
-            <!--/*여기에 작성/ 다 만들고 style 지워주세요  */-->
+        <div class="col-10" >
 		   
         		         
           <div class="second_main_wrap">
@@ -164,93 +244,87 @@
             
             
             <div class="split2">
-                
-              <!--/* 각 상품관리 페이지로 이동 가능한 상단 목록 */-->
-              <div class="listWrap2">
-                <div id="package">
-                  <a th:href="@{/manage/productList.do}">패키지</a>
-                </div>
-                <div id="hotel">
-                  <a th:href="@{/manage/hotelProductList.do}">호텔</a>
-                </div>
+              
+              <!--/* 검색기능 */-->
+              <div id="search_wrap">
+                <form id="frm_search" method="get" th:action="@{/manage/searchReview.do}" >
+                  <select name="columnGubun" id="columnGubun">
+                    <option value="">유형선택</option>
+                    <option value="PACKAGE_NO">패키지만보기</option>
+                    <option value="HOTEL_NO">호텔만보기</option>
+                  </select>
+                  <select name="column" id="column" >
+                    <option value="REVIEW_NO">리뷰번호</option>
+                    <option value="PACKAGE_NO">패키지번호</option>
+                    <option value="HOTEL_NO">호텔번호</option>
+                    <option value="NAME">작성자</option>
+                    <option value="REVIEW_CONTENTS">내용</option>
+                    <option value="STAR">별점</option>
+                  </select>
+                  <input type="text" name="query" id="query" placeholder="검색어 입력" >
+                  <button type="submit" id="btn_search_rewiew" >검색</button>
+                </form>
               </div>
                 
         
-              <!--/* 관리 회원목록이 표시될 div */-->
+              <!--/* 관리 리뷰목록이 표시될 div */-->
               <div class="listMainWrap">
                   
-                <!--/* 총 회원 수를 표시 */-->
-                <div style="text-align: left;" th:text="|총 ${total}명|"></div>
+                <!--/* 총 리뷰 수를 표시 */-->
+                <div style="text-align: left;" th:text="|총 ${total}개|"></div>
                   
                 <!--/* 전체 목록을 나타내는 테이블 */-->
                 <div>
                   <table border="1" class="table table-hover">
                     <thead>
                       <tr>
-                        <th scope="col">회원번호</th>
-                        <th scope="col">이메일</th>
-                        <th scope="col">이름</th>
-                        <th scope="col">전화번호</th>
-                        <th scope="col">성별</th>
-                        <th scope="col">가입형태</th>
-                        <th scope="col">가입일</th>
-                        <th scope="col">권한</th>
+                        <th scope="col">리뷰번호</th>
+                        <th scope="col">상품번호</th>
+                        <th scope="col">유형</th>
+                        <th scope="col">작성자</th>
+                        <th scope="col">내용</th>
+                        <th scope="col">작성일</th>
+                        <th scope="col">별점</th>
                       </tr>
                     </thead>
                     <tbody class="table-group-divider table_to_detail">
-                      <th:block th:each="u:${userList}">
+                      <th:block th:each="r:${reviewList}">
                         <tr>
-                          <th scope="row" th:text="${u.userNo}"></th>
+                          <td scope="row" th:text="${r.reviewNo}"></td>
                           <td>
-                            <a th:href="@{/manage/userDetail.do(userNo=${u.userNo})}" th:text="${u.email}"></a>
+                            <a th:if="${r.packageNo != 0 && r.hotelNo == 0}" th:text="${r.packageNo}" th:href="@{/package/detail.do(packageNo=${r.packageNo})}"></a>
+                            <a th:if="${r.packageNo == 0 && r.hotelNo != 0}" th:text="${r.hotelNo}" th:href="@{/hotel/detail.do(hotelNo=${r.hotelNo})}"></a>
                           </td>
-                          <td>
-                            <a th:href="@{/manage/userDetail.do(userNo=${u.userNo})}" th:text="${u.name}"></a>
+                          <td class="open_contents">
+                            <th:block th:if="${r.packageNo != 0 && r.hotelNo == 0}">패키지</th:block>
+                            <th:block th:if="${r.packageNo == 0 && r.hotelNo != 0}">호텔</th:block>
                           </td>
-                          <td>
-                            <a th:href="@{/manage/userDetail.do(userNo=${u.userNo})}" th:text="${u.mobile}"></a>
-                          </td>
-                          <td>
-                            <a th:href="@{/manage/userDetail.do(userNo=${u.userNo})}" th:if="${u.gender == 'F'}">여자</a>
-                            <a th:href="@{/manage/userDetail.do(userNo=${u.userNo})}" th:if="${u.gender == 'M'}">남자</a>
-                          </td>
-                          <td>
-                            <a th:href="@{/manage/userDetail.do(userNo=${u.userNo})}" th:if="${u.state == 0}">일반회원</a>
-                            <a th:href="@{/manage/userDetail.do(userNo=${u.userNo})}" th:if="${u.state == 1}">네이버 간편로그인</a>
-                            <a th:href="@{/manage/userDetail.do(userNo=${u.userNo})}" th:if="${u.state == 2}">카카오 간편로그인</a>
-                          </td>
-                          <td>
-                            <a th:href="@{/manage/userDetail.do(userNo=${u.userNo})}" th:text="${u.joinedAt}"></a>
-                          </td>
-                          <td>
-                            <th:block th:if="${u.auth != 1}">관리자</th:block>
-                            <th:block th:if="${u.auth == 1}">회원</th:block>
+                          <td class="open_contents" th:text="${r.userDto.name}"></td>
+                          <td class="open_contents" th:text="${r.reviewContents}"></td>
+                          <td th:text="${r.registAt}" class="open_contents"></td>
+                          <td th:text="${r.star}" class="open_contents"></td>
+                        </tr>
+                        <tr class="blind show_content" >
+                          <td colspan="7" >
+                            <div class="review_content" th:text="${r.reviewContents}"></div>
+                            <form class="frm_remove_review" method="post" th:action="@{/manage/removeReview.do}">
+                              <input type="hidden" name="reviewNo" th:value="${r.reviewNo}">
+                              <button type="submit" class="btn_remove_review">댓글삭제</button>
+                            </form>
                           </td>
                         </tr>
                       </th:block>
+
                     </tbody>
                     <!--/* 페이징 처리 */-->
                     <tfoot>
                       <tr>
-                        <td colspan="8" th:utext="${paging}" class="paging"></td>
+                        <td colspan="7" th:utext="${paging}" class="paging"></td>
                       </tr>
                     </tfoot>
                   </table>
                     
-                  <!--/* 검색기능 */-->
-                  <div>
-                    <form id="frm_search" method="get" th:action="@{/manage/searchReview.do}" >
-                      <select name="column" id="column" >
-                        <option value="USER_NO">회원번호</option>
-                        <option value="EMAIL">이메일</option>
-                        <option value="NAME">이름</option>
-                        <option value="MOBILE">전화번호</option>
-                        <option value="JOINED_AT">가입일</option>
-                      </select>
-                      <input type="text" name="query" id="query" placeholder="검색어 입력" >
-                      <button type="submit" id="btn_search_rewiew" >검색</button>
-                    </form>
-                  </div>
+
                 
                 </div>
               </div>

@@ -17,8 +17,11 @@ import org.springframework.ui.Model;
 
 import com.tour.hanbando.dao.ManageMapper;
 import com.tour.hanbando.dao.UserMapper;
+import com.tour.hanbando.dto.HotelDto;
 import com.tour.hanbando.dto.InactiveUserDto;
 import com.tour.hanbando.dto.LeaveUserDto;
+import com.tour.hanbando.dto.PackageDto;
+import com.tour.hanbando.dto.ReviewDto;
 import com.tour.hanbando.dto.UserDto;
 import com.tour.hanbando.util.MyPageUtils;
 import com.tour.hanbando.util.MySecurityUtils;
@@ -204,7 +207,7 @@ public class ManageServiceImpl implements ManageService {
       PrintWriter out = response.getWriter();
       out.println("<script>");
       if(insertLeaveUserResult == 1 && deleteUserResult == 1) {
-        out.println("alert('회원 탈퇴가 완료되었습니다. 탈퇴회원 목록에서 확인 가능합니다.");
+        out.println("alert('회원 탈퇴가 완료되었습니다. 탈퇴회원 목록에서 확인 가능합니다.')");
         out.println("location.href='" + request.getContextPath() + "/manage/leaveUserList.do'");  // 회원 탈퇴시킨 뒤 탈퇴회원 관리 목록으로 이동
       } else {
         out.println("alert('회원이 탈퇴되지 않았습니다.')");
@@ -219,6 +222,10 @@ public class ManageServiceImpl implements ManageService {
     
   }
   
+  /**
+   * 찜 목록 
+   */
+
   
   /**
    * 휴면회원 목록
@@ -370,6 +377,165 @@ public class ManageServiceImpl implements ManageService {
     model.addAttribute("beginNo", total - (page - 1) * display);
     model.addAttribute("total", total);
     
+  }
+  
+  /**
+   * 패키지 상품 목록
+   * 
+   * @author 심희수
+   * @param request
+   * @param model
+   * @return 전체 패키지 목록, 페이징 정보, 총 패키지 상품 수 반환
+   */
+  @Transactional(readOnly=true)
+  @Override
+  public void loadPackageList(HttpServletRequest request, Model model) {
+    
+    Optional<String> opt = Optional.ofNullable(request.getParameter("page"));
+    int page = Integer.parseInt(opt.orElse("1"));
+    int total = manageMapper.getPackageCount();
+    int display = 20;
+    
+    myPageUtils.setPaging(page, total, display);
+    
+    Map<String, Object> map = Map.of("begin", myPageUtils.getBegin()
+                                   , "end", myPageUtils.getEnd());
+    
+    List<PackageDto> packageList = manageMapper.getPackageList(map);
+
+    model.addAttribute("packageList", packageList);
+    model.addAttribute("paging", myPageUtils.getMvcPaging(request.getContextPath() + "/manage/productList.do"));
+    model.addAttribute("beginNo", total - (page - 1) * display);
+    model.addAttribute("total", total);
+  }
+  
+  /**
+   * 호텔 상품 목록
+   * 
+   * @author 심희수
+   * @param request
+   * @param model
+   * @return 전체 호텔 목록, 페이징 정보, 총 호텔 상품 수 반환
+   */
+  @Transactional(readOnly=true)
+  @Override
+  public void loadHotelList(HttpServletRequest request, Model model) {
+    
+    Optional<String> opt = Optional.ofNullable(request.getParameter("page"));
+    int page = Integer.parseInt(opt.orElse("1"));
+    int total = manageMapper.getHotelCount();
+    int display = 20;
+    
+    myPageUtils.setPaging(page, total, display);
+    
+    Map<String, Object> map = Map.of("begin", myPageUtils.getBegin()
+                                   , "end", myPageUtils.getEnd());
+    List<HotelDto> hotelList = manageMapper.getHotelList(map);
+    
+    model.addAttribute("hotelList", hotelList);
+    model.addAttribute("paging", myPageUtils.getMvcPaging(request.getContextPath() + "/manage/hotelProductList.do"));
+    model.addAttribute("beginNo", total - (page - 1) * display);
+    model.addAttribute("total", total);
+  }
+  
+  /**
+   * 호텔 추천/비추천 여부 변경
+   */
+  @Override
+  public ResponseEntity<Map<String, Object>> modifyHotelRecommend(HttpServletRequest request) {
+    
+    int recommendStatus = Integer.parseInt(request.getParameter("recommendStatus"));
+    int hotelNo = Integer.parseInt(request.getParameter("hotelNo"));
+    int status = Integer.parseInt(request.getParameter("status"));
+    
+    HotelDto hotel = HotelDto.builder()
+                        .recommendStatus(recommendStatus)
+                        .hotelNo(hotelNo)
+                        .status(status)
+                        .build();
+    
+    int modifyRecommendResult = manageMapper.updateHotelRecommend(hotel);
+    
+    return new ResponseEntity<>(Map.of("modifyRecommendResult", modifyRecommendResult), HttpStatus.OK);
+  }
+  
+  /**
+   * 전체 리뷰 목록
+   * 
+   * @author 심희수
+   * @param request
+   * @param model
+   * @return 전체 리뷰 목록, 페이징 정보, 총 리뷰 수 반환
+   */
+  @Transactional(readOnly=true)
+  @Override
+  public void loadReviewList(HttpServletRequest request, Model model) {
+    
+    Optional<String> opt = Optional.ofNullable(request.getParameter("page"));
+    int page = Integer.parseInt(opt.orElse("1"));
+    int total = manageMapper.getReviewCount();
+    int display = 20;
+    
+    myPageUtils.setPaging(page, total, display);
+    
+    Map<String, Object> map = new HashMap<>();
+    map.put("begin", myPageUtils.getBegin());
+    map.put("end", myPageUtils.getEnd());
+    
+    List<ReviewDto> reviewList = manageMapper.getReviewList(map);
+    
+    model.addAttribute("reviewList", reviewList);
+    model.addAttribute("paging", myPageUtils.getMvcPaging(request.getContextPath() + "/manage/reviewList.do"));
+    model.addAttribute("beginNo", total - (page - 1) * display);
+    model.addAttribute("total", total);
+  }
+  
+  /**
+   * 리뷰 검색
+   * 
+   * @author 심희수
+   * @param request
+   * @param model
+   * @return 검색한 리뷰 목록, 페이징 정보, 검색한 총 리뷰 수 반환
+   */
+  @Transactional(readOnly=true)
+  @Override
+  public void loadSearchReviewList(HttpServletRequest request, Model model) {
+    
+    String columnGubun = request.getParameter("columnGubun");
+    String column = request.getParameter("column");
+    String query = request.getParameter("query");
+    
+    Map<String, Object> map = new HashMap<>();
+    map.put("columnGubun", columnGubun);
+    map.put("column", column);
+    map.put("query", query);
+    
+    int total = manageMapper.getSearchReviewCount(map);
+    
+    Optional<String> opt = Optional.ofNullable(request.getParameter("page"));
+    int page = Integer.parseInt(opt.orElse("1"));
+    int display = 20;
+    
+    myPageUtils.setPaging(page, total, display);
+    
+    map.put("begin", myPageUtils.getBegin());
+    map.put("end", myPageUtils.getEnd());
+    
+    List<ReviewDto> reviewList = manageMapper.getSearchReviewList(map);
+    
+    model.addAttribute("reviewList", reviewList);
+    model.addAttribute("paging", myPageUtils.getMvcPaging(request.getContextPath() + "/manage/searchReview.do", "column=" + column + "&query=" + query + "&columnGubun=" + columnGubun));
+    model.addAttribute("beginNo", total - (page - 1) * display);
+    model.addAttribute("total", total);
+  }
+  
+  /**
+   * 리뷰 삭제
+   */
+  @Override
+  public int removeReview(int reviewNo) {
+    return manageMapper.deleteReview(reviewNo);
   }
   
 }

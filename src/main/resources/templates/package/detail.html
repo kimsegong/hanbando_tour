@@ -67,7 +67,9 @@
 <body>
   
   <div th:replace="~{/layout/header::header}"></div>
+
   
+  <!--
          <th:block th:if="${session.user.auth == 0}">
          <form id="frm_btn" method="post">
             <input type="hidden" name="packageNo" class="heart" th:value="${packageDto.packageNo}"> 
@@ -89,33 +91,18 @@
            <button type="button" id="btn_edit">편집</button> 
            <button type="button" id="btn_remove">삭제</button> 
          </form>
-         </th:block>  
+         </th:block>   -->
+         
   <div class="container text-center">
    <div class="row">
     <div class="col-8">
       <div style="text-align: left;" th:text="|조회수 : ${#numbers.formatInteger(packageDto.hit, 1, 'COMMA')}|"></div>
-      <!-- 패키지 슬라이드 시작-->
-     <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="true">
-      <div class="carousel-indicators">
-        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
-        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
+      <div th:each="atc, iterStat : ${attachList.attachList}">
+          <input type="hidden" id="attach" th:value="${attachList.attachList}">
+          <img th:if="${iterStat.index == 1}" 
+               th:src="@{|${atc.imagePath}/${atc.filesystemName}|}" class="img-fluid">
       </div>
-      <div class="carousel-inner">
-        <div th:each="atc : ${attachList.attachList}">
-            <img th:src="@{|${atc.imagePath}/${atc.filesystemName}|}"  class="d-block w-100" alt="image">
-        </div>
-      </div>
-      <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
-        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-        <span class="visually-hidden">Previous</span>
-      </button>
-      <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
-        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-        <span class="visually-hidden">Next</span>
-      </button>
-     </div>
-      <!-- 패키지 슬라이드 끝 -->
+
       <div>
        <div class="choice">여행 주요일정</div>
        <div style="text-align: left;" th:text="${packageDto.packagePlan}"></div>
@@ -189,15 +176,13 @@
             id="profile-tab-pane"
             role="tabpanel"
             aria-labelledby="profile-tab" th:text="${packageDto.hotelContents}"></div>
-        </div>
-        
+        </div>        
         
         <input type="hidden" name="userNo" id="userNo" th:value="${session.user.userNo}">
         <div th:each="reservation : ${reserve}">
             <div class="reserveNo" th:text="${reservation.reserveNo}|"th:value="${reservation.reserveNo}"></div>
             <div class="reserveUserNo" th:text="${reservation.userDto.userNo}" th:value="${reservation.userDto.userNo}"></div>
         </div>
-        
         
         <div class="choice">여행 후기</div>
         
@@ -257,24 +242,63 @@
        </div>
        <button class="btn btn-kong"  style="margin-left: 220px; margin-top: 50px;">
          <input type="hidden" id="packageNoHeart" name="packageNo" th:value="${packageDto.packageNo}">
+         <input type="hidden" name="userNo" th:value="${session.user.userNo}">  
         <div id="heartButton" style="color: white; cursor: pointer;">찜하기♥</div>
        </button>
-       <button class="btn btn-kong1"  style="margin-top: 50px;">
-        <div id="calender" style="color: white; cursor: pointer;">출발일선택</div>
-       </button>
-       <button class="btn btn-kong1"  style="margin-top: 50px;" id="btn_reserve">
+      <div style="margin-top: 50px;">
+       <div class="input-group date" data-provide="datepicker" style="width: 220px;">
+        <input type="text" class="form-control" id="reserve_start">
+        <div class="input-group-addon">
+        <button class="btn btn-kong1">
+         <div id="calender" style="color: white; cursor: pointer;">출발일선택</div>
+        </button>
+        </div>
+       </div>       
+      </div>
+       <button class="btn btn-kong1" id="btn_reserve" style="margin-top: 50px;">
         <div style="color: white; cursor: pointer;">예약하러가기</div>
        </button>
       </div> 
     </div>
    </div>
   </div>
-
   
+
   <script th:inline="javascript">   
+
+
+
+$.fn.datepicker.dates['ko'] = {
+    days: ["일요일", "월요일", "화요일", "수요일", "목요일", "금요일", "토요일"],
+    daysShort: ["일", "월", "화", "수", "목", "금", "토"],
+    daysMin: ["일", "월", "화", "수", "목", "금", "토"],
+    months: ["1월", "2월", "3월", "4월", "5월", "6월", "7월", "8월", "9월", "10월", "11월", "12월"],
+    monthsShort: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"],
+    today: "오늘",
+    clear: "닫기",
+    format: "yyyy-mm-dd",
+    titleFormat: "yyyy MM", 
+    weekStart: 0
+    };
+
+
+     $(".date").datepicker({
+        language: 'ko',        // 한글
+        format: 'yyyy-mm-dd',  // 달력 포맷
+        autoclose: true,       // 선택 시 자동 닫기
+        minViewMode: 0,        // 최소 뷰 모드 (일)
+        maxViewMode: 2,        // 최대 뷰 모드 (년도)
+        startView: 0,          // 달력이 열리면 일부터 선택
+        clearBtn: true,        // 닫기 버튼
+        orientation: "bottom",
+        startDate: new Date(), // 오늘부터 선택 가능
+        endDate: '+2m'         // 2개월 까지만 열어둠
+    });
+
+    
     function fnGoReserve(){
       $('#btn_reserve').click(function(){
-         location.href='/reserve/write.form?packageNo=[[${packageDto.packageNo}]]';
+         location.href='/reserve/write.form?packageNo=[[${packageDto.packageNo}]]&resStart=' + $('#reserve_start').val();
       })
    }
    
@@ -513,46 +537,57 @@
           addHeart();
       });
   });
+        
+  	const fnReserveClick = () => {
+          $('#btn_reserve').click(() => {
+            let user = /*[[${session.user}]]*/ null;
+            if(user === null){
+              if(confirm('로그인이 필요한 기능입니다. 로그인할까요?')){
+                location.href = '/user/login.form';
+              } else {
+                return;
+              }
+            }
+          })
+        }
+  
+  	function addHeart() {
+    var user = /*[[${session.user}]]*/ null;
 
-    function addHeart() {
+    // 로그인하지 않은 경우
+    if (user === null) {
+        if (confirm('로그인이 필요한 기능입니다. 로그인하시겠습니까?')) {
+            location.href = '/user/login.form';
+        }
+        return;
+    }
+
+    // 로그인한 경우
     var packageNo = $('#packageNoHeart').val();
     var userNo = $('#userNo').val();
-    var confirmResult = confirm('찜하기 페이지로 이동하시겠습니까?');
-    if (confirmResult) {
-        $.ajax({
-            type: 'post',
-            url: '/package/heartPackage.do',
-            data: {
-                packageNo: packageNo,
-                userNo: userNo
-            },
-            success: function (response) {
-                console.log('찜하기 성공');
-                window.location.href = '/user/heart.do';
-            },
-            error: function (error) {
-                console.error('찜하기 실패:', error);
-            }
-        });
-    } else {
-        $.ajax({
-            type: 'post',
-            url: '/package/heartPackage.do',
-            data: {
-                packageNo: packageNo,
-                userNo: userNo
-            },
-            success: function (response) {
-                console.log('찜하기 성공');
-            },
-            error: function (error) {
-                console.error('찜하기 실패:', error);
-            }
-        });
-     }
-  }
+    var confirmResult = confirm('찜하기 성공! 찜하기 페이지로 이동하시겠습니까?');
 
-  
+    // 확인 결과에 따라 찜하기 요청을 항상 보냄
+    $.ajax({
+        type: 'post',
+        url: '/package/heartPackage.do',
+        data: {
+            packageNo: packageNo,
+            userNo: userNo
+        },
+        success: function (response) {
+            console.log('찜하기 성공');
+            // 확인 결과에 따라 페이지 이동 여부를 결정
+            if (confirmResult) {
+                window.location.href = '/user/heart.do?userNo='+ userNo ;
+            }
+        },
+        error: function (error) {
+            console.error('찜하기 실패:', error);
+        }
+    });
+}
+
 
     
    fnGoReserve();
@@ -561,6 +596,8 @@
    fnReviewAdd();
    fnReviewList();
    fnReviewRemove();
+
+   fnReserveClick();
 
    
   </script>
