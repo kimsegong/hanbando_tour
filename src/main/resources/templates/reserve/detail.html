@@ -2,6 +2,7 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 
 <head th:replace="~{/layout/header::head('예약 상세')}">
+ 
 </head> <!-- 이거 알맞게 바꿔주세요-->
 <style>
   .blind {
@@ -150,6 +151,7 @@
 	  </div>
 	
 	</div>
+	<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
   <script src="https://cdn.iamport.kr/v1/iamport.js"></script>
   <script>
     
@@ -204,7 +206,6 @@
               dataType: 'json'
             }).done(function (data) {
               console.log(data);
-              alert('결제성공했습니다');
               // 결제승인시 정보 DB 저장 후 예약상태를 '결제대기' >> '예약완료'로 수정
               $.ajax({
                 url: "/payment/modifyResStatus", // 두 번째 요청의 URL
@@ -223,6 +224,7 @@
                 }
               });
             })
+            alert('성공적으로 결제되었습니다. 예약완료 되었습니다.');
           } else {
               console.log(rsp);
               alert(`결제에 실패하였습니다. ${rsp.error_msg}`);
