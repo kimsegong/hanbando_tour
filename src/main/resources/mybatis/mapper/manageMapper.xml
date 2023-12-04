@@ -5,7 +5,61 @@
 
 <mapper namespace="com.tour.hanbando.dao.ManageMapper">
   
+  <!-- 패키지테이블 -->
+  <resultMap type="PackageDto"          id="PackageMap">
+    <id      column="PACKAGE_NO"        property="packageNo"/>
+    <result  column="PACKAGE_TITLE"     property="packageTitle"/>
+    <result  column="MINI_ONE"          property="miniOne"/>
+    <result  column="MINI_TWO"          property="miniTwo"/>
+    <result  column="MINI_THREE"        property="miniThree"/>
+    <result  column="PACKAGE_PLAN"      property="packagePlan"/>
+    <result  column="PACKAGE_CONTENTS"  property="packageContents"/>
+    <result  column="HOTEL_CONTENTS"    property="hotelContents"/>
+    <result  column="PRICE"             property="price"/>
+    <result  column="DANGER"            property="danger"/>
+    <result  column="CREATED_AT"        property="createdAt"/>
+    <result  column="MODIFIED_AT"       property="modifiedAt"/>
+    <result  column="HIT"               property="hit"/>
+    <result  column="STATUS"            property="status"/>
+    <result  column="MAX_PEOPLE"        property="maxPeople"/>
+    <result  column="RECOMMEND_STATUS"  property="recommendStatus"/>
+    <association javaType="RegionDto" property="regionDto">
+      <id        column="REGION_NO"   property="regionNo"/>
+      <result    column="REGION_NAME" property="regionName"/>
+    </association>
+    <association javaType="ThemeDto" property="themeDto">
+      <id        column="THEME_NO"   property="themeNo"/>
+    </association>
+    <association javaType="UserDto" property="userDto">
+      <id        column="USER_NO"   property="userNo"/>
+    </association>
+    <association javaType="ProductImageDto" property="productImageDto">
+      <id        column="IMAGE_NO"          property="imageNo"/>
+    </association>
+  </resultMap>
+    
+  <!-- 호텔 테이블 -->
+  <resultMap type="HotelDto"              id="HotelMap">
+    <id      column="HOTEL_NO"          property="hotelNo" />
+    <result  column="HOTEL_NAME"        property="hotelName" />
+    <result  column="HOTEL_ADDRESS"     property="hotelAddress" />
+    <result  column="LATITUDE"          property="latitude" />
+    <result  column="LONGITUDE"         property="longitude" />
+    <result  column="HOTEL_DETAIL"      property="hotelDetail" />
+    <result  column="PHONE_NUMBER"      property="phoneNumber" />
+    <result  column="H_EMAIL"           property="HEmail" />
+    <result  column="CREATED_AT"        property="createdAt" />
+    <result  column="MODIFIED_AT"       property="modifiedAt" />
+    <result  column="HIT"               property="hit" />
+    <result  column="STATUS"            property="status" />
+    <result  column="RECOMMEND_STATUS"  property="recommendStatus" />
+    <association javaType="RegionDto" property="regionDto">
+      <id        column="REGION_NO"   property="regionNo"/>
+      <result    column="REGION_NAME" property="regionName"/>
+    </association>
+  </resultMap>
   
+  <!-- 리뷰 테이블 -->
   <resultMap type="ReviewDto"         id="ReviewMap">
     <id      column="REVIEW_NO"       property="reviewNo"/>
     <result  column="PACKAGE_NO"      property="packageNo" />
@@ -121,6 +175,51 @@
              WHERE ${column} LIKE '%' || #{query} || '%')
      WHERE RN BETWEEN #{begin} AND #{end}
   </select>
+  
+  <!-- 패키지 상품 목록 -->
+  <select id="getPackageCount" resultType="int">
+    SELECT COUNT(*)
+      FROM PACKAGE_T
+  </select>
+  <select id="getPackageList" parameterType="Map" resultMap="PackageMap">
+    SELECT A.PACKAGE_NO, A.USER_NO, A.REGION_NO, A.REGION_NAME, A.THEME_NO, A.PACKAGE_TITLE, A.MINI_ONE, A.MINI_TWO, A.MINI_THREE, A.PACKAGE_PLAN, A.PACKAGE_CONTENTS, A.HOTEL_CONTENTS, A.PRICE, A.DANGER, A.CREATED_AT, A.MODIFIED_AT, A.HIT, A.STATUS, A.MAX_PEOPLE, A.RECOMMEND_STATUS
+      FROM (SELECT ROW_NUMBER() OVER(ORDER BY P.PACKAGE_NO DESC) AS RN, P.PACKAGE_NO, P.USER_NO, P.REGION_NO, R.REGION_NAME, P.THEME_NO, P.PACKAGE_TITLE, P.MINI_ONE, P.MINI_TWO, P.MINI_THREE, P.PACKAGE_PLAN, P.PACKAGE_CONTENTS, P.HOTEL_CONTENTS, P.PRICE, P.DANGER, P.CREATED_AT, P.MODIFIED_AT, P.HIT, P.STATUS, P.MAX_PEOPLE, P.RECOMMEND_STATUS
+              FROM PACKAGE_T P INNER JOIN REGION_T R
+                ON R.REGION_NO = P.REGION_NO) A
+     WHERE A.RN BETWEEN #{begin} AND #{end}
+  </select>
+  
+  <!-- 패키지 상품 검색 -->
+  
+  <!-- 호텔 상품 목록 -->
+  <select id="getHotelCount" resultType="int">
+    SELECT COUNT(*)
+      FROM HOTEL_T
+  </select>
+  <select id="getHotelList" parameterType="Map" resultMap="HotelMap">
+    SELECT A.HOTEL_NO, A.REGION_NO, A.REGION_NAME, A.HOTEL_NAME, A.HOTEL_ADDRESS, A.LATITUDE, A.LONGITUDE, A.HOTEL_DETAIL, A.PHONE_NUMBER, A.H_EMAIL, A.CREATED_AT, A.MODIFIED_AT, A.HIT, A.STATUS, A.RECOMMEND_STATUS
+      FROM (SELECT ROW_NUMBER() OVER(ORDER BY H.HOTEL_NO DESC) AS RN, H.HOTEL_NO, H.REGION_NO, R.REGION_NAME, H.HOTEL_NAME, H.HOTEL_ADDRESS, H.LATITUDE, H.LONGITUDE, H.HOTEL_DETAIL, H.PHONE_NUMBER, H.H_EMAIL, H.CREATED_AT, H.MODIFIED_AT, H.HIT, H.STATUS, H.RECOMMEND_STATUS
+              FROM REGION_T R INNER JOIN HOTEL_T H
+                ON H.REGION_NO = R.REGION_NO) A
+     WHERE A.RN BETWEEN #{begin} AND #{end}
+  </select>
+  
+  <!-- 호텔 추천/비추천 변경 -->
+  <update id="updateHotelRecommend" parameterType="HotelDto">
+    UPDATE HOTEL_T
+       SET RECOMMEND_STATUS = #{recommendStatus}
+         , STATUS = #{status}
+     WHERE HOTEL_NO = #{hotelNo}
+  </update>
+  
+  <!-- 호텔 상품 검색 -->
+  
+  
+  
+  
+  <!-- 예약 목록 -->
+  <!-- 예약 검색 목록 -->
+  <!-- 예약 상세 -->
   
   <!-- 리뷰 목록 -->
   <select id="getReviewCount" resultType="int">
