@@ -17,6 +17,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.tour.hanbando.service.HotelService;
 
 import lombok.RequiredArgsConstructor;
+import retrofit2.http.GET;
 
 @RequestMapping("/hotel")
 @RequiredArgsConstructor
@@ -53,7 +54,6 @@ public class HotelController {
   public String hotelDetail(
       @RequestParam(value = "packageNo", required = false, defaultValue = "0") int hotelNo, 
       HttpServletRequest request, Model model) {
-    
    return "hotel/detail";
   } 
   
@@ -61,6 +61,7 @@ public class HotelController {
   @GetMapping("write.form")
   public String write(Model model) {
     hotelService.regionList(model);
+    hotelService.makeHotelNo(model);
     return "hotel/write";
   }
   
@@ -69,11 +70,13 @@ public class HotelController {
     return "redirect:/hotel/list.do";
   }
   
-  
-  @PostMapping("addRoom.do")
-  public void writeHotelRoom(MultipartHttpServletRequest multipartHttpServletRequest) {
-      
+  @GetMapping("addRoom.form")
+  public String HotelRoom(HttpServletRequest request, Model model) {
+    hotelService.makeRoomNo(model);
+    return "hotel/hotelRoom";  
   }
   
+  @PostMapping("addRoom.do")
+  public void writeRoom(MultipartHttpServletRequest multipartHttpServletRequest) {}
   
 }
