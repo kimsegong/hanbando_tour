@@ -184,7 +184,7 @@
 	  LEFT JOIN REGION_T R ON P.REGION_NO = R.REGION_NO
 	  LEFT JOIN THEME_T T ON P.THEME_NO = T.THEME_NO
 	  WHERE P.RN BETWEEN #{begin} AND #{end}
-	    <if test="recommendStatus != null and recommendStatus == 1">
+	    <if test="condition == 'recommendStatus'">
 	      AND P.RECOMMEND_STATUS = 1
 	    </if>
 	</select>
@@ -491,6 +491,23 @@
           FROM PRODUCT_IMAGE_T
          WHERE FILESYSTEM_NAME = #{filesystemName}
       </delete>
+      
+      <select id="getPackageInfoByReservationStart" parameterType="map" resultType="PackageDto">
+        SELECT
+            PACKAGE_NO,
+            PACKAGE_TITLE,
+            MAX_PEOPLE
+        FROM
+            PACKAGE_T
+        WHERE
+            PACKAGE_NO = #{packageNo}
+            AND MAX_PEOPLE = (
+                SELECT COALESCE(SUM(RESERVE_PERSON), 0)
+                FROM RESERVE_T
+                WHERE RESERVE_START = #{reserveStart}
+                AND PACKAGE_NO = #{packageNo}
+            )
+      </select>
       
 </mapper>
 
