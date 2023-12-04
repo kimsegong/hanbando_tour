@@ -592,5 +592,5 @@ public class PackageServiceImpl implements PackageService {
         int removeResult = packageMapper.deleteReview(reviewNo);
         return Map.of("removeResult", removeResult);
       }
-
+    
 }

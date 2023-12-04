@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{/layout/header::head('약관동의')}"></head>
+
+
+<body>
+  
+  <div th:replace="~{/layout/header::header}"></div>
+  
+  <div class="container text-center">  <!-- 그리드 시작 -->  
+    <div class="row">
+      <div class="col-1">
+    <div class="w3-sidebar w3-bar-block" style="width:15%; height:200px;"> <!-- 사이드바 -->
+      <a href='' class="w3-bar-item w3-button">내 정보</a>
+      <a href='' class="w3-bar-item w3-button">내 예약</a>
+    </div>    
+      </div>
+      <div class="col-10" >
+       <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">!!!!!#</th>
+              <th scope="col">First</th>
+              <th scope="col">Last</th>
+              <th scope="col">Handle</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">1</th>
+              <td>Mark</td>
+              <td>Otto</td>
+              <td>@mdo</td>
+            </tr>
+            <tr>
+              <th scope="row">2</th>
+              <td>Jacob</td>
+              <td>Thornton</td>
+              <td>@fat</td>
+            </tr>
+            <tr>
+              <th scope="row">3</th>
+              <td colspan="2">Larry the Bird</td>
+              <td>@twitter</td>
+            </tr>
+          </tbody>
+        </table>           
+      </div>
+    <div class="col-1">      
+    </div>
+  </div>
+  </div>
+    
+  <div th:replace="~{/layout/footer::footer}"></div>
+  
+</body>
+</html>
