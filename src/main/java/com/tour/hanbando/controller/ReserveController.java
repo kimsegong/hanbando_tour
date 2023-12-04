@@ -16,7 +16,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.tour.hanbando.dto.PackageDto;
 import com.tour.hanbando.dto.ReserveDto;
-import com.tour.hanbando.dto.UserDto;
 import com.tour.hanbando.service.PackageService;
 import com.tour.hanbando.service.ReserveService;
 
@@ -45,7 +44,7 @@ public class ReserveController {
   public String reserve(HttpServletRequest request, Model model) {
     PackageDto pack = packageService.getPackage(Integer.parseInt(request.getParameter("packageNo")));
     model.addAttribute("pack", pack);
-//    model.addAttribute("resDate", request.getParameter("resDate"));
+    model.addAttribute("resStart", request.getParameter("resStart").replace("-", "/"));
     return "reserve/write";
   }
   
@@ -102,6 +101,10 @@ public class ReserveController {
     redirectAttributes.addFlashAttribute("removeResult", reserveService.removeReserve(request));
     return "redirect:/reserve/reserveList.do?userNo=" + request.getParameter("userNo");
   }
+  
+
+  
+  
   
   
   

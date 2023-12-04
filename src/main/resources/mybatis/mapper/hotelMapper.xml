@@ -297,6 +297,11 @@
 	 SELECT *
   	 FROM REGION_T
  </select>
+  
+  <select id="getHotelNo" resultType="int">
+    SELECT HOTEL_SEQ.NEXTVAL
+      FROM DUAL
+  </select>
  
  
  </mapper>
