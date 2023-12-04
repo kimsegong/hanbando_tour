@@ -69,19 +69,9 @@
     // 전역 변수
     var page = 1;
     var totalPage = 0;
-  
     
 		var btnVal=0;
-		$(document).ready(function(){
-			///fnGetHotelList(btnVal);
-  		//fnScroll(btnVal);
-  		
-		});    
 		
-   
-      
-    
-  
       const fnGetHotelList = (btnVal) => {
       $.ajax({
         type: 'get',
@@ -151,9 +141,7 @@
     fnScroll();
   </script>
 
-
     <div th:replace="~{/layout/footer::footer}"></div>
-
  
 </body>
 </html>

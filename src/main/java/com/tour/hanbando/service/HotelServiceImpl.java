@@ -126,20 +126,24 @@ public class HotelServiceImpl implements HotelService {
   public int increseHit(int hotelNo) {
     return hotelMapper.hotelHit(hotelNo);
   }
-  
+  @Transactional(readOnly = true)
   @Override
   public void regionList(Model model) {
     model.addAttribute("region", hotelMapper.getRegion());
   }
-  
+  @Transactional(readOnly = true)
   @Override
   public void hotelRoomList(Model model) {
     // TODO Auto-generated method stub
-    
   }
-  
+  @Transactional(readOnly = true)
   @Override
     public void makeHotelNo(Model model) {
       model.addAttribute("hotelNo", hotelMapper.getHotelNo());
+    }
+  @Transactional(readOnly = true)
+  @Override
+    public void makeRoomNo(Model model) {
+      model.addAttribute("roomNo", hotelMapper.getRoomNo());
     }
 }
