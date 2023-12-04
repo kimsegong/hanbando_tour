@@ -125,7 +125,7 @@
             
             <div>
               <form id="frm_btn" method="post">
-                <input type="hidden" name="reserveNo" th:value="${reserve.reserveNo}">
+                <input type="hidden" name="reserveNo" id="reserveNo" th:value="${reserve.reserveNo}">
                 <input type="hidden" name="userNo" th:value="${reserve.userDto.userNo}">
                 <input type="hidden" name="userName" th:value="${reserve.userDto.name}">
                 <input type="hidden" name="userMobile" th:value="${reserve.userDto.mobile}">
