@@ -45,7 +45,7 @@ public class ReserveController {
   public String reserve(HttpServletRequest request, Model model) {
     PackageDto pack = packageService.getPackage(Integer.parseInt(request.getParameter("packageNo")));
     model.addAttribute("pack", pack);
-//    model.addAttribute("resDate", request.getParameter("resDate"));
+    model.addAttribute("resStart", request.getParameter("resStart").replace("-", "/"));
     return "reserve/write";
   }
   

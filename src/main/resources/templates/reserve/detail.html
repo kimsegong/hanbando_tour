@@ -71,8 +71,8 @@
                   <td th:text="${reserve.packageDto.packageTitle}"></td>
                 </tr>
                 <tr>
-                  <td>여행기간</td>
-                  <td th:text="|${reserve.reserveStart} ~ ${reserve.reserveFinish}|"></td>
+                  <td>출발일</td>
+                  <td th:text="${reserve.reserveStart}"></td>
                 </tr>
                 <tr>
                   <td>총인원</td>
