@@ -57,9 +57,12 @@ public interface PackageMapper {
   public int starAve(int packageNo);
   public int deleteReview(int reviewNo);
   
-  // 아몰랑
+  // 부가요소
   public List<ReserveDto> getReserve(int packageNo);
+  public PackageDto getPackageInfoByReservationStart(Map<String, Object> map);
   
   // 찜 
   public int heartProduct(HeartDto heart);
+  public List<HeartDto> selectHeartList(Map<String, Object> map);
+  public int getHeartCount(int userNo);
 }

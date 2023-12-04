@@ -97,31 +97,12 @@
    <div class="row">
     <div class="col-8">
       <div style="text-align: left;" th:text="|조회수 : ${#numbers.formatInteger(packageDto.hit, 1, 'COMMA')}|"></div>
-      <!-- 패키지 슬라이드 시작-->
-     <div id="carouselExampleIndicators" class="carousel slide dynamicCarousel" data-bs-ride="true">
-      <div class="carousel-indicators">
-        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
-        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
+      <div th:each="atc, iterStat : ${attachList.attachList}">
+          <input type="hidden" id="attach" th:value="${attachList.attachList}">
+          <img th:if="${iterStat.index == 1}" 
+               th:src="@{|${atc.imagePath}/${atc.filesystemName}|}" class="img-fluid">
       </div>
-      <div class="carousel-inner">
-		  <div class="carousel-item active">
-        	<div th:each="atc : ${attachList.attachList}">
-		    <input type="hidden" id="attach" th:value="${attachList.attachList}">
-            <img th:src="@{|${atc.imagePath}/${atc.filesystemName}|}"  class="d-block w-100" alt="image">
-          </div>
-        </div>
-      </div>
-      <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
-        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-        <span class="visually-hidden">Previous</span>
-      </button>
-      <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
-        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-        <span class="visually-hidden">Next</span>
-      </button>
-     </div>
-      <!-- 패키지 슬라이드 끝 -->
+
       <div>
        <div class="choice">여행 주요일정</div>
        <div style="text-align: left;" th:text="${packageDto.packagePlan}"></div>
@@ -197,7 +178,7 @@
             aria-labelledby="profile-tab" th:text="${packageDto.hotelContents}"></div>
         </div>        
         
-      <!--  <input type="hidden" name="userNo" id="userNo" th:value="${session.user.userNo}"> -->
+        <input type="hidden" name="userNo" id="userNo" th:value="${session.user.userNo}">
         <div th:each="reservation : ${reserve}">
             <div class="reserveNo" th:text="${reservation.reserveNo}|"th:value="${reservation.reserveNo}"></div>
             <div class="reserveUserNo" th:text="${reservation.userDto.userNo}" th:value="${reservation.userDto.userNo}"></div>
@@ -261,17 +242,18 @@
        </div>
        <button class="btn btn-kong"  style="margin-left: 220px; margin-top: 50px;">
          <input type="hidden" id="packageNoHeart" name="packageNo" th:value="${packageDto.packageNo}">
+         <input type="hidden" name="userNo" th:value="${session.user.userNo}">  
         <div id="heartButton" style="color: white; cursor: pointer;">찜하기♥</div>
        </button>
-       <div style="margin-top: 50px;">
-      <div class="input-group date" data-provide="datepicker" style="width: 220px;">
-    <input type="text" class="form-control">
-    <div class="input-group-addon">
-     <button class="btn btn-kong1">
-       <div id="calender" style="color: white; cursor: pointer;">출발일선택</div>
-     </button>
-    </div>
-   </div>       
+      <div style="margin-top: 50px;">
+       <div class="input-group date" data-provide="datepicker" style="width: 220px;">
+        <input type="text" class="form-control" id="reserve_start">
+        <div class="input-group-addon">
+        <button class="btn btn-kong1">
+         <div id="calender" style="color: white; cursor: pointer;">출발일선택</div>
+        </button>
+        </div>
+       </div>       
       </div>
        <button class="btn btn-kong1" id="btn_reserve" style="margin-top: 50px;">
         <div style="color: white; cursor: pointer;">예약하러가기</div>
@@ -308,6 +290,7 @@ $.fn.datepicker.dates['ko'] = {
         maxViewMode: 2,        // 최대 뷰 모드 (년도)
         startView: 0,          // 달력이 열리면 일부터 선택
         clearBtn: true,        // 닫기 버튼
+        orientation: "bottom",
         startDate: new Date(), // 오늘부터 선택 가능
         endDate: '+2m'         // 2개월 까지만 열어둠
     });
@@ -315,7 +298,7 @@ $.fn.datepicker.dates['ko'] = {
     
     function fnGoReserve(){
       $('#btn_reserve').click(function(){
-         location.href='/reserve/write.form?packageNo=[[${packageDto.packageNo}]]';
+         location.href='/reserve/write.form?packageNo=[[${packageDto.packageNo}]]&resStart=' + $('#reserve_start').val();
       })
    }
    
@@ -582,7 +565,7 @@ $.fn.datepicker.dates['ko'] = {
     // 로그인한 경우
     var packageNo = $('#packageNoHeart').val();
     var userNo = $('#userNo').val();
-    var confirmResult = confirm('찜하기 페이지로 이동하시겠습니까?');
+    var confirmResult = confirm('찜하기 성공! 찜하기 페이지로 이동하시겠습니까?');
 
     // 확인 결과에 따라 찜하기 요청을 항상 보냄
     $.ajax({
@@ -594,10 +577,9 @@ $.fn.datepicker.dates['ko'] = {
         },
         success: function (response) {
             console.log('찜하기 성공');
-
             // 확인 결과에 따라 페이지 이동 여부를 결정
             if (confirmResult) {
-                window.location.href = '/user/heart.do';
+                window.location.href = '/user/heart.do?userNo='+ userNo ;
             }
         },
         error: function (error) {

@@ -64,6 +64,7 @@
       <association javaType="PackageDto" property="packageDto">
             <id column="PACKAGE_NO" property="packageNo"/>            
             <result column="PACKAGE_TITLE" property="packageTitle"/>      
+            <result column="PRICE" property="price"/>      
        </association>
       <association javaType="HotelDto" property="hotelDto">
             <id column="HOTEL_NO" property="hotelNo"/>            
@@ -184,7 +185,7 @@
 	  LEFT JOIN REGION_T R ON P.REGION_NO = R.REGION_NO
 	  LEFT JOIN THEME_T T ON P.THEME_NO = T.THEME_NO
 	  WHERE P.RN BETWEEN #{begin} AND #{end}
-	    <if test="recommendStatus != null and recommendStatus == 1">
+	    <if test="condition == 'recommendStatus'">
 	      AND P.RECOMMEND_STATUS = 1
 	    </if>
 	</select>
@@ -491,6 +492,38 @@
           FROM PRODUCT_IMAGE_T
          WHERE FILESYSTEM_NAME = #{filesystemName}
       </delete>
+      
+      <select id="getPackageInfoByReservationStart" parameterType="map" resultType="PackageDto">
+        SELECT
+            PACKAGE_NO,
+            PACKAGE_TITLE,
+            MAX_PEOPLE
+        FROM
+            PACKAGE_T
+        WHERE
+            PACKAGE_NO = #{packageNo}
+            AND MAX_PEOPLE = (
+                SELECT COALESCE(SUM(RESERVE_PERSON), 0)
+                FROM RESERVE_T
+                WHERE RESERVE_START = #{reserveStart}
+                AND PACKAGE_NO = #{packageNo}
+            )
+      </select>
+      
+     <select id="selectHeartList" parameterType="Map" resultMap="HeartMap">
+      SELECT  A.PACKAGE_NO, A.PACKAGE_TITLE, A.PRICE, A.USER_NO
+        FROM (SELECT ROW_NUMBER() OVER(ORDER BY H.USER_NO DESC) AS RN, H.USER_NO, H.PACKAGE_NO, P.PACKAGE_TITLE, P.PRICE
+                FROM HEART_T H INNER JOIN PACKAGE_T P
+                  ON H.PACKAGE_NO = P.PACKAGE_NO
+               WHERE H.USER_NO = #{userNo}) A
+       WHERE A.RN BETWEEN #{begin} AND #{end}       
+     </select>
+     
+     <select id="getHeartCount" resultType="int">
+      SELECT COUNT(*)
+        FROM HEART_T
+       WHERE USER_NO = #{userNo}
+      </select>
       
 </mapper>
 
