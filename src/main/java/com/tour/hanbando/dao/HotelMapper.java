@@ -19,4 +19,5 @@ public interface HotelMapper {
   public List<HotelDto> getRecommendHotelList(Map<String, Object> map);
   public List<HotelDto> getPriceHotelList(Map<String, Object> map);
   public List<RegionDto> getRegion();
+  public int getHotelNo();
 }

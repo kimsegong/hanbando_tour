@@ -11,4 +11,6 @@ public interface HotelService {
   public Map<String, Object> getHotelList(HttpServletRequest request);
   public int increseHit(int hotelNo);
   public void regionList(Model model);
+  public void hotelRoomList(Model model);
+  public void makeHotelNo(Model model);
 }
