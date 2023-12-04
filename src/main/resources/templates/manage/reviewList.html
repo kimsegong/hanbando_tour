@@ -214,8 +214,7 @@
 		  <div class="row">
 		    <div class="col-1">	      
 		    </div>
-        <div class="col-10" style="border:1px gray dotted">
-            <!--/*여기에 작성/ 다 만들고 style 지워주세요  */-->
+        <div class="col-10" >
 		   
         		         
           <div class="second_main_wrap">
@@ -288,7 +287,7 @@
                         <th scope="col">별점</th>
                       </tr>
                     </thead>
-                    <tbody>
+                    <tbody class="table-group-divider table_to_detail">
                       <th:block th:each="r:${reviewList}">
                         <tr>
                           <td scope="row" th:text="${r.reviewNo}"></td>
@@ -296,14 +295,14 @@
                             <a th:if="${r.packageNo != 0 && r.hotelNo == 0}" th:text="${r.packageNo}" th:href="@{/package/detail.do(packageNo=${r.packageNo})}"></a>
                             <a th:if="${r.packageNo == 0 && r.hotelNo != 0}" th:text="${r.hotelNo}" th:href="@{/hotel/detail.do(hotelNo=${r.hotelNo})}"></a>
                           </td>
-                          <td>
+                          <td class="open_contents">
                             <th:block th:if="${r.packageNo != 0 && r.hotelNo == 0}">패키지</th:block>
                             <th:block th:if="${r.packageNo == 0 && r.hotelNo != 0}">호텔</th:block>
                           </td>
                           <td class="open_contents" th:text="${r.userDto.name}"></td>
                           <td class="open_contents" th:text="${r.reviewContents}"></td>
-                          <td th:text="${r.registAt}"></td>
-                          <td th:text="${r.star}"></td>
+                          <td th:text="${r.registAt}" class="open_contents"></td>
+                          <td th:text="${r.star}" class="open_contents"></td>
                         </tr>
                         <tr class="blind show_content" >
                           <td colspan="7" >
