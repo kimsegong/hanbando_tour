@@ -132,4 +132,14 @@ public class HotelServiceImpl implements HotelService {
     model.addAttribute("region", hotelMapper.getRegion());
   }
   
+  @Override
+  public void hotelRoomList(Model model) {
+    // TODO Auto-generated method stub
+    
+  }
+  
+  @Override
+    public void makeHotelNo(Model model) {
+      model.addAttribute("hotelNo", hotelMapper.getHotelNo());
+    }
 }
