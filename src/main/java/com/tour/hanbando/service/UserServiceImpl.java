@@ -519,7 +519,6 @@ public class UserServiceImpl implements UserService {
     
     Map<String, Object> map = new HashMap<>();
     map.put("email", email);
-    map.put("leavedEmail", email);
     
     boolean enableEmail = userMapper.getUser(map) == null
                        && userMapper.getLeaveUser(map) == null
