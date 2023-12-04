@@ -1,5 +1,8 @@
 package com.tour.hanbando.service;
 
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -128,7 +131,7 @@ public class ReserveServiceImpl implements ReserveService {
   
   @Override
   public Map<String, Object> addPayment(HttpServletRequest request, PaymentDto payment) {
-    System.out.println(payment.getReserveDto().getReserveNo() + ", " + payment.toString());
+    String paidAt = null;
     String errorMsg = null;
     if(payment.getErrorMsg() == null) {
       errorMsg = "";
@@ -139,7 +142,21 @@ public class ReserveServiceImpl implements ReserveService {
     String payYn = payment.getPayYn();
     String payMethod = payment.getPayMethod();
     int paidAmount = payment.getPaidAmount();
-    String paidAt = payment.getPaidAt();
+    
+    if(payment.getPaidAt() != null) {
+      String paidAtTimestamp = payment.getPaidAt();
+      long seconds = Long.parseLong(paidAtTimestamp);
+      LocalDateTime dateTime = Instant.ofEpochSecond(seconds).atZone(ZoneId.of("Asia/Seoul")).toLocalDateTime();
+      int year = dateTime.getYear();
+      int month = dateTime.getMonthValue();
+      int day = dateTime.getDayOfMonth();
+      int hour = dateTime.getHour();
+      int minute = dateTime.getMinute();
+      int second = dateTime.getSecond();
+      paidAt = year + "/" + month + "/" + day + " " + hour + ":" + minute + ":" + second;
+    }
+    
+    
     String buyerName = payment.getBuyerName();
     String buyerEmail = payment.getBuyerEmail();
     String payStatus = payment.getPayStatus();
@@ -205,7 +222,8 @@ public class ReserveServiceImpl implements ReserveService {
     List<ReserveDto> reserveList = reserveMapper.getReserveListByUser(map);
     
     model.addAttribute("reserveList", reserveList);
-    model.addAttribute("paging", myPageUtils.getMvcPaging(request.getContextPath() + "/reserve/reserveList.do", request.getParameter("userNo")));
+    String params = "userNo=" + request.getParameter("userNo");
+    model.addAttribute("paging", myPageUtils.getMvcPaging(request.getContextPath() + "/reserve/reserveList.do", params));
     model.addAttribute("beginNo", total - (page - 1) * display);
     
   }
