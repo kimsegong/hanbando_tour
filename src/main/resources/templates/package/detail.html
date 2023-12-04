@@ -242,6 +242,7 @@
        </div>
        <button class="btn btn-kong"  style="margin-left: 220px; margin-top: 50px;">
          <input type="hidden" id="packageNoHeart" name="packageNo" th:value="${packageDto.packageNo}">
+         <input type="hidden" name="userNo" th:value="${session.user.userNo}">  
         <div id="heartButton" style="color: white; cursor: pointer;">찜하기♥</div>
        </button>
       <div style="margin-top: 50px;">
@@ -576,10 +577,9 @@ $.fn.datepicker.dates['ko'] = {
         },
         success: function (response) {
             console.log('찜하기 성공');
-
             // 확인 결과에 따라 페이지 이동 여부를 결정
             if (confirmResult) {
-                window.location.href = '/user/heart.do';
+                window.location.href = '/user/heart.do?userNo='+ userNo ;
             }
         },
         error: function (error) {

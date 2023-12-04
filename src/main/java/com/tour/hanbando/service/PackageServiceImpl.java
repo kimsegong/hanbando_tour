@@ -11,6 +11,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -592,5 +593,29 @@ public class PackageServiceImpl implements PackageService {
         int removeResult = packageMapper.deleteReview(reviewNo);
         return Map.of("removeResult", removeResult);
       }
+    
+    @Override
+    public void getHeartPackage(HttpServletRequest request, Model model) {
+      
+      int userNo = Integer.parseInt(request.getParameter("userNo"));
+      
+      Optional<String> opt = Optional.ofNullable(request.getParameter("page"));
+      int page = Integer.parseInt(opt.orElse("1"));
+      int total = packageMapper.getHeartCount(userNo);
+      int display = 10;
+      
+      myPageUtils.setPaging(page, total, display);
+      
+      Map<String, Object> map = Map.of("begin", myPageUtils.getBegin()
+                                     , "end", myPageUtils.getEnd()
+                                     , "userNo", userNo);
+      
+      List<HeartDto> heartList = packageMapper.selectHeartList(map);
+      
+      model.addAttribute("heartList", heartList);
+      model.addAttribute("paging", myPageUtils.getMvcPaging(request.getContextPath() + "/package/heart.do"));
+      model.addAttribute("beginNo", total - (page - 1) * display); 
+
+    }
     
 }
