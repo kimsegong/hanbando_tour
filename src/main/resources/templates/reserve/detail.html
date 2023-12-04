@@ -176,36 +176,52 @@
           amount: payAmount,
           buyer_email: userEmail,
           buyer_name: '[[${reserve.userDto.name}]]',
-          buyer_tel: '[[${reserve.userDto.mobile}]]'
+          buyer_tel: '[[${reserve.userDto.mobile}]]' // 필수
         },
         function (rsp) {
           // callback
-          //rsp.imp_uid 값으로 결제 단건조회 API를 호출하여 결제결과를 판단합니다.
           if (rsp.success) {
             console.log(rsp);
             // 결제 성공 시: 결제 승인 또는 가상계좌 발급에 성공한 경우 DB에 정보 저장
-            // jQuery로 HTTP 요청
             $.ajax({
               url: "/payment/payReserve.do", 
               method: "POST",
               headers: { "Content-Type": "application/json" },
               data: JSON.stringify({
                 impUid: rsp.imp_uid,            // 결제 고유번호
-                payYn: rsp.success,  // 성공여부
-                payMethod: rsp.pay_method, // 결제방식
-                paidAmount: rsp.paid_amount, // 결제금액
-                paidAt: rsp.paid_at, // 결제시각
+                payYn: rsp.success,             // 성공여부
+                payMethod: rsp.pay_method,      // 결제방식
+                paidAmount: rsp.paid_amount,    // 결제금액
+                paidAt: rsp.paid_at,            // 결제시각
                 buyerName: rsp.buyer_name,
                 buyerEmail: rsp.buyer_email,
-                payStatus: rsp.status, // 결제상태
-                merchantUid: rsp.merchant_uid,   // 주문번호
-                reserveNo: reserveNo
+                payStatus: rsp.status,          // 결제상태
+                merchantUid: rsp.merchant_uid,  // 주문번호
+                reserveDto: {
+                  reserveNo: reserveNo
+                  }
               }),
               dataType: 'json'
             }).done(function (data) {
               console.log(data);
-              // 가맹점 서버 결제 API 성공시 로직
               alert('결제성공했습니다');
+              // 결제승인시 정보 DB 저장 후 예약상태를 '결제대기' >> '예약완료'로 수정
+              $.ajax({
+                url: "/payment/modifyResStatus", // 두 번째 요청의 URL
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                data: JSON.stringify({
+                  reserveNo: reserveNo,
+                  payStatus: rsp.status
+                })
+              }).done(function (data) {
+                console.log(data);
+                // 두 번째 요청이 성공했을 때의 처리를 여기에 작성합니다.
+                if(data.modifyResStatusResult == '1'){
+                  alert('예약상태가 완료로 변경되었습니다.');
+                  location.reload();
+                }
+              });
             })
           } else {
               console.log(rsp);
