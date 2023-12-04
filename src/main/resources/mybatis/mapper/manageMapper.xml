@@ -148,7 +148,7 @@
         <if test="column != null and query != null">
           AND ${column} LIKE '%' || #{query} || '%'
         </if>
-      </where>    
+      </where>   
   </select>
   <select id="getSearchReviewList" parameterType="Map" resultMap="ReviewMap">
     SELECT A.USER_NO, A.NAME, A.REVIEW_NO, A.PACKAGE_NO, A.HOTEL_NO, A.REVIEW_CONTENTS, A.STAR, A.REGIST_AT
@@ -169,7 +169,11 @@
   </select>
 
   <!-- 리뷰 삭제 -->
-  
+  <delete id="deleteReview" parameterType="int">
+    DELETE
+      FROM REVIEW_T
+     WHERE REVIEW_NO = #{reviewNo}
+  </delete>
   
   
   
