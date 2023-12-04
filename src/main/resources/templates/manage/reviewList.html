@@ -99,11 +99,17 @@
     background-color: #96B6C5; /* 호버 시 배경 색상 */
   }
   
+  #search_wrap {
+    margin: 5% auto;
+  }
+  
+  #columnGubun,
   #column,
   #query {
     height: 38px;
   }
   
+  #columnGubun,
   #column {
     flex: 1;           /* 셀렉트 박스가 나머지 영역을 모두 차지하도록 설정 */
     margin-right: 5px; /* 셀렉트 박스와 인풋 사이의 간격을 조절 */
@@ -192,8 +198,8 @@
     let removeReviewResult = /*[[${removeReviewResult}]]*/ null;
     if(removeReviewResult !== ''){
       if(removeReviewResult === 1){
-      alert('댓글이 삭제되었습니다.');
-      } 
+        alert('댓글이 삭제되었습니다.');
+      }
     }
   }
   
@@ -239,6 +245,27 @@
             
             
             <div class="split2">
+              
+              <!--/* 검색기능 */-->
+              <div id="search_wrap">
+                <form id="frm_search" method="get" th:action="@{/manage/searchReview.do}" >
+                  <select name="columnGubun" id="columnGubun">
+                    <option value="">유형선택</option>
+                    <option value="PACKAGE_NO">패키지만보기</option>
+                    <option value="HOTEL_NO">호텔만보기</option>
+                  </select>
+                  <select name="column" id="column" >
+                    <option value="REVIEW_NO">리뷰번호</option>
+                    <option value="PACKAGE_NO">패키지번호</option>
+                    <option value="HOTEL_NO">호텔번호</option>
+                    <option value="NAME">작성자</option>
+                    <option value="REVIEW_CONTENTS">내용</option>
+                    <option value="STAR">별점</option>
+                  </select>
+                  <input type="text" name="query" id="query" placeholder="검색어 입력" >
+                  <button type="submit" id="btn_search_rewiew" >검색</button>
+                </form>
+              </div>
                 
         
               <!--/* 관리 리뷰목록이 표시될 div */-->
@@ -266,8 +293,8 @@
                         <tr>
                           <td scope="row" th:text="${r.reviewNo}"></td>
                           <td>
-                            <th:block th:if="${r.packageNo != 0 && r.hotelNo == 0}" th:text="${r.packageNo}"></th:block>
-                            <th:block th:if="${r.packageNo == 0 && r.hotelNo != 0}" th:text="${r.hotelNo}"></th:block>
+                            <a th:if="${r.packageNo != 0 && r.hotelNo == 0}" th:text="${r.packageNo}" th:href="@{/package/detail.do(packageNo=${r.packageNo})}"></a>
+                            <a th:if="${r.packageNo == 0 && r.hotelNo != 0}" th:text="${r.hotelNo}" th:href="@{/hotel/detail.do(hotelNo=${r.hotelNo})}"></a>
                           </td>
                           <td>
                             <th:block th:if="${r.packageNo != 0 && r.hotelNo == 0}">패키지</th:block>
@@ -298,26 +325,7 @@
                     </tfoot>
                   </table>
                     
-                  <!--/* 검색기능 */-->
-                  <div>
-                    <form id="frm_search" method="get" th:action="@{/manage/searchReview.do}" >
-                      <select name="columnGubun">
-                        <option value="">유형선택</option>
-                        <option value="R.PACKAGE_NO">패키지만보기</option>
-                        <option value="R.HOTEL_NO">호텔만보기</option>
-                      </select>
-                      <select name="column" id="column" >
-                        <option value="R.REVIEW_NO">리뷰번호</option>
-                        <option value="R.PACKAGE_NO">패키지번호</option>
-                        <option value="R.HOTEL_NO">호텔번호</option>
-                        <option value="U.NAME">작성자</option>
-                        <option value="R.REVIEW_CONTENTS">내용</option>
-                        <option value="R.STAR">별점</option>
-                      </select>
-                      <input type="text" name="query" id="query" placeholder="검색어 입력" >
-                      <button type="submit" id="btn_search_rewiew" >검색</button>
-                    </form>
-                  </div>
+
                 
                 </div>
               </div>
