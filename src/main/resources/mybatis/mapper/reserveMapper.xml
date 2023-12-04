@@ -283,10 +283,6 @@
   </insert>
   
   
-  
-  
-  
-  
   <update id="updateReserveStatus" parameterType="Map">
     UPDATE RESERVE_T
        SET RESERVE_STATUS = 1
