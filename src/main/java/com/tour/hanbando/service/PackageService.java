@@ -35,6 +35,6 @@ public interface PackageService {
   public int addHeart(HttpServletRequest request);
   public Map<String, Object> removeReview(int reviewNo);
   public List<ReserveDto> getReserveUser(int packageNo);
-  public void getHeartPackage(HttpServletRequest request, Model model);
+  public Map<String, Object> getHeartPackage(int page, HttpServletRequest request);
   
 }
