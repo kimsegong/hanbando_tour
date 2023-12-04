@@ -25,12 +25,12 @@
 	  <div style="margin: 30px 270px;" class="w-50 p-3">		 
 		  
     <div>
-          <div id="previewId"></div>
-          <textarea rows="10" cols="30" name="packageTitle"></textarea>
+          <input type="text" name="packageTitle" class="form-control">제목 한번더 입력</textarea>
+        <div id="previewId"></div>
     	  <div>
     	  	<label for="thumbnailFiles" class="form-label">썸네일첨부</label>
     	  	 <input type="hidden" th:value="${map.packageNo}" name="packageNo">
-		    <input type="file" name="thumbnailFiles" id="thumbnailFiles" class="input-group-text"  onchange="previewImage(this,'previewId')" accept="image/gif,image/jpeg,image/png" required/>
+		    <input type="file" name="thumbnailFiles" id="thumbnailFiles" class="form-control"  onchange="previewImage(this,'previewId')" accept="image/gif,image/jpeg,image/png" required/>
     	  </div>    	  
 
 		  <div class="d-grid gap-2 col-6 mx-auto">	

@@ -153,25 +153,6 @@
   }
 
 </style>
-<script th:inline="javascript">
-  
-  /* 함수 호출 */
-  $(() => {
-    fnRemoveUser();
-  })
-  
-  const fnRemoveUser = () => {
-    let leaveUserResult = /*[[${leaveUserResult}]]*/ null;
-    if(leaveUserResult !== null){
-      if(leaveUserResult === 1){
-        alert('회원이 탈퇴되었습니다.');
-      } else {
-        alert('회원이 탈퇴되지 않았습니다.');
-      }
-    }
-  }
-  
-</script>
 
 <body>
 	<div th:replace="~{/layout/header::header}"></div>
@@ -255,7 +236,7 @@
                         <tr>
                           <th scope="row" th:text="${beginNo - vs.index}"></th>
                           <td>
-                            <div th:text="${lu.leavedEmail}"></div>
+                            <div th:text="${lu.email}"></div>
                           </td>
                           <td>
                             <div th:text="${lu.joinedAt}"></div>
@@ -278,7 +259,7 @@
                   <div>
                     <form id="frm_search" method="get" th:action="@{/manage/searchLeaveList.do}" >
                       <select name="column" id="column" >
-                        <option value="LEAVED_EMAIL">이메일</option>
+                        <option value="EMAIL">이메일</option>
                         <option value="JOINED_AT">가입일</option>
                         <option value="LEAVED_AT">탈퇴일</option>
                       </select>
