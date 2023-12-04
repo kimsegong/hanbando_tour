@@ -26,9 +26,9 @@
   </insert>
   
   <select id="getLeaveUser" parameterType="Map" resultType="LeaveUserDto">
-    SELECT LEAVED_EMAIL, JOINED_AT, LEAVED_AT
+    SELECT EMAIL, JOINED_AT, LEAVED_AT
       FROM LEAVE_USER_T
-     WHERE LEAVED_EMAIL = #{leavedEmail}
+     WHERE EMAIL = #{email}
   </select>
 
   <select id="getInactiveUser" parameterType="Map" resultType="InactiveUserDto">
