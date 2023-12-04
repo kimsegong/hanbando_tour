@@ -295,13 +295,17 @@
  </select>
  <select id="getRegion" parameterType="RegionDto">
 	 SELECT *
-  	 FROM REGION_T
+		 FROM REGION_T
  </select>
   
-  <select id="getHotelNo" resultType="int">
-    SELECT HOTEL_SEQ.NEXTVAL
-      FROM DUAL
-  </select>
+ <select id="getHotelNo" resultType="int">
+   SELECT HOTEL_SEQUENCE.NEXTVAL
+     FROM DUAL
+ </select>
+ <select id="getRoomNo" resultType="int">
+	 SELECT ROOM_SEQUENCE.NEXTVAL
+		 FROM DUAL
+ </select>
  
  
  </mapper>
