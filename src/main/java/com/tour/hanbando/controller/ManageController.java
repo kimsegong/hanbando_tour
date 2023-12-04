@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.tour.hanbando.dto.InactiveUserDto;
@@ -74,11 +75,8 @@ public class ManageController {
     return "redirect:/manage/modifyPw.form?userNo=" + userNo;
   }
   
-  /* 기존 회원 찜목록 상세 */
-  @GetMapping("/heartList.do")
-  public String heartList() {
-    return "manage/heartList";
-  }
+  /* 기존 회원 찜목록 */
+
   
   /* 기존 회원 탈퇴 */
   @PostMapping("/leaveUser.do")
@@ -167,12 +165,14 @@ public class ManageController {
   /* 전체 리뷰 목록 */
   @GetMapping("/reviewList.do")
   public String reviewList(HttpServletRequest request, Model model) {
+    manageService.loadReviewList(request, model);
     return "manage/reviewList";
   }
   
   /* 리뷰 검색 */
   @GetMapping("/searchReview.do")
   public String searchReview(HttpServletRequest request, Model model) {
+    manageService.loadSearchReviewList(request, model);
     return "manage/reviewList";
   }
   

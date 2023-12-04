@@ -4,6 +4,33 @@
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.tour.hanbando.dao.ManageMapper">
+  
+  
+  <resultMap type="ReviewDto"         id="ReviewMap">
+    <id      column="REVIEW_NO"       property="reviewNo"/>
+    <result  column="PACKAGE_NO"      property="packageNo" />
+    <result  column="REVIEW_CONTENTS" property="reviewContents"/>
+    <result  column="HOTEL_NO"        property="hotelNo" />
+    <result  column="REGIST_AT"       property="registAt"/>
+    <result  column="STAR"            property="star"/>
+    <association javaType="UserDto"      property="userDto">
+      <id        column="USER_NO"        property="userNo"/>
+      <result    column="EMAIL"          property="email"/>
+      <result    column="PW"             property="pw"/>
+      <result    column="NAME"           property="name"/>
+      <result    column="GENDER"         property="gender"/>
+      <result    column="MOBILE"         property="mobile"/>
+      <result    column="POSTCODE"       property="postcode"/>
+      <result    column="ROAD_ADDRESS"   property="roadAddress"/>
+      <result    column="JIBUN_ADDRESS"  property="jibunAddress"/>
+      <result    column="DETAIL_ADDRESS" property="detailAddress"/>
+      <result    column="AGREE"          property="agree"/>
+      <result    column="STATE"          property="state"/>
+      <result    column="AUTH"           property="auth"/>
+      <result    column="PW_MODIFIED_AT" property="pwModifiedAt"/>
+      <result    column="JOINED_AT"      property="joinedAt"/>
+    </association>
+  </resultMap>
 	
   <!-- 회원 관리 목록 -->
   <select id="getUserCount" resultType="int">
@@ -31,6 +58,9 @@
              WHERE ${column} LIKE '%' || #{query} || '%')
      WHERE RN BETWEEN #{begin} AND #{end}
   </select>
+  
+  <!-- 찜목록 가져오기 -->
+
   
   
   <!-- 휴면회원 관리 목록 -->
@@ -72,8 +102,8 @@
       FROM LEAVE_USER_T
   </select>
   <select id="getLeaveUserList" parameterType="Map" resultType="LeaveUserDto">
-    SELECT LEAVED_EMAIL, JOINED_AT, LEAVED_AT
-      FROM (SELECT ROW_NUMBER() OVER(ORDER BY LEAVED_AT DESC) AS RN, LEAVED_EMAIL, JOINED_AT, LEAVED_AT
+    SELECT EMAIL, JOINED_AT, LEAVED_AT
+      FROM (SELECT ROW_NUMBER() OVER(ORDER BY LEAVED_AT DESC) AS RN, EMAIL, JOINED_AT, LEAVED_AT
               FROM LEAVE_USER_T)
      WHERE RN BETWEEN #{begin} AND #{end}
   </select>
@@ -85,12 +115,60 @@
      WHERE ${column} LIKE '%' || #{query} || '%'
   </select>
   <select id="getSearchLeaveList" parameterType="Map" resultType="LeaveUserDto">
-    SELECT LEAVED_EMAIL, JOINED_AT, LEAVED_AT
-      FROM (SELECT ROW_NUMBER() OVER(ORDER BY LEAVED_AT DESC) AS RN, LEAVED_EMAIL, JOINED_AT, LEAVED_AT
+    SELECT EMAIL, JOINED_AT, LEAVED_AT
+      FROM (SELECT ROW_NUMBER() OVER(ORDER BY LEAVED_AT DESC) AS RN, EMAIL, JOINED_AT, LEAVED_AT
               FROM LEAVE_USER_T
              WHERE ${column} LIKE '%' || #{query} || '%')
      WHERE RN BETWEEN #{begin} AND #{end}
   </select>
+  
+  <!-- 리뷰 목록 -->
+  <select id="getReviewCount" resultType="int">
+    SELECT COUNT(*)
+      FROM REVIEW_T
+  </select>
+  <select id="getReviewList" parameterType="Map" resultMap="ReviewMap">
+    SELECT A.USER_NO, A.NAME, A.REVIEW_NO, A.PACKAGE_NO, A.HOTEL_NO, A.REVIEW_CONTENTS, A.STAR, A.REGIST_AT
+      FROM (SELECT ROW_NUMBER() OVER(ORDER BY REVIEW_NO DESC) AS RN, R.REVIEW_NO, R.PACKAGE_NO, R.HOTEL_NO, R.REVIEW_CONTENTS, R.STAR, R.REGIST_AT,
+                   R.USER_NO, U.NAME
+              FROM USER_T U INNER JOIN REVIEW_T R
+                ON U.USER_NO = R.USER_NO) A
+     WHERE RN BETWEEN #{begin} AND #{end}
+  </select>
+  
+  <!-- 리뷰 검색 -->
+  <select id="getSearchReviewCount" parameterType="Map" resultType="int">
+    SELECT COUNT(R.REVIEW_NO)
+      FROM USER_T U INNER JOIN REVIEW_T R
+        ON U.USER_NO = R.USER_NO
+      <where>
+        <if test="columnGubun != ''">
+          ${columnGubun} IS NOT NULL
+        </if>
+        <if test="column != null and query != null">
+          AND ${column} LIKE '%' || #{query} || '%'
+        </if>
+      </where>    
+  </select>
+  <select id="getSearchReviewList" parameterType="Map" resultMap="ReviewMap">
+    SELECT A.USER_NO, A.NAME, A.REVIEW_NO, A.PACKAGE_NO, A.HOTEL_NO, A.REVIEW_CONTENTS, A.STAR, A.REGIST_AT
+      FROM (SELECT ROW_NUMBER() OVER(ORDER BY R.REVIEW_NO DESC) AS RN, R.REVIEW_NO, R.PACKAGE_NO, R.HOTEL_NO, R.REVIEW_CONTENTS, R.STAR, R.REGIST_AT,
+                   R.USER_NO, U.NAME
+              FROM USER_T U INNER JOIN REVIEW_T R
+                ON U.USER_NO = R.USER_NO
+              <where>
+                <if test="columnGubun != ''">
+                  ${columnGubun} IS NOT NULL
+                </if>
+                <if test="column != null and query != null">
+                  AND ${column} LIKE '%' || #{query} || '%'
+                </if>
+              </where>
+            ) A
+     WHERE A.RN BETWEEN #{begin} AND #{end}
+  </select>
+
+  <!-- 리뷰 삭제 -->
   
   
   
