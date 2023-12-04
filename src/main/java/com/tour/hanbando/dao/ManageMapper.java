@@ -5,9 +5,10 @@ import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 
-import com.tour.hanbando.dto.HeartDto;
+import com.tour.hanbando.dto.HotelDto;
 import com.tour.hanbando.dto.InactiveUserDto;
 import com.tour.hanbando.dto.LeaveUserDto;
+import com.tour.hanbando.dto.PackageDto;
 import com.tour.hanbando.dto.ReviewDto;
 import com.tour.hanbando.dto.UserDto;
 
@@ -42,6 +43,25 @@ public interface ManageMapper {
   /* 탈퇴회원 검색결과 목록 */
   public int getSearchLeaveCount(Map<String, Object> map);
   public List<LeaveUserDto> getSearchLeaveList(Map<String, Object> map);
+  
+  /* 패키지 상품 목록 */
+  public int getPackageCount();
+  public List<PackageDto> getPackageList(Map<String, Object> map);
+  
+  /* 패키지 상품 검색 */
+  
+  /* 호텔 상품 목록 */
+  public int getHotelCount();
+  public List<HotelDto> getHotelList(Map<String, Object> map);
+  
+  /* 호텔 추천/비추천 변경 */
+  public int updateHotelRecommend(HotelDto hotel);
+  
+  /* 호텔 상품 검색 */
+  
+  /* 예약 목록 */
+  /* 예약 검색 */
+  /* 예약 상세 */
   
   /* 리뷰 목록 */
   public int getReviewCount();
