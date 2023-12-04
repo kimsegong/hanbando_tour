@@ -210,10 +210,12 @@ public class UserController {
   @GetMapping("/active.do")
   public void active(HttpSession session, HttpServletRequest request, HttpServletResponse response) {
     userService.active(session, request, response);
+  } 
+  
+  @GetMapping("/heart.do")
+  public String heart() {
+    return "user/heart";
   }
-  
-  
-  
   
   
 }
