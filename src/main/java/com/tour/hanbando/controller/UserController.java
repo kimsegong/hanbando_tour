@@ -19,7 +19,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.tour.hanbando.dao.PackageMapper;
 import com.tour.hanbando.dto.UserDto;
+import com.tour.hanbando.service.PackageService;
 import com.tour.hanbando.service.UserService;
 
 import lombok.RequiredArgsConstructor;
@@ -30,6 +32,7 @@ import lombok.RequiredArgsConstructor;
 public class UserController {
   
   private final UserService userService;
+  private final PackageService packageService;
   
  //인증번호
   @ResponseBody
@@ -213,7 +216,9 @@ public class UserController {
   } 
   
   @GetMapping("/heart.do")
-  public String heart() {
+  public String heart(@RequestParam(value="userNo", required=false, defaultValue="0") int userNo, HttpServletRequest request, Model model) {
+    model.addAttribute("userNo", userNo);
+    packageService.getHeartPackage(request, model);
     return "user/heart";
   }
   

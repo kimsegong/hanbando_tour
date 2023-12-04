@@ -11,38 +11,45 @@
   <div class="container text-center">  <!-- 그리드 시작 -->  
     <div class="row">
       <div class="col-1">
-    <div class="w3-sidebar w3-bar-block" style="width:15%; height:200px;"> <!-- 사이드바 -->
+    <div class="w3-sidebar w3-bar-block" style="width:8%; height:200px;"> <!-- 사이드바 -->
       <a href='' class="w3-bar-item w3-button">내 정보</a>
       <a href='' class="w3-bar-item w3-button">내 예약</a>
     </div>    
       </div>
       <div class="col-10" >
-       <table class="table">
+       <table class="table w-75 p-3 text-center">
           <thead>
             <tr>
-              <th scope="col">❤️</th>
+              <th scope="col">❤️
+                <input type="checkbox" value="" >
+                  <label for="flexCheckDefault">
+                </label>
+              </th>
               <th scope="col">제목</th>
-              <th scope="col">보러가기</th>
+              <th scope="col">가격</th>
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <th scope="row">1</th>
-              <td>Mark</td>
-              <td>Otto</td>
+           <th:block>
+            <tr th:each=" heart :${heartList}">
+              <td scope="row">💙
+                  <input type="checkbox" value="" >
+                  <label for="flexCheckDefault">
+                  </label>
+              </td>
+              <td>
+                <a th:href="@{/package/detail.do(packageNo=${heart.packageDto.packageNo})}" th:text="${heart.packageDto.packageTitle}"></a>
+              </td>
+              <td th:text="${heart.packageDto.price}"></td>
             </tr>
-            <tr>
-              <th scope="row">2</th>
-              <td>Jacob</td>
-              <td>Thornton</td>
-            </tr>
-            <tr>
-              <th scope="row">3</th>
-              <td>Larry the Bird</td>
-              <td>@twitter</td>
-            </tr>
+           </th:block>
           </tbody>
-        </table>           
+          <tfoot>
+           <tr>
+            <td colspan="5" th:utext="${paging}" class="paging"></td>
+           </tr>
+          </tfoot>
+          </table>           
       </div>
     <div class="col-1">      
     </div>

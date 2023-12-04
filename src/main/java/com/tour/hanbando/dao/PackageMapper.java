@@ -63,4 +63,6 @@ public interface PackageMapper {
   
   // 찜 
   public int heartProduct(HeartDto heart);
+  public List<HeartDto> selectHeartList(Map<String, Object> map);
+  public int getHeartCount(int userNo);
 }
