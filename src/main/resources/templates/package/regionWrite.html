@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 
-<head th:replace="~{/layout/header::head('패키지상품작성')}"></head>
+<head th:replace="~{/layout/header::head('패키지지역')}"></head>
 <style>
 .ck.ck-editor {
   max-width: 1000px;
@@ -29,7 +29,7 @@
 	    </div>
 	    <div class="col-10" >
 		<h2>세부사항작성</h2>
-	<form method="post" id="frm_product_add" th:action="@{/package/addRegion.do}">
+	 <form method="post" id="frm_product_add" th:action="@{/package/addRegion.do}">
 	  <div style="margin: 30px 270px;" class="w-50 p-3">		 
 		  
     <div>
@@ -39,8 +39,7 @@
 	        <input type="text" name="regionName" id="regionName" class="form-control" placeholder="지역 작성해주세요">
     	  </div>    	  	  
 
-		   <div class="d-grid gap-2 col-6 mx-auto">
-		     <!-- <input type="hidden" name="userNo" th:value="${session.user.userNo}"> -->
+		   <div class="d-grid gap-2 col-6 mx-auto">    
 		      <button type="submit" class="btn btn-primary" style="margin: 32px;">작성완료</button>
 	      </div>
 		 </div>
