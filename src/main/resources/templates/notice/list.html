@@ -47,7 +47,7 @@
     <div class="col-7"></div>
     <div class="col-4" style="display: flex; justify-content: flex-end;">
       <div class="home">
-        <a th:href="@{/layout/main.do}"><i class="fa-solid fa-house" style="font-size:15px; margin-right: 5px;"></i></a>
+        <a th:href="@{http://localhost:8080}"><i class="fa-solid fa-house" style="font-size:15px; margin-right: 5px;"></i></a>
          &nbsp;고객센터  &nbsp;  >   &nbsp; 공지사항
       </div>
     </div>
@@ -58,12 +58,16 @@
     
     <div class="col-4"></div>
     <div class="col-4">    
+
     <div>
         <a th:href="@{/notice/write.form}">
         <button type="button" class="btn btn-outline-success">새글작성</button>
         </a>
     </div>
     </div>
+ 
+    
+    
     
     <div class="col-4">
      <form method="get" th:action="@{/notice/search.do}">
@@ -180,7 +184,23 @@
       
       <script>
 
+        const fnBlind = () => {
+        $('.btn-outline-success').click((ev) => {
+          let user = /*[[${session.user}]]*/ null;
+          if(user === null){
+            if(confirm('로그인이 필요한 기능입니다. 로그인할까요? 왜안가집니가????')){
+              location.href = '/user/login.form';
+            } else {
+              return;
+            }
+      }
+    })
+   }
+
       
+      
+      
+      fnBlind();
       </script>
       
             

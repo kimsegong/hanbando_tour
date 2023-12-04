@@ -21,6 +21,7 @@ import lombok.RequiredArgsConstructor;
 public class HotelController {
   private final HotelService hotelService;
   
+  
  /*************************** 리스트 ***************************************************/
   
   @GetMapping("list.do")
@@ -32,7 +33,6 @@ public class HotelController {
   @GetMapping("getList.do")
   public Map<String, Object> getHotelist(HttpServletRequest request){
     
-    System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"+hotelService.getHotelList(request));
     return hotelService.getHotelList(request);
   }
   
@@ -56,7 +56,8 @@ public class HotelController {
   
   /*************************** 작성 ***************************************************/  
   @GetMapping("write.form")
-  public String write() {
+  public String write(Model model) {
+    hotelService.regionList(model);
     return "hotel/write";
   }
 }

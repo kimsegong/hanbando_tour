@@ -30,7 +30,6 @@ public interface ManageService {
     
     /* 기존 회원 찜목록 상세 */
     
-    
     /* 기존 회원 탈퇴 */
     public void leaveUser(HttpServletRequest request, HttpServletResponse response);
     
@@ -68,9 +67,12 @@ public interface ManageService {
     /* 호텔 예약 상세 */
     
     /* 전체 리뷰 목록 */
+    public void loadReviewList(HttpServletRequest request, Model model);
     
     /* 리뷰 검색 */
+    public void loadSearchReviewList(HttpServletRequest request, Model model);
     
     /* 리뷰 삭제 */
+    public int removeReview(int reviewNo);
     
 }
