@@ -73,5 +73,6 @@ public interface ManageService {
     public void loadSearchReviewList(HttpServletRequest request, Model model);
     
     /* 리뷰 삭제 */
+    public int removeReview(int reviewNo);
     
 }
