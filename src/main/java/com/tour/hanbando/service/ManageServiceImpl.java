@@ -444,9 +444,17 @@ public class ManageServiceImpl implements ManageService {
     List<ReviewDto> reviewList = manageMapper.getSearchReviewList(map);
     
     model.addAttribute("reviewList", reviewList);
-    model.addAttribute("paging", myPageUtils.getMvcPaging(request.getContextPath() + "/manage/searchReview.do", "column=" + column + "&query=" + query));
+    model.addAttribute("paging", myPageUtils.getMvcPaging(request.getContextPath() + "/manage/searchReview.do", "column=" + column + "&query=" + query + "&columnGubun=" + columnGubun));
     model.addAttribute("beginNo", total - (page - 1) * display);
     model.addAttribute("total", total);
+  }
+  
+  /**
+   * 리뷰 삭제
+   */
+  @Override
+  public int removeReview(int reviewNo) {
+    return manageMapper.deleteReview(reviewNo);
   }
   
 }
