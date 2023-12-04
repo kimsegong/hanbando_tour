@@ -30,6 +30,7 @@ public class MainServiceImpl implements MainService {
   private final MyPageUtils myPageUtils;
   private final MainFileUtil mainFileUtil; 
   
+  @Transactional(readOnly = true)
   @Override
   public Map<String, Object> SearchPackageList(HttpServletRequest request) {
     
@@ -52,7 +53,7 @@ public class MainServiceImpl implements MainService {
                  , "totalPage", myPageUtils.getTotalPage());
    
   }
-  
+  @Transactional(readOnly = true)
   @Override
   public Map<String, Object> SearchHotelList(HttpServletRequest request) {
     String query = request.getParameter("query");
@@ -74,7 +75,7 @@ public class MainServiceImpl implements MainService {
                  , "totalPage", myPageUtils.getTotalPage());
     
   }
-  
+  @Transactional(readOnly = true)
   @Override
   public Map<String, Object> getBestPackage() {
     
@@ -82,7 +83,7 @@ public class MainServiceImpl implements MainService {
     
     return map;
   }
-  
+  @Transactional(readOnly = true)
   @Override
   public Map<String, Object> getThemePackage() {
     int themeTotalNo = mainMapper.countTheme();
@@ -93,7 +94,7 @@ public class MainServiceImpl implements MainService {
     
     return Map.of("themePackageList",packageDto);
   }
-  
+  @Transactional(readOnly = true)
   @Override
   public void bannerList(Model model) {
     
@@ -117,9 +118,7 @@ public class MainServiceImpl implements MainService {
     } else {
       attachCount = 0;
     }
-    
-    
-    
+
       if(files != null && !files.isEmpty()) {
         
         String path = mainFileUtil.getUploadPath();
@@ -127,7 +126,6 @@ public class MainServiceImpl implements MainService {
         if(!dir.exists()) {
           dir.mkdirs();
         }
-        
         
         List<BannerImageDto> bannerImage = mainMapper.getBannerImage();
         String bannerPath = mainFileUtil.getUploadPath();

@@ -12,9 +12,10 @@ import com.tour.hanbando.dto.PackageDto;
 import com.tour.hanbando.dto.ReserveDto;
 
 public interface PackageService {
-  public Map<String, Object> getPackageList(HttpServletRequest request);
+  public Map<String, Object> getPackageList(HttpServletRequest request, String condition, int recommendStatus);
   public int getTotalPackageCount();
-  public boolean addPackage(MultipartHttpServletRequest multipartRequest) throws Exception;
+  public Map<String, Object> addPackage(MultipartHttpServletRequest multipartRequest) throws Exception;
+  public boolean addThumbnail(MultipartHttpServletRequest multipartRequest) throws Exception;
   public Map<String, Object> getAttachList(HttpServletRequest request);
   public void loadUpload(HttpServletRequest request, Model model) ;
   public int addRegion(HttpServletRequest request);
