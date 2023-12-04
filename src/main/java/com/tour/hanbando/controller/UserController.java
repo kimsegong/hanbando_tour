@@ -30,6 +30,7 @@ import lombok.RequiredArgsConstructor;
 public class UserController {
   
   private final UserService userService;
+
   
  //인증번호
   @ResponseBody
@@ -212,7 +213,7 @@ public class UserController {
     userService.active(session, request, response);
   }
   
-  
+ 
   
   
   
