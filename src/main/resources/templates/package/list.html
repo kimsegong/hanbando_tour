@@ -24,6 +24,11 @@
   .btn-outline-kong {
     color: rgb(23, 62, 104);
   } 
+  .card-img-top {
+        height: 200px; /* 원하는 카드 이미지 높이 */
+        object-fit: cover; /* 이미지가 카드에 맞게 조절될 수 있도록 설정 */
+        width: 100%; /* 가로 크기를 100%로 설정하여 카드 안에 꽉 차게 함 */
+    }
 
 </style>  
 <body>
@@ -46,10 +51,10 @@
          <span th:text="${count}"></span>개의 상품
         </div>
         <div class="btn-group btn-group-sm" role="group" aria-label="Small button group" style="display: inline-block;">
-          <button type="button" class="btn btn-outline-kong" id="new">최신순</button>
-          <button type="button" class="btn btn-outline-kong" id="recommend">추천순</button>
-          <button type="button" class="btn btn-outline-kong" id="priceLow">가격낮은순</button>
-          <button type="button" class="btn btn-outline-kong" id="priceHigh">가격높은순</button>
+          <button type="button" class="btn btn-outline-kong" value="defaultCondition">최신순</button>
+          <button type="button" class="btn btn-outline-kong" value="recommendStatus">추천순</button>
+          <button type="button" class="btn btn-outline-kong" value="rowPrice">가격낮은순</button>
+          <button type="button" class="btn btn-outline-kong" value="highPrice">가격높은순</button>
         </div>
       </div>
       <hr>
@@ -74,65 +79,15 @@
     var totalPage = 0;
     var param = 0;
     
-    function toggleRecommendStatus() {
-    const currentURL = new URL('/package/getList.do', window.location.origin);
-    const recommendStatus = currentURL.searchParams.get('recommendStatus') === '1' ? '0' : '1';
 
-    // URL에 파라미터 추가
-    currentURL.searchParams.set('recommendStatus', recommendStatus);
-
-    // 서버로 요청 보내기
-    fetch(currentURL.href)
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json();
-        })
-        .then(data => {
-            console.log(data);
-
-            // 추천 상태를 토글한 후에 fnGetPackageList 호출
-            param = recommendStatus;
-            fnGetPackageList(param);
-        })
-        .catch(error => console.error('Error:', error));
-}
-
-
-  // 이벤트 리스너 등록
-  document.getElementById('recommend').addEventListener('click', toggleRecommendStatus);
-  
-    document.getElementById('new').addEventListener('click', function (event) {
-        event.preventDefault();
-        param = 'defaultCondition'; 
-        changeUrlParameter('condition', param);
-        fnGetPackageList(param);
-    });
-
-    document.getElementById('priceLow').addEventListener('click', function (event) {
-        event.preventDefault();
-        param = 'rowPrice';  
-        changeUrlParameter('condition', param);
-        fnGetPackageList(param);
-    });
-
-    document.getElementById('priceHigh').addEventListener('click', function (event) {
-        event.preventDefault();
-        param = 'highPrice';  
-        changeUrlParameter('condition', param);
-        fnGetPackageList(param);
-    });
-
-
-    const changeUrlParameter = (parameterName, parameterValue, callback) => {
-	    var currentUrl = window.location.href;
-	    var url = new URL(currentUrl);
-	    url.searchParams.set(parameterName, parameterValue);	
-	    window.history.pushState({}, '', url.href); 
-	
-	};
-
+       var param = null;
+      $('.btn-outline-kong').click(function(){
+        param = $(this).val();
+        page = 1;
+        totalPage = 0;
+         $('#package_list').empty();
+          fnGetPackageList(param);
+      })
 
     const fnGetPackageList = (param) => {
         $.ajax({
@@ -145,8 +100,7 @@
             dataType: 'json',
             success: (resData) => {
                 totalPage = resData.totalPage;
-                if (resData.packageList != null && resData.packageList.length > 0) {
-                    $('#package_list').empty();
+                if (resData.packageList != null && resData.packageList.length > 0) {                   
                     $.each(resData.packageList, (i, package) => {
                         let str = '<div class="col-md-4">';
                         str += '<div class="card">';
@@ -189,7 +143,7 @@
                         return;
                     }
                     page++;
-                    fnGetPackageList();
+                    fnGetPackageList(param);
                 }
             }, 200);
         })
