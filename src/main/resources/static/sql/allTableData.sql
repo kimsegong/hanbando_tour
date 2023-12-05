@@ -286,6 +286,7 @@ CREATE TABLE ROOMTYPE_T (
 CREATE TABLE HOTEL_IMAGE_T (
     HOTEL_NO          NUMBER           NOT NULL,  -- 호텔 번호  (PK/FK)
     ROOM_NO           NUMBER           NULL,      -- 객실 번호  (FK)
+    ORIGINAL_NAME     VARCHAR2(300)    NOT NULL,  -- 사진 원래 이름
     THUMBNAIL         NUMBER           NULL,      -- 썸네일 유무 (0:없음, 1:있음) 
     FILESYSTEM_NAME   VARCHAR2(300)    NOT NULL,  -- 시스템 이름
     IMAGE_PATH        VARCHAR2(300)    NOT NULL,  -- 경로 
@@ -575,34 +576,34 @@ COMMIT;
 -- ******************************************************************************
 -- 호텔 상품 등록 ***************************************************************
 INSERT INTO HOTEL_T (HOTEL_NO, REGION_NO, HOTEL_NAME, HOTEL_ADDRESS, LATITUDE, LONGITUDE, HOTEL_DETAIL, PHONE_NUMBER, H_EMAIL, CREATED_AT, MODIFIED_AT, HIT, STATUS, RECOMMEND_STATUS)
-VALUES (HOTEL_SEQUENCE.NEXTVAL, 1, '호텔 서울', '서울 강남구 역삼동', 37.507457, 127.035358, '서울의 중심에 위치한 편안한 호텔입니다.', '010123456', 'hotel1@example.com', '2023-01-01', '2023-01-05', 100, 1, 1);
+VALUES (HOTEL_SEQUENCE.NEXTVAL, 1, '호텔 서울', '서울 강남구 역삼동', 37.507457, 127.035358, '서울의 중심에 위치한 편안한 호텔입니다.', '010123456', 'hotel1@example.com', '2023/01/01', '2023/01/05', 100, 1, 1);
 
 INSERT INTO HOTEL_T (HOTEL_NO, REGION_NO, HOTEL_NAME, HOTEL_ADDRESS, LATITUDE, LONGITUDE, HOTEL_DETAIL, PHONE_NUMBER, H_EMAIL, CREATED_AT, MODIFIED_AT, HIT, STATUS, RECOMMEND_STATUS)
-VALUES (HOTEL_SEQUENCE.NEXTVAL, 1, '해운대 호텔', '부산 해운대구 해운대해변로', 35.165298, 129.165198, '해운대에 자리한 바다가 보이는 호텔입니다.', '0109876543', 'hotel2@example.com', '2023-02-01', '2023-02-10', 150, 1, 1);
+VALUES (HOTEL_SEQUENCE.NEXTVAL, 1, '해운대 호텔', '부산 해운대구 해운대해변로', 35.165298, 129.165198, '해운대에 자리한 바다가 보이는 호텔입니다.', '0109876543', 'hotel2@example.com', '2023/02/01', '2023/02/10', 150, 1, 1);
 
 INSERT INTO HOTEL_T (HOTEL_NO, REGION_NO, HOTEL_NAME, HOTEL_ADDRESS, LATITUDE, LONGITUDE, HOTEL_DETAIL, PHONE_NUMBER, H_EMAIL, CREATED_AT, MODIFIED_AT, HIT, STATUS, RECOMMEND_STATUS)
-VALUES (HOTEL_SEQUENCE.NEXTVAL, 2, '경주 풀빌라', '경주시 보문로', 35.856876, 129.224778, '역사와 자연이 어우러진 풀빌라입니다.', '010555555', 'hotel3@example.com', '2023-03-01', '2023-03-15', 120, 1, 1);
+VALUES (HOTEL_SEQUENCE.NEXTVAL, 2, '경주 풀빌라', '경주시 보문로', 35.856876, 129.224778, '역사와 자연이 어우러진 풀빌라입니다.', '010555555', 'hotel3@example.com', '2023/03/01', '2023/03/15', 120, 1, 1);
 
 INSERT INTO HOTEL_T (HOTEL_NO, REGION_NO, HOTEL_NAME, HOTEL_ADDRESS, LATITUDE, LONGITUDE, HOTEL_DETAIL, PHONE_NUMBER, H_EMAIL, CREATED_AT, MODIFIED_AT, HIT, STATUS, RECOMMEND_STATUS)
-VALUES (HOTEL_SEQUENCE.NEXTVAL, 2, '제주 리조트', '제주시 중앙로', 33.500090, 126.531188, '자연 속에서 휴식을 즐길 수 있는 제주 리조트입니다.', '010444444', 'hotel4@example.com', '2023-04-01', '2023-04-20', 80, 1, 0);
+VALUES (HOTEL_SEQUENCE.NEXTVAL, 2, '제주 리조트', '제주시 중앙로', 33.500090, 126.531188, '자연 속에서 휴식을 즐길 수 있는 제주 리조트입니다.', '010444444', 'hotel4@example.com', '2023/04/01', '2023/04/20', 80, 1, 0);
 
 INSERT INTO HOTEL_T (HOTEL_NO, REGION_NO, HOTEL_NAME, HOTEL_ADDRESS, LATITUDE, LONGITUDE, HOTEL_DETAIL, PHONE_NUMBER, H_EMAIL, CREATED_AT, MODIFIED_AT, HIT, STATUS, RECOMMEND_STATUS)
-VALUES (HOTEL_SEQUENCE.NEXTVAL, 2, '강릉 펜션', '강원도 강릉시 난설헌로', 37.793653, 128.904917, '강릉의 아름다운 풍경을 즐길 수 있는 펜션입니다.', '010666666', 'hotel5@example.com', '2023-05-01', '2023-05-10', 110, 1, 1);
+VALUES (HOTEL_SEQUENCE.NEXTVAL, 2, '강릉 펜션', '강원도 강릉시 난설헌로', 37.793653, 128.904917, '강릉의 아름다운 풍경을 즐길 수 있는 펜션입니다.', '010666666', 'hotel5@example.com', '2023/05/01', '2023/05/10', 110, 1, 1);
 
 INSERT INTO HOTEL_T (HOTEL_NO, REGION_NO, HOTEL_NAME, HOTEL_ADDRESS, LATITUDE, LONGITUDE, HOTEL_DETAIL, PHONE_NUMBER, H_EMAIL, CREATED_AT, MODIFIED_AT, HIT, STATUS, RECOMMEND_STATUS)
-VALUES (HOTEL_SEQUENCE.NEXTVAL, 3, '여수 해수욕장 호텔', '전라남도 여수시 해안로', 34.760761, 127.647621, '여수의 맑은 바다가 보이는 호텔입니다.', '010333333', 'hotel6@example.com', '2023-06-01', '2023-06-15', 90, 1, 0);
+VALUES (HOTEL_SEQUENCE.NEXTVAL, 3, '여수 해수욕장 호텔', '전라남도 여수시 해안로', 34.760761, 127.647621, '여수의 맑은 바다가 보이는 호텔입니다.', '010333333', 'hotel6@example.com', '2023/06/01', '2023/06/15', 90, 1, 0);
 
 INSERT INTO HOTEL_T (HOTEL_NO, REGION_NO, HOTEL_NAME, HOTEL_ADDRESS, LATITUDE, LONGITUDE, HOTEL_DETAIL, PHONE_NUMBER, H_EMAIL, CREATED_AT, MODIFIED_AT, HIT, STATUS, RECOMMEND_STATUS)
-VALUES (HOTEL_SEQUENCE.NEXTVAL, 3, '대구 비즈니스 호텔', '대구 중구 서문로', 35.866079, 128.595136, '대구 시내에 위치한 편리한 비즈니스 호텔입니다.', '010222222', 'hotel7@example.com', '2023-07-01', '2023-07-20', 130, 1, 1);
+VALUES (HOTEL_SEQUENCE.NEXTVAL, 3, '대구 비즈니스 호텔', '대구 중구 서문로', 35.866079, 128.595136, '대구 시내에 위치한 편리한 비즈니스 호텔입니다.', '010222222', 'hotel7@example.com', '2023/07/01', '2023/07/20', 130, 1, 1);
 
 INSERT INTO HOTEL_T (HOTEL_NO, REGION_NO, HOTEL_NAME, HOTEL_ADDRESS, LATITUDE, LONGITUDE, HOTEL_DETAIL, PHONE_NUMBER, H_EMAIL, CREATED_AT, MODIFIED_AT, HIT, STATUS, RECOMMEND_STATUS)
-VALUES (HOTEL_SEQUENCE.NEXTVAL, 4, '인천 공항 트랜짓 호텔', '인천 중구 인천대로', 37.457156, 126.445415, '인천 공항에서 편리하게 이용할 수 있는 호텔입니다.', '010999999', 'hotel8@example.com', '2023-08-01', '2023-08-10', 70, 1, 1);
+VALUES (HOTEL_SEQUENCE.NEXTVAL, 4, '인천 공항 트랜짓 호텔', '인천 중구 인천대로', 37.457156, 126.445415, '인천 공항에서 편리하게 이용할 수 있는 호텔입니다.', '010999999', 'hotel8@example.com', '2023/08/01', '2023/08/10', 70, 1, 1);
 
 INSERT INTO HOTEL_T (HOTEL_NO, REGION_NO, HOTEL_NAME, HOTEL_ADDRESS, LATITUDE, LONGITUDE, HOTEL_DETAIL, PHONE_NUMBER, H_EMAIL, CREATED_AT, MODIFIED_AT, HIT, STATUS, RECOMMEND_STATUS)
-VALUES (HOTEL_SEQUENCE.NEXTVAL, 4, '울산 리버뷰 호텔', '울산 남구 산업로', 35.539429, 129.318182, '울산 강변에서 멋진 뷰를 즐길 수 있는 호텔입니다.', '0109999888', 'hotel9@example.com', '2023-09-01', '2023-09-10', 75, 1, 1);
+VALUES (HOTEL_SEQUENCE.NEXTVAL, 4, '울산 리버뷰 호텔', '울산 남구 산업로', 35.539429, 129.318182, '울산 강변에서 멋진 뷰를 즐길 수 있는 호텔입니다.', '0109999888', 'hotel9@example.com', '2023/09/01', '2023/09/10', 75, 1, 1);
 
 INSERT INTO HOTEL_T (HOTEL_NO, REGION_NO, HOTEL_NAME, HOTEL_ADDRESS, LATITUDE, LONGITUDE, HOTEL_DETAIL, PHONE_NUMBER, H_EMAIL, CREATED_AT, MODIFIED_AT, HIT, STATUS, RECOMMEND_STATUS)
-VALUES (HOTEL_SEQUENCE.NEXTVAL, 4, '전주 한옥스테이', '전주시 완산구 한옥마을', 35.814510, 127.152756, '전주의 전통과 아름다움을 느낄 수 있는 한옥스테이입니다.', '0108888222', 'hotel10@example.com', '2023-10-01', '2023-10-15', 80, 1, 0);
+VALUES (HOTEL_SEQUENCE.NEXTVAL, 4, '전주 한옥스테이', '전주시 완산구 한옥마을', 35.814510, 127.152756, '전주의 전통과 아름다움을 느낄 수 있는 한옥스테이입니다.', '0108888222', 'hotel10@example.com', '2023/10/01', '2023/10/15', 80, 1, 0);
 
 COMMIT;
 
@@ -754,162 +755,164 @@ COMMIT;
 
 -- 호텔 이미지 등록 *************************************************************
 -- 호텔 1 이미지
-INSERT INTO HOTEL_IMAGE_T (HOTEL_NO, THUMBNAIL, FILESYSTEM_NAME, IMAGE_PATH)
-VALUES (1, 1, 'hotel1_thumbnail.jpg', '/images/hotel1/thumbnail/hotel1_thumbnail.jpg');
+INSERT INTO HOTEL_IMAGE_T (HOTEL_NO, ORIGINAL_NAME, THUMBNAIL,  FILESYSTEM_NAME, IMAGE_PATH)
+VALUES (1, 'hotel1_thumbnail.jpg', 1, 'hotel1_thumbnail.jpg',  '/images/hotel1/thumbnail/hotel1_thumbnail.jpg');
 
-INSERT INTO HOTEL_IMAGE_T (HOTEL_NO, ROOM_NO, THUMBNAIL, FILESYSTEM_NAME, IMAGE_PATH)
-VALUES (1, 1, 0, 'hotel1_room1_1.jpg', '/images/hotel1/room1/hotel1_room1_1.jpg');
+INSERT INTO HOTEL_IMAGE_T (HOTEL_NO, ROOM_NO, ORIGINAL_NAME, THUMBNAIL,  FILESYSTEM_NAME, IMAGE_PATH)
+VALUES (1, 1, 'hotel1_thumbnail.jpg', 0, 'hotel1_room1_1.jpg', '/images/hotel1/room1/hotel1_room1_1.jpg');
 
-INSERT INTO HOTEL_IMAGE_T (HOTEL_NO, ROOM_NO, THUMBNAIL, FILESYSTEM_NAME, IMAGE_PATH)
-VALUES (1, 1, 0, 'hotel1_room1_2.jpg', '/images/hotel1/room1/hotel1_room1_2.jpg');
+INSERT INTO HOTEL_IMAGE_T (HOTEL_NO, ROOM_NO, ORIGINAL_NAME, THUMBNAIL,  FILESYSTEM_NAME, IMAGE_PATH)
+VALUES (1, 1, 'hotel1_thumbnail.jpg', 0, 'hotel1_room1_2.jpg', '/images/hotel1/room1/hotel1_room1_2.jpg');
 
-INSERT INTO HOTEL_IMAGE_T (HOTEL_NO, ROOM_NO, THUMBNAIL, FILESYSTEM_NAME, IMAGE_PATH)
-VALUES (1, 2, 0, 'hotel1_thumbnail.jpg', '/images/hotel1/thumbnail/hotel1_thumbnail.jpg');
+INSERT INTO HOTEL_IMAGE_T (HOTEL_NO, ROOM_NO, ORIGINAL_NAME, THUMBNAIL,  FILESYSTEM_NAME, IMAGE_PATH)
+VALUES (1, 2, 'hotel1_thumbnail.jpg', 0, 'hotel1_thumbnail.jpg', '/images/hotel1/thumbnail/hotel1_thumbnail.jpg');
 
-INSERT INTO HOTEL_IMAGE_T (HOTEL_NO, ROOM_NO, THUMBNAIL, FILESYSTEM_NAME, IMAGE_PATH)
-VALUES (1, 2, 0, 'hotel1_room2_1.jpg', '/images/hotel1/room2/hotel1_room2_1.jpg');
+INSERT INTO HOTEL_IMAGE_T (HOTEL_NO, ROOM_NO, ORIGINAL_NAME, THUMBNAIL,  FILESYSTEM_NAME, IMAGE_PATH)
+VALUES (1, 2, 'hotel1_thumbnail.jpg',  0, 'hotel1_room2_1.jpg', '/images/hotel1/room2/hotel1_room2_1.jpg');
 
 COMMIT;
 
 -- 호텔 2 이미지
-INSERT INTO HOTEL_IMAGE_T (HOTEL_NO, THUMBNAIL, FILESYSTEM_NAME, IMAGE_PATH)
-VALUES (2, 1, 'hotel2_thumbnail.jpg', '/images/hotel2/thumbnail/hotel2_thumbnail.jpg');
+INSERT INTO HOTEL_IMAGE_T (HOTEL_NO, ORIGINAL_NAME, THUMBNAIL,  FILESYSTEM_NAME, IMAGE_PATH)
+VALUES (2, 'hotel2_thumbnail.jpg', 1, 'hotel2_thumbnail.jpg', '/images/hotel2/thumbnail/hotel2_thumbnail.jpg');
 
-INSERT INTO HOTEL_IMAGE_T (HOTEL_NO, ROOM_NO, THUMBNAIL, FILESYSTEM_NAME, IMAGE_PATH)
-VALUES (2, 1, 0, 'hotel2_room1_1.jpg', '/images/hotel2/room1/hotel2_room1_1.jpg');
+INSERT INTO HOTEL_IMAGE_T (HOTEL_NO, ROOM_NO, ORIGINAL_NAME, THUMBNAIL,  FILESYSTEM_NAME, IMAGE_PATH)
+VALUES (2, 1, 'hotel2_thumbnail.jpg', 0, 'hotel2_room1_1.jpg', '/images/hotel2/room1/hotel2_room1_1.jpg');
 
-INSERT INTO HOTEL_IMAGE_T (HOTEL_NO, ROOM_NO, THUMBNAIL, FILESYSTEM_NAME, IMAGE_PATH)
-VALUES (2, 1, 0, 'hotel2_room1_2.jpg', '/images/hotel2/room1/hotel2_room1_2.jpg');
+INSERT INTO HOTEL_IMAGE_T (HOTEL_NO, ROOM_NO, ORIGINAL_NAME, THUMBNAIL,  FILESYSTEM_NAME, IMAGE_PATH)
+VALUES (2, 1, 'hotel2_thumbnail.jpg',0, 'hotel2_room1_2.jpg', '/images/hotel2/room1/hotel2_room1_2.jpg');
 
-INSERT INTO HOTEL_IMAGE_T (HOTEL_NO, ROOM_NO, THUMBNAIL, FILESYSTEM_NAME, IMAGE_PATH)
-VALUES (2, 2, 0, 'hotel2_thumbnail.jpg', '/images/hotel2/thumbnail/hotel2_thumbnail.jpg');
+INSERT INTO HOTEL_IMAGE_T (HOTEL_NO, ROOM_NO, ORIGINAL_NAME, THUMBNAIL,  FILESYSTEM_NAME, IMAGE_PATH)
+VALUES (2, 2, 'hotel2_thumbnail.jpg', 0, 'hotel2_thumbnail.jpg', '/images/hotel2/thumbnail/hotel2_thumbnail.jpg');
 
-INSERT INTO HOTEL_IMAGE_T (HOTEL_NO, ROOM_NO, THUMBNAIL, FILESYSTEM_NAME, IMAGE_PATH)
-VALUES (2, 2, 0, 'hotel2_room2_1.jpg', '/images/hotel2/room2/hotel2_room2_1.jpg');
+INSERT INTO HOTEL_IMAGE_T (HOTEL_NO, ROOM_NO, ORIGINAL_NAME, THUMBNAIL,  FILESYSTEM_NAME, IMAGE_PATH)
+VALUES (2, 2,  'hotel2_thumbnail.jpg', 0, 'hotel2_room2_1.jpg', '/images/hotel2/room2/hotel2_room2_1.jpg');
 
 COMMIT;
 
 -- 호텔 3 이미지
-INSERT INTO HOTEL_IMAGE_T (HOTEL_NO, THUMBNAIL, FILESYSTEM_NAME, IMAGE_PATH)
-VALUES (3, 1, 'hotel3_thumbnail.jpg', '/images/hotel3/thumbnail/hotel3_thumbnail.jpg');
+INSERT INTO HOTEL_IMAGE_T (HOTEL_NO, ORIGINAL_NAME, THUMBNAIL,  FILESYSTEM_NAME, IMAGE_PATH)
+VALUES (3, 'hotel2_thumbnail.jpg', 1, 'hotel3_thumbnail.jpg', '/images/hotel3/thumbnail/hotel3_thumbnail.jpg');
 
-INSERT INTO HOTEL_IMAGE_T (HOTEL_NO, ROOM_NO, THUMBNAIL, FILESYSTEM_NAME, IMAGE_PATH)
-VALUES (3, 1, 0, 'hotel3_room1_1.jpg', '/images/hotel3/room1/hotel3_room1_1.jpg');
+INSERT INTO HOTEL_IMAGE_T (HOTEL_NO, ROOM_NO, ORIGINAL_NAME, THUMBNAIL,  FILESYSTEM_NAME, IMAGE_PATH)
+VALUES (3, 1, 'hotel2_thumbnail.jpg', 0, 'hotel3_room1_1.jpg', '/images/hotel3/room1/hotel3_room1_1.jpg');
 
-INSERT INTO HOTEL_IMAGE_T (HOTEL_NO, ROOM_NO, THUMBNAIL, FILESYSTEM_NAME, IMAGE_PATH)
-VALUES (3, 1, 0, 'hotel3_room1_2.jpg', '/images/hotel3/room1/hotel3_room1_2.jpg');
+INSERT INTO HOTEL_IMAGE_T (HOTEL_NO, ROOM_NO, ORIGINAL_NAME, THUMBNAIL,  FILESYSTEM_NAME, IMAGE_PATH)
+VALUES (3, 1, 'hotel2_thumbnail.jpg', 0, 'hotel3_room1_2.jpg', '/images/hotel3/room1/hotel3_room1_2.jpg');
 
-INSERT INTO HOTEL_IMAGE_T (HOTEL_NO, ROOM_NO, THUMBNAIL, FILESYSTEM_NAME, IMAGE_PATH)
-VALUES (3, 2, 0, 'hotel3_thumbnail.jpg', '/images/hotel3/thumbnail/hotel3_thumbnail.jpg');
+INSERT INTO HOTEL_IMAGE_T (HOTEL_NO, ROOM_NO, ORIGINAL_NAME, THUMBNAIL,  FILESYSTEM_NAME, IMAGE_PATH)
+VALUES (3, 2, 'hotel2_thumbnail.jpg', 0, 'hotel3_thumbnail.jpg', '/images/hotel3/thumbnail/hotel3_thumbnail.jpg');
 
-INSERT INTO HOTEL_IMAGE_T (HOTEL_NO, ROOM_NO, THUMBNAIL, FILESYSTEM_NAME, IMAGE_PATH)
-VALUES (3, 2, 0, 'hotel3_room2_1.jpg', '/images/hotel3/room2/hotel3_room2_1.jpg');
+INSERT INTO HOTEL_IMAGE_T (HOTEL_NO, ROOM_NO, ORIGINAL_NAME, THUMBNAIL,  FILESYSTEM_NAME, IMAGE_PATH)
+VALUES (3, 2, 'hotel2_thumbnail.jpg', 0, 'hotel3_room2_1.jpg', '/images/hotel3/room2/hotel3_room2_1.jpg');
 
 COMMIT;
 
 -- 호텔 4 이미지
-INSERT INTO HOTEL_IMAGE_T (HOTEL_NO, THUMBNAIL, FILESYSTEM_NAME, IMAGE_PATH)
-VALUES (4, 1, 'hotel4_thumbnail.jpg', '/images/hotel4/thumbnail/hotel4_thumbnail.jpg');
+INSERT INTO HOTEL_IMAGE_T (HOTEL_NO, ORIGINAL_NAME, THUMBNAIL,  FILESYSTEM_NAME, IMAGE_PATH)
+VALUES (4, 'hotel4_room1_1.jpg', 1, 'hotel4_thumbnail.jpg', '/images/hotel4/thumbnail/hotel4_thumbnail.jpg');
 
-INSERT INTO HOTEL_IMAGE_T (HOTEL_NO, ROOM_NO, THUMBNAIL, FILESYSTEM_NAME, IMAGE_PATH)
-VALUES (4, 1, 0, 'hotel4_room1_1.jpg', '/images/hotel4/room1/hotel4_room1_1.jpg');
+INSERT INTO HOTEL_IMAGE_T (HOTEL_NO, ROOM_NO, ORIGINAL_NAME, THUMBNAIL,  FILESYSTEM_NAME, IMAGE_PATH)
+VALUES (4, 1, 'hotel4_room1_1.jpg', 0, 'hotel4_room1_1.jpg', '/images/hotel4/room1/hotel4_room1_1.jpg');
 
-INSERT INTO HOTEL_IMAGE_T (HOTEL_NO, ROOM_NO, THUMBNAIL, FILESYSTEM_NAME, IMAGE_PATH)
-VALUES (4, 1, 0, 'hotel4_room1_2.jpg', '/images/hotel4/room1/hotel4_room1_2.jpg');
+INSERT INTO HOTEL_IMAGE_T (HOTEL_NO, ROOM_NO, ORIGINAL_NAME, THUMBNAIL,  FILESYSTEM_NAME, IMAGE_PATH)
+VALUES (4, 1, 'hotel4_room1_1.jpg', 0, 'hotel4_room1_2.jpg', '/images/hotel4/room1/hotel4_room1_2.jpg');
 
-INSERT INTO HOTEL_IMAGE_T (HOTEL_NO, ROOM_NO, THUMBNAIL, FILESYSTEM_NAME, IMAGE_PATH)
-VALUES (4, 2, 0, 'hotel4_thumbnail.jpg', '/images/hotel4/thumbnail/hotel4_thumbnail.jpg');
+INSERT INTO HOTEL_IMAGE_T (HOTEL_NO, ROOM_NO, ORIGINAL_NAME, THUMBNAIL,  FILESYSTEM_NAME, IMAGE_PATH)
+VALUES (4, 2, 'hotel4_room1_1.jpg', 0, 'hotel4_thumbnail.jpg', '/images/hotel4/thumbnail/hotel4_thumbnail.jpg');
 
-INSERT INTO HOTEL_IMAGE_T (HOTEL_NO, ROOM_NO, THUMBNAIL, FILESYSTEM_NAME, IMAGE_PATH)
-VALUES (4, 2, 0, 'hotel4_room2_1.jpg', '/images/hotel4/room2/hotel4_room2_1.jpg');
+INSERT INTO HOTEL_IMAGE_T (HOTEL_NO, ROOM_NO, ORIGINAL_NAME, THUMBNAIL,  FILESYSTEM_NAME, IMAGE_PATH)
+VALUES (4, 2, 'hotel4_room1_1.jpg', 0, 'hotel4_room2_1.jpg', '/images/hotel4/room2/hotel4_room2_1.jpg');
 
 COMMIT;
 
 -- 호텔 5 이미지
-INSERT INTO HOTEL_IMAGE_T (HOTEL_NO, THUMBNAIL, FILESYSTEM_NAME, IMAGE_PATH)
-VALUES (5, 1, 'hotel5_thumbnail.jpg', '/images/hotel5/thumbnail/hotel5_thumbnail.jpg');
+INSERT INTO HOTEL_IMAGE_T (HOTEL_NO, ORIGINAL_NAME, THUMBNAIL,  FILESYSTEM_NAME, IMAGE_PATH)
+VALUES (5, 'hotel4_room1_1.jpg', 1, 'hotel5_thumbnail.jpg', '/images/hotel5/thumbnail/hotel5_thumbnail.jpg');
 
-INSERT INTO HOTEL_IMAGE_T (HOTEL_NO, ROOM_NO, THUMBNAIL, FILESYSTEM_NAME, IMAGE_PATH)
-VALUES (5, 1, 0, 'hotel5_room1_1.jpg', '/images/hotel5/room1/hotel5_room1_1.jpg');
+INSERT INTO HOTEL_IMAGE_T (HOTEL_NO, ROOM_NO, ORIGINAL_NAME, THUMBNAIL,  FILESYSTEM_NAME, IMAGE_PATH)
+VALUES (5, 1, 'hotel4_room1_1.jpg', 0, 'hotel5_room1_1.jpg', '/images/hotel5/room1/hotel5_room1_1.jpg');
 
-INSERT INTO HOTEL_IMAGE_T (HOTEL_NO, ROOM_NO, THUMBNAIL, FILESYSTEM_NAME, IMAGE_PATH)
-VALUES (5, 1, 0, 'hotel5_room1_2.jpg', '/images/hotel5/room1/hotel5_room1_2.jpg');
+INSERT INTO HOTEL_IMAGE_T (HOTEL_NO, ROOM_NO, ORIGINAL_NAME, THUMBNAIL,  FILESYSTEM_NAME, IMAGE_PATH)
+VALUES (5, 1, 'hotel4_room1_1.jpg', 0, 'hotel5_room1_2.jpg', '/images/hotel5/room1/hotel5_room1_2.jpg');
 
-INSERT INTO HOTEL_IMAGE_T (HOTEL_NO, ROOM_NO, THUMBNAIL, FILESYSTEM_NAME, IMAGE_PATH)
-VALUES (5, 2, 0, 'hotel5_room2_1.jpg', '/images/hotel5/room2/hotel5_room2_1.jpg');
+INSERT INTO HOTEL_IMAGE_T (HOTEL_NO, ROOM_NO, ORIGINAL_NAME, THUMBNAIL,  FILESYSTEM_NAME, IMAGE_PATH)
+VALUES (5, 2, 'hotel4_room1_1.jpg', 0, 'hotel5_room2_1.jpg', '/images/hotel5/room2/hotel5_room2_1.jpg');
 
 COMMIT;
 
 -- 호텔 6
-INSERT INTO HOTEL_IMAGE_T (HOTEL_NO, THUMBNAIL, FILESYSTEM_NAME, IMAGE_PATH)
-VALUES (6, 1, 'hotel6_thumbnail.jpg', '/images/hotel6/thumbnail/hotel6_thumbnail.jpg');
+INSERT INTO HOTEL_IMAGE_T (HOTEL_NO, ORIGINAL_NAME, THUMBNAIL,  FILESYSTEM_NAME, IMAGE_PATH)
+VALUES (6, 'hotel4_room1_1.jpg', 1, 'hotel6_thumbnail.jpg', '/images/hotel6/thumbnail/hotel6_thumbnail.jpg');
 
-INSERT INTO HOTEL_IMAGE_T (HOTEL_NO, ROOM_NO, THUMBNAIL, FILESYSTEM_NAME, IMAGE_PATH)
-VALUES (6, 1, 0, 'hotel6_room1_1.jpg', '/images/hotel6/room1/hotel6_room1_1.jpg');
+INSERT INTO HOTEL_IMAGE_T (HOTEL_NO, ROOM_NO, ORIGINAL_NAME, THUMBNAIL,  FILESYSTEM_NAME, IMAGE_PATH)
+VALUES (6, 1,'hotel4_room1_1.jpg',  0, 'hotel6_room1_1.jpg', '/images/hotel6/room1/hotel6_room1_1.jpg');
 
-INSERT INTO HOTEL_IMAGE_T (HOTEL_NO, ROOM_NO, THUMBNAIL, FILESYSTEM_NAME, IMAGE_PATH)
-VALUES (6, 1, 0, 'hotel6_room1_2.jpg', '/images/hotel6/room1/hotel6_room1_2.jpg');
+INSERT INTO HOTEL_IMAGE_T (HOTEL_NO, ROOM_NO, ORIGINAL_NAME, THUMBNAIL,  FILESYSTEM_NAME, IMAGE_PATH)
+VALUES (6, 1, 'hotel4_room1_1.jpg', 0, 'hotel6_room1_2.jpg', '/images/hotel6/room1/hotel6_room1_2.jpg');
 
-INSERT INTO HOTEL_IMAGE_T (HOTEL_NO, ROOM_NO, THUMBNAIL, FILESYSTEM_NAME, IMAGE_PATH)
-VALUES (6, 2, 0, 'hotel6_room2_1.jpg', '/images/hotel6/room2/hotel6_room2_1.jpg');
+INSERT INTO HOTEL_IMAGE_T (HOTEL_NO, ROOM_NO, ORIGINAL_NAME, THUMBNAIL,  FILESYSTEM_NAME, IMAGE_PATH)
+VALUES (6, 2,'hotel4_room1_1.jpg',  0, 'hotel6_room2_1.jpg', '/images/hotel6/room2/hotel6_room2_1.jpg');
 
 COMMIT;
 
 -- 호텔 7
-INSERT INTO HOTEL_IMAGE_T (HOTEL_NO, THUMBNAIL, FILESYSTEM_NAME, IMAGE_PATH)
-VALUES (7, 1, 'hotel6_thumbnail.jpg', '/images/hotel6/thumbnail/hotel6_thumbnail.jpg');
+INSERT INTO HOTEL_IMAGE_T (HOTEL_NO, ORIGINAL_NAME, THUMBNAIL,  FILESYSTEM_NAME, IMAGE_PATH)
+VALUES (7, 'hotel4_room1_1.jpg', 1, 'hotel6_thumbnail.jpg', '/images/hotel6/thumbnail/hotel6_thumbnail.jpg');
 
-INSERT INTO HOTEL_IMAGE_T (HOTEL_NO, ROOM_NO, THUMBNAIL, FILESYSTEM_NAME, IMAGE_PATH)
-VALUES (7, 1, 0, 'hotel6_room1_1.jpg', '/images/hotel6/room1/hotel6_room1_1.jpg');
+INSERT INTO HOTEL_IMAGE_T (HOTEL_NO, ROOM_NO, ORIGINAL_NAME, THUMBNAIL,  FILESYSTEM_NAME, IMAGE_PATH)
+VALUES (7, 1, 'hotel4_room1_1.jpg', 0, 'hotel6_room1_1.jpg', '/images/hotel6/room1/hotel6_room1_1.jpg');
 
-INSERT INTO HOTEL_IMAGE_T (HOTEL_NO, ROOM_NO, THUMBNAIL, FILESYSTEM_NAME, IMAGE_PATH)
-VALUES (7, 1, 0, 'hotel6_room1_2.jpg', '/images/hotel6/room1/hotel6_room1_2.jpg');
+INSERT INTO HOTEL_IMAGE_T (HOTEL_NO, ROOM_NO, ORIGINAL_NAME, THUMBNAIL,  FILESYSTEM_NAME, IMAGE_PATH)
+VALUES (7, 1, 'hotel4_room1_1.jpg', 0, 'hotel6_room1_2.jpg', '/images/hotel6/room1/hotel6_room1_2.jpg');
 
-INSERT INTO HOTEL_IMAGE_T (HOTEL_NO, ROOM_NO, THUMBNAIL, FILESYSTEM_NAME, IMAGE_PATH)
-VALUES (7, 2, 0, 'hotel6_room2_1.jpg', '/images/hotel6/room2/hotel6_room2_1.jpg');
+INSERT INTO HOTEL_IMAGE_T (HOTEL_NO, ROOM_NO, ORIGINAL_NAME, THUMBNAIL,  FILESYSTEM_NAME, IMAGE_PATH)
+VALUES (7, 2, 'hotel4_room1_1.jpg', 0, 'hotel6_room2_1.jpg', '/images/hotel6/room2/hotel6_room2_1.jpg');
 
 COMMIT;
 
 -- 호텔 8
-INSERT INTO HOTEL_IMAGE_T (HOTEL_NO, THUMBNAIL, FILESYSTEM_NAME, IMAGE_PATH)
-VALUES (8, 1, 'hotel6_thumbnail.jpg', '/images/hotel6/thumbnail/hotel6_thumbnail.jpg');
+INSERT INTO HOTEL_IMAGE_T (HOTEL_NO, ORIGINAL_NAME, THUMBNAIL,  FILESYSTEM_NAME, IMAGE_PATH)
+VALUES (8, 'hotel4_room1_1.jpg', 1, 'hotel6_thumbnail.jpg', '/images/hotel6/thumbnail/hotel6_thumbnail.jpg');
 
-INSERT INTO HOTEL_IMAGE_T (HOTEL_NO, ROOM_NO, THUMBNAIL, FILESYSTEM_NAME, IMAGE_PATH)
-VALUES (8, 1, 0, 'hotel6_room1_1.jpg', '/images/hotel6/room1/hotel6_room1_1.jpg');
+INSERT INTO HOTEL_IMAGE_T (HOTEL_NO, ROOM_NO, ORIGINAL_NAME, THUMBNAIL,  FILESYSTEM_NAME, IMAGE_PATH)
+VALUES (8, 1, 'hotel4_room1_1.jpg', 0, 'hotel6_room1_1.jpg', '/images/hotel6/room1/hotel6_room1_1.jpg');
 
-INSERT INTO HOTEL_IMAGE_T (HOTEL_NO, ROOM_NO, THUMBNAIL, FILESYSTEM_NAME, IMAGE_PATH)
-VALUES (8, 1, 0, 'hotel6_room1_2.jpg', '/images/hotel6/room1/hotel6_room1_2.jpg');
+INSERT INTO HOTEL_IMAGE_T (HOTEL_NO, ROOM_NO, ORIGINAL_NAME, THUMBNAIL,  FILESYSTEM_NAME, IMAGE_PATH)
+VALUES (8, 1, 'hotel4_room1_1.jpg', 0, 'hotel6_room1_2.jpg', '/images/hotel6/room1/hotel6_room1_2.jpg');
 
-INSERT INTO HOTEL_IMAGE_T (HOTEL_NO, ROOM_NO, THUMBNAIL, FILESYSTEM_NAME, IMAGE_PATH)
-VALUES (8, 2, 0, 'hotel6_room2_1.jpg', '/images/hotel6/room2/hotel6_room2_1.jpg');
+INSERT INTO HOTEL_IMAGE_T (HOTEL_NO, ROOM_NO, ORIGINAL_NAME, THUMBNAIL,  FILESYSTEM_NAME, IMAGE_PATH)
+VALUES (8, 2, 'hotel4_room1_1.jpg', 0, 'hotel6_room2_1.jpg', '/images/hotel6/room2/hotel6_room2_1.jpg');
+
 -- 호텔 9
-INSERT INTO HOTEL_IMAGE_T (HOTEL_NO, THUMBNAIL, FILESYSTEM_NAME, IMAGE_PATH)
-VALUES (9, 1, 'hotel6_thumbnail.jpg', '/images/hotel6/thumbnail/hotel6_thumbnail.jpg');
+INSERT INTO HOTEL_IMAGE_T (HOTEL_NO, ORIGINAL_NAME, THUMBNAIL,  FILESYSTEM_NAME, IMAGE_PATH)
+VALUES (9, 'hotel6_thumbnail.jpg', 1, 'hotel6_thumbnail.jpg', '/images/hotel6/thumbnail/hotel6_thumbnail.jpg');
 
-INSERT INTO HOTEL_IMAGE_T (HOTEL_NO, ROOM_NO, THUMBNAIL, FILESYSTEM_NAME, IMAGE_PATH)
-VALUES (9, 1, 0, 'hotel6_room1_1.jpg', '/images/hotel6/room1/hotel6_room1_1.jpg');
+INSERT INTO HOTEL_IMAGE_T (HOTEL_NO, ROOM_NO, ORIGINAL_NAME, THUMBNAIL,  FILESYSTEM_NAME, IMAGE_PATH)
+VALUES (9, 1,'hotel6_room1_1.jpg', 0, 'hotel6_room1_1.jpg', '/images/hotel6/room1/hotel6_room1_1.jpg');
 
-INSERT INTO HOTEL_IMAGE_T (HOTEL_NO, ROOM_NO, THUMBNAIL, FILESYSTEM_NAME, IMAGE_PATH)
-VALUES (9, 1, 0, 'hotel6_room1_2.jpg', '/images/hotel6/room1/hotel6_room1_2.jpg');
+INSERT INTO HOTEL_IMAGE_T (HOTEL_NO, ROOM_NO, ORIGINAL_NAME, THUMBNAIL,  FILESYSTEM_NAME, IMAGE_PATH)
+VALUES (9, 1,'hotel6_room1_1.jpg', 0, 'hotel6_room1_2.jpg', '/images/hotel6/room1/hotel6_room1_2.jpg');
 
-INSERT INTO HOTEL_IMAGE_T (HOTEL_NO, ROOM_NO, THUMBNAIL, FILESYSTEM_NAME, IMAGE_PATH)
-VALUES (9, 2, 0, 'hotel6_room2_1.jpg', '/images/hotel6/room2/hotel6_room2_1.jpg');
+INSERT INTO HOTEL_IMAGE_T (HOTEL_NO, ROOM_NO, ORIGINAL_NAME, THUMBNAIL,  FILESYSTEM_NAME, IMAGE_PATH)
+VALUES (9, 2,'hotel6_room1_1.jpg', 0, 'hotel6_room2_1.jpg', '/images/hotel6/room2/hotel6_room2_1.jpg');
 
 COMMIT;
 
 -- 호텔 10
-INSERT INTO HOTEL_IMAGE_T (HOTEL_NO, THUMBNAIL, FILESYSTEM_NAME, IMAGE_PATH)
-VALUES (10, 1, 'hotel6_thumbnail.jpg', '/images/hotel6/thumbnail/hotel6_thumbnail.jpg');
+INSERT INTO HOTEL_IMAGE_T (HOTEL_NO, ORIGINAL_NAME, THUMBNAIL,  FILESYSTEM_NAME, IMAGE_PATH)
+VALUES (10, 'hotel4_room1_1.jpg', 1, 'hotel6_thumbnail.jpg', '/images/hotel6/thumbnail/hotel6_thumbnail.jpg');
 
-INSERT INTO HOTEL_IMAGE_T (HOTEL_NO, ROOM_NO, THUMBNAIL, FILESYSTEM_NAME, IMAGE_PATH)
-VALUES (10, 1, 0, 'hotel6_room1_1.jpg', '/images/hotel6/room1/hotel6_room1_1.jpg');
+INSERT INTO HOTEL_IMAGE_T (HOTEL_NO, ROOM_NO, ORIGINAL_NAME, THUMBNAIL,  FILESYSTEM_NAME, IMAGE_PATH)
+VALUES (10, 1, 'hotel4_room1_1.jpg', 0, 'hotel6_room1_1.jpg', '/images/hotel6/room1/hotel6_room1_1.jpg');
 
-INSERT INTO HOTEL_IMAGE_T (HOTEL_NO, ROOM_NO, THUMBNAIL, FILESYSTEM_NAME, IMAGE_PATH)
-VALUES (10, 1, 0, 'hotel6_room1_2.jpg', '/images/hotel6/room1/hotel6_room1_2.jpg');
+INSERT INTO HOTEL_IMAGE_T (HOTEL_NO, ROOM_NO, ORIGINAL_NAME, THUMBNAIL,  FILESYSTEM_NAME, IMAGE_PATH)
+VALUES (10, 1, 'hotel4_room1_1.jpg', 0, 'hotel6_room1_2.jpg', '/images/hotel6/room1/hotel6_room1_2.jpg');
 
-INSERT INTO HOTEL_IMAGE_T (HOTEL_NO, ROOM_NO, THUMBNAIL, FILESYSTEM_NAME, IMAGE_PATH)
-VALUES (10, 2, 0, 'hotel6_room2_1.jpg', '/images/hotel6/room2/hotel6_room2_1.jpg');
+INSERT INTO HOTEL_IMAGE_T (HOTEL_NO, ROOM_NO, ORIGINAL_NAME, THUMBNAIL,  FILESYSTEM_NAME, IMAGE_PATH)
+VALUES (10, 2, 'hotel4_room1_1.jpg', 0, 'hotel6_room2_1.jpg', '/images/hotel6/room2/hotel6_room2_1.jpg');
 COMMIT;
+
 
 -- 객실 특성 등록 ***************************************************************
 -- 호텔 1 방 특징
