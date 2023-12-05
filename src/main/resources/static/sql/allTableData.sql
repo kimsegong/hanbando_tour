@@ -364,18 +364,19 @@ CREATE TABLE TOURIST_T (
 -- ************************************ 결제 ************************************
 -- 결제 테이블
 CREATE TABLE PAYMENT_T (
-    PAYMENT_NO   NUMBER             NOT NULL,  -- 결제번호 (PK)
-    IMP_UID      VARCHAR2(30 BYTE)  NULL,      -- 결제고유번호
-    PAY_YN       VARCHAR2(10 BYTE)  NULL,      -- 결제성공여부
-    PAY_METHOD   VARCHAR2(30 BYTE)  NULL,      -- 결제수단
-    PAID_AMOUNT  NUMBER             NULL,      -- 결제금액
-    PAID_AT      VARCHAR2(30 BYTE)  NULL,      -- 결제승인시각
-    MERCHANT_UID VARCHAR2(30 BYTE)  NULL,      -- 주문번호
-    BUYER_NAME   VARCHAR2(20 BYTE)  NULL,      -- 구매자이름
-    BUYER_EMAIL  VARCHAR2(100 BYTE) NULL,      -- 구매자이메일
-    ERROR_MSG    VARCHAR2(300 BYTE) NULL,      -- 에러메시지
-    PAY_STATUS   VARCHAR2(10 BYTE)  NULL,      -- 결제상태 ready,paid,failed(api응답으로 오는 값임)
-    RESERVE_NO   NUMBER             NULL,      -- 예약번호 (FK)
+    PAYMENT_NO    NUMBER             NOT NULL,  -- 결제번호 (PK)
+    IMP_UID       VARCHAR2(30 BYTE)  NULL,      -- 결제고유번호
+    PAY_YN        VARCHAR2(10 BYTE)  NULL,      -- 결제성공여부
+    PAY_METHOD    VARCHAR2(30 BYTE)  NULL,      -- 결제수단
+    PAID_AMOUNT   NUMBER             NULL,      -- 결제금액
+    PAID_AT       VARCHAR2(30 BYTE)  NULL,      -- 결제승인시각
+    MERCHANT_UID  VARCHAR2(30 BYTE)  NULL,      -- 주문번호
+    BUYER_NAME    VARCHAR2(20 BYTE)  NULL,      -- 구매자이름
+    BUYER_EMAIL   VARCHAR2(100 BYTE) NULL,      -- 구매자이메일
+    ERROR_MSG     VARCHAR2(300 BYTE) NULL,      -- 에러메시지
+    PAY_STATUS    VARCHAR2(10 BYTE)  NULL,      -- 결제상태 ready,paid,failed(api응답으로 오는 값임)
+    CANCEL_AMOUNT NUMBER             NULL,      -- 취소금액
+    RESERVE_NO    NUMBER             NULL,      -- 예약번호 (FK)
     CONSTRAINT PK_PAY PRIMARY KEY(PAYMENT_NO),
     CONSTRAINT FK_RES_PAY FOREIGN KEY(RESERVE_NO) REFERENCES RESERVE_T(RESERVE_NO) ON DELETE SET NULL
 );
@@ -1150,14 +1151,14 @@ INSERT INTO TOURIST_T VALUES(TOURIST_SEQ.NEXTVAL, '김소아', '19900101', 'F', 
 COMMIT;
 
 -- 결제 등록
-INSERT INTO PAYMENT_T VALUES(PAYMENT_SEQ.NEXTVAL, '결제고유번호', 'Y', '결제수단', 112000, TO_CHAR(SYSDATE,'YYYY/MM/DD'), '주문번호', '구매자1', '구매자1@이메일', '에러메시지', 'paid', 1);
-INSERT INTO PAYMENT_T VALUES(PAYMENT_SEQ.NEXTVAL, '결제고유번호', 'Y', '결제수단', 110000, TO_CHAR(SYSDATE,'YYYY/MM/DD'), '주문번호', '구매자2', '구매자2@이메일', '에러메시지', 'paid', 4);
-INSERT INTO PAYMENT_T VALUES(PAYMENT_SEQ.NEXTVAL, '결제고유번호', 'Y', '결제수단', 165000, TO_CHAR(SYSDATE,'YYYY/MM/DD'), '주문번호', '구매자3', '구매자3@이메일', '에러메시지', 'paid', 5);
-INSERT INTO PAYMENT_T VALUES(PAYMENT_SEQ.NEXTVAL, '결제고유번호', 'Y', '결제수단', 90, TO_CHAR(SYSDATE,'YYYY/MM/DD'), '주문번호', '구매자4', '구매자4@이메일', '에러메시지', 'paid', 9);
-INSERT INTO PAYMENT_T VALUES(PAYMENT_SEQ.NEXTVAL, '결제고유번호', 'Y', '결제수단', 70, TO_CHAR(SYSDATE,'YYYY/MM/DD'), '주문번호', '구매자5', '구매자5@이메일', '에러메시지', 'paid', 10);
-INSERT INTO PAYMENT_T VALUES(PAYMENT_SEQ.NEXTVAL, '결제고유번호', 'Y', '결제수단', 70, TO_CHAR(SYSDATE,'YYYY/MM/DD'), '주문번호', '구매자6', '구매자6@이메일', '에러메시지', 'paid', 11);
-INSERT INTO PAYMENT_T VALUES(PAYMENT_SEQ.NEXTVAL, '결제고유번호', 'Y', '결제수단', 110, TO_CHAR(SYSDATE,'YYYY/MM/DD'), '주문번호', '구매자7', '구매자7@이메일', '에러메시지', 'paid', 12);
-INSERT INTO PAYMENT_T VALUES(PAYMENT_SEQ.NEXTVAL, '결제고유번호', 'Y', '결제수단', 130, TO_CHAR(SYSDATE,'YYYY/MM/DD'), '주문번호', '구매자8', '구매자8@이메일', '에러메시지', 'paid', 13);
+INSERT INTO PAYMENT_T VALUES(PAYMENT_SEQ.NEXTVAL, '결제고유번호', 'Y', '결제수단', 112000, TO_CHAR(SYSDATE,'YYYY/MM/DD'), '주문번호', '구매자1', '구매자1@이메일', '에러메시지', 'paid', 0, 1);
+INSERT INTO PAYMENT_T VALUES(PAYMENT_SEQ.NEXTVAL, '결제고유번호', 'Y', '결제수단', 110000, TO_CHAR(SYSDATE,'YYYY/MM/DD'), '주문번호', '구매자2', '구매자2@이메일', '에러메시지', 'paid', 0, 4);
+INSERT INTO PAYMENT_T VALUES(PAYMENT_SEQ.NEXTVAL, '결제고유번호', 'Y', '결제수단', 165000, TO_CHAR(SYSDATE,'YYYY/MM/DD'), '주문번호', '구매자3', '구매자3@이메일', '에러메시지', 'paid', 0, 5);
+INSERT INTO PAYMENT_T VALUES(PAYMENT_SEQ.NEXTVAL, '결제고유번호', 'Y', '결제수단', 90, TO_CHAR(SYSDATE,'YYYY/MM/DD'), '주문번호', '구매자4', '구매자4@이메일', '에러메시지', 'paid', 0, 9);
+INSERT INTO PAYMENT_T VALUES(PAYMENT_SEQ.NEXTVAL, '결제고유번호', 'Y', '결제수단', 70, TO_CHAR(SYSDATE,'YYYY/MM/DD'), '주문번호', '구매자5', '구매자5@이메일', '에러메시지', 'paid', 0, 10);
+INSERT INTO PAYMENT_T VALUES(PAYMENT_SEQ.NEXTVAL, '결제고유번호', 'Y', '결제수단', 70, TO_CHAR(SYSDATE,'YYYY/MM/DD'), '주문번호', '구매자6', '구매자6@이메일', '에러메시지', 'paid', 0, 11);
+INSERT INTO PAYMENT_T VALUES(PAYMENT_SEQ.NEXTVAL, '결제고유번호', 'Y', '결제수단', 110, TO_CHAR(SYSDATE,'YYYY/MM/DD'), '주문번호', '구매자7', '구매자7@이메일', '에러메시지', 'paid', 0, 12);
+INSERT INTO PAYMENT_T VALUES(PAYMENT_SEQ.NEXTVAL, '결제고유번호', 'Y', '결제수단', 130, TO_CHAR(SYSDATE,'YYYY/MM/DD'), '주문번호', '구매자8', '구매자8@이메일', '에러메시지', 'paid', 0, 13);
 COMMIT;
 
 -- ******************************************************************************
