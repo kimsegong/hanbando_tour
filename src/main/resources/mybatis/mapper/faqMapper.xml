@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.tour.hanbando.dao.FaqMapper">
+
+  <select id="getFaqList" parameterType="Map" resultType="FaqDto">
+    SELECT FAQ_NO, CA_NO, TITLE, CONTENTS, CREATED_AT, MODIFIED_AT
+      FROM FAQ_T
+
+   </select>
+   
+  
+</mapper>

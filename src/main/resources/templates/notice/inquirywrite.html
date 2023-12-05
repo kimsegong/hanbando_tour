@@ -126,6 +126,7 @@
     
     <div class="col-5"> 
       <div>
+        <form id="frm_inquiry_add" method="post" th:action="@{/notice/addInquiry.do}">
       <select class="form-select" aria-label="Default select example">
         <option selected>문의선택</option>
         <option value="1">호텔문의</option>
@@ -138,7 +139,6 @@
       <div class="box5"></div>
       </div>
       
-      <form id="frm_inquiry_add" method="post" th:action="@{/notice/addInquiry.do}">
 
       <div class="title_input">
         <input type="text" name="title" id="title" placeholder="제목 입력" class="search_input" style="width:450px">

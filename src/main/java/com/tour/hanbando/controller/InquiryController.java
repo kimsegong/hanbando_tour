@@ -33,6 +33,8 @@ public class InquiryController {
     return "redirect:/notice/inquirylist.do";
   }
   
+
+  
   @GetMapping("/inquirywrite.form")
   public String inquirywrite() {
     return "notice/inquirywrite";
