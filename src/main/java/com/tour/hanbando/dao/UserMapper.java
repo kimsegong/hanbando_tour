@@ -27,4 +27,6 @@ public interface UserMapper {
   public int insertNaverUser(UserDto user);
   //카카오
   public int insertKakaoUser(UserDto user);
+  //아이디찾기
+  public UserDto getFindId(Map<String, Object> map);
 }
