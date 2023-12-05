@@ -49,10 +49,15 @@ public interface ManageService {
     public void loadSearchLeaveList(HttpServletRequest request, Model model);
     
     /* 패키지 상품 목록 */
+    public void loadPackageList(HttpServletRequest request, Model model);
     
     /* 패키지 상품 검색 */
     
     /* 호텔 상품 목록 */
+    public void loadHotelList(HttpServletRequest request, Model model);
+    
+    /* 호텔 판매/추천 변경 */
+    public ResponseEntity<Map<String, Object>> modifyHotelRecommend(HttpServletRequest request);
     
     /* 호텔 상품 검색 */
     

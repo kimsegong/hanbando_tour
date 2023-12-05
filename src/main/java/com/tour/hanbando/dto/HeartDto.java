@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class HeartDto {
-  private int userNo;
+  private UserDto userDto;
   private PackageDto packageDto;
   private HotelDto hotelDto;
 }

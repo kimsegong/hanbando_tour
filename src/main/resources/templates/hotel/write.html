@@ -23,6 +23,7 @@
 		      	<!--/*여기에 작성/ 다 만들고 style 지워주세요  */-->
 				   <h2>호텔 게시글작성</h2>
 			<form method="post" id="hotel_add" th:action="@{/hotel/add.do}" accept="image/*" enctype="multipart/form-data" >
+				<input type="hidden" id="hotelNo" name="hotelNo" th:value="${hotelNo}"> 
 			   <div style="margin: 30px 270px;" class="w-50 p-3">
 		<div style="text-align: left;">
 		      <label for="files" class="form-label">메인첨부</label>
@@ -90,15 +91,28 @@
       <input type="checkbox" id="sauna" class="form-check-input">
       <label for="lounge" class="form-check-label">라운지</label>
       <input type="checkbox" id="lounge" class="form-check-input">
-      <label for="roomservice" class="form-check-label">조식</label>
+      <label for="roomservice" class="form-check-label">룸서비스</label>
       <input type="checkbox" id="roomservice" class="form-check-input">
     </div>
 		<div>
     <label for="hotelDetail">호텔 상세</label>
     <textarea id="hotelDetail">체크인: 체크아웃:</textarea>
       
+    <!--/* Button trigger modal */--> 
+		<button type="button" class="btn btn-primary" onclick="openHotelRoom()" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+		  객실 등록하기 
+		</button>
+		
+		<!--/* Modal */-->
+		<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+		  <div class="modal-dialog">
+		    <div class="modal-content">
+		    </div>
+		  </div>
+		</div>  
+      
     </div>
-    <button type="button" id="addRoom">객실 추가 등록</button>
+    <!--/*
 		<div class="roomGroup">
       <input type="file" name="files1" class="form-control" multiple>
       <label for="roomName" >객실이름</label>
@@ -154,7 +168,7 @@
       <button type="button" id="btnAddRoom" onclick="return roomSubmit(this.form)">객실등록</button>
     </div>
 		<div id="emptyRoom"></div>
-		
+		*/-->
 		
 		    	  </div>    
 				    <div class="d-grid gap-2 col-6 mx-auto">
@@ -172,6 +186,7 @@
 	</div>
 <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 <script th:inline="javascript">
+  console.log($("#hotelNo").val())
   
 	          //본 예제에서는 도로명 주소 표기 방식에 대한 법령에 따라, 내려오는 데이터를 조합하여 올바른 주소를 구성하는 방법을 설명합니다.
           function execDaumPostcode() {
@@ -232,17 +247,10 @@
               }
             }).open();
           }
-
-   $('#addRoom').click(() => {
-     
-   })
-  
-   roomSubmit = (frm) => {
-     frm.action="";
-     frm.submit();
-     return true;
-   }; 
-
+          
+  function openHotelRoom(){
+    $('.modal-content').load("addRoom.form");
+  }
 
 	const fnFileCheck = () => {
         $('#files').change((ev) => {

@@ -17,9 +17,10 @@ import org.springframework.ui.Model;
 
 import com.tour.hanbando.dao.ManageMapper;
 import com.tour.hanbando.dao.UserMapper;
-import com.tour.hanbando.dto.HeartDto;
+import com.tour.hanbando.dto.HotelDto;
 import com.tour.hanbando.dto.InactiveUserDto;
 import com.tour.hanbando.dto.LeaveUserDto;
+import com.tour.hanbando.dto.PackageDto;
 import com.tour.hanbando.dto.ReviewDto;
 import com.tour.hanbando.dto.UserDto;
 import com.tour.hanbando.util.MyPageUtils;
@@ -376,6 +377,84 @@ public class ManageServiceImpl implements ManageService {
     model.addAttribute("beginNo", total - (page - 1) * display);
     model.addAttribute("total", total);
     
+  }
+  
+  /**
+   * 패키지 상품 목록
+   * 
+   * @author 심희수
+   * @param request
+   * @param model
+   * @return 전체 패키지 목록, 페이징 정보, 총 패키지 상품 수 반환
+   */
+  @Transactional(readOnly=true)
+  @Override
+  public void loadPackageList(HttpServletRequest request, Model model) {
+    
+    Optional<String> opt = Optional.ofNullable(request.getParameter("page"));
+    int page = Integer.parseInt(opt.orElse("1"));
+    int total = manageMapper.getPackageCount();
+    int display = 20;
+    
+    myPageUtils.setPaging(page, total, display);
+    
+    Map<String, Object> map = Map.of("begin", myPageUtils.getBegin()
+                                   , "end", myPageUtils.getEnd());
+    
+    List<PackageDto> packageList = manageMapper.getPackageList(map);
+
+    model.addAttribute("packageList", packageList);
+    model.addAttribute("paging", myPageUtils.getMvcPaging(request.getContextPath() + "/manage/productList.do"));
+    model.addAttribute("beginNo", total - (page - 1) * display);
+    model.addAttribute("total", total);
+  }
+  
+  /**
+   * 호텔 상품 목록
+   * 
+   * @author 심희수
+   * @param request
+   * @param model
+   * @return 전체 호텔 목록, 페이징 정보, 총 호텔 상품 수 반환
+   */
+  @Transactional(readOnly=true)
+  @Override
+  public void loadHotelList(HttpServletRequest request, Model model) {
+    
+    Optional<String> opt = Optional.ofNullable(request.getParameter("page"));
+    int page = Integer.parseInt(opt.orElse("1"));
+    int total = manageMapper.getHotelCount();
+    int display = 20;
+    
+    myPageUtils.setPaging(page, total, display);
+    
+    Map<String, Object> map = Map.of("begin", myPageUtils.getBegin()
+                                   , "end", myPageUtils.getEnd());
+    List<HotelDto> hotelList = manageMapper.getHotelList(map);
+    
+    model.addAttribute("hotelList", hotelList);
+    model.addAttribute("paging", myPageUtils.getMvcPaging(request.getContextPath() + "/manage/hotelProductList.do"));
+    model.addAttribute("beginNo", total - (page - 1) * display);
+    model.addAttribute("total", total);
+  }
+  
+  /**
+   * 호텔 판매/추천 여부 변경
+   */
+  @Override
+  public ResponseEntity<Map<String, Object>> modifyHotelRecommend(HttpServletRequest request) {
+    
+    int recommendStatus = Integer.parseInt(request.getParameter("recommendStatus"));
+    int hotelNo = Integer.parseInt(request.getParameter("hotelNo"));
+    
+    HotelDto hotel = HotelDto.builder()
+                        .recommendStatus(recommendStatus)
+                        .hotelNo(hotelNo)
+                        .build();
+    
+    int modifyRecommendResult = manageMapper.updateHotelRecommend(hotel);
+    
+    return new ResponseEntity<>(Map.of("modifyRecommendResult", modifyRecommendResult), HttpStatus.OK);
   }
   
   /**
