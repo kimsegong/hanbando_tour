@@ -60,16 +60,18 @@
 
     <!-- 찜테이블 -->
     <resultMap type="HeartDto" id="HeartMap">            
-            <result column="USER_NO" property="userNo"/>
       <association javaType="PackageDto" property="packageDto">
-            <id column="PACKAGE_NO" property="packageNo"/>            
-            <result column="PACKAGE_TITLE" property="packageTitle"/>      
-            <result column="PRICE" property="price"/>      
+        <id column="PACKAGE_NO" property="packageNo"/>            
+        <result column="PACKAGE_TITLE" property="packageTitle"/>      
+        <result column="PRICE" property="price"/>      
+        <association property="userDto" javaType="UserDto">
+          <result column="USER_NO" property="userNo"/>
+        </association>
        </association>
       <association javaType="HotelDto" property="hotelDto">
-            <id column="HOTEL_NO" property="hotelNo"/>            
-            <result column="HOTEL_NAME" property="hotelName"/>      
-       </association>
+        <id column="HOTEL_NO" property="hotelNo"/>            
+        <result column="HOTEL_NAME" property="hotelName"/>      
+      </association>
     </resultMap>
     
     <resultMap type="ReserveDto" id="ReserveMap">
