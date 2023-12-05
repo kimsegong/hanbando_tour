@@ -59,11 +59,9 @@
               </div>
               
  
-              <div >
-                <a th:href="@{/user/heart.do}">
-                 <button type="button" id="btn_heart_list" class="btn btn-danger">내찜한목록보기♥</button>
-                </a>
-              </div>
+              <a th:href="@{/user/heart.do(userNo=${session.user.userNo})}">
+                 <div>내찜한목록보기♥</div>
+                </a>s
             </div>
             
     <div id="split2" class="wrap wrap_6" th:if="${session.user != null}">
