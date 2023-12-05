@@ -439,19 +439,17 @@ public class ManageServiceImpl implements ManageService {
   }
   
   /**
-   * 호텔 추천/비추천 여부 변경
+   * 호텔 판매/추천 여부 변경
    */
   @Override
   public ResponseEntity<Map<String, Object>> modifyHotelRecommend(HttpServletRequest request) {
     
     int recommendStatus = Integer.parseInt(request.getParameter("recommendStatus"));
     int hotelNo = Integer.parseInt(request.getParameter("hotelNo"));
-    int status = Integer.parseInt(request.getParameter("status"));
     
     HotelDto hotel = HotelDto.builder()
                         .recommendStatus(recommendStatus)
                         .hotelNo(hotelNo)
-                        .status(status)
                         .build();
     
     int modifyRecommendResult = manageMapper.updateHotelRecommend(hotel);

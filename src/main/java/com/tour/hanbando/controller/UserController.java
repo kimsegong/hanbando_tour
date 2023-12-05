@@ -222,6 +222,12 @@ public class UserController {
     return "user/heart";
   }
   
+  @ResponseBody
+  @PostMapping(value="/removeHeart.do", produces="application/json")
+  public Map<String, Object> removeReview(@RequestParam(value="packageNo", required=false, defaultValue="0") int packageNo) {
+    return packageService.removeHeart(packageNo);
+  }
+  
   //아이디, 비밀번호 찾기
   @PostMapping("/findIdCheck.do")
   public String findId(HttpServletRequest request, HttpServletResponse response) {

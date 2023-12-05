@@ -54,7 +54,7 @@ public interface ManageMapper {
   public int getHotelCount();
   public List<HotelDto> getHotelList(Map<String, Object> map);
   
-  /* 호텔 추천/비추천 변경 */
+  /* 호텔 판매/추천 변경 */
   public int updateHotelRecommend(HotelDto hotel);
   
   /* 호텔 상품 검색 */

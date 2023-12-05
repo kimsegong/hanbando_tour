@@ -48,7 +48,7 @@
     <!--  </th:block> -->
       <div style="display: flex; justify-content: space-between; align-items: center;">
         <div style="display: inline-block;"> 
-         <span th:text="${count}"></span>개의 상품
+         <span id="count"></span>개의 상품
         </div>
         <div class="btn-group btn-group-sm" role="group" aria-label="Small button group" style="display: inline-block;">
           <button type="button" class="btn btn-outline-kong" value="defaultCondition">최신순</button>
@@ -63,8 +63,6 @@
           
         </div>
       </div>
-      
-      
 
       
     </div>
@@ -78,9 +76,14 @@
     var page = 1;
     var totalPage = 0;
     var param = 0;
+    const url = new URL(window.location.href);
     
-
-       var param = null;
+    var region = url.searchParams.get("regionNo");   
+    if(url.searchParams.get("regionNo") == null){
+      region = 0;
+    } 
+    
+       
       $('.btn-outline-kong').click(function(){
         param = $(this).val();
         page = 1;
@@ -89,17 +92,20 @@
           fnGetPackageList(param);
       })
 
-    const fnGetPackageList = (param) => {
+    const fnGetPackageList = (param, region) => {
         $.ajax({
             type: 'get',
             url: '/package/getList.do',
             data: {
                 page: page,
-                condition: param
+                condition: param,
+                regionNo: region || 0
             },
             dataType: 'json',
             success: (resData) => {
                 totalPage = resData.totalPage;
+                $('#count').empty();
+                $('#count').append(resData.count);
                 if (resData.packageList != null && resData.packageList.length > 0) {                   
                     $.each(resData.packageList, (i, package) => {
                         let str = '<div class="col-md-4">';
@@ -111,6 +117,7 @@
                         }
                         str += '<div class="card-body">';
                         str += '<p class="card-title">' + package.packageTitle + '</p>';
+                        str += '<p class="card-text">'+ package.price +'원</p>';
                         str += '<p class="card-text"></p>';
                         str += '<a href="' + '/package/increseHit.do?packageNo=' + package.packageNo + '" class="btn btn-kong">여행가기</a>';
                         str += '</div>';
@@ -149,7 +156,7 @@
         })
     }
 
-    fnGetPackageList(param);
+    fnGetPackageList(param, region);
     fnScroll();
 </script>
 
