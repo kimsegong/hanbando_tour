@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{/layout/header::head('Sign Up')}"></head>
+<body>
+  <div th:replace="~{/layout/header::header}"></div>
+  <div id="modal" class="modal-overlay">
+    <div class="modal-window">
+      <div class="title">
+        <h2>Search Result for ID</h2>
+      </div>
+      <div class="close-area">X</div>
+      <div class="content" id="id_value"></div>
+    </div>
+  </div>
+  <div th:replace="~{/layout/footer::footer}"></div>
+</body>
+</html>

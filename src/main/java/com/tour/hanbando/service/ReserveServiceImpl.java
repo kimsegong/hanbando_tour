@@ -1,16 +1,24 @@
 package com.tour.hanbando.service;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.tour.hanbando.dao.ReserveMapper;
 import com.tour.hanbando.dto.PackageDto;
@@ -34,20 +42,7 @@ public class ReserveServiceImpl implements ReserveService {
   
   @Override
   public Map<String, Object> addReserve(HttpServletRequest request) throws Exception {
-    /*
-    String oldFormat = "MM/dd/yyyy";
-    String newFormat = "yyyy/MM/dd";
 
-    String resStart = req.getParameter("resStart"); 
-    
-    SimpleDateFormat sdf = new SimpleDateFormat(oldFormat);
-    Date d = sdf.parse(resStart); 
-    sdf.applyPattern(newFormat);
-    String reserveStart = sdf.format(d); // 20231115
-    
-    ReserveDto reserve =
-    
-    */
     String requestedTerm = null;
     if(request.getParameter("reqTerm") == null) {
       requestedTerm = "";
@@ -64,7 +59,7 @@ public class ReserveServiceImpl implements ReserveService {
     
     String departureLoc = request.getParameter("departureLoc");
     int reserveStatus = Integer.parseInt(request.getParameter("resStatus"));
-//    String reserveStart = "null";
+    String reserveStart = request.getParameter("resStart").replace("-", "/");
 //    String reserveFinish = "null";
     int reservePerson = Integer.parseInt(request.getParameter("reservePerson"));
     int reservePrice = Integer.parseInt(request.getParameter("totalReservePrice"));
@@ -76,7 +71,7 @@ public class ReserveServiceImpl implements ReserveService {
                             .agree(agree)
                             .departureLoc(departureLoc)
                             .reserveStatus(reserveStatus)
-//                            .reserveStart(reserveStart)
+                            .reserveStart(reserveStart)
 //                            .reserveFinish(reserveFinish)
                             .reservePerson(reservePerson)
                             .reservePrice(reservePrice)
@@ -125,9 +120,8 @@ public class ReserveServiceImpl implements ReserveService {
   }
   
   @Override
-  public Map<String, Object> addPayment(HttpServletRequest request, PaymentDto payment, int reserveNo) {
-    System.out.println("===============================addPayment 서비스 시작================================");
-    System.out.println(reserveNo + ", " + payment.toString());
+  public Map<String, Object> addPayment(HttpServletRequest request, PaymentDto payment) {
+    String paidAt = null;
     String errorMsg = null;
     if(payment.getErrorMsg() == null) {
       errorMsg = "";
@@ -138,12 +132,26 @@ public class ReserveServiceImpl implements ReserveService {
     String payYn = payment.getPayYn();
     String payMethod = payment.getPayMethod();
     int paidAmount = payment.getPaidAmount();
-    String paidAt = payment.getPaidAt();
+    
+    if(payment.getPaidAt() != null) {
+      String paidAtTimestamp = payment.getPaidAt();
+      long seconds = Long.parseLong(paidAtTimestamp);
+      LocalDateTime dateTime = Instant.ofEpochSecond(seconds).atZone(ZoneId.of("Asia/Seoul")).toLocalDateTime();
+      int year = dateTime.getYear();
+      int month = dateTime.getMonthValue();
+      int day = dateTime.getDayOfMonth();
+      int hour = dateTime.getHour();
+      int minute = dateTime.getMinute();
+      int second = dateTime.getSecond();
+      paidAt = year + "/" + month + "/" + day + " " + hour + ":" + minute + ":" + second;
+    }
+    
+    
     String buyerName = payment.getBuyerName();
     String buyerEmail = payment.getBuyerEmail();
     String payStatus = payment.getPayStatus();
     String merchantUid = payment.getMerchantUid();
-    int reserveNo1 = reserveNo;
+    int reserveNo = payment.getReserveDto().getReserveNo();
     System.out.println("===============================PaymentDto build 준비완료================================");
     
     PaymentDto paymentDto = PaymentDto.builder()
@@ -158,13 +166,12 @@ public class ReserveServiceImpl implements ReserveService {
                             .payStatus(payStatus)
                             .merchantUid(merchantUid)
                             .reserveDto(ReserveDto.builder()
-                                                .reserveNo(reserveNo1)
+                                                .reserveNo(reserveNo)
                                                 .build())
                             .build();
     
     int addPaymentResult = reserveMapper.insertPayment(paymentDto);
     
-    System.out.println("===============================addPayment 서비스 리턴 직전================================");
     return Map.of("addPaymentResult", addPaymentResult);
   }
   
@@ -205,9 +212,9 @@ public class ReserveServiceImpl implements ReserveService {
     List<ReserveDto> reserveList = reserveMapper.getReserveListByUser(map);
     
     model.addAttribute("reserveList", reserveList);
-    model.addAttribute("paging", myPageUtils.getMvcPaging(request.getContextPath() + "/reserve/reserveList.do", request.getParameter("userNo")));
+    String params = "userNo=" + request.getParameter("userNo");
+    model.addAttribute("paging", myPageUtils.getMvcPaging(request.getContextPath() + "/reserve/reserveList.do", params));
     model.addAttribute("beginNo", total - (page - 1) * display);
-    
   }
   
   @Transactional(readOnly=true)
@@ -224,11 +231,29 @@ public class ReserveServiceImpl implements ReserveService {
     return Map.of("tourists", tourists);
   }
   
+  @Override
+  public PaymentDto loadPaymentByReserveNo(int reserveNo) {
+    return reserveMapper.getPaymentBy(Map.of("reserveNo", reserveNo));
+  }
+  
+  @Override
+  public Map<String, Object> loadPaymentByMerchantUid(HttpServletRequest request, PaymentDto payment) {
+    String accessToken = getAccessToken(null, null);
+    String merchantUid = payment.getMerchantUid();
+    int cancelAmount = payment.getCancelAmount();
+    PaymentDto payinfo = reserveMapper.getPaymentBy(Map.of("merchantUid", merchantUid));
+    int cancelableAmount = (payinfo.getPaidAmount() - cancelAmount); 
+    if(cancelableAmount < 0) {
+      return Map.of("payInfo", HttpStatus.BAD_REQUEST);
+    }
+    return Map.of("payInfo", payinfo);
+  }
+  
+  
   
   @Override
   public int modifyReserve(HttpServletRequest request) {
     int reserveNo = Integer.parseInt(request.getParameter("reserveNo"));
-    
     String requestedTerm = request.getParameter("reqTerm");
     String departureLoc = request.getParameter("departureLoc");
     
@@ -248,6 +273,66 @@ public class ReserveServiceImpl implements ReserveService {
     int removeResult = reserveMapper.deleteReserve(reserveNo);
     return removeResult;
   }
+  
+  
+  @Override
+  public Map<String, Object> modifyReserveStatusByPayStatus(Map<String, String> payload, HttpServletRequest request, RedirectAttributes redirectAttributes) {
+    String reserveNoStr = payload.get("reserveNo");
+    String payStatus = payload.get("payStatus");
+    int reserveNo = Integer.parseInt(reserveNoStr);
+    Map<String, Object> map = Map.of("reserveNo", reserveNo, "payStatus", payStatus);
+    int modifyResStatusResult = reserveMapper.updateReserveStatus(map);
+    return Map.of("modifyResStatusResult", modifyResStatusResult);
+  }
+  
+  
+  
+  
+  public String getAccessToken(String apiKey, String apiSecret) {
+    String urlStr = "https://api.iamport.kr/users/getToken";
+    String params = "{\"imp_key\": \"" + apiKey + "\", \"imp_secret\": \"" + apiSecret + "\"}";
+    
+    try {
+      URL url = new URL(urlStr);
+      HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+      
+      conn.setRequestMethod("POST");
+      conn.setRequestProperty("Content-Type", "application/json");
+      conn.setDoOutput(true);
+      
+      OutputStream os = conn.getOutputStream();
+      os.write(params.getBytes());
+      os.flush();
+      os.close();
+      
+      int responseCode = conn.getResponseCode();
+      BufferedReader br;
+      if(responseCode == 200) { // 정상 호출
+        br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+      } else {  // 에러 발생
+        br = new BufferedReader(new InputStreamReader(conn.getErrorStream()));
+      }
+      
+      String inputLine;
+      StringBuffer response = new StringBuffer();
+      while ((inputLine = br.readLine()) != null) {
+        response.append(inputLine);
+      }
+      br.close();
+      
+      return response.toString();
+      
+    } catch (Exception e) {
+      e.printStackTrace();
+      return null;
+    }
+  }
+  
+  
+  
+  
+  
+  
   
   
   

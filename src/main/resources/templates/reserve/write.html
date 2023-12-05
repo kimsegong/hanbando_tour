@@ -149,8 +149,8 @@
             <input type="hidden" name="userNo" th:value="${session.user.userNo}">
             <input type="hidden" name="packageNo" th:value="${pack.packageNo}">
             <input type="hidden" name="resStatus" th:value="0">
+            <input type="hidden" name="resStart" th:value="${resStart}">
             <!-- 
-            <input type="hidden" name="resStart" value="${resDate}">
             <input type="hidden" name="resFinish">
             -->
           
@@ -248,6 +248,14 @@
                          명 / 소아 : 
                         <span class="childCntVal">0</span>
                          명
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        출발일
+                      </td>
+                      <td>
+                        <span th:text="${resStart}"></span>
                       </td>
                     </tr>
                     <tr>
