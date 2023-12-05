@@ -22,8 +22,7 @@
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.5.0/css/bootstrap-datepicker3.min.css">    
 <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
-<script src="js/owl.carousel.min.js"></script>
-<script src='//code.jquery.com/jquery-1.8.3.js'type='text/javascript'></script>    
+<script src="js/owl.carousel.min.js"></script>    
 <script src="https://cdn.ckeditor.com/ckeditor5/40.0.0/decoupled-document/ckeditor.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.5.0/js/bootstrap-datepicker.min.js" type='text/javascript'></script>    
 <script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=c8e918c999e5a28f4d7e1914f1a1956e&libraries=services" type="text/javascript"></script>
@@ -31,38 +30,38 @@
 
 </head>
 <body>
- <div th:fragment="header" class="header_wrap">	
+ <div th:fragment="header" class="header_wrap">   
    <div class="container text-center header_top">
-		  <div class="row">
-		    <div class="col-3">
-		       <div class="logo"><a th:href="@{/}"><div class="logom"></div></a></div>
-		    </div>
-		    <div class="col-8">
-		       <div class="header_search">
-				   	<form class="frm_search" method="get" th:action="@{/main/search.do}">
-				   	<input type="text" class="header_searchbar" name="query" placeholder="가고 싶은 곳을 입력하세요" ><button type="submit" class="btn_search">검색</button>
-				   	</form></div>
-		    </div>
-		    <div class="col-1">
-		      <div  class="user">
-						<a th:href="@{/user/login.form}"><i class="fa-regular fa-user fa-2xl" style="color: #96b6c5;"></i><div>&emsp;로그인&emsp;</div></a> 
-						<a th:href="@{/reserve/reserveList.do?userNo=${session.user.userNo}}"><i class="fa-regular fa-calendar-check fa-2xl" style="color: #96b6c5;"></i><div>내일정</div></a> 		 
-					</div>  
-					<div class="user">
+        <div class="row">
+          <div class="col-3">
+             <div class="logo"><a th:href="@{/}"><div class="logom"></div></a></div>
+          </div>
+          <div class="col-8">
+             <div class="header_search">
+                  <form class="frm_search" method="get" th:action="@{/main/search.do}">
+                  <input type="text" class="header_searchbar" name="query" placeholder="가고 싶은 곳을 입력하세요" ><button type="submit" class="btn_search">검색</button>
+                  </form></div>
+          </div>
+          <div class="col-1">
+            <div  class="user">
+                  <a th:href="@{/user/login.form}"><i class="fa-regular fa-user fa-2xl" style="color: #96b6c5;"></i><div>&emsp;로그인&emsp;</div></a> 
+                  <a th:href="@{/reserve/reserveList.do?userNo=${session.user.userNo}}"><i class="fa-regular fa-calendar-check fa-2xl" style="color: #96b6c5;"></i><div>내일정</div></a>        
+               </div>  
+               <div class="user">
             <a th:href="@{/user/mypage.form}"><i class="fa-solid fa-user fa-2xl" style="color: #96b6c5;"></i><div>마이페이지</div></a> 
             <a th:href="@{/reserve/reserveList.do?userNo=${session.user.userNo}}"><i class="fa-regular fa-calendar-check fa-2xl" style="color: #96b6c5;"></i><div>내일정</div></a>   
             <a th:href="@{/user/logout.do}"><i class="fa-solid fa-right-from-bracket fa-2xl" style="color: #96b6c5;"></i><div>로그아웃</div></a>   
           </div>
-					<div class="user">
+               <div class="user">
             <a th:href="@{/manage/userList.do}"><i class="fa-solid fa-user fa-2xl" style="color: #96b6c5;"></i><div>관리페이지</div></a> 
             <a th:href="@{/reserve/reserveList.do?userNo=${session.user.userNo}}"><i class="fa-regular fa-calendar-check fa-2xl" style="color: #96b6c5;"></i><div>내일정</div></a>
             <a th:href="@{/user/logout.do}"><i class="fa-solid fa-right-from-bracket fa-2xl" style="color: #96b6c5;"></i><div>로그아웃</div></a>       
-          </div>	
+          </div>   
           <div th:if="${session.user != null}" style="color: crimson;">로그인 했음</div>
-		    </div>
-		  </div>
-		</div>
-	  <nav class="navbar navbar-expand-lg bg-body-tertiary">
+          </div>
+        </div>
+      </div>
+     <nav class="navbar navbar-expand-lg bg-body-tertiary">
   <div class="container-fluid">    
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
@@ -75,12 +74,12 @@
           </a>
           <ul class="dropdown-menu">
             <li><a class="dropdown-item" th:href="@{/package/list.do}">모든 패키지</a></li>
-            <li><a class="dropdown-item" href="#">서울/경기</a></li>
-            <li><a class="dropdown-item" href="#">인천</a></li>
-            <li><a class="dropdown-item" href="#">강원도</a></li>
-            <li><a class="dropdown-item" href="#">충정도</a></li>
-            <li><a class="dropdown-item" href="#">전라도</a></li>
-            <li><a class="dropdown-item" href="#">경상도</a></li>
+            <li><a class="dropdown-item" th:href="@{/package/list.do(regionNo=2)}">서울/경기</a></li>
+            <li><a class="dropdown-item" th:href="@{/package/list.do(regionNo=3)}">인천</a></li>
+            <li><a class="dropdown-item" th:href="@{/package/list.do(regionNo=4)}">강원도</a></li>
+            <li><a class="dropdown-item" th:href="@{/package/list.do(regionNo=5)}">충정도</a></li>
+            <li><a class="dropdown-item" th:href="@{/package/list.do(regionNo=6)}">전라도</a></li>
+            <li><a class="dropdown-item" th:href="@{/package/list.do(regionNo=7)}">경상도</a></li>
           </ul>
         </li>
         <li class="nav-item dropdown">
@@ -107,15 +106,14 @@
     </div>
   </div>
 </nav> 
-	   
-</div>	   
+      
+</div>      
  
-	
-	
-	
-	
-	
+   
+   
+   
+   
+   
 
 </body>
 </html>
-
