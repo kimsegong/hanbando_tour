@@ -13,4 +13,5 @@ public interface HotelService {
   public void regionList(Model model);
   public void hotelRoomList(Model model);
   public void makeHotelNo(Model model);
+  public void makeRoomNo(Model model);
 }

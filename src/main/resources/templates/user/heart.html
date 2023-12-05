@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 
-<head th:replace="~{/layout/header::head('약관동의')}"></head>
+<head th:replace="~{/layout/header::head('찜페이지')}"></head>
 
 
 <body>
@@ -30,8 +30,8 @@
             </tr>
           </thead>
           <tbody>
-           <th:block>
-            <tr th:each=" heart :${heartList}">
+           <th:block  th:each=" heart :${heartList}">
+            <tr>             
               <td scope="row">💙
                   <input type="checkbox" value="" >
                   <label for="flexCheckDefault">
@@ -46,7 +46,7 @@
           </tbody>
           <tfoot>
            <tr>
-            <td colspan="5" th:utext="${paging}" class="paging"></td>
+             <td colspan="3" th:utext="${paging}"></td>
            </tr>
           </tfoot>
           </table>           
