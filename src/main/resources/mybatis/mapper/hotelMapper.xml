@@ -374,8 +374,8 @@
           SHOWER, 
           R_SIZE
    ) VALUES (
-          #{roomNo}, 
           ROOM_SEQUENCE.NEXTVAL,
+          #{hotelNo}, 
           #{roomDetail},
           #{roomName},
           #{roomMany},
@@ -440,27 +440,23 @@
  <insert id="insertRoomImage" parameterType="HotelImageDto">
    INSERT INTO 
           HOTEL_IMAGE_T (
-          <if test="hotelNo != null">
             HOTEL_NO, 
             THUMBNAIL,  
-          </if>     
-          <if test="hotelNo == null">
+            <if test="roomNo == 0">
             ROOM_NO,
-          </if>         
+            </if>
             ORIGINAL_NAME, 
             FILESYSTEM_NAME, 
             IMAGE_PATH
   ) VALUES (
-          <if test="hotelNo != null">
             #{hotelNo}, 
             #{thumbnail},
-          </if>   
-          <if test="hotelNo == null">
-             ROOM_SEQUENCE.CURRVAL,
-          </if>        
-           #{originalName},
-           #{filesystemName},
-           #{imagePath}
+            <if test="roomNo == 0">
+           	ROOM_SEQUENCE.CURRVAL,
+           	</if>
+          	#{originalName},
+           	#{filesystemName},
+          	#{imagePath}
            )
  </insert>
  
