@@ -261,12 +261,12 @@
                               <a th:href="@{/hotel/detail.do(hotelNo=${h.hotelNo})}" th:text="${h.createdAt}"></a>
                             </td>
                             <td>
-                                <select name="recommendStatus" class="recommendStatus" >
-                                  <option value="1" class="recommend_status_one" th:selected="${h.recommendStatus == 1}">추천</option>
-                                  <option value="0" class="recommend_status_zero" th:selected="${h.recommendStatus == 0}">비추천</option>
-                                </select>
-                                <input type="hidden" name="hotelNo" th:value="${h.hotelNo}">
-                                <button type="button" class="btn_select">저장</button>
+                              <select name="recommendStatus" class="recommendStatus" >
+                                <option value="1" class="recommend_status_one" th:selected="${h.recommendStatus == 1}">추천</option>
+                                <option value="0" class="recommend_status_zero" th:selected="${h.recommendStatus == 0}">비추천</option>
+                              </select>
+                              <input type="hidden" name="hotelNo" th:value="${h.hotelNo}">
+                              <button type="button" class="btn_select">저장</button>
                             </td>
                           </form>
                         </tr>
