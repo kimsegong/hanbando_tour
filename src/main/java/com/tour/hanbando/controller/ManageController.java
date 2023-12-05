@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.tour.hanbando.dto.InactiveUserDto;
@@ -123,8 +122,9 @@ public class ManageController {
   
   /* 패키지 상품 목록 */
   @GetMapping("/productList.do")
-  public String productList(HttpServletRequest request, Model model) {
-    return "manage/productList";
+  public String packageProductList(HttpServletRequest request, Model model) {
+    manageService.loadPackageList(request, model);
+    return "manage/packageProductList";
   }
   
   /* 패키지 상품 검색 */
@@ -136,7 +136,14 @@ public class ManageController {
   /* 호텔 상품 목록 */
   @GetMapping("/hotelProductList.do")
   public String hotelProductList(HttpServletRequest request, Model model) {
+    manageService.loadHotelList(request, model);
     return "manage/hotelProductList";
+  }
+  
+  /* 호텔 판매/추천 여부 변경 */
+  @PostMapping(value="/modifyRecommend.do", produces=MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<Map<String, Object>> modifyHotelRecommend(HttpServletRequest request){
+    return manageService.modifyHotelRecommend(request);
   }
   
   /* 호텔 상품 검색 */

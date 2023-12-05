@@ -295,13 +295,174 @@
  </select>
  <select id="getRegion" parameterType="RegionDto">
 	 SELECT *
-  	 FROM REGION_T
+		 FROM REGION_T
  </select>
   
-  <select id="getHotelNo" resultType="int">
-    SELECT HOTEL_SEQ.NEXTVAL
-      FROM DUAL
-  </select>
+ <select id="getHotelNo" resultType="int">
+   SELECT HOTEL_SEQUENCE.NEXTVAL
+     FROM DUAL
+ </select>
+ 
+ <insert id="insertHotelNo" parameterType="int">
+   INSERT INTO HOTEL_T (HOTEL_NO)
+   VALUES (#{hotelNo})
+ </insert>
+ 
+ <select id="getRoomNo" resultType="int">
+   SELECT ROOM_SEQUENCE.NEXTVAL
+     FROM DUAL
+ </select>
+ 
+ <select id="getRoomtype" parameterType="int" resultType="RoomTypeDto">
+   SELECT ROOM_NO, HOTEL_NO, ROOM_DETAIL, ROOM_NAME, ROOM_MANY, R_VIEW, BLEAKFAST, SMOKE, PEOPLE, BED, SHOWER, R_SIZE
+     FROM ROOMTYPE_T
+    WHERE HOTEL_NO = #{hotelNo}
+ </select>
+ 
+ <select id="getRoomImage" resultType="HotelImageDto">
+   SELECT HOTEL_NO, ROOM_NO, THUMBNAIL, FILESYSTEM_NAME, IMAGE_PATH
+     FROM HOTEL_IMAGE_T
+    WHERE ROOM_NO 
+     <foreach item="item" index="index" collection="list" open="in(" separator="," close=")">
+      #{item.roomNo}
+     </foreach>
+     ORDER BY DECODE(ROOM_NO,
+    <foreach item="item" index="index" collection="list" separator="," close=")">  
+     #{item.roomNo}, (list.size() - ${index})  
+    </foreach>  
+ </select>
+ 
+ <select id="getRoomFeature" resultType="RoomFeatureDto">
+   SELECT ROOM_NO, TOWEL, WATER, COFFEE, DRIER, IRON, MINIBAR
+     FROM ROOM_FEATURE_T
+    WHERE ROOM_NO 
+     <foreach item="item" index="index" collection="list" open="in(" separator="," close=")">
+      #{item.roomNo}
+     </foreach>
+     ORDER BY DECODE(ROOM_NO,
+     <foreach item="item" index="index" collection="list" separator="," close=")">  
+     #{item.roomNo}, (list.size() - ${index})  
+    </foreach>  
+ </select>
+ 
+ <select id="getPrice" resultType="RoompriceDto">
+   SELECT HOTEL_NO, ROOM_NO, BI_PRICE, BS_DATE, BE_DATE, JUN_PRICE, JS_DATE, JE_DATE, SUNG_PRICE, SS_DATE, SE_DATE
+     FROM ROOMPRICE_T
+    WHERE ROOM_NO 
+    <foreach item="item" index="index" collection="list" open="in(" separator="," close=")">
+      #{item.roomNo}, index  
+     </foreach>
+     ORDER BY DECODE(ROOM_NO,
+     <foreach item="item" index="index" collection="list" separator="," close=")">  
+     #{item.roomNo}, (list.size() - ${index})  
+    </foreach>  
+ </select>
+ 
+ <insert id="insertRoomtype" parameterType="RoomtypeDto">
+   INSERT INTO 
+      ROOMTYPE_T (
+          ROOM_NO, 
+          HOTEL_NO, 
+          ROOM_DETAIL, 
+          ROOM_NAME, 
+          ROOM_MANY, 
+          R_VIEW, 
+          BLEAKFAST, 
+          SMOKE, 
+          PEOPLE, 
+          BED, 
+          SHOWER, 
+          R_SIZE
+   ) VALUES (
+          #{roomNo}, 
+          ROOM_SEQUENCE.NEXTVAL,
+          #{roomDetail},
+          #{roomName},
+          #{roomMany},
+          #{rView},
+          #{bleakfast},
+          #{smoke},
+          #{people},
+          #{bed},
+          #{shower},
+          #{rSize}
+          )
+ </insert>
+ <insert id="insertRoomFeature" parameterType="RoomFeatureDto">
+   INSERT INTO 
+     ROOM_FEATURE_T (
+          ROOM_NO, 
+          TOWEL, 
+          WATER, 
+          COFFEE, 
+          DRIER, 
+          IRON, 
+          MINIBAR
+          )VALUES (
+          ROOM_SEQUENCE.CURRVAL,
+          #{towel},
+          #{water},
+          #{coffee},
+          #{drier},
+          #{iron},
+          #{minibar}
+          )
+ </insert>
+ <insert id="insertRoomPrice" parameterType="RoompriceDto">
+   INSERT INTO 
+     ROOMPRICE_T (
+         HOTEL_NO, 
+         ROOM_NO, 
+         BI_PRICE, 
+         BS_DATE, 
+         BE_DATE, 
+         JUN_PRICE, 
+         JS_DATE, 
+         JE_DATE, 
+         SUNG_PRICE, 
+         SS_DATE, 
+         SE_DATE
+     )VALUES (
+          #{hotelNo},
+          ROOM_SEQUENCE.CURRVAL,
+          #{biPrice},
+          #{bsDate},
+          #{beDate},
+          #{junPrice},
+          #{jsDate},
+          #{jeDate},
+          #{sungPrice},
+          #{ssDate},
+          #{seDate}
+          )
+ </insert>
+ 
+ <insert id="insertRoomImage" parameterType="HotelImageDto">
+   INSERT INTO 
+          HOTEL_IMAGE_T (
+          <if test="hotelNo != null">
+            HOTEL_NO, 
+            THUMBNAIL,  
+          </if>     
+          <if test="hotelNo == null">
+            ROOM_NO,
+          </if>         
+            ORIGINAL_NAME, 
+            FILESYSTEM_NAME, 
+            IMAGE_PATH
+  ) VALUES (
+          <if test="hotelNo != null">
+            #{hotelNo}, 
+            #{thumbnail},
+          </if>   
+          <if test="hotelNo == null">
+             ROOM_SEQUENCE.CURRVAL,
+          </if>        
+           #{originalName},
+           #{filesystemName},
+           #{imagePath}
+           )
+ </insert>
  
  
  </mapper>

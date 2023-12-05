@@ -17,7 +17,8 @@ import com.tour.hanbando.dto.ThemeDto;
 public interface PackageMapper {
   
   // 패키지상품 리스트 불러오기
-  public int getPackageCount();
+  public int getPackageCount(int regionNo);
+  public int getCount();
   public List<PackageDto> getPackageList(Map<String, Object> map);
   public List<ProductImageDto> getPackageImageList(int packageNo);
   public List<ProductImageDto> getPackageThumbnailList(Map<String, Object> map);
@@ -63,4 +64,8 @@ public interface PackageMapper {
   
   // 찜 
   public int heartProduct(HeartDto heart);
+  public List<HeartDto> selectHeartList(Map<String, Object> map);
+  public int getHeartCount(int userNo);
+  public int checkHeart(Map<String, Object> map);
+  public int deleteHeart(int packageNo);
 }

@@ -50,8 +50,9 @@ public class PackageServiceImpl implements PackageService {
   public Map<String, Object> getPackageList(HttpServletRequest request, String condition, int recommendStatus) {
 	  Optional<String> optPage = Optional.ofNullable(request.getParameter("page"));
 	    int page = Integer.parseInt(optPage.orElse("1"));
-	    int total = packageMapper.getPackageCount();
 	    int display = 9;
+	    int regionNo = Integer.parseInt(request.getParameter("regionNo"));
+	    int total = packageMapper.getPackageCount(regionNo);
 
 	    myPageUtils.setPaging(page, total, display);
 
@@ -59,13 +60,15 @@ public class PackageServiceImpl implements PackageService {
 	        "begin", myPageUtils.getBegin(),
 	        "end", myPageUtils.getEnd(),
 	        "condition", condition,
-	        "recommendStatus", recommendStatus
+	        "recommendStatus", recommendStatus,
+	        "regionNo", regionNo
 	    );
 	    List<PackageDto> packageList = packageMapper.getPackageList(map);
 	    
 	    return Map.of(
 	        "packageList", packageList,
 	        "totalPage", myPageUtils.getTotalPage()
+	        ,"count", packageMapper.getPackageCount(regionNo)
 	    );
 	}
   
@@ -89,12 +92,7 @@ public class PackageServiceImpl implements PackageService {
         
    return editorImageList;
   }
-  
-    @Transactional(readOnly=true)
-    @Override
-    public int getTotalPackageCount() {
-        return packageMapper.getPackageCount();
-    }
+
     
  // 패키지 추가하기
     @Override
@@ -104,11 +102,9 @@ public class PackageServiceImpl implements PackageService {
         String packageContents = multipartRequest.getParameter("packageContents");
         int regionNo = Integer.parseInt(multipartRequest.getParameter("regionNo"));
         int themeNo = Integer.parseInt(multipartRequest.getParameter("themeNo"));   
-        int userNo = Integer.parseInt(multipartRequest.getParameter("userNo"));
 
         // PackageDto 생성
         PackageDto packageDto = PackageDto.builder()
-                .userDto(UserDto.builder().userNo(userNo).build())
                 .regionDto(RegionDto.builder().regionNo(regionNo).build())
                 .themeDto(ThemeDto.builder().themeNo(themeNo).build())
                 .packageTitle(multipartRequest.getParameter("packageTitle"))
@@ -391,7 +387,6 @@ public class PackageServiceImpl implements PackageService {
       
       Optional<String> opt = Optional.ofNullable(request.getParameter("packageNo"));
       int packageNo = Integer.parseInt(opt.orElse("0"));
-      
       return Map.of("attachList", packageMapper.getPackageImageList(packageNo));
      
     }   
@@ -420,7 +415,7 @@ public class PackageServiceImpl implements PackageService {
           
        Optional<String> opt = Optional.ofNullable(request.getParameter("page"));
             int page = Integer.parseInt(opt.orElse("1"));
-            int total = packageMapper.getPackageCount();
+            int total = packageMapper.getCount();
             int display = 9;
 
             myPageUtils.setPaging(page, total, display);
@@ -575,7 +570,7 @@ public class PackageServiceImpl implements PackageService {
               .packageDto(PackageDto.builder()
                           .packageNo(packageNo)
                           .build())
-              .userNo(userNo)
+              .userDto(UserDto.builder().userNo(userNo).build())
                   .build();
     return packageMapper.heartProduct(heart);
     }
@@ -593,4 +588,48 @@ public class PackageServiceImpl implements PackageService {
         return Map.of("removeResult", removeResult);
       }
     
+    @Override
+    public void getHeartPackage(HttpServletRequest request, Model model) {
+      
+      
+      Optional<String> opt = Optional.ofNullable(request.getParameter("page"));
+      int page = Integer.parseInt(opt.orElse("1"));
+      int display = 10;
+      int userNo = Integer.parseInt(request.getParameter("userNo"));
+      int total = packageMapper.getHeartCount(userNo);
+      
+      myPageUtils.setPaging(page, total, display);
+      
+      Map<String, Object> map = Map.of("begin", myPageUtils.getBegin()
+                                     , "end", myPageUtils.getEnd()
+                                     , "userNo", userNo);
+      
+      List<HeartDto> heartList = packageMapper.selectHeartList(map);
+
+      model.addAttribute("heartList", heartList);
+      String params = "userNo=" + request.getParameter("userNo");
+      model.addAttribute("paging", myPageUtils.getMvcPaging(request.getContextPath() + "/user/heart.do", params));
+      model.addAttribute("beginNo", total - (page - 1) * display); 
+
+    }
+    
+    @Override
+    public Map<String, Object> removeHeart(int packageNo) {
+        int removeHeartResult = packageMapper.deleteHeart(packageNo);
+        return Map.of("removeHeartResult", removeHeartResult);
+      }
+    
+    @Transactional(readOnly=true)
+    @Override
+    public Map<String, Object> checkHeart(int packageNo, int userNo) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("packageNo", packageNo);
+        map.put("userNo", userNo);
+
+        int heartCount = packageMapper.checkHeart(map);
+
+        boolean enableHeart = heartCount > 0;
+
+        return Map.of("enableHeart", enableHeart);
+    }
 }

@@ -53,17 +53,15 @@
       <!--/* 비밀번호 변경과 찜 목록으로 이동 가능한 좌측 메뉴 버튼 */-->
             <div id="split1">
               <div>
-                <a th:href="@{/##/##}">
+                <a th:href="@{/user/modifyPw.form}">
                   <button type="button" id="btn_modify_pw" class="btn btn-dark">비밀번호변경하기</button>
                 </a>
               </div>
               
  
-              <div >
-                <a th:href="@{/##/##}">
-                 <button type="button" id="btn_heart_list" class="btn btn-danger">내찜한목록보기♥</button>
-                </a>
-              </div>
+              <a th:href="@{/user/heart.do(userNo=${session.user.userNo})}">
+                 <button type="button" id="btn_love" class="btn btn-danger">내 찜한목록보기♥</button>
+                </a>s
             </div>
             
     <div id="split2" class="wrap wrap_6" th:if="${session.user != null}">
