@@ -56,7 +56,7 @@ public interface ManageService {
     /* 호텔 상품 목록 */
     public void loadHotelList(HttpServletRequest request, Model model);
     
-    /* 호텔 추천/비추천 변경 */
+    /* 호텔 판매/추천 변경 */
     public ResponseEntity<Map<String, Object>> modifyHotelRecommend(HttpServletRequest request);
     
     /* 호텔 상품 검색 */
