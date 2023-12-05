@@ -165,11 +165,9 @@ public class HotelServiceImpl implements HotelService {
   @Override
   public boolean writeRoom(MultipartHttpServletRequest multipartRequest) throws Exception {
     
-    System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@" + multipartRequest);
-    
     int hotelNo = Integer.parseInt(multipartRequest.getParameter("hotelNo"));
     String roomName = multipartRequest.getParameter("roomName");
-    String roomDetail = multipartRequest.getParameter("roomDeatail");
+    String roomDetail = multipartRequest.getParameter("roomDetail");
     String rView = multipartRequest.getParameter("rView");
     String bed = multipartRequest.getParameter("bed");
     String shower = multipartRequest.getParameter("shower");
@@ -187,7 +185,6 @@ public class HotelServiceImpl implements HotelService {
     Optional<String> optDrier = Optional.ofNullable(multipartRequest.getParameter("drier"));
     Optional<String> optIron = Optional.ofNullable(multipartRequest.getParameter("iron"));
     Optional<String> optMinibar = Optional.ofNullable(multipartRequest.getParameter("minibar"));
-
     int towel = Integer.parseInt(optTowel.orElse("0"));
     int water = Integer.parseInt(optWater.orElse("0"));
     int coffee = Integer.parseInt(optCoffee.orElse("0"));
@@ -195,6 +192,7 @@ public class HotelServiceImpl implements HotelService {
     int iron = Integer.parseInt(optIron.orElse("0"));
     int minibar = Integer.parseInt(optMinibar.orElse("0"));
     
+    System.out.println(minibar);
     int biPrice = Integer.parseInt(multipartRequest.getParameter("biPrice"));
     String bsDate = multipartRequest.getParameter("bsDate"); 
     String beDate = multipartRequest.getParameter("beDate"); 
@@ -204,10 +202,6 @@ public class HotelServiceImpl implements HotelService {
     int sungPrice = Integer.parseInt(multipartRequest.getParameter("sungPrice"));
     String ssDate = multipartRequest.getParameter("ssDate"); 
     String seDate = multipartRequest.getParameter("seDate");
-    
-
-    
-    
     
     RoomtypeDto roomtypeDto = RoomtypeDto.builder()
                                 .hotelNo(hotelNo)
@@ -237,6 +231,7 @@ public class HotelServiceImpl implements HotelService {
    insertResult += hotelMapper.insertRoomFeature(roomFeatureDto);
    
    RoompriceDto roompriceDto = RoompriceDto.builder()
+                                     .hotelNo(hotelNo)
                                      .biPrice(biPrice)
                                      .bsDate(bsDate)
                                      .beDate(beDate)
@@ -282,6 +277,9 @@ public class HotelServiceImpl implements HotelService {
         String contentType = Files.probeContentType(file.toPath());  // 이미지의 Content-Type은 image/jpeg, image/png 등 image로 시작한다.
         
         HotelImageDto hotelImageDto = HotelImageDto.builder()
+                                         .hotelNo(hotelNo)
+                                         .thumbnail(0)
+                                         .roomNo(0)
                                          .originalName(originalFilename)
                                          .filesystemName(filesystemName)
                                          .imagePath(path)
@@ -295,6 +293,12 @@ public class HotelServiceImpl implements HotelService {
     }  // for
     
     return (insertResult == 3) && (files.size() == insertResult);
+  }
+  
+  @Override
+  public boolean writeHotel(MultipartHttpServletRequest multipartRequest) throws Exception {
+    // TODO Auto-generated method stub
+    return false;
   }
   
 }

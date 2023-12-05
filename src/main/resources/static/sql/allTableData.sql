@@ -641,115 +641,115 @@ VALUES (10, 0, 1, 0, 1, 0);
 -- 호텔 객실 등록 ***************************************************************
 -- 호텔 1의 객실
 INSERT INTO ROOMTYPE_T (ROOM_NO, HOTEL_NO, ROOM_DETAIL, ROOM_NAME, ROOM_MANY, R_VIEW, BLEAKFAST, SMOKE, PEOPLE, BED, SHOWER, R_SIZE)
-VALUES (1, 1, '편안하고 모던한 디자인의 객실입니다.', '스탠다드 더블', 3, '시티뷰', 1, 0, 2, '더블', '샤워실', 25);
+VALUES (ROOM_SEQUENCE.NEXTVAL, 1, '편안하고 모던한 디자인의 객실입니다.', '스탠다드 더블', 3, '시티뷰', 1, 0, 2, '더블', '샤워실', 25);
 
 INSERT INTO ROOMTYPE_T (ROOM_NO, HOTEL_NO, ROOM_DETAIL, ROOM_NAME, ROOM_MANY, R_VIEW, BLEAKFAST, SMOKE, PEOPLE, BED, SHOWER, R_SIZE)
-VALUES (2, 1, '넓은 창문으로 햇살 가득한 객실입니다.', '스탠다드 트윈', 2, '오션뷰', 1, 0, 2, '트윈', '샤워실', 28);
+VALUES (ROOM_SEQUENCE.NEXTVAL, 1, '넓은 창문으로 햇살 가득한 객실입니다.', '스탠다드 트윈', 2, '오션뷰', 1, 0, 2, '트윈', '샤워실', 28);
 
 INSERT INTO ROOMTYPE_T (ROOM_NO, HOTEL_NO, ROOM_DETAIL, ROOM_NAME, ROOM_MANY, R_VIEW, BLEAKFAST, SMOKE, PEOPLE, BED, SHOWER, R_SIZE)
-VALUES (3, 1, '풍부한 공간과 편리한 시설이 구비된 스위트 룸입니다.', '스위트 룸', 1, '오션뷰', 1, 0, 4, '킹 사이즈', '욕조', 40);
+VALUES (ROOM_SEQUENCE.NEXTVAL, 1, '풍부한 공간과 편리한 시설이 구비된 스위트 룸입니다.', '스위트 룸', 1, '오션뷰', 1, 0, 4, '킹 사이즈', '욕조', 40);
 
 COMMIT;
 
 -- 호텔 2의 객실
 INSERT INTO ROOMTYPE_T (ROOM_NO, HOTEL_NO, ROOM_DETAIL, ROOM_NAME, ROOM_MANY, R_VIEW, BLEAKFAST, SMOKE, PEOPLE, BED, SHOWER, R_SIZE)
-VALUES (4, 2, '고급스러운 분위기의 객실입니다.', '디럭스 더블', 2, '시티뷰', 1, 1, 2, '더블', '샤워실', 30);
+VALUES (ROOM_SEQUENCE.NEXTVAL, 2, '고급스러운 분위기의 객실입니다.', '디럭스 더블', 2, '시티뷰', 1, 1, 2, '더블', '샤워실', 30);
 
 INSERT INTO ROOMTYPE_T (ROOM_NO, HOTEL_NO, ROOM_DETAIL, ROOM_NAME, ROOM_MANY, R_VIEW, BLEAKFAST, SMOKE, PEOPLE, BED, SHOWER, R_SIZE)
-VALUES (5, 2, '넓은 공간과 특별한 서비스가 제공되는 스위트 룸입니다.', '스위트 룸', 1, '오션뷰', 1, 0, 4, '킹 사이즈', '욕조', 45);
+VALUES (ROOM_SEQUENCE.NEXTVAL, 2, '넓은 공간과 특별한 서비스가 제공되는 스위트 룸입니다.', '스위트 룸', 1, '오션뷰', 1, 0, 4, '킹 사이즈', '욕조', 45);
 
 INSERT INTO ROOMTYPE_T (ROOM_NO, HOTEL_NO, ROOM_DETAIL, ROOM_NAME, ROOM_MANY, R_VIEW, BLEAKFAST, SMOKE, PEOPLE, BED, SHOWER, R_SIZE)
-VALUES (6, 2, '가족이 함께 머물기에 적합한 패밀리 룸입니다.', '패밀리 룸', 2, '시티뷰', 1, 0, 4, '더블+트윈', '샤워실', 35);
+VALUES (ROOM_SEQUENCE.NEXTVAL, 2, '가족이 함께 머물기에 적합한 패밀리 룸입니다.', '패밀리 룸', 2, '시티뷰', 1, 0, 4, '더블+트윈', '샤워실', 35);
 
 COMMIT;
 
 -- 호텔 3의 객실
 INSERT INTO ROOMTYPE_T (ROOM_NO, HOTEL_NO, ROOM_DETAIL, ROOM_NAME, ROOM_MANY, R_VIEW, BLEAKFAST, SMOKE, PEOPLE, BED, SHOWER, R_SIZE)
-VALUES (7, 3, '전통적인 한옥 스타일의 고급 객실입니다.', '한옥 스위트', 2, '정원뷰', 1, 0, 2, '킹 사이즈', '욕조', 40);
+VALUES (ROOM_SEQUENCE.NEXTVAL, 3, '전통적인 한옥 스타일의 고급 객실입니다.', '한옥 스위트', 2, '정원뷰', 1, 0, 2, '킹 사이즈', '욕조', 40);
 
 INSERT INTO ROOMTYPE_T (ROOM_NO, HOTEL_NO, ROOM_DETAIL, ROOM_NAME, ROOM_MANY, R_VIEW, BLEAKFAST, SMOKE, PEOPLE, BED, SHOWER, R_SIZE)
-VALUES (8, 3, '모던한 디자인과 편안한 공간을 제공하는 디럭스 더블룸입니다.', '디럭스 더블', 1, '시티뷰', 1, 1, 2, '더블', '샤워실', 32);
+VALUES (ROOM_SEQUENCE.NEXTVAL, 3, '모던한 디자인과 편안한 공간을 제공하는 디럭스 더블룸입니다.', '디럭스 더블', 1, '시티뷰', 1, 1, 2, '더블', '샤워실', 32);
 
 INSERT INTO ROOMTYPE_T (ROOM_NO, HOTEL_NO, ROOM_DETAIL, ROOM_NAME, ROOM_MANY, R_VIEW, BLEAKFAST, SMOKE, PEOPLE, BED, SHOWER, R_SIZE)
-VALUES (9, 3, '심플하면서도 편안한 객실입니다.', '스탠다드 트윈', 3, '정원뷰', 1, 0, 2, '트윈', '샤워실', 28);
+VALUES (ROOM_SEQUENCE.NEXTVAL, 3, '심플하면서도 편안한 객실입니다.', '스탠다드 트윈', 3, '정원뷰', 1, 0, 2, '트윈', '샤워실', 28);
 
 INSERT INTO ROOMTYPE_T (ROOM_NO, HOTEL_NO, ROOM_DETAIL, ROOM_NAME, ROOM_MANY, R_VIEW, BLEAKFAST, SMOKE, PEOPLE, BED, SHOWER, R_SIZE)
-VALUES (10, 4, '휴식과 힐링을 위한 공간이 마련된 디럭스 객실입니다.', '디럭스 더블', 2, '시티뷰', 1, 0, 2, '더블', '샤워실', 30);
+VALUES (ROOM_SEQUENCE.NEXTVAL, 4, '휴식과 힐링을 위한 공간이 마련된 디럭스 객실입니다.', '디럭스 더블', 2, '시티뷰', 1, 0, 2, '더블', '샤워실', 30);
 
 INSERT INTO ROOMTYPE_T (ROOM_NO, HOTEL_NO, ROOM_DETAIL, ROOM_NAME, ROOM_MANY, R_VIEW, BLEAKFAST, SMOKE, PEOPLE, BED, SHOWER, R_SIZE)
-VALUES (11, 4, '화려하고 세련된 분위기의 스위트 룸입니다.', '스위트 룸', 1, '오션뷰', 1, 0, 4, '킹 사이즈', '욕조', 45);
+VALUES (ROOM_SEQUENCE.NEXTVAL, 4, '화려하고 세련된 분위기의 스위트 룸입니다.', '스위트 룸', 1, '오션뷰', 1, 0, 4, '킹 사이즈', '욕조', 45);
 
 INSERT INTO ROOMTYPE_T (ROOM_NO, HOTEL_NO, ROOM_DETAIL, ROOM_NAME, ROOM_MANY, R_VIEW, BLEAKFAST, SMOKE, PEOPLE, BED, SHOWER, R_SIZE)
-VALUES (12, 4, '편안함과 모던한 디자인이 어우러진 패밀리 룸입니다.', '패밀리 룸', 3, '시티뷰', 1, 0, 4, '더블+트윈', '샤워실', 35);
+VALUES (ROOM_SEQUENCE.NEXTVAL, 4, '편안함과 모던한 디자인이 어우러진 패밀리 룸입니다.', '패밀리 룸', 3, '시티뷰', 1, 0, 4, '더블+트윈', '샤워실', 35);
 
 COMMIT;
 
 -- 호텔 5의 객실
 INSERT INTO ROOMTYPE_T (ROOM_NO, HOTEL_NO, ROOM_DETAIL, ROOM_NAME, ROOM_MANY, R_VIEW, BLEAKFAST, SMOKE, PEOPLE, BED, SHOWER, R_SIZE)
-VALUES (13, 5, '고급스러움과 편안함이 느껴지는 디럭스 객실입니다.', '디럭스 더블', 2, '시티뷰', 1, 0, 2, '더블', '샤워실', 30);
+VALUES (ROOM_SEQUENCE.NEXTVAL, 5, '고급스러움과 편안함이 느껴지는 디럭스 객실입니다.', '디럭스 더블', 2, '시티뷰', 1, 0, 2, '더블', '샤워실', 30);
 
 INSERT INTO ROOMTYPE_T (ROOM_NO, HOTEL_NO, ROOM_DETAIL, ROOM_NAME, ROOM_MANY, R_VIEW, BLEAKFAST, SMOKE, PEOPLE, BED, SHOWER, R_SIZE)
-VALUES (14, 5, '모던한 인테리어와 넓은 공간이 특징인 스위트 룸입니다.', '스위트 룸', 1, '오션뷰', 1, 0, 4, '킹 사이즈', '욕조', 45);
+VALUES (ROOM_SEQUENCE.NEXTVAL, 5, '모던한 인테리어와 넓은 공간이 특징인 스위트 룸입니다.', '스위트 룸', 1, '오션뷰', 1, 0, 4, '킹 사이즈', '욕조', 45);
 
 INSERT INTO ROOMTYPE_T (ROOM_NO, HOTEL_NO, ROOM_DETAIL, ROOM_NAME, ROOM_MANY, R_VIEW, BLEAKFAST, SMOKE, PEOPLE, BED, SHOWER, R_SIZE)
-VALUES (15, 5, '가족이 함께 머물기에 이상적인 패밀리 룸입니다.', '패밀리 룸', 2, '시티뷰', 1, 0, 4, '더블+트윈', '샤워실', 35);
+VALUES (ROOM_SEQUENCE.NEXTVAL, 5, '가족이 함께 머물기에 이상적인 패밀리 룸입니다.', '패밀리 룸', 2, '시티뷰', 1, 0, 4, '더블+트윈', '샤워실', 35);
 
 COMMIT;
 
 -- 호텔 6의 객실
 INSERT INTO ROOMTYPE_T (ROOM_NO, HOTEL_NO, ROOM_DETAIL, ROOM_NAME, ROOM_MANY, R_VIEW, BLEAKFAST, SMOKE, PEOPLE, BED, SHOWER, R_SIZE)
-VALUES (16, 6, '풍부한 공간과 편안한 분위기의 디럭스 객실입니다.', '디럭스 더블', 2, '오션뷰', 1, 0, 2, '더블', '샤워실', 30);
+VALUES (ROOM_SEQUENCE.NEXTVAL, 6, '풍부한 공간과 편안한 분위기의 디럭스 객실입니다.', '디럭스 더블', 2, '오션뷰', 1, 0, 2, '더블', '샤워실', 30);
 
 INSERT INTO ROOMTYPE_T (ROOM_NO, HOTEL_NO, ROOM_DETAIL, ROOM_NAME, ROOM_MANY, R_VIEW, BLEAKFAST, SMOKE, PEOPLE, BED, SHOWER, R_SIZE)
-VALUES (17, 6, '러그와 가구가 조화를 이루는 스위트 룸입니다.', '스위트 룸', 1, '시티뷰', 1, 0, 4, '킹 사이즈', '욕조', 45);
+VALUES (ROOM_SEQUENCE.NEXTVAL, 6, '러그와 가구가 조화를 이루는 스위트 룸입니다.', '스위트 룸', 1, '시티뷰', 1, 0, 4, '킹 사이즈', '욕조', 45);
 
 INSERT INTO ROOMTYPE_T (ROOM_NO, HOTEL_NO, ROOM_DETAIL, ROOM_NAME, ROOM_MANY, R_VIEW, BLEAKFAST, SMOKE, PEOPLE, BED, SHOWER, R_SIZE)
-VALUES (18, 6, '편안하고 따뜻한 분위기의 패밀리 룸입니다.', '패밀리 룸', 3, '오션뷰', 1, 0, 4, '더블+트윈', '샤워실', 35);
+VALUES (ROOM_SEQUENCE.NEXTVAL, 6, '편안하고 따뜻한 분위기의 패밀리 룸입니다.', '패밀리 룸', 3, '오션뷰', 1, 0, 4, '더블+트윈', '샤워실', 35);
 
 INSERT INTO ROOMTYPE_T (ROOM_NO, HOTEL_NO, ROOM_DETAIL, ROOM_NAME, ROOM_MANY, R_VIEW, BLEAKFAST, SMOKE, PEOPLE, BED, SHOWER, R_SIZE)
-VALUES (19, 7, '화려한 조명과 럭셔리한 분위기의 디럭스 객실입니다.', '디럭스 더블', 2, '시티뷰', 1, 0, 2, '더블', '샤워실', 30);
+VALUES (ROOM_SEQUENCE.NEXTVAL, 7, '화려한 조명과 럭셔리한 분위기의 디럭스 객실입니다.', '디럭스 더블', 2, '시티뷰', 1, 0, 2, '더블', '샤워실', 30);
 
 INSERT INTO ROOMTYPE_T (ROOM_NO, HOTEL_NO, ROOM_DETAIL, ROOM_NAME, ROOM_MANY, R_VIEW, BLEAKFAST, SMOKE, PEOPLE, BED, SHOWER, R_SIZE)
-VALUES (20, 7, '아늑하고 세련된 인테리어의 스위트 룸입니다.', '스위트 룸', 1, '오션뷰', 1, 0, 4, '킹 사이즈', '욕조', 45);
+VALUES (ROOM_SEQUENCE.NEXTVAL, 7, '아늑하고 세련된 인테리어의 스위트 룸입니다.', '스위트 룸', 1, '오션뷰', 1, 0, 4, '킹 사이즈', '욕조', 45);
 
 INSERT INTO ROOMTYPE_T (ROOM_NO, HOTEL_NO, ROOM_DETAIL, ROOM_NAME, ROOM_MANY, R_VIEW, BLEAKFAST, SMOKE, PEOPLE, BED, SHOWER, R_SIZE)
-VALUES (21, 7, '가족 모두가 만족할 수 있는 패밀리 룸입니다.', '패밀리 룸', 3, '시티뷰', 1, 0, 4, '더블+트윈', '샤워실', 35);
+VALUES (ROOM_SEQUENCE.NEXTVAL, 7, '가족 모두가 만족할 수 있는 패밀리 룸입니다.', '패밀리 룸', 3, '시티뷰', 1, 0, 4, '더블+트윈', '샤워실', 35);
 
 COMMIT;
 
 -- 호텔 8의 객실
 INSERT INTO ROOMTYPE_T (ROOM_NO, HOTEL_NO, ROOM_DETAIL, ROOM_NAME, ROOM_MANY, R_VIEW, BLEAKFAST, SMOKE, PEOPLE, BED, SHOWER, R_SIZE)
-VALUES (22, 8, '푸른 바다가 내려다보이는 디럭스 객실입니다.', '디럭스 더블', 2, '시티뷰', 1, 0, 2, '더블', '샤워실', 30);
+VALUES (ROOM_SEQUENCE.NEXTVAL, 8, '푸른 바다가 내려다보이는 디럭스 객실입니다.', '디럭스 더블', 2, '시티뷰', 1, 0, 2, '더블', '샤워실', 30);
 
 INSERT INTO ROOMTYPE_T (ROOM_NO, HOTEL_NO, ROOM_DETAIL, ROOM_NAME, ROOM_MANY, R_VIEW, BLEAKFAST, SMOKE, PEOPLE, BED, SHOWER, R_SIZE)
-VALUES (23, 8, '포근한 분위기의 스위트 룸입니다.', '스위트 룸', 1, '오션뷰', 1, 0, 4, '킹 사이즈', '욕조', 45);
+VALUES (ROOM_SEQUENCE.NEXTVAL, 8, '포근한 분위기의 스위트 룸입니다.', '스위트 룸', 1, '오션뷰', 1, 0, 4, '킹 사이즈', '욕조', 45);
 
 INSERT INTO ROOMTYPE_T (ROOM_NO, HOTEL_NO, ROOM_DETAIL, ROOM_NAME, ROOM_MANY, R_VIEW, BLEAKFAST, SMOKE, PEOPLE, BED, SHOWER, R_SIZE)
-VALUES (24, 8, '가족 모두가 편안하게 머물 수 있는 패밀리 룸입니다.', '패밀리 룸', 3, '시티뷰', 1, 0, 4, '더블+트윈', '샤워실', 35);
+VALUES (ROOM_SEQUENCE.NEXTVAL, 8, '가족 모두가 편안하게 머물 수 있는 패밀리 룸입니다.', '패밀리 룸', 3, '시티뷰', 1, 0, 4, '더블+트윈', '샤워실', 35);
 
 COMMIT;
 
 -- 호텔 9의 객실
 INSERT INTO ROOMTYPE_T (ROOM_NO, HOTEL_NO, ROOM_DETAIL, ROOM_NAME, ROOM_MANY, R_VIEW, BLEAKFAST, SMOKE, PEOPLE, BED, SHOWER, R_SIZE)
-VALUES (25, 9, '화려한 조명과 세련된 분위기의 디럭스 객실입니다.', '디럭스 더블', 2, '오션뷰', 1, 0, 2, '더블', '샤워실', 30);
+VALUES (ROOM_SEQUENCE.NEXTVAL, 9, '화려한 조명과 세련된 분위기의 디럭스 객실입니다.', '디럭스 더블', 2, '오션뷰', 1, 0, 2, '더블', '샤워실', 30);
 
 INSERT INTO ROOMTYPE_T (ROOM_NO, HOTEL_NO, ROOM_DETAIL, ROOM_NAME, ROOM_MANY, R_VIEW, BLEAKFAST, SMOKE, PEOPLE, BED, SHOWER, R_SIZE)
-VALUES (26, 9, '편안하면서도 세련된 인테리어의 스위트 룸입니다.', '스위트 룸', 1, '시티뷰', 1, 0, 4, '킹 사이즈', '욕조', 45);
+VALUES (ROOM_SEQUENCE.NEXTVAL, 9, '편안하면서도 세련된 인테리어의 스위트 룸입니다.', '스위트 룸', 1, '시티뷰', 1, 0, 4, '킹 사이즈', '욕조', 45);
 
 INSERT INTO ROOMTYPE_T (ROOM_NO, HOTEL_NO, ROOM_DETAIL, ROOM_NAME, ROOM_MANY, R_VIEW, BLEAKFAST, SMOKE, PEOPLE, BED, SHOWER, R_SIZE)
-VALUES (27, 9, '가족 모두가 만족할 수 있는 패밀리 룸입니다.', '패밀리 룸', 3, '오션뷰', 1, 0, 4, '더블+트윈', '샤워실', 35);
+VALUES (ROOM_SEQUENCE.NEXTVAL, 9, '가족 모두가 만족할 수 있는 패밀리 룸입니다.', '패밀리 룸', 3, '오션뷰', 1, 0, 4, '더블+트윈', '샤워실', 35);
 
 COMMIT;
 
 -- 호텔 10의 객실
 INSERT INTO ROOMTYPE_T (ROOM_NO, HOTEL_NO, ROOM_DETAIL, ROOM_NAME, ROOM_MANY, R_VIEW, BLEAKFAST, SMOKE, PEOPLE, BED, SHOWER, R_SIZE)
-VALUES (28, 10, '푸르른 바다와 하늘을 닮은 디럭스 객실입니다.', '디럭스 더블', 2, '오션뷰', 1, 0, 2, '더블', '샤워실', 30);
+VALUES (ROOM_SEQUENCE.NEXTVAL, 10, '푸르른 바다와 하늘을 닮은 디럭스 객실입니다.', '디럭스 더블', 2, '오션뷰', 1, 0, 2, '더블', '샤워실', 30);
 
 INSERT INTO ROOMTYPE_T (ROOM_NO, HOTEL_NO, ROOM_DETAIL, ROOM_NAME, ROOM_MANY, R_VIEW, BLEAKFAST, SMOKE, PEOPLE, BED, SHOWER, R_SIZE)
-VALUES (29, 10, '우아하고 세련된 분위기의 스위트 룸입니다.', '스위트 룸', 1, '시티뷰', 1, 0, 4, '킹 사이즈', '욕조', 45);
+VALUES (ROOM_SEQUENCE.NEXTVAL, 10, '우아하고 세련된 분위기의 스위트 룸입니다.', '스위트 룸', 1, '시티뷰', 1, 0, 4, '킹 사이즈', '욕조', 45);
 
 INSERT INTO ROOMTYPE_T (ROOM_NO, HOTEL_NO, ROOM_DETAIL, ROOM_NAME, ROOM_MANY, R_VIEW, BLEAKFAST, SMOKE, PEOPLE, BED, SHOWER, R_SIZE)
-VALUES (30, 10, '가족 모두가 함께 머물기에 좋은 패밀리 룸입니다.', '패밀리 룸', 3, '오션뷰', 1, 0, 4, '더블+트윈', '샤워실', 35);
+VALUES (ROOM_SEQUENCE.NEXTVAL, 10, '가족 모두가 함께 머물기에 좋은 패밀리 룸입니다.', '패밀리 룸', 3, '오션뷰', 1, 0, 4, '더블+트윈', '샤워실', 35);
 
 COMMIT;
 
