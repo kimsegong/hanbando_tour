@@ -512,14 +512,14 @@
       
      <select id="selectHeartList" parameterType="Map" resultMap="HeartMap">
       SELECT  A.PACKAGE_NO, A.PACKAGE_TITLE, A.PRICE, A.USER_NO
-        FROM (SELECT ROW_NUMBER() OVER(ORDER BY H.USER_NO DESC) AS RN, H.USER_NO, H.PACKAGE_NO, P.PACKAGE_TITLE, P.PRICE
+        FROM (SELECT ROW_NUMBER() OVER(ORDER BY H.PACKAGE_NO DESC) AS RN, H.USER_NO, H.PACKAGE_NO, P.PACKAGE_TITLE, P.PRICE
                 FROM HEART_T H INNER JOIN PACKAGE_T P
                   ON H.PACKAGE_NO = P.PACKAGE_NO
                WHERE H.USER_NO = #{userNo}) A
        WHERE A.RN BETWEEN #{begin} AND #{end}       
      </select>
      
-     <select id="getHeartCount" resultType="int">
+     <select id="getHeartCount" resultType="int" parameterType="int">
       SELECT COUNT(*)
         FROM HEART_T
        WHERE USER_NO = #{userNo}

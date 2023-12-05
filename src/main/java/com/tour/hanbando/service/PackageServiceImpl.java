@@ -597,12 +597,12 @@ public class PackageServiceImpl implements PackageService {
     @Override
     public void getHeartPackage(HttpServletRequest request, Model model) {
       
-      int userNo = Integer.parseInt(request.getParameter("userNo"));
       
       Optional<String> opt = Optional.ofNullable(request.getParameter("page"));
       int page = Integer.parseInt(opt.orElse("1"));
-      int total = packageMapper.getHeartCount(userNo);
       int display = 10;
+      int userNo = Integer.parseInt(request.getParameter("userNo"));
+      int total = packageMapper.getHeartCount(userNo);
       
       myPageUtils.setPaging(page, total, display);
       
@@ -611,10 +611,12 @@ public class PackageServiceImpl implements PackageService {
                                      , "userNo", userNo);
       
       List<HeartDto> heartList = packageMapper.selectHeartList(map);
-      
+
       model.addAttribute("heartList", heartList);
-      model.addAttribute("paging", myPageUtils.getMvcPaging(request.getContextPath() + "/package/heart.do"));
+      String params = "userNo=" + request.getParameter("userNo");
+      model.addAttribute("paging", myPageUtils.getMvcPaging(request.getContextPath() + "/user/heart.do", params));
       model.addAttribute("beginNo", total - (page - 1) * display); 
+      System.out.println("$$$$$$$$$$$$" + heartList);
 
     }
     
