@@ -21,9 +21,16 @@ public interface ReserveService {
   public ReserveDto loadReserve(int reserveNo);
   
   public Map<String, Object> loadTourists(HttpServletRequest request);
+  public PaymentDto loadPaymentByReserveNo(int reserveNo);
+  public Map<String, Object> loadPaymentByMerchantUid(HttpServletRequest request, PaymentDto payment);
   
   public int modifyReserve(HttpServletRequest request);
   public int removeReserve(HttpServletRequest request);
   
   public Map<String, Object> modifyReserveStatusByPayStatus(Map<String, String> payload, HttpServletRequest request, RedirectAttributes redirectAttributes);
+  
+  
+  // 아임포트 accessToken 발급
+  public String getAccessToken(String apiKey, String apiSecret);
+  
 }
