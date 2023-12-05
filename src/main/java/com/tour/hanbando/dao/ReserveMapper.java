@@ -24,6 +24,7 @@ public interface ReserveMapper {
   public ReserveDto getReserve(int reserveNo);
   
   public List<TouristDto> getTourists(int reserveNo);
+  public PaymentDto getPaymentBy(Map<String, Object> map);
   
   public int updateReserve(ReserveDto reserve);
   public int deleteReserve(int reserveNo);

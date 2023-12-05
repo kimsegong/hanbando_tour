@@ -15,11 +15,11 @@ public class RoomtypeDto {
   private String roomDetail;
   private String roomName;
   private int roomMany;
-  private String view;
-  private int breakfast;
+  private String rView;
+  private int bleakfast;
   private int smoke;
   private int people;
   private String bed;
   private String shower;
-  private int size;
+  private int rSize;
 }

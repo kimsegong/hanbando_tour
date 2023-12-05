@@ -6,8 +6,11 @@ import java.util.Map;
 import org.apache.ibatis.annotations.Mapper;
 
 import com.tour.hanbando.dto.HotelDto;
+import com.tour.hanbando.dto.HotelImageDto;
 import com.tour.hanbando.dto.RegionDto;
+import com.tour.hanbando.dto.RoomFeatureDto;
 import com.tour.hanbando.dto.RoompriceDto;
+import com.tour.hanbando.dto.RoomtypeDto;
 
 @Mapper
 public interface HotelMapper {
@@ -21,4 +24,18 @@ public interface HotelMapper {
   public List<RegionDto> getRegion();
   public int getHotelNo();
   public int getRoomNo();
+  public int insertHotelNo(int HotelNo);
+  
+  public int insertRoomtype(RoomtypeDto roomtypeDto);
+  public int insertRoomFeature(RoomFeatureDto roomFeatureDto);
+  public int insertRoomPrice(RoompriceDto roompriceDto);
+  public int insertRoomImage(HotelImageDto hotelImageDto);
+  
+  
+  
+  
+  public List<RoomtypeDto> getRoomtype(int hotelNo);
+  public List<HotelImageDto> getRoomImage(List<RoomtypeDto> roomtypeDto);
+  public List<RoomFeatureDto> getRoomFeature(List<RoomtypeDto> roomtypeDto);
+  public List<RoompriceDto> getPrice(List<RoomtypeDto> roomtypeDto);
 }
