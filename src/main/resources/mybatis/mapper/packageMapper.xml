@@ -30,11 +30,6 @@
           <id column="THEME_NO" property="themeNo"/>
           <result column="THEME_NAME" property="themeName"/>
       </association>
-      <association javaType="UserDto" property="userDto">
-          <id column="USER_NO" property="userNo"/>
-          <result column="EMAIL" property="email"/>
-          <result column="NAME" property="name"/>
-      </association>
       <association javaType="ProductImageDto" property="productImageDto">
           <id column="IMAGE_NO" property="imageNo"/>
           <result column="THUMBNAIL" property="thumbnail"/>
@@ -59,15 +54,15 @@
      </resultMap>       
 
     <!-- 찜테이블 -->
-    <resultMap type="HeartDto" id="HeartMap">            
+    <resultMap type="HeartDto" id="HeartMap">           
       <association javaType="PackageDto" property="packageDto">
         <id column="PACKAGE_NO" property="packageNo"/>            
         <result column="PACKAGE_TITLE" property="packageTitle"/>      
         <result column="PRICE" property="price"/>      
-        <association property="userDto" javaType="UserDto">
-          <result column="USER_NO" property="userNo"/>
-        </association>
        </association>
+     <association property="userDto" javaType="UserDto">
+          <result column="USER_NO" property="userNo"/>
+      </association>
       <association javaType="HotelDto" property="hotelDto">
         <id column="HOTEL_NO" property="hotelNo"/>            
         <result column="HOTEL_NAME" property="hotelName"/>      
@@ -138,13 +133,21 @@
     <select id="getPackageCount" resultType="int">
       SELECT COUNT(*)
         FROM PACKAGE_T
+      <if test="regionNo != 0">
+        WHERE REGION_NO = #{regionNo}
+      </if>
     </select>
+    
+    <select id="getCount" resultType="int">
+      SELECT COUNT(*)
+        FROM PACKAGE_T
+    </select>
+    
 
     <!-- 패키지리스트불러오기 -->
     <select id="getPackageList" parameterType="Map" resultMap="PackageMap">
 	  SELECT
 	    P.PACKAGE_NO,
-	    P.USER_NO,
 	    P.REGION_NO,
 	    P.THEME_NO,
 	    P.PACKAGE_TITLE,
@@ -159,7 +162,6 @@
 	  FROM (
 	    SELECT
 	      PT.PACKAGE_NO,
-	      PT.USER_NO,
 	      PT.REGION_NO,
 	      PT.THEME_NO,
 	      PT.PACKAGE_TITLE,
@@ -181,7 +183,10 @@
 	          </otherwise>
 	        </choose>
 	      ) AS RN
-	    FROM PACKAGE_T PT
+	    FROM PACKAGE_T PT 
+	    <if test="regionNo != 0">
+        WHERE PT.REGION_NO = #{regionNo}
+      </if>
 	  ) P
 	  LEFT JOIN PRODUCT_IMAGE_T PI ON P.PACKAGE_NO = PI.PACKAGE_NO
 	  LEFT JOIN REGION_T R ON P.REGION_NO = R.REGION_NO
@@ -191,8 +196,7 @@
 	      AND P.RECOMMEND_STATUS = 1
 	    </if>
 	</select>
-
- 
+	
 
     <select id="getRegion" resultType="regionDto">
       SELECT REGION_NO, REGION_NAME
@@ -211,7 +215,6 @@
       </selectKey>
         INSERT INTO PACKAGE_T (
             PACKAGE_NO,
-            USER_NO,
             REGION_NO,
             THEME_NO,
             PACKAGE_TITLE,
@@ -229,7 +232,6 @@
             RECOMMEND_STATUS
         ) VALUES (
             #{packageNo},
-            #{userDto.userNo},
             #{regionDto.regionNo},
             #{themeDto.themeNo},
             #{packageTitle},
@@ -309,7 +311,6 @@
       <select id="getPackage" parameterType="int" resultMap="PackageMap">
         SELECT
             P.PACKAGE_NO,
-            P.USER_NO,
             P.REGION_NO,
             P.THEME_NO,
             P.PACKAGE_TITLE,
@@ -348,7 +349,7 @@
       
       
       <select id="getPackageImageList" parameterType="int" resultType="ProductImageDto">
-        SELECT PACKAGE_NO, IMAGE_NO, IMAGE_PATH, FILESYSTEM_NAME
+        SELECT PACKAGE_NO, IMAGE_NO, IMAGE_PATH, THUMBNAIL, FILESYSTEM_NAME
           FROM PRODUCT_IMAGE_T
          WHERE PACKAGE_NO = #{packageNo}  
       </select>
@@ -467,7 +468,7 @@
         , USER_NO
         )VALUES(
           #{packageDto.packageNo}
-        , #{userNo}
+        , #{userDto.userNo}
          )
       </insert>
       
@@ -526,6 +527,19 @@
         FROM HEART_T
        WHERE USER_NO = #{userNo}
       </select>
+      
+      <select id="checkHeart" parameterType="Map" resultType="int">
+        SELECT COUNT(*) 
+          FROM HEART_T 
+         WHERE PACKAGE_NO = #{packageNo} 
+           AND USER_NO = #{userNo}
+      </select>
+      
+      <delete id="deleteHeart" parameterType="int">
+        DELETE
+          FROM HEART_T
+         WHERE PACKAGE_NO = #{packageNo}
+      </delete>
       
 </mapper>
 
