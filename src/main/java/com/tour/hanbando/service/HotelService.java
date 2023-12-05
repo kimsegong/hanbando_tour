@@ -4,9 +4,16 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.springframework.ui.Model;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 public interface HotelService {
   /********************리스트**************************/
   public Map<String, Object> getHotelList(HttpServletRequest request);
-  public Map<String, Object> getSortedHotelList(HttpServletRequest request);
   public int increseHit(int hotelNo);
+  public void regionList(Model model);
+  public void hotelRoomList(HttpServletRequest request, Model model);
+  public void makeHotelNo(Model model);
+  public boolean writeRoom(MultipartHttpServletRequest multipartRequest) throws Exception;
 }

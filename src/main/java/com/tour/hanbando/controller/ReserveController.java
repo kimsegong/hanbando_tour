@@ -15,8 +15,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.tour.hanbando.dto.PackageDto;
+import com.tour.hanbando.dto.PaymentDto;
 import com.tour.hanbando.dto.ReserveDto;
-import com.tour.hanbando.dto.UserDto;
 import com.tour.hanbando.service.PackageService;
 import com.tour.hanbando.service.ReserveService;
 
@@ -30,6 +30,7 @@ public class ReserveController {
   private final ReserveService reserveService;
   private final PackageService packageService;
   
+  // 패키지 예약관련 요청을 처리
   @GetMapping("/reserveList.do")
   public String list(HttpServletRequest request, Model model) {
     if(request.getParameter("userNo") != null) { // userNo가 파라미터로 넘어오는 경우 
@@ -40,19 +41,20 @@ public class ReserveController {
     return "reserve/list";
   }
   
-  
   @GetMapping("/write.form")
   public String reserve(HttpServletRequest request, Model model) {
     PackageDto pack = packageService.getPackage(Integer.parseInt(request.getParameter("packageNo")));
     model.addAttribute("pack", pack);
-//    model.addAttribute("resDate", request.getParameter("resDate"));
+    model.addAttribute("resStart", request.getParameter("resStart").replace("-", "/"));
     return "reserve/write";
   }
   
   @GetMapping("/detail.do")
   public String detail(@RequestParam(value="reserveNo", required = false, defaultValue = "0") int reserveNo, Model model) {
     ReserveDto reserve = reserveService.loadReserve(reserveNo);
+//    PaymentDto payLog = reserveService.loadPaymentByReserveNo(reserveNo);
     model.addAttribute("reserve", reserve);
+//    model.addAttribute("payLog", payLog);
     return "reserve/detail";
   }
   
@@ -66,14 +68,12 @@ public class ReserveController {
     model.addAttribute("userMobile", userMobile);
     return "reserve/edit";
   }
- 
   
   @ResponseBody
   @GetMapping(value="/getTouristInfo.do", produces="application/json")
   public Map<String, Object> getTourists(HttpServletRequest request) {
     return reserveService.loadTourists(request);
   }
-  
   
   @ResponseBody
   @PostMapping(value="/addReserve.do", produces="application/json")
@@ -88,7 +88,6 @@ public class ReserveController {
     return "redirect:/reserve/detail.do?reserveNo=" + request.getParameter("reserveNo");
   }
 
-  
   @PostMapping("/modifyReserve.do")
   public String modifyBlog(HttpServletRequest request, RedirectAttributes redirectAttributes) {
     int modifyResult = reserveService.modifyReserve(request);
@@ -96,13 +95,28 @@ public class ReserveController {
     return "redirect:/reserve/detail.do?reserveNo=" + request.getParameter("reserveNo");
   }
   
-  
   @PostMapping("/delete.do")
   public String removeReserve(HttpServletRequest request, RedirectAttributes redirectAttributes) {
     redirectAttributes.addFlashAttribute("removeResult", reserveService.removeReserve(request));
     return "redirect:/reserve/reserveList.do?userNo=" + request.getParameter("userNo");
   }
   
+
+  // 호텔 예약관련 요청을 처리
+  @GetMapping("/reserveHotelList.do")
+  public String resHotelList() {
+    return "reserve/listHotel";
+  }
+  
+  @GetMapping("/writeHotel.form")
+  public String reserveHotel() {
+    return "reserve/writeHotel";
+  }
+  
+  @GetMapping("/detailHotel.do")
+  public String detailHotel() {
+    return "reserve/detailHotel";
+  }
   
   
 }

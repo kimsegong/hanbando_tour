@@ -519,7 +519,6 @@ public class UserServiceImpl implements UserService {
     
     Map<String, Object> map = new HashMap<>();
     map.put("email", email);
-    map.put("leavedEmail", email);
     
     boolean enableEmail = userMapper.getUser(map) == null
                        && userMapper.getLeaveUser(map) == null
@@ -765,5 +764,25 @@ public class UserServiceImpl implements UserService {
     
   }
 
+  @Override
+  public void findId(HttpServletRequest request, HttpServletResponse response) {
   
+    
+  }
+  //아이디 찾기 
+  @Override
+  public UserDto find_id(String name, String mobile) {
+    UserDto result = null;
+    
+    try {
+     result= userMapper.getFindId(Map.of("name", name, "mobile", mobile));
+     
+    } catch(Exception e) {
+      
+      e.printStackTrace();
+    }
+    
+    return result ;
+  }
 }
+  

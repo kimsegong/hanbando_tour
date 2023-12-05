@@ -1,12 +1,19 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 
-<head th:replace="~{/layout/header::head('한반도 투어')}"></head> <!-- 이거 알맞게 바꿔주세요-->
+<head th:replace="~{/layout/header::head('호텔작성')}"></head> <!-- 이거 알맞게 바꿔주세요-->
+<style>
+.roomGroup {
+  border: thick double darkgray ;
+}
+  
+  
+</style>
 <body>
+  
 	<div th:replace="~{/layout/header::header}"></div>
 	
 	<div class="main_wrap">
-	
 	
 		 <div class="container text-center">
 		  <div class="row">
@@ -14,9 +21,162 @@
 		    </div>
 		    <div class="col-10" style="border:1px gray dotted">
 		      	<!--/*여기에 작성/ 다 만들고 style 지워주세요  */-->
-		   
-		      	
-		      	
+				   <h2>호텔 게시글작성</h2>
+			<form method="post" id="hotel_add" th:action="@{/hotel/add.do}" accept="image/*" enctype="multipart/form-data" >
+				<input type="hidden" id="hotelNo" name="hotelNo" th:value="${hotelNo}"> 
+			   <div style="margin: 30px 270px;" class="w-50 p-3">
+		<div style="text-align: left;">
+		      <label for="files" class="form-label">메인첨부</label>
+		      <input type="file" name="files" id="files" class="form-control" multiple>
+		  </div>
+		  <div class="attached_list mt-2" id="attached_list"></div>
+		  <div>
+       <label for="hotelName">호텔 이름 </label> 
+       <input type="text" id="hotelName" class="form-control">
+      </div>
+		  <div><!-- 추천라디오 및 선택박스 -->
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+        <!-- 추천라디오 -->
+        <div style="text-align: left;">
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="recommendStatus" th:value="1">
+                <label class="form-check-label" for="recommendStatus">
+                    추천
+                </label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="recommendStatus"  th:value="2" checked>
+                <label class="form-check-label" for="recommendStatus">
+                    안추천
+                </label>
+            </div>
+        </div>
+           <div class="w-25 p-3">
+			    <select id="regionSelect" class="form-select" aria-label="Default select example" name="regionNo">
+			        <option selected>-지역-</option>
+			        <option th:each="region : ${region}" th:value="${region.regionNo}" th:text="${region.regionName}"></option>
+			    </select>
+		    </div>
+		  </div>
+		</div>
+		
+		<div>
+      <label for="hEmail">Email</label>
+      <input type="email" id="hEmail" class="form-control">
+    </div>
+		<div>
+      <label for="phoneNumber">전화번호</label>
+      <input type="text" id="phoneNumber" class="form-control">
+    </div>
+    <div class="row mb-2">
+          <label for="postcode" class="col-sm-3 col-form-label">주소</label>
+          <div class="col-sm-4"><input type="text" name="postcode" id="postcode" class="form-control" onclick="execDaumPostcode()" placeholder="우편번호" readonly></div>
+          <div class="col-sm-5"><input type="button" class="btn btn-outline-success" onclick="execDaumPostcode()" value="우편번호 찾기"></div>
+        </div>
+        
+        <div class="row mb-2">
+          <div class="col-sm-6"><input type="text" name="roadAddress" id="roadAddress" class="form-control" placeholder="도로명주소" readonly></div>
+          <div class="col-sm-6"><input type="text" name="jibunAddress" id="jibunAddress" class="form-control" placeholder="지번주소" readonly></div>
+          <input type="hidden" name="latitude" id="latitude">
+          <input type="hidden" name="longitude" id="longitude"  >
+        </div>
+        <div class="col-sm-12"><span id="guide" style="color:#999;display:none"></span></div>
+        
+    <div>사용할수 있는 시설
+      <label for="morning" class="form-check-label">조식</label>
+      <input type="checkbox" id="morning" class="form-check-input">
+      <label for="pool" class="form-check-label">수영장</label>
+      <input type="checkbox" id="pool" class="form-check-input">
+      <label for="sauna" class="form-check-label">사우나</label>
+      <input type="checkbox" id="sauna" class="form-check-input">
+      <label for="lounge" class="form-check-label">라운지</label>
+      <input type="checkbox" id="lounge" class="form-check-input">
+      <label for="roomservice" class="form-check-label">룸서비스</label>
+      <input type="checkbox" id="roomservice" class="form-check-input">
+    </div>
+		<div>
+    <label for="hotelDetail">호텔 상세</label>
+    <textarea id="hotelDetail">체크인: 체크아웃:</textarea>
+      
+    <!--/* Button trigger modal */--> 
+		<button type="button" class="btn btn-primary" onclick="openHotelRoom()" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+		  객실 등록하기 
+		</button>
+		
+		<!--/* Modal */-->
+		<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+		  <div class="modal-dialog">
+		    <div class="modal-content">
+		    </div>
+		  </div>
+		</div>  
+      
+    </div>
+    <!--/*
+		<div class="roomGroup">
+      <input type="file" name="files1" class="form-control" multiple>
+      <label for="roomName" >객실이름</label>
+      <input type="text" id="roomName" class="form-control">
+      <label for="roomDetail">객실상세</label>
+      <textarea id="roomDetail" class="form-control"></textarea>
+      <label for="rView">전망</label>
+      <input type="text" id="rView" class="form-control"> 
+      <label for="bed">침대</label>
+      <input type="bed" id="bed" class="form-control"> 
+      <label for="shower">욕실</label>
+      <input type="text" id="shower" class="form-control"> 
+      <label for="rSize">방사이즈</label>
+      <input type="text" id="rSize" class="form-control">
+      <label for="smoke" class="form-check-label">흡연유무</label>
+      <input type="checkbox" id="smoke" class="form-check-input">
+      <label for="bleakfast" class="form-check-label">조식</label>
+      <input type="checkbox" id="bleakfast" class="form-check-input">
+      <label for="people">허용인원</label>
+      <input type="text" id="people" class="form-control">
+      <label for="roomMany">객실개수</label>
+      <input type="text" id="roomMany" class="form-control">
+      
+      <h4>객실 구비사항</h4>
+      <label for="towel" class="form-check-label">수건</label>
+      <input type="checkbox" id="towel" class="form-check-input">
+      <label for="water" class="form-check-label">생수</label>
+      <input type="checkbox" id="water" class="form-check-input">
+      <label for="coffee" class="form-check-label">커피/티</label>
+      <input type="checkbox" id="coffee" class="form-check-input">
+      <label for="drier" class="form-check-label">드라이기</label>
+      <input type="checkbox" id="drier" class="form-check-input">
+      <label for="iron" class="form-check-label">다리미</label>
+      <input type="checkbox" id="iron" class="form-check-input">
+      <label for="minibar" class="form-check-label">미니바</label>
+      <input type="checkbox" id="minibar" class="form-check-input">
+      <div>비수기</div>
+      <label for="biPrice">금액</label>
+      <input type="text" id="biPrice" class="form-control">
+      <label for="bsDate">날짜</label>
+      <input type="date" id="bsDate"><input type="date" id="beDate">
+      <div>준성수기</div>
+      <label for="junPrice">금액</label>
+      <input type="text" id="junPrice" class="form-control">
+      <label for="jsDate">날짜</label>
+      <input type="date" id="jsDate"><input type="date" id="jeDate">
+      <div>성수기</div>
+      <label for="sungPrice">금액</label>
+      <input type="text" id="sungPrice" class="form-control">
+      <label for="ssDate">날짜</label>
+      <input type="date" id="ssDate"><input type="date" id="seDate">
+      
+      <button type="button" id="btnAddRoom" onclick="return roomSubmit(this.form)">객실등록</button>
+    </div>
+		<div id="emptyRoom"></div>
+		*/-->
+		
+		    	  </div>    
+				    <div class="d-grid gap-2 col-6 mx-auto">
+				      
+				      <button type="submit" class="btn btn-primary" style="margin: 32px;">작성완료</button>
+			      </div>
+				 </div>
+				</form>
 		    </div>
 		    <div class="col-1">	      
 		    </div>
@@ -24,7 +184,103 @@
 	  </div>
 	
 	</div>
+<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+<script th:inline="javascript">
+  console.log($("#hotelNo").val())
+  
+	          //본 예제에서는 도로명 주소 표기 방식에 대한 법령에 따라, 내려오는 데이터를 조합하여 올바른 주소를 구성하는 방법을 설명합니다.
+          function execDaumPostcode() {
+            new daum.Postcode({
+              oncomplete: function(data) {
+                // 팝업에서 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분.
+    
+                // 도로명 주소의 노출 규칙에 따라 주소를 표시한다.
+                // 내려오는 변수가 값이 없는 경우엔 공백('')값을 가지므로, 이를 참고하여 분기 한다.
+                var roadAddr = data.roadAddress; // 도로명 주소 변수
+                var extraRoadAddr = ''; // 참고 항목 변수
+    
+                // 법정동명이 있을 경우 추가한다. (법정리는 제외)
+                // 법정동의 경우 마지막 문자가 "동/로/가"로 끝난다.
+                if(data.bname !== '' && /[동|로|가]$/g.test(data.bname)){
+                  extraRoadAddr += data.bname;
+                }
+                // 건물명이 있고, 공동주택일 경우 추가한다.
+                if(data.buildingName !== '' && data.apartment === 'Y'){
+                  extraRoadAddr += (extraRoadAddr !== '' ? ', ' + data.buildingName : data.buildingName);
+                }
+                // 표시할 참고항목이 있을 경우, 괄호까지 추가한 최종 문자열을 만든다.
+                if(extraRoadAddr !== ''){
+                  extraRoadAddr = ' (' + extraRoadAddr + ')';
+                }
+    
+                // 우편번호와 주소 정보를 해당 필드에 넣는다.
+                document.getElementById('postcode').value = data.zonecode;
+                document.getElementById("roadAddress").value = roadAddr;
+                document.getElementById("jibunAddress").value = data.jibunAddress;
+                
+                var geocoder = new kakao.maps.services.Geocoder();
 
+                var callback = function(result, status) {
+                    if (status === kakao.maps.services.Status.OK) {
+                      document.getElementById('latitude').value = result[0].x;
+                      document.getElementById('longitude').value = result[0].y;
+                        console.log(result);
+                        console.log(result[0].x);
+                    }
+                };
+                  geocoder.addressSearch(roadAddr, callback);
+
+                var guideTextBox = document.getElementById("guide");
+                // 사용자가 '선택 안함'을 클릭한 경우, 예상 주소라는 표시를 해준다.
+                if(data.autoRoadAddress) {
+                  var expRoadAddr = data.autoRoadAddress + extraRoadAddr;
+                  guideTextBox.innerHTML = '(예상 도로명 주소 : ' + expRoadAddr + ')';
+                  guideTextBox.style.display = 'block';
+                } else if(data.autoJibunAddress) {
+                  var expJibunAddr = data.autoJibunAddress;
+                  guideTextBox.innerHTML = '(예상 지번 주소 : ' + expJibunAddr + ')';
+                  guideTextBox.style.display = 'block';
+                } else {
+                  guideTextBox.innerHTML = '';
+                  guideTextBox.style.display = 'none';
+                }
+              }
+            }).open();
+          }
+          
+  function openHotelRoom(){
+    $('.modal-content').load("addRoom.form");
+  }
+
+	const fnFileCheck = () => {
+        $('#files').change((ev) => {
+          $('#attached_list').empty();
+          let maxSize = 1024 * 1024 * 100;
+          let maxSizePerFile = 1024 * 1024 * 10;
+          let totalSize = 0;
+          let files = ev.target.files;
+          for(let i = 0; i < files.length; i++){
+            totalSize += files[i].size;
+            if(files[i].size > maxSizePerFile){
+              alert('각 첨부파일의 최대 크기는 10MB입니다.');
+              $(ev.target).val('');
+              $('#attached_list').empty();
+              return;
+            }
+            $('#attached_list').append('<div>' + files[i].name + '</div>');
+          }
+          if(totalSize > maxSize){
+            alert('전체 첨부파일의 최대 크기는 100MB입니다.');
+            $(ev.target).val('');
+            $('#attached_list').empty();
+            return;
+          }
+        })
+      }
+      
+	
+	fnFileCheck();
+</script>
 	
 	
 	

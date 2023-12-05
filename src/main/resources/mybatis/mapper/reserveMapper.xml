@@ -121,6 +121,7 @@
     <result column="BUYER_EMAIL" property="buyerEmail"/>
     <result column="ERROR_MSG" property="errorMsg"/>
     <result column="PAY_STATUS" property="payStatus"/>
+    <result column="CANCEL_AMOUNT" property="cancelAmount"/>
     <association property="reserveDto" resultMap="ReserveMap"/>
   </resultMap>
   
@@ -175,6 +176,15 @@
      WHERE RES.RESERVE_NO = #{reserveNo}
   </select>
   
+  <select id="getPaymentBy" parameterType="Map" resultMap="PaymentMap">
+    SELECT PAYMENT_NO, IMP_UID, MERCHANT_UID, PAY_YN, PAY_METHOD, PAID_AMOUNT, PAID_AT, BUYER_NAME, BUYER_EMAIL, ERROR_MSG, PAY_STATUS, CANCEL_AMOUNT, RESERVE_NO
+      FROM PAYMENT_T
+     <where>
+       <if test="reserveNo != null">RESERVE_NO = #{reserveNo}</if>
+       <if test="merchantUid != null">AND MERCHANT_UID = #{merchantUid}</if>
+     </where> 
+  </select>
+  
   
   <insert id="insertReserve" parameterType="ReserveDto" useGeneratedKeys="true" keyProperty="reserveNo">
     <selectKey order="BEFORE" keyProperty="reserveNo" resultType="int">
@@ -196,7 +206,7 @@
       , PACKAGE_NO
     ) VALUES (
         #{reserveNo}
-      , TO_CHAR(SYSDATE, 'YYYYMMDD') 
+      , TO_CHAR(SYSDATE, 'YYYY/MM/DD') 
       , #{requestedTerm}
       , #{agree}
       , #{departureLoc}
@@ -283,11 +293,14 @@
   </insert>
   
   
-  
-  
-  
-  
-  
+  <update id="updateReserveStatus" parameterType="Map">
+    UPDATE RESERVE_T
+       SET RESERVE_STATUS = 1
+     WHERE RESERVE_NO = (SELECT RESERVE_NO
+                           FROM PAYMENT_T 
+                          WHERE PAY_STATUS = #{payStatus} 
+                            AND RESERVE_NO = #{reserveNo})
+  </update> 
   
   
   <update id="updateReserve" parameterType="ReserveDto">
@@ -295,6 +308,16 @@
        SET REQUESTED_TERM = #{requestedTerm}
          , DEPARTURE_LOC = #{departureLoc}
      WHERE RESERVE_NO = #{reserveNo}
+  </update>
+  
+  
+  <update id="updateReserveCancel">
+    UPDATE RESERVE_T
+       SET RESERVE_STATUS = 2
+     WHERE RESERVE_NO = (SELECT RESERVE_NO
+                           FROM RESERVE_T
+                          WHERE RESERVE_STATUS = 1
+                            AND RESERVE_NO = #{reserveNo})
   </update>
   
   <delete id="deleteReserve" parameterType="int">

@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 public class HotelImageDto {
   private int hotelNo;
   private Integer roomNo; // Nullable
+  private String originalName;
   private Integer thumbnail; // Nullable
   private String filesystemName;
   private String imagePath;

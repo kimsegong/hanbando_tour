@@ -12,9 +12,9 @@ import com.tour.hanbando.dto.PackageDto;
 import com.tour.hanbando.dto.ReserveDto;
 
 public interface PackageService {
-  public Map<String, Object> getPackageList(HttpServletRequest request);
-  public int getTotalPackageCount();
-  public boolean addPackage(MultipartHttpServletRequest multipartRequest) throws Exception;
+  public Map<String, Object> getPackageList(HttpServletRequest request, String condition, int recommendStatus);
+  public Map<String, Object> addPackage(MultipartHttpServletRequest multipartRequest) throws Exception;
+  public boolean addThumbnail(MultipartHttpServletRequest multipartRequest) throws Exception;
   public Map<String, Object> getAttachList(HttpServletRequest request);
   public void loadUpload(HttpServletRequest request, Model model) ;
   public int addRegion(HttpServletRequest request);
@@ -34,5 +34,8 @@ public interface PackageService {
   public int addHeart(HttpServletRequest request);
   public Map<String, Object> removeReview(int reviewNo);
   public List<ReserveDto> getReserveUser(int packageNo);
+  public void getHeartPackage(HttpServletRequest request, Model model);
+  public Map<String, Object> removeHeart(int packageNo);
+  public Map<String, Object> checkHeart(int packageNo, int userNo);
   
 }
