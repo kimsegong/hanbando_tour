@@ -611,7 +611,7 @@ public class PackageServiceImpl implements PackageService {
                                      , "userNo", userNo);
       
       List<HeartDto> heartList = packageMapper.selectHeartList(map);
-
+      System.out.println(heartList.size());
       model.addAttribute("heartList", heartList);
       String params = "userNo=" + request.getParameter("userNo");
       model.addAttribute("paging", myPageUtils.getMvcPaging(request.getContextPath() + "/user/heart.do", params));
