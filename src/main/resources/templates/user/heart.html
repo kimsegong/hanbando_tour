@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 
-<head th:replace="~{/layout/header::head('찜')}"></head>
+<head th:replace="~{/layout/header::head('찜페이지')}"></head>
 
 
 <body>
@@ -17,7 +17,7 @@
     </div>    
       </div>
       <div class="col-10" >
-		<table class="table w-75 p-3 text-center">
+       <table class="table w-75 p-3 text-center">
           <thead>
             <tr>
               <th scope="col">❤️
@@ -29,67 +29,32 @@
               <th scope="col">가격</th>
             </tr>
           </thead>
-          <input type="hidden" id="userNo" th:value="${session.user.userNo}"> 
-          <tbody id="heart_list"></tbody>
+          <tbody>
+           <th:block  th:each=" heart :${heartList}">
+            <tr>             
+              <td scope="row">💙
+                  <input type="checkbox" value="" >
+                  <label for="flexCheckDefault">
+                  </label>
+              </td>
+              <td>
+                <a th:href="@{/package/detail.do(packageNo=${heart.packageDto.packageNo})}" th:text="${heart.packageDto.packageTitle}"></a>
+              </td>
+              <td th:text="${heart.packageDto.price}"></td>
+            </tr>
+           </th:block>
+          </tbody>
           <tfoot>
            <tr>
-            <td colspan="5" id="paging"></td>
+             <td colspan="3" th:utext="${paging}"></td>
            </tr>
           </tfoot>
-          </table>     	
-		</div>         
+          </table>           
       </div>
     <div class="col-1">      
     </div>
   </div>
   </div>
-            
-     
-  <script th:inline="javascript">
-	  
-	const fnAjaxPaging = (clickedPage) => {
-        // 페이지 버튼을 클릭했을 때의 동작 정의
-        page = clickedPage;
-        fnGetHeartList();  // 페이지 변경 후 목록을 다시 가져옴
-    };  
-	  
-    var page = 1;
-	var userNo = $('#userNo').val();
-	 const fnGetHeartList = () => {		   
-        $.ajax({
-            type: 'get',
-            url: '/user/heartList.do?page='+ page,   
-            data: {userNo : userNo},	
-            dataType: 'json',
-            success: (resData) => {     
-				$('#heart_list').empty();              
-                    $.each(resData.heartList, (i, heart) => {
-                        let str = '<tr>';
-                        str += '<td scope="row">💙';
-                        str += '<input type="checkbox" value="" >';
-                        str += '<label for="flexCheckDefault">';
-                        str += '</label>';
-                        str += '</td>';
-                        str += '<td>';
-                        str += '<a href="/package/detail.do?packageNo=' + heart.packageDto.packageNo + '">' + heart.packageDto.packageTitle;
-                        str += '</a>';
-                        str += '</td>';
-                        str += '<td>' + heart.packageDto.price + '원';
-                        str += '</td>';
-                        str += '</tr>';
-                        $('#heart_list').append(str);
-                    });
-                     $('#paging').html(resData.paging);
-            },
-            error: (error) => {
-                console.error('Ajax 요청 에러:', error);
-            }
-        });
-    }
-
-
-    fnGetHeartList();
-  </script>
     
   <div th:replace="~{/layout/footer::footer}"></div>
   
