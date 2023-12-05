@@ -22,6 +22,7 @@ public class PaymentDto {
   private String buyerEmail;
   private String errorMsg;
   private String payStatus;
+  private int cancelAmount;
   private ReserveDto reserveDto;
   
 }
