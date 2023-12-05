@@ -204,11 +204,10 @@
      WHERE A.RN BETWEEN #{begin} AND #{end}
   </select>
   
-  <!-- 호텔 추천/비추천 변경 -->
+  <!-- 호텔 판매/추천 변경 -->
   <update id="updateHotelRecommend" parameterType="HotelDto">
     UPDATE HOTEL_T
        SET RECOMMEND_STATUS = #{recommendStatus}
-         , STATUS = #{status}
      WHERE HOTEL_NO = #{hotelNo}
   </update>
   
