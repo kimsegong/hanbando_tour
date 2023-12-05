@@ -2,12 +2,10 @@ package com.tour.hanbando.controller;
 
 
 import java.util.Map;
-import java.util.Random;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import javax.swing.Spring;
 
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -16,10 +14,12 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.tour.hanbando.dto.UserDto;
+import com.tour.hanbando.service.PackageService;
 import com.tour.hanbando.service.UserService;
 
 import lombok.RequiredArgsConstructor;
@@ -30,6 +30,8 @@ import lombok.RequiredArgsConstructor;
 public class UserController {
   
   private final UserService userService;
+  private final PackageService packageService; 
+
   
  //인증번호
   @ResponseBody
@@ -212,8 +214,35 @@ public class UserController {
     userService.active(session, request, response);
   }
   
+ 
+  //찜하기
+  @GetMapping("/heart.do")
+  public String heart(HttpServletRequest request, Model model) {
+    packageService.getHeartPackage(request, model);   
+    return "user/heart";
+  }
   
+  //아이디, 비밀번호 찾기
+  @PostMapping("/findIdCheck.do")
+  public String findId(HttpServletRequest request, HttpServletResponse response) {
+    userService.findId(request,response);
+    return"";
+  }
   
+  @GetMapping("/find.form")
+  public String findIdCheck() {
+    return "user/findIdCheck";
+  }
+  //아이디 찾기-일치검사
+  //아이디 찾기 
+    @RequestMapping(value = "/find_id.do", method = RequestMethod.POST, produces="application/json")
+    @ResponseBody
+    public UserDto find_id(@RequestParam("name") String name, @RequestParam("mobile") String mobile) {
+      
+    UserDto result = userService.find_id(name, mobile);
+      
+    return result;
+    }
   
   
 }

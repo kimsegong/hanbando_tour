@@ -184,7 +184,6 @@ CREATE TABLE THEME_T (
 -- 패키지 상품 테이블
 CREATE TABLE PACKAGE_T (
 	PACKAGE_NO	        NUMBER	            NOT NULL,  -- 패키지 번호              (PK)
-	USER_NO             NUMBER	            NULL,      -- 회원(작성한 관리자) 번호 (FK)
 	REGION_NO	        NUMBER	            NULL,      -- 지역 번호                (FK)
 	THEME_NO	        NUMBER	            NULL,      -- 테마 번호                (FK)
 	PACKAGE_TITLE	    VARCHAR2(150 BYTE)	NOT NULL,  -- 패키지 이름
@@ -203,7 +202,6 @@ CREATE TABLE PACKAGE_T (
 	MAX_PEOPLE	        NUMBER	            NULL,      -- 최대 인원수
 	RECOMMEND_STATUS	NUMBER	            NULL,      -- 추천상태  (0:비추천, 1:추천)
     CONSTRAINT PK_PACKAGE          PRIMARY KEY(PACKAGE_NO),
-    CONSTRAINT FK_USER_PACKAGE     FOREIGN KEY(USER_NO)     REFERENCES USER_T(USER_NO)         ON DELETE SET NULL,
     CONSTRAINT FK_REGION_PACKAGE   FOREIGN KEY(REGION_NO)   REFERENCES REGION_T(REGION_NO)     ON DELETE SET NULL,
     CONSTRAINT FK_THEME_PACKAGE    FOREIGN KEY(THEME_NO)    REFERENCES THEME_T(THEME_NO)       ON DELETE SET NULL
 );
@@ -237,7 +235,7 @@ CREATE TABLE BANNER_IMAGE_T (
 CREATE TABLE HOTEL_T (
     HOTEL_NO           NUMBER               NOT NULL,  -- 호텔 번호  (PK)
     REGION_NO          NUMBER               NULL,      -- 지역 구분  (FK)
-    HOTEL_NAME         VARCHAR2(150 BYTE)   NOT NULL,  -- 호텔 명
+    HOTEL_NAME         VARCHAR2(150 BYTE)   NULL,      -- 호텔 명
     HOTEL_ADDRESS      VARCHAR2(255 BYTE)   NULL,      -- 주소
     LATITUDE           NUMBER               NULL,      -- 위도
     LONGITUDE          NUMBER               NULL,      -- 경도 
@@ -252,6 +250,7 @@ CREATE TABLE HOTEL_T (
     CONSTRAINT PK_HOTEL        PRIMARY KEY(HOTEL_NO),
     CONSTRAINT FK_REGION_HOTEL FOREIGN KEY(REGION_NO) REFERENCES REGION_T(REGION_NO) ON DELETE SET NULL
 );
+
 
 -- 호텔 편의시설 테이블
 CREATE TABLE FACILITIES_T (
@@ -270,15 +269,15 @@ CREATE TABLE ROOMTYPE_T (
     ROOM_NO       NUMBER               NOT NULL,   -- 객실 번호  (PK)
     HOTEL_NO      NUMBER               NOT NULL,   -- 호텔 번호  (FK)
     ROOM_DETAIL   CLOB                 NULL,       -- 객실 설명
-    ROOM_NAME     VARCHAR2(100 BYTE)   NOT NULL,   -- 객실 이름
-    ROOM_MANY     NUMBER               NOT NULL,   -- 객실 개수 
+    ROOM_NAME     VARCHAR2(100 BYTE)   NULL,       -- 객실 이름
+    ROOM_MANY     NUMBER               NULL,       -- 객실 개수 
     R_VIEW        VARCHAR2(100 BYTE)   NULL,       -- 시티뷰 오션뷰 
-    BLEAKFAST     NUMBER               NOT NULL,   -- 조식여부 
-    SMOKE         NUMBER               NOT NULL,   -- 흡연가능여부 (0:불가, 1:가능)
-    PEOPLE        NUMBER               NOT NULL,   -- 방 인원수  
-    BED           VARCHAR2(100 BYTE)   NOT NULL,   -- 침대 종류 
-    SHOWER        VARCHAR2(100 BYTE)   NOT NULL,   -- 샤워실인가 욕조인가 
-    R_SIZE        NUMBER               NOT NULL,   -- 방 크기
+    BLEAKFAST     NUMBER               NULL,       -- 조식여부 
+    SMOKE         NUMBER               NULL,       -- 흡연가능여부 (0:불가, 1:가능)
+    PEOPLE        NUMBER               NULL,       -- 방 인원수  
+    BED           VARCHAR2(100 BYTE)   NULL,       -- 침대 종류 
+    SHOWER        VARCHAR2(100 BYTE)   NULL,       -- 샤워실인가 욕조인가 
+    R_SIZE        NUMBER               NULL,       -- 방 크기
     CONSTRAINT PK_ROOM      PRIMARY KEY(ROOM_NO),
     CONSTRAINT FK_HOEL_ROOM FOREIGN KEY(HOTEL_NO) REFERENCES HOTEL_T(HOTEL_NO) ON DELETE CASCADE
 );
@@ -364,18 +363,19 @@ CREATE TABLE TOURIST_T (
 -- ************************************ 결제 ************************************
 -- 결제 테이블
 CREATE TABLE PAYMENT_T (
-    PAYMENT_NO   NUMBER             NOT NULL,  -- 결제번호 (PK)
-    IMP_UID      VARCHAR2(30 BYTE)  NULL,      -- 결제고유번호
-    PAY_YN       VARCHAR2(10 BYTE)  NULL,      -- 결제성공여부
-    PAY_METHOD   VARCHAR2(30 BYTE)  NULL,      -- 결제수단
-    PAID_AMOUNT  NUMBER             NULL,      -- 결제금액
-    PAID_AT      VARCHAR2(30 BYTE)  NULL,      -- 결제승인시각
-    MERCHANT_UID VARCHAR2(30 BYTE)  NULL,      -- 주문번호
-    BUYER_NAME   VARCHAR2(20 BYTE)  NULL,      -- 구매자이름
-    BUYER_EMAIL  VARCHAR2(100 BYTE) NULL,      -- 구매자이메일
-    ERROR_MSG    VARCHAR2(300 BYTE) NULL,      -- 에러메시지
-    PAY_STATUS   VARCHAR2(10 BYTE)  NULL,      -- 결제상태 ready,paid,failed(api응답으로 오는 값임)
-    RESERVE_NO   NUMBER             NULL,      -- 예약번호 (FK)
+    PAYMENT_NO    NUMBER             NOT NULL,  -- 결제번호 (PK)
+    IMP_UID       VARCHAR2(30 BYTE)  NULL,      -- 결제고유번호
+    PAY_YN        VARCHAR2(10 BYTE)  NULL,      -- 결제성공여부
+    PAY_METHOD    VARCHAR2(30 BYTE)  NULL,      -- 결제수단
+    PAID_AMOUNT   NUMBER             NULL,      -- 결제금액
+    PAID_AT       VARCHAR2(30 BYTE)  NULL,      -- 결제승인시각
+    MERCHANT_UID  VARCHAR2(30 BYTE)  NULL,      -- 주문번호
+    BUYER_NAME    VARCHAR2(20 BYTE)  NULL,      -- 구매자이름
+    BUYER_EMAIL   VARCHAR2(100 BYTE) NULL,      -- 구매자이메일
+    ERROR_MSG     VARCHAR2(300 BYTE) NULL,      -- 에러메시지
+    PAY_STATUS    VARCHAR2(10 BYTE)  NULL,      -- 결제상태 ready,paid,failed(api응답으로 오는 값임)
+    CANCEL_AMOUNT NUMBER             NULL,      -- 취소금액
+    RESERVE_NO    NUMBER             NULL,      -- 예약번호 (FK)
     CONSTRAINT PK_PAY PRIMARY KEY(PAYMENT_NO),
     CONSTRAINT FK_RES_PAY FOREIGN KEY(RESERVE_NO) REFERENCES RESERVE_T(RESERVE_NO) ON DELETE SET NULL
 );
@@ -543,20 +543,20 @@ INSERT INTO THEME_T VALUES(THEME_SEQ.NEXTVAL, '등산여행');   -- 6
 COMMIT;
 
 -- 패키지 상품 등록 *************************************************************
-INSERT INTO PACKAGE_T VALUES(PACKAGE_SEQ.NEXTVAL, 1, 9, 4, '강원도로 놀러가요', '예약가능', '인기폭발', '항공없음', '강원도에서 먹고자고싸고', '강원도는 이래저래', '호텔정보는 이렇습니다!', 56000, '위험한사항이있어요', TO_CHAR(SYSDATE,'YYYY/MM/DD'), TO_CHAR(SYSDATE,'YYYY/MM/DD'), 0, 1, 30, 1);
-INSERT INTO PACKAGE_T VALUES(PACKAGE_SEQ.NEXTVAL, 2, 2, 1, '전라도로 놀러가요', '예약가능', '강추', '항공없음', '전라도에서 먹고자고싸고', '전라도는 이래저래', '호텔정보는 이렇습니다!', 66000, '위험한사항이있어요', TO_CHAR(SYSDATE,'YYYY/MM/DD'), TO_CHAR(SYSDATE,'YYYY/MM/DD'), 0, 1, 30, 1);
-INSERT INTO PACKAGE_T VALUES(PACKAGE_SEQ.NEXTVAL, 1, 3, 2, '골프여행 놀러가요', '예약가능', '가족과함께 추천', '항공없음', '골프에서 먹고자고싸고', '골프는 이래저래', '호텔정보는 이렇습니다!', 126000, '위험한사항이있어요', TO_CHAR(SYSDATE,'YYYY/MM/DD'), TO_CHAR(SYSDATE,'YYYY/MM/DD'), 0, 1, 30, 1);
-INSERT INTO PACKAGE_T VALUES(PACKAGE_SEQ.NEXTVAL, 2, 1, 6, '등산할래요 놀러가요', '예약가능', '연인과 추천', '항공없음', '등산에서 먹고자고싸고', '등산는 이래저래', '호텔정보는 이렇습니다!', 46000, '위험한사항이있어요', TO_CHAR(SYSDATE,'YYYY/MM/DD'), TO_CHAR(SYSDATE,'YYYY/MM/DD'), 0, 1, 30, 1);
-INSERT INTO PACKAGE_T VALUES(PACKAGE_SEQ.NEXTVAL, 1, 8, 4, '인천으로 놀러가요', '예약가능', '효도여행 강추', '항공없음', '인천에서 먹고자고싸고', '인천는 이래저래', '호텔정보는 이렇습니다!', 226000, '위험한사항이있어요', TO_CHAR(SYSDATE,'YYYY/MM/DD'), TO_CHAR(SYSDATE,'YYYY/MM/DD'), 0, 1, 30, 1);
-INSERT INTO PACKAGE_T VALUES(PACKAGE_SEQ.NEXTVAL, 1, 1, 5, '기차타고 놀러가요', '예약가능', '연인과 추천', '항공없음', '기차에서 먹고자고싸고', '기차는 이래저래', NULL, 169000, '위험한사항이있어요', TO_CHAR(SYSDATE,'YYYY/MM/DD'), TO_CHAR(SYSDATE,'YYYY/MM/DD'), 0, 1, 30, 1);
-INSERT INTO PACKAGE_T VALUES(PACKAGE_SEQ.NEXTVAL, 2, 4, 4, '경상도로 놀러가요', '예약가능', '가족과함께 추천', '항공없음', '경상도에서 먹고자고싸고', '경상도는 이래저래', '호텔정보는 이렇습니다!', 129000, '위험한사항이있어요', TO_CHAR(SYSDATE,'YYYY/MM/DD'), TO_CHAR(SYSDATE,'YYYY/MM/DD'), 0, 1, 30, 1);
-INSERT INTO PACKAGE_T VALUES(PACKAGE_SEQ.NEXTVAL, 1, 6, 3, '서울 단풍보러 놀러가요', '예약가능', '효도여행 강추', '항공없음', '서울에서 먹고자고싸고', '단풍은 이래저래', '호텔정보는 이렇습니다!', 219000, '위험한사항이있어요', TO_CHAR(SYSDATE,'YYYY/MM/DD'), TO_CHAR(SYSDATE,'YYYY/MM/DD'), 0, 1, 30, 1);
-INSERT INTO PACKAGE_T VALUES(PACKAGE_SEQ.NEXTVAL, 2, 5, 6, '제주도로 등산가요', '예약가능', '강추', '항공없음', '제주도에서 먹고자고싸고', '제주도 등산은 이래저래', '호텔정보는 이렇습니다!', 136000, '위험한사항이있어요', TO_CHAR(SYSDATE,'YYYY/MM/DD'), TO_CHAR(SYSDATE,'YYYY/MM/DD'), 0, 1, 30, 1);
-INSERT INTO PACKAGE_T VALUES(PACKAGE_SEQ.NEXTVAL, 1, 7, 3, '경기도 단풍보러 놀러가요', '예약가능', '인기폭발', '항공없음', '경기도에서 먹고자고싸고', '경기도 단풍은 이래저래', '호텔정보는 이렇습니다!', 45000, '위험한사항이있어요', TO_CHAR(SYSDATE,'YYYY/MM/DD'), TO_CHAR(SYSDATE,'YYYY/MM/DD'), 0, 1, 30, 1);
-INSERT INTO PACKAGE_T VALUES(PACKAGE_SEQ.NEXTVAL, 2, 1, 1, '인기 없는 묻지마여행1', '예약가능', '추천', '항공없음', '아무데서 먹고자고싸고', '묻지마여행은 이래저래', '호텔정보는 이렇습니다!', 55000, '위험한사항이있어요', TO_CHAR(SYSDATE,'YYYY/MM/DD'), TO_CHAR(SYSDATE,'YYYY/MM/DD'), 0, 1, 30, 0);
-INSERT INTO PACKAGE_T VALUES(PACKAGE_SEQ.NEXTVAL, 2, 1, 1, '인기 없는 묻지마여행2', '예약가능', '강추', '항공없음', '아무데서 먹고자고싸고', '묻지마여행은 이래저래', '호텔정보는 이렇습니다!', 55000, '위험한사항이있어요', TO_CHAR(SYSDATE,'YYYY/MM/DD'), TO_CHAR(SYSDATE,'YYYY/MM/DD'), 0, 1, 30, 0);
-INSERT INTO PACKAGE_T VALUES(PACKAGE_SEQ.NEXTVAL, 2, 1, 1, '인기 많은묻지마여행1', '예약가능', '친구와 함께 추천', '항공없음', '아무데서 먹고자고싸고', '묻지마여행은 이래저래', '호텔정보는 이렇습니다!', 55000, '위험한사항이있어요', TO_CHAR(SYSDATE,'YYYY/MM/DD'), TO_CHAR(SYSDATE,'YYYY/MM/DD'), 0, 1, 30, 1);
-INSERT INTO PACKAGE_T VALUES(PACKAGE_SEQ.NEXTVAL, 2, 1, 1, '인기 많은묻지마여행2', '예약가능', '친구와 함께 추천', '항공없음', '아무데서 먹고자고싸고', '묻지마여행은 이래저래', '호텔정보는 이렇습니다!', 55000, '위험한사항이있어요', TO_CHAR(SYSDATE,'YYYY/MM/DD'), TO_CHAR(SYSDATE,'YYYY/MM/DD'), 0, 1, 30, 1);
+INSERT INTO PACKAGE_T VALUES(PACKAGE_SEQ.NEXTVAL, 9, 4, '강원도로 놀러가요', '예약가능', '인기폭발', '항공없음', '강원도에서 먹고자고싸고', '강원도는 이래저래', '호텔정보는 이렇습니다!', 56000, '위험한사항이있어요', TO_CHAR(SYSDATE,'YYYY/MM/DD'), TO_CHAR(SYSDATE,'YYYY/MM/DD'), 0, 1, 30, 1);
+INSERT INTO PACKAGE_T VALUES(PACKAGE_SEQ.NEXTVAL, 2, 1, '전라도로 놀러가요', '예약가능', '강추', '항공없음', '전라도에서 먹고자고싸고', '전라도는 이래저래', '호텔정보는 이렇습니다!', 66000, '위험한사항이있어요', TO_CHAR(SYSDATE,'YYYY/MM/DD'), TO_CHAR(SYSDATE,'YYYY/MM/DD'), 0, 1, 30, 1);
+INSERT INTO PACKAGE_T VALUES(PACKAGE_SEQ.NEXTVAL, 3, 2, '골프여행 놀러가요', '예약가능', '가족과함께 추천', '항공없음', '골프에서 먹고자고싸고', '골프는 이래저래', '호텔정보는 이렇습니다!', 126000, '위험한사항이있어요', TO_CHAR(SYSDATE,'YYYY/MM/DD'), TO_CHAR(SYSDATE,'YYYY/MM/DD'), 0, 1, 30, 1);
+INSERT INTO PACKAGE_T VALUES(PACKAGE_SEQ.NEXTVAL, 1, 6, '등산할래요 놀러가요', '예약가능', '연인과 추천', '항공없음', '등산에서 먹고자고싸고', '등산는 이래저래', '호텔정보는 이렇습니다!', 46000, '위험한사항이있어요', TO_CHAR(SYSDATE,'YYYY/MM/DD'), TO_CHAR(SYSDATE,'YYYY/MM/DD'), 0, 1, 30, 1);
+INSERT INTO PACKAGE_T VALUES(PACKAGE_SEQ.NEXTVAL, 8, 4, '인천으로 놀러가요', '예약가능', '효도여행 강추', '항공없음', '인천에서 먹고자고싸고', '인천는 이래저래', '호텔정보는 이렇습니다!', 226000, '위험한사항이있어요', TO_CHAR(SYSDATE,'YYYY/MM/DD'), TO_CHAR(SYSDATE,'YYYY/MM/DD'), 0, 1, 30, 1);
+INSERT INTO PACKAGE_T VALUES(PACKAGE_SEQ.NEXTVAL, 1, 5, '기차타고 놀러가요', '예약가능', '연인과 추천', '항공없음', '기차에서 먹고자고싸고', '기차는 이래저래', NULL, 169000, '위험한사항이있어요', TO_CHAR(SYSDATE,'YYYY/MM/DD'), TO_CHAR(SYSDATE,'YYYY/MM/DD'), 0, 1, 30, 1);
+INSERT INTO PACKAGE_T VALUES(PACKAGE_SEQ.NEXTVAL, 4, 4, '경상도로 놀러가요', '예약가능', '가족과함께 추천', '항공없음', '경상도에서 먹고자고싸고', '경상도는 이래저래', '호텔정보는 이렇습니다!', 129000, '위험한사항이있어요', TO_CHAR(SYSDATE,'YYYY/MM/DD'), TO_CHAR(SYSDATE,'YYYY/MM/DD'), 0, 1, 30, 1);
+INSERT INTO PACKAGE_T VALUES(PACKAGE_SEQ.NEXTVAL, 6, 3, '서울 단풍보러 놀러가요', '예약가능', '효도여행 강추', '항공없음', '서울에서 먹고자고싸고', '단풍은 이래저래', '호텔정보는 이렇습니다!', 219000, '위험한사항이있어요', TO_CHAR(SYSDATE,'YYYY/MM/DD'), TO_CHAR(SYSDATE,'YYYY/MM/DD'), 0, 1, 30, 1);
+INSERT INTO PACKAGE_T VALUES(PACKAGE_SEQ.NEXTVAL, 5, 6, '제주도로 등산가요', '예약가능', '강추', '항공없음', '제주도에서 먹고자고싸고', '제주도 등산은 이래저래', '호텔정보는 이렇습니다!', 136000, '위험한사항이있어요', TO_CHAR(SYSDATE,'YYYY/MM/DD'), TO_CHAR(SYSDATE,'YYYY/MM/DD'), 0, 1, 30, 1);
+INSERT INTO PACKAGE_T VALUES(PACKAGE_SEQ.NEXTVAL, 7, 3, '경기도 단풍보러 놀러가요', '예약가능', '인기폭발', '항공없음', '경기도에서 먹고자고싸고', '경기도 단풍은 이래저래', '호텔정보는 이렇습니다!', 45000, '위험한사항이있어요', TO_CHAR(SYSDATE,'YYYY/MM/DD'), TO_CHAR(SYSDATE,'YYYY/MM/DD'), 0, 1, 30, 1);
+INSERT INTO PACKAGE_T VALUES(PACKAGE_SEQ.NEXTVAL, 1, 1, '인기 없는 묻지마여행1', '예약가능', '추천', '항공없음', '아무데서 먹고자고싸고', '묻지마여행은 이래저래', '호텔정보는 이렇습니다!', 55000, '위험한사항이있어요', TO_CHAR(SYSDATE,'YYYY/MM/DD'), TO_CHAR(SYSDATE,'YYYY/MM/DD'), 0, 1, 30, 0);
+INSERT INTO PACKAGE_T VALUES(PACKAGE_SEQ.NEXTVAL, 1, 1, '인기 없는 묻지마여행2', '예약가능', '강추', '항공없음', '아무데서 먹고자고싸고', '묻지마여행은 이래저래', '호텔정보는 이렇습니다!', 55000, '위험한사항이있어요', TO_CHAR(SYSDATE,'YYYY/MM/DD'), TO_CHAR(SYSDATE,'YYYY/MM/DD'), 0, 1, 30, 0);
+INSERT INTO PACKAGE_T VALUES(PACKAGE_SEQ.NEXTVAL, 1, 1, '인기 많은묻지마여행1', '예약가능', '친구와 함께 추천', '항공없음', '아무데서 먹고자고싸고', '묻지마여행은 이래저래', '호텔정보는 이렇습니다!', 55000, '위험한사항이있어요', TO_CHAR(SYSDATE,'YYYY/MM/DD'), TO_CHAR(SYSDATE,'YYYY/MM/DD'), 0, 1, 30, 1);
+INSERT INTO PACKAGE_T VALUES(PACKAGE_SEQ.NEXTVAL, 1, 1, '인기 많은묻지마여행2', '예약가능', '친구와 함께 추천', '항공없음', '아무데서 먹고자고싸고', '묻지마여행은 이래저래', '호텔정보는 이렇습니다!', 55000, '위험한사항이있어요', TO_CHAR(SYSDATE,'YYYY/MM/DD'), TO_CHAR(SYSDATE,'YYYY/MM/DD'), 0, 1, 30, 1);
 COMMIT;
 
 -- ******************************************************************************
@@ -764,7 +764,7 @@ INSERT INTO HOTEL_IMAGE_T (HOTEL_NO, ROOM_NO, THUMBNAIL, FILESYSTEM_NAME, IMAGE_
 VALUES (1, 1, 0, 'hotel1_room1_2.jpg', '/images/hotel1/room1/hotel1_room1_2.jpg');
 
 INSERT INTO HOTEL_IMAGE_T (HOTEL_NO, ROOM_NO, THUMBNAIL, FILESYSTEM_NAME, IMAGE_PATH)
-VALUES (1, 2, 1, 'hotel1_thumbnail.jpg', '/images/hotel1/thumbnail/hotel1_thumbnail.jpg');
+VALUES (1, 2, 0, 'hotel1_thumbnail.jpg', '/images/hotel1/thumbnail/hotel1_thumbnail.jpg');
 
 INSERT INTO HOTEL_IMAGE_T (HOTEL_NO, ROOM_NO, THUMBNAIL, FILESYSTEM_NAME, IMAGE_PATH)
 VALUES (1, 2, 0, 'hotel1_room2_1.jpg', '/images/hotel1/room2/hotel1_room2_1.jpg');
@@ -782,7 +782,7 @@ INSERT INTO HOTEL_IMAGE_T (HOTEL_NO, ROOM_NO, THUMBNAIL, FILESYSTEM_NAME, IMAGE_
 VALUES (2, 1, 0, 'hotel2_room1_2.jpg', '/images/hotel2/room1/hotel2_room1_2.jpg');
 
 INSERT INTO HOTEL_IMAGE_T (HOTEL_NO, ROOM_NO, THUMBNAIL, FILESYSTEM_NAME, IMAGE_PATH)
-VALUES (2, 2, 1, 'hotel2_thumbnail.jpg', '/images/hotel2/thumbnail/hotel2_thumbnail.jpg');
+VALUES (2, 2, 0, 'hotel2_thumbnail.jpg', '/images/hotel2/thumbnail/hotel2_thumbnail.jpg');
 
 INSERT INTO HOTEL_IMAGE_T (HOTEL_NO, ROOM_NO, THUMBNAIL, FILESYSTEM_NAME, IMAGE_PATH)
 VALUES (2, 2, 0, 'hotel2_room2_1.jpg', '/images/hotel2/room2/hotel2_room2_1.jpg');
@@ -800,7 +800,7 @@ INSERT INTO HOTEL_IMAGE_T (HOTEL_NO, ROOM_NO, THUMBNAIL, FILESYSTEM_NAME, IMAGE_
 VALUES (3, 1, 0, 'hotel3_room1_2.jpg', '/images/hotel3/room1/hotel3_room1_2.jpg');
 
 INSERT INTO HOTEL_IMAGE_T (HOTEL_NO, ROOM_NO, THUMBNAIL, FILESYSTEM_NAME, IMAGE_PATH)
-VALUES (3, 2, 1, 'hotel3_thumbnail.jpg', '/images/hotel3/thumbnail/hotel3_thumbnail.jpg');
+VALUES (3, 2, 0, 'hotel3_thumbnail.jpg', '/images/hotel3/thumbnail/hotel3_thumbnail.jpg');
 
 INSERT INTO HOTEL_IMAGE_T (HOTEL_NO, ROOM_NO, THUMBNAIL, FILESYSTEM_NAME, IMAGE_PATH)
 VALUES (3, 2, 0, 'hotel3_room2_1.jpg', '/images/hotel3/room2/hotel3_room2_1.jpg');
@@ -818,11 +818,97 @@ INSERT INTO HOTEL_IMAGE_T (HOTEL_NO, ROOM_NO, THUMBNAIL, FILESYSTEM_NAME, IMAGE_
 VALUES (4, 1, 0, 'hotel4_room1_2.jpg', '/images/hotel4/room1/hotel4_room1_2.jpg');
 
 INSERT INTO HOTEL_IMAGE_T (HOTEL_NO, ROOM_NO, THUMBNAIL, FILESYSTEM_NAME, IMAGE_PATH)
-VALUES (4, 2, 1, 'hotel4_thumbnail.jpg', '/images/hotel4/thumbnail/hotel4_thumbnail.jpg');
+VALUES (4, 2, 0, 'hotel4_thumbnail.jpg', '/images/hotel4/thumbnail/hotel4_thumbnail.jpg');
 
 INSERT INTO HOTEL_IMAGE_T (HOTEL_NO, ROOM_NO, THUMBNAIL, FILESYSTEM_NAME, IMAGE_PATH)
 VALUES (4, 2, 0, 'hotel4_room2_1.jpg', '/images/hotel4/room2/hotel4_room2_1.jpg');
 
+COMMIT;
+
+-- 호텔 5 이미지
+INSERT INTO HOTEL_IMAGE_T (HOTEL_NO, THUMBNAIL, FILESYSTEM_NAME, IMAGE_PATH)
+VALUES (5, 1, 'hotel5_thumbnail.jpg', '/images/hotel5/thumbnail/hotel5_thumbnail.jpg');
+
+INSERT INTO HOTEL_IMAGE_T (HOTEL_NO, ROOM_NO, THUMBNAIL, FILESYSTEM_NAME, IMAGE_PATH)
+VALUES (5, 1, 0, 'hotel5_room1_1.jpg', '/images/hotel5/room1/hotel5_room1_1.jpg');
+
+INSERT INTO HOTEL_IMAGE_T (HOTEL_NO, ROOM_NO, THUMBNAIL, FILESYSTEM_NAME, IMAGE_PATH)
+VALUES (5, 1, 0, 'hotel5_room1_2.jpg', '/images/hotel5/room1/hotel5_room1_2.jpg');
+
+INSERT INTO HOTEL_IMAGE_T (HOTEL_NO, ROOM_NO, THUMBNAIL, FILESYSTEM_NAME, IMAGE_PATH)
+VALUES (5, 2, 0, 'hotel5_room2_1.jpg', '/images/hotel5/room2/hotel5_room2_1.jpg');
+
+COMMIT;
+
+-- 호텔 6
+INSERT INTO HOTEL_IMAGE_T (HOTEL_NO, THUMBNAIL, FILESYSTEM_NAME, IMAGE_PATH)
+VALUES (6, 1, 'hotel6_thumbnail.jpg', '/images/hotel6/thumbnail/hotel6_thumbnail.jpg');
+
+INSERT INTO HOTEL_IMAGE_T (HOTEL_NO, ROOM_NO, THUMBNAIL, FILESYSTEM_NAME, IMAGE_PATH)
+VALUES (6, 1, 0, 'hotel6_room1_1.jpg', '/images/hotel6/room1/hotel6_room1_1.jpg');
+
+INSERT INTO HOTEL_IMAGE_T (HOTEL_NO, ROOM_NO, THUMBNAIL, FILESYSTEM_NAME, IMAGE_PATH)
+VALUES (6, 1, 0, 'hotel6_room1_2.jpg', '/images/hotel6/room1/hotel6_room1_2.jpg');
+
+INSERT INTO HOTEL_IMAGE_T (HOTEL_NO, ROOM_NO, THUMBNAIL, FILESYSTEM_NAME, IMAGE_PATH)
+VALUES (6, 2, 0, 'hotel6_room2_1.jpg', '/images/hotel6/room2/hotel6_room2_1.jpg');
+
+COMMIT;
+
+-- 호텔 7
+INSERT INTO HOTEL_IMAGE_T (HOTEL_NO, THUMBNAIL, FILESYSTEM_NAME, IMAGE_PATH)
+VALUES (7, 1, 'hotel6_thumbnail.jpg', '/images/hotel6/thumbnail/hotel6_thumbnail.jpg');
+
+INSERT INTO HOTEL_IMAGE_T (HOTEL_NO, ROOM_NO, THUMBNAIL, FILESYSTEM_NAME, IMAGE_PATH)
+VALUES (7, 1, 0, 'hotel6_room1_1.jpg', '/images/hotel6/room1/hotel6_room1_1.jpg');
+
+INSERT INTO HOTEL_IMAGE_T (HOTEL_NO, ROOM_NO, THUMBNAIL, FILESYSTEM_NAME, IMAGE_PATH)
+VALUES (7, 1, 0, 'hotel6_room1_2.jpg', '/images/hotel6/room1/hotel6_room1_2.jpg');
+
+INSERT INTO HOTEL_IMAGE_T (HOTEL_NO, ROOM_NO, THUMBNAIL, FILESYSTEM_NAME, IMAGE_PATH)
+VALUES (7, 2, 0, 'hotel6_room2_1.jpg', '/images/hotel6/room2/hotel6_room2_1.jpg');
+
+COMMIT;
+
+-- 호텔 8
+INSERT INTO HOTEL_IMAGE_T (HOTEL_NO, THUMBNAIL, FILESYSTEM_NAME, IMAGE_PATH)
+VALUES (8, 1, 'hotel6_thumbnail.jpg', '/images/hotel6/thumbnail/hotel6_thumbnail.jpg');
+
+INSERT INTO HOTEL_IMAGE_T (HOTEL_NO, ROOM_NO, THUMBNAIL, FILESYSTEM_NAME, IMAGE_PATH)
+VALUES (8, 1, 0, 'hotel6_room1_1.jpg', '/images/hotel6/room1/hotel6_room1_1.jpg');
+
+INSERT INTO HOTEL_IMAGE_T (HOTEL_NO, ROOM_NO, THUMBNAIL, FILESYSTEM_NAME, IMAGE_PATH)
+VALUES (8, 1, 0, 'hotel6_room1_2.jpg', '/images/hotel6/room1/hotel6_room1_2.jpg');
+
+INSERT INTO HOTEL_IMAGE_T (HOTEL_NO, ROOM_NO, THUMBNAIL, FILESYSTEM_NAME, IMAGE_PATH)
+VALUES (8, 2, 0, 'hotel6_room2_1.jpg', '/images/hotel6/room2/hotel6_room2_1.jpg');
+-- 호텔 9
+INSERT INTO HOTEL_IMAGE_T (HOTEL_NO, THUMBNAIL, FILESYSTEM_NAME, IMAGE_PATH)
+VALUES (9, 1, 'hotel6_thumbnail.jpg', '/images/hotel6/thumbnail/hotel6_thumbnail.jpg');
+
+INSERT INTO HOTEL_IMAGE_T (HOTEL_NO, ROOM_NO, THUMBNAIL, FILESYSTEM_NAME, IMAGE_PATH)
+VALUES (9, 1, 0, 'hotel6_room1_1.jpg', '/images/hotel6/room1/hotel6_room1_1.jpg');
+
+INSERT INTO HOTEL_IMAGE_T (HOTEL_NO, ROOM_NO, THUMBNAIL, FILESYSTEM_NAME, IMAGE_PATH)
+VALUES (9, 1, 0, 'hotel6_room1_2.jpg', '/images/hotel6/room1/hotel6_room1_2.jpg');
+
+INSERT INTO HOTEL_IMAGE_T (HOTEL_NO, ROOM_NO, THUMBNAIL, FILESYSTEM_NAME, IMAGE_PATH)
+VALUES (9, 2, 0, 'hotel6_room2_1.jpg', '/images/hotel6/room2/hotel6_room2_1.jpg');
+
+COMMIT;
+
+-- 호텔 10
+INSERT INTO HOTEL_IMAGE_T (HOTEL_NO, THUMBNAIL, FILESYSTEM_NAME, IMAGE_PATH)
+VALUES (10, 1, 'hotel6_thumbnail.jpg', '/images/hotel6/thumbnail/hotel6_thumbnail.jpg');
+
+INSERT INTO HOTEL_IMAGE_T (HOTEL_NO, ROOM_NO, THUMBNAIL, FILESYSTEM_NAME, IMAGE_PATH)
+VALUES (10, 1, 0, 'hotel6_room1_1.jpg', '/images/hotel6/room1/hotel6_room1_1.jpg');
+
+INSERT INTO HOTEL_IMAGE_T (HOTEL_NO, ROOM_NO, THUMBNAIL, FILESYSTEM_NAME, IMAGE_PATH)
+VALUES (10, 1, 0, 'hotel6_room1_2.jpg', '/images/hotel6/room1/hotel6_room1_2.jpg');
+
+INSERT INTO HOTEL_IMAGE_T (HOTEL_NO, ROOM_NO, THUMBNAIL, FILESYSTEM_NAME, IMAGE_PATH)
+VALUES (10, 2, 0, 'hotel6_room2_1.jpg', '/images/hotel6/room2/hotel6_room2_1.jpg');
 COMMIT;
 
 -- 객실 특성 등록 ***************************************************************
@@ -949,121 +1035,121 @@ COMMIT;
 -- 객실 기간별 가격 등록 ********************************************************
 -- 호텔 1 객실 가격
 INSERT INTO ROOMPRICE_T (HOTEL_NO, ROOM_NO, BI_PRICE, BS_DATE, BE_DATE, JUN_PRICE, JS_DATE, JE_DATE, SUNG_PRICE, SS_DATE, SE_DATE)
-VALUES (1, 1, 100, '2024-01-01', '2024-03-31', 150, '2024-04-01', '2024-06-30', 200, '2024-07-01', '2024-08-31');
+VALUES (1, 1, 100, '2024/01/01', '2024/03/31', 150, '2024/04/01', '2024/06/30', 200, '2023/11/01', '2023/12/31');
 
 INSERT INTO ROOMPRICE_T (HOTEL_NO, ROOM_NO, BI_PRICE, BS_DATE, BE_DATE, JUN_PRICE, JS_DATE, JE_DATE, SUNG_PRICE, SS_DATE, SE_DATE)
-VALUES (1, 2, 120, '2024-01-01', '2024-03-31', 180, '2024-04-01', '2024-06-30', 230, '2024-07-01', '2024-08-31');
+VALUES (1, 2, 120, '2024/01/01', '2024/03/31', 180, '2024/04/01', '2024/06/30', 230, '2023/11/01', '2023/12/31');
 
 INSERT INTO ROOMPRICE_T (HOTEL_NO, ROOM_NO, BI_PRICE, BS_DATE, BE_DATE, JUN_PRICE, JS_DATE, JE_DATE, SUNG_PRICE, SS_DATE, SE_DATE)
-VALUES (1, 3, 80, '2024-01-01', '2024-03-31', 120, '2024-04-01', '2024-06-30', 160, '2024-07-01', '2024-08-31');
+VALUES (1, 3, 80, '2024/01/01', '2024/03/31', 120, '2024/04/01', '2024/06/30', 160, '2023/11/01', '2023/12/31');
 
 COMMIT;
 
 -- 호텔 2 객실 가격
 INSERT INTO ROOMPRICE_T (HOTEL_NO, ROOM_NO, BI_PRICE, BS_DATE, BE_DATE, JUN_PRICE, JS_DATE, JE_DATE, SUNG_PRICE, SS_DATE, SE_DATE)
-VALUES (2, 4, 90, '2024-01-01', '2024-03-31', 130, '2024-04-01', '2024-06-30', 180, '2024-07-01', '2024-08-31');
+VALUES (2, 4, 90, '2024/01/01', '2024/03/31', 130, '2024/04/01', '2024/06/30', 180, '2023/11/01', '2023/12/31');
 
 INSERT INTO ROOMPRICE_T (HOTEL_NO, ROOM_NO, BI_PRICE, BS_DATE, BE_DATE, JUN_PRICE, JS_DATE, JE_DATE, SUNG_PRICE, SS_DATE, SE_DATE)
-VALUES (2, 5, 110, '2024-01-01', '2024-03-31', 160, '2024-04-01', '2024-06-30', 210, '2024-07-01', '2024-08-31');
+VALUES (2, 5, 110, '2024/01/01', '2024/03/31', 160, '2024/04/01', '2024/06/30', 210, '2023/11/01', '2023/12/31');
 
 INSERT INTO ROOMPRICE_T (HOTEL_NO, ROOM_NO, BI_PRICE, BS_DATE, BE_DATE, JUN_PRICE, JS_DATE, JE_DATE, SUNG_PRICE, SS_DATE, SE_DATE)
-VALUES (2, 6, 70, '2024-01-01', '2024-03-31', 110, '2024-04-01', '2024-06-30', 150, '2024-07-01', '2024-08-31');
+VALUES (2, 6, 70, '2024/01/01', '2024/03/31', 110, '2024/04/01', '2024/06/30', 150, '2023/11/01', '2023/12/31');
 
 COMMIT;
 
 -- 호텔 3 객실 가격
 INSERT INTO ROOMPRICE_T (HOTEL_NO, ROOM_NO, BI_PRICE, BS_DATE, BE_DATE, JUN_PRICE, JS_DATE, JE_DATE, SUNG_PRICE, SS_DATE, SE_DATE)
-VALUES (3, 7, 120, '2024-01-01', '2024-03-31', 180, '2024-04-01', '2024-06-30', 230, '2024-07-01', '2024-08-31');
+VALUES (3, 7, 120, '2024/01/01', '2024/03/31', 180, '2024/04/01', '2024/06/30', 230, '2023/11/01', '2023/12/31');
 
 INSERT INTO ROOMPRICE_T (HOTEL_NO, ROOM_NO, BI_PRICE, BS_DATE, BE_DATE, JUN_PRICE, JS_DATE, JE_DATE, SUNG_PRICE, SS_DATE, SE_DATE)
-VALUES (3, 8, 150, '2024-01-01', '2024-03-31', 200, '2024-04-01', '2024-06-30', 250, '2024-07-01', '2024-08-31');
+VALUES (3, 8, 150, '2024/01/01', '2024/03/31', 200, '2024/04/01', '2024/06/30', 250, '2023/11/01', '2023/12/31');
 
 INSERT INTO ROOMPRICE_T (HOTEL_NO, ROOM_NO, BI_PRICE, BS_DATE, BE_DATE, JUN_PRICE, JS_DATE, JE_DATE, SUNG_PRICE, SS_DATE, SE_DATE)
-VALUES (3, 9, 100, '2024-01-01', '2024-03-31', 150, '2024-04-01', '2024-06-30', 200, '2024-07-01', '2024-08-31');
+VALUES (3, 9, 100, '2024/01/01', '2024/03/31', 150, '2024/04/01', '2024/06/30', 200, '2023/11/01', '2023/12/31');
 
 COMMIT;
 
 -- 호텔 4 객실 가격
 INSERT INTO ROOMPRICE_T (HOTEL_NO, ROOM_NO, BI_PRICE, BS_DATE, BE_DATE, JUN_PRICE, JS_DATE, JE_DATE, SUNG_PRICE, SS_DATE, SE_DATE)
-VALUES (4, 10, 80, '2024-01-01', '2024-03-31', 120, '2024-04-01', '2024-06-30', 160, '2024-07-01', '2024-08-31');
+VALUES (4, 10, 80, '2024/01/01', '2024/03/31', 120, '2024/04/01', '2024/06/30', 160, '2023/11/01', '2023/12/31');
 
 INSERT INTO ROOMPRICE_T (HOTEL_NO, ROOM_NO, BI_PRICE, BS_DATE, BE_DATE, JUN_PRICE, JS_DATE, JE_DATE, SUNG_PRICE, SS_DATE, SE_DATE)
-VALUES (4, 11, 100, '2024-01-01', '2024-03-31', 150, '2024-04-01', '2024-06-30', 200, '2024-07-01', '2024-08-31');
+VALUES (4, 11, 100, '2024/01/01', '2024/03/31', 150, '2024/04/01', '2024/06/30', 200, '2023/11/01', '2023/12/31');
 
 INSERT INTO ROOMPRICE_T (HOTEL_NO, ROOM_NO, BI_PRICE, BS_DATE, BE_DATE, JUN_PRICE, JS_DATE, JE_DATE, SUNG_PRICE, SS_DATE, SE_DATE)
-VALUES (4, 12, 60, '2024-01-01', '2024-03-31', 100, '2024-04-01', '2024-06-30', 140, '2024-07-01', '2024-08-31');
+VALUES (4, 12, 60, '2024/01/01', '2024/03/31', 100, '2024/04/01', '2024/06/30', 140, '2023/11/01', '2023/12/31');
 
 COMMIT;
 
 -- 호텔 5 객실 가격
 INSERT INTO ROOMPRICE_T (HOTEL_NO, ROOM_NO, BI_PRICE, BS_DATE, BE_DATE, JUN_PRICE, JS_DATE, JE_DATE, SUNG_PRICE, SS_DATE, SE_DATE)
-VALUES (5, 13, 70, '2024-01-01', '2024-03-31', 110, '2024-04-01', '2024-06-30', 150, '2024-07-01', '2024-08-31');
+VALUES (5, 13, 70, '2024/01/01', '2024/03/31', 110, '2024/04/01', '2024/06/30', 150, '2023/11/01', '2023/12/31');
 
 INSERT INTO ROOMPRICE_T (HOTEL_NO, ROOM_NO, BI_PRICE, BS_DATE, BE_DATE, JUN_PRICE, JS_DATE, JE_DATE, SUNG_PRICE, SS_DATE, SE_DATE)
-VALUES (5, 14, 90, '2024-01-01', '2024-03-31', 130, '2024-04-01', '2024-06-30', 170, '2024-07-01', '2024-08-31');
+VALUES (5, 14, 90, '2024/01/01', '2024/03/31', 130, '2024/04/01', '2024/06/30', 170, '2023/11/01', '2023/12/31');
 
 INSERT INTO ROOMPRICE_T (HOTEL_NO, ROOM_NO, BI_PRICE, BS_DATE, BE_DATE, JUN_PRICE, JS_DATE, JE_DATE, SUNG_PRICE, SS_DATE, SE_DATE)
-VALUES (5, 15, 50, '2024-01-01', '2024-03-31', 80, '2024-04-01', '2024-06-30', 120, '2024-07-01', '2024-08-31');
+VALUES (5, 15, 50, '2024/01/01', '2024/03/31', 80, '2024/04/01', '2024/06/30', 120, '2023/11/01', '2023/12/31');
 
 COMMIT;
 
 -- 호텔 6 객실 가격
 INSERT INTO ROOMPRICE_T (HOTEL_NO, ROOM_NO, BI_PRICE, BS_DATE, BE_DATE, JUN_PRICE, JS_DATE, JE_DATE, SUNG_PRICE, SS_DATE, SE_DATE)
-VALUES (6, 16, 110, '2024-01-01', '2024-03-31', 160, '2024-04-01', '2024-06-30', 200, '2024-07-01', '2024-08-31');
+VALUES (6, 16, 110, '2024/01/01', '2024/03/31', 160, '2024/04/01', '2024/06/30', 200, '2023/11/01', '2023/12/31');
 
 INSERT INTO ROOMPRICE_T (HOTEL_NO, ROOM_NO, BI_PRICE, BS_DATE, BE_DATE, JUN_PRICE, JS_DATE, JE_DATE, SUNG_PRICE, SS_DATE, SE_DATE)
-VALUES (6, 17, 130, '2024-01-01', '2024-03-31', 180, '2024-04-01', '2024-06-30', 220, '2024-07-01', '2024-08-31');
+VALUES (6, 17, 130, '2024/01/01', '2024/03/31', 180, '2024/04/01', '2024/06/30', 220, '2023/11/01', '2023/12/31');
 
 INSERT INTO ROOMPRICE_T (HOTEL_NO, ROOM_NO, BI_PRICE, BS_DATE, BE_DATE, JUN_PRICE, JS_DATE, JE_DATE, SUNG_PRICE, SS_DATE, SE_DATE)
-VALUES (6, 18, 90, '2024-01-01', '2024-03-31', 120, '2024-04-01', '2024-06-30', 160, '2024-07-01', '2024-08-31');
+VALUES (6, 18, 90, '2024/01/01', '2024/03/31', 120, '2024/04/01', '2024/06/30', 160, '2023/11/01', '2023/12/31');
 
 COMMIT;
 
 -- 호텔 7 객실 가격
 INSERT INTO ROOMPRICE_T (HOTEL_NO, ROOM_NO, BI_PRICE, BS_DATE, BE_DATE, JUN_PRICE, JS_DATE, JE_DATE, SUNG_PRICE, SS_DATE, SE_DATE)
-VALUES (7, 19, 120, '2024-01-01', '2024-03-31', 180, '2024-04-01', '2024-06-30', 230, '2024-07-01', '2024-08-31');
+VALUES (7, 19, 120, '2024/01/01', '2024/03/31', 180, '2024/04/01', '2024/06/30', 230, '2023/11/01', '2023/12/31');
 
 INSERT INTO ROOMPRICE_T (HOTEL_NO, ROOM_NO, BI_PRICE, BS_DATE, BE_DATE, JUN_PRICE, JS_DATE, JE_DATE, SUNG_PRICE, SS_DATE, SE_DATE)
-VALUES (7, 20, 150, '2024-01-01', '2024-03-31', 200, '2024-04-01', '2024-06-30', 250, '2024-07-01', '2024-08-31');
+VALUES (7, 20, 150, '2024/01/01', '2024/03/31', 200, '2024/04/01', '2024/06/30', 250, '2023/11/01', '2023/12/31');
 
 INSERT INTO ROOMPRICE_T (HOTEL_NO, ROOM_NO, BI_PRICE, BS_DATE, BE_DATE, JUN_PRICE, JS_DATE, JE_DATE, SUNG_PRICE, SS_DATE, SE_DATE)
-VALUES (7, 21, 100, '2024-01-01', '2024-03-31', 150, '2024-04-01', '2024-06-30', 200, '2024-07-01', '2024-08-31');
+VALUES (7, 21, 100, '2024/01/01', '2024/03/31', 150, '2024/04/01', '2024/06/30', 200, '2023/11/01', '2023/12/31');
 
 COMMIT;
 
 -- 호텔 8 객실 가격
 INSERT INTO ROOMPRICE_T (HOTEL_NO, ROOM_NO, BI_PRICE, BS_DATE, BE_DATE, JUN_PRICE, JS_DATE, JE_DATE, SUNG_PRICE, SS_DATE, SE_DATE)
-VALUES (8, 22, 80, '2024-01-01', '2024-03-31', 120, '2024-04-01', '2024-06-30', 160, '2024-07-01', '2024-08-31');
+VALUES (8, 22, 80, '2024/01/01', '2024/03/31', 120, '2024/04/01', '2024/06/30', 160, '2023/11/01', '2023/12/31');
 
 INSERT INTO ROOMPRICE_T (HOTEL_NO, ROOM_NO, BI_PRICE, BS_DATE, BE_DATE, JUN_PRICE, JS_DATE, JE_DATE, SUNG_PRICE, SS_DATE, SE_DATE)
-VALUES (8, 23, 100, '2024-01-01', '2024-03-31', 150, '2024-04-01', '2024-06-30', 200, '2024-07-01', '2024-08-31');
+VALUES (8, 23, 100, '2024/01/01', '2024/03/31', 150, '2024/04/01', '2024/06/30', 200, '2023/11/01', '2023/12/31');
 
 INSERT INTO ROOMPRICE_T (HOTEL_NO, ROOM_NO, BI_PRICE, BS_DATE, BE_DATE, JUN_PRICE, JS_DATE, JE_DATE, SUNG_PRICE, SS_DATE, SE_DATE)
-VALUES (8, 24, 60, '2024-01-01', '2024-03-31', 100, '2024-04-01', '2024-06-30', 140, '2024-07-01', '2024-08-31');
+VALUES (8, 24, 60, '2024/01/01', '2024/03/31', 100, '2024/04/01', '2024/06/30', 140, '2023/11/01', '2023/12/31');
 
 COMMIT;
 
 -- 호텔 9 객실 가격
 INSERT INTO ROOMPRICE_T (HOTEL_NO, ROOM_NO, BI_PRICE, BS_DATE, BE_DATE, JUN_PRICE, JS_DATE, JE_DATE, SUNG_PRICE, SS_DATE, SE_DATE)
-VALUES (9, 25, 70, '2024-01-01', '2024-03-31', 110, '2024-04-01', '2024-06-30', 150, '2024-07-01', '2024-08-31');
+VALUES (9, 25, 70, '2024/01/01', '2024/03/31', 110, '2024/04/01', '2024/06/30', 150, '2023/11/01', '2023/12/31');
 
 INSERT INTO ROOMPRICE_T (HOTEL_NO, ROOM_NO, BI_PRICE, BS_DATE, BE_DATE, JUN_PRICE, JS_DATE, JE_DATE, SUNG_PRICE, SS_DATE, SE_DATE)
-VALUES (9, 26, 90, '2024-01-01', '2024-03-31', 130, '2024-04-01', '2024-06-30', 170, '2024-07-01', '2024-08-31');
+VALUES (9, 26, 90, '2024/01/01', '2024/03/31', 130, '2024/04/01', '2024/06/30', 170, '2023/11/01', '2023/12/31');
 
 INSERT INTO ROOMPRICE_T (HOTEL_NO, ROOM_NO, BI_PRICE, BS_DATE, BE_DATE, JUN_PRICE, JS_DATE, JE_DATE, SUNG_PRICE, SS_DATE, SE_DATE)
-VALUES (9, 27, 50, '2024-01-01', '2024-03-31', 80, '2024-04-01', '2024-06-30', 120, '2024-07-01', '2024-08-31');
+VALUES (9, 27, 50, '2024/01/01', '2024/03/31', 80, '2024/04/01', '2024/06/30', 120, '2023/11/01', '2023/12/31');
 
 COMMIT;
 
 -- 호텔 10 객실 가격
 INSERT INTO ROOMPRICE_T (HOTEL_NO, ROOM_NO, BI_PRICE, BS_DATE, BE_DATE, JUN_PRICE, JS_DATE, JE_DATE, SUNG_PRICE, SS_DATE, SE_DATE)
-VALUES (10, 28, 110, '2024-01-01', '2024-03-31', 160, '2024-04-01', '2024-06-30', 200, '2024-07-01', '2024-08-31');
+VALUES (10, 28, 110, '2024/01/01', '2024/03/31', 160, '2024/04/01', '2024/06/30', 200, '2023/11/01', '2023/12/31');
 
 INSERT INTO ROOMPRICE_T (HOTEL_NO, ROOM_NO, BI_PRICE, BS_DATE, BE_DATE, JUN_PRICE, JS_DATE, JE_DATE, SUNG_PRICE, SS_DATE, SE_DATE)
-VALUES (10, 29, 130, '2024-01-01', '2024-03-31', 180, '2024-04-01', '2024-06-30', 220, '2024-07-01', '2024-08-31');
+VALUES (10, 29, 130, '2024/01/01', '2024/03/31', 180, '2024/04/01', '2024/06/30', 220, '2023/11/01', '2023/12/31');
 
 INSERT INTO ROOMPRICE_T (HOTEL_NO, ROOM_NO, BI_PRICE, BS_DATE, BE_DATE, JUN_PRICE, JS_DATE, JE_DATE, SUNG_PRICE, SS_DATE, SE_DATE)
-VALUES (10, 30, 90, '2024-01-01', '2024-03-31', 120, '2024-04-01', '2024-06-30', 160, '2024-07-01', '2024-08-31');
+VALUES (10, 30, 90, '2024/01/01', '2024/03/31', 120, '2024/04/01', '2024/06/30', 160, '2023/11/01', '2023/12/31');
 
 COMMIT;
 
@@ -1150,14 +1236,14 @@ INSERT INTO TOURIST_T VALUES(TOURIST_SEQ.NEXTVAL, '김소아', '19900101', 'F', 
 COMMIT;
 
 -- 결제 등록
-INSERT INTO PAYMENT_T VALUES(PAYMENT_SEQ.NEXTVAL, '결제고유번호', 'Y', '결제수단', 112000, TO_CHAR(SYSDATE,'YYYY/MM/DD'), '주문번호', '구매자1', '구매자1@이메일', '에러메시지', 'paid', 1);
-INSERT INTO PAYMENT_T VALUES(PAYMENT_SEQ.NEXTVAL, '결제고유번호', 'Y', '결제수단', 110000, TO_CHAR(SYSDATE,'YYYY/MM/DD'), '주문번호', '구매자2', '구매자2@이메일', '에러메시지', 'paid', 4);
-INSERT INTO PAYMENT_T VALUES(PAYMENT_SEQ.NEXTVAL, '결제고유번호', 'Y', '결제수단', 165000, TO_CHAR(SYSDATE,'YYYY/MM/DD'), '주문번호', '구매자3', '구매자3@이메일', '에러메시지', 'paid', 5);
-INSERT INTO PAYMENT_T VALUES(PAYMENT_SEQ.NEXTVAL, '결제고유번호', 'Y', '결제수단', 90, TO_CHAR(SYSDATE,'YYYY/MM/DD'), '주문번호', '구매자4', '구매자4@이메일', '에러메시지', 'paid', 9);
-INSERT INTO PAYMENT_T VALUES(PAYMENT_SEQ.NEXTVAL, '결제고유번호', 'Y', '결제수단', 70, TO_CHAR(SYSDATE,'YYYY/MM/DD'), '주문번호', '구매자5', '구매자5@이메일', '에러메시지', 'paid', 10);
-INSERT INTO PAYMENT_T VALUES(PAYMENT_SEQ.NEXTVAL, '결제고유번호', 'Y', '결제수단', 70, TO_CHAR(SYSDATE,'YYYY/MM/DD'), '주문번호', '구매자6', '구매자6@이메일', '에러메시지', 'paid', 11);
-INSERT INTO PAYMENT_T VALUES(PAYMENT_SEQ.NEXTVAL, '결제고유번호', 'Y', '결제수단', 110, TO_CHAR(SYSDATE,'YYYY/MM/DD'), '주문번호', '구매자7', '구매자7@이메일', '에러메시지', 'paid', 12);
-INSERT INTO PAYMENT_T VALUES(PAYMENT_SEQ.NEXTVAL, '결제고유번호', 'Y', '결제수단', 130, TO_CHAR(SYSDATE,'YYYY/MM/DD'), '주문번호', '구매자8', '구매자8@이메일', '에러메시지', 'paid', 13);
+INSERT INTO PAYMENT_T VALUES(PAYMENT_SEQ.NEXTVAL, '결제고유번호', 'Y', '결제수단', 112000, TO_CHAR(SYSDATE,'YYYY/MM/DD'), '주문번호', '구매자1', '구매자1@이메일', '에러메시지', 'paid', 0, 1);
+INSERT INTO PAYMENT_T VALUES(PAYMENT_SEQ.NEXTVAL, '결제고유번호', 'Y', '결제수단', 110000, TO_CHAR(SYSDATE,'YYYY/MM/DD'), '주문번호', '구매자2', '구매자2@이메일', '에러메시지', 'paid', 0, 4);
+INSERT INTO PAYMENT_T VALUES(PAYMENT_SEQ.NEXTVAL, '결제고유번호', 'Y', '결제수단', 165000, TO_CHAR(SYSDATE,'YYYY/MM/DD'), '주문번호', '구매자3', '구매자3@이메일', '에러메시지', 'paid', 0, 5);
+INSERT INTO PAYMENT_T VALUES(PAYMENT_SEQ.NEXTVAL, '결제고유번호', 'Y', '결제수단', 90, TO_CHAR(SYSDATE,'YYYY/MM/DD'), '주문번호', '구매자4', '구매자4@이메일', '에러메시지', 'paid', 0, 9);
+INSERT INTO PAYMENT_T VALUES(PAYMENT_SEQ.NEXTVAL, '결제고유번호', 'Y', '결제수단', 70, TO_CHAR(SYSDATE,'YYYY/MM/DD'), '주문번호', '구매자5', '구매자5@이메일', '에러메시지', 'paid', 0, 10);
+INSERT INTO PAYMENT_T VALUES(PAYMENT_SEQ.NEXTVAL, '결제고유번호', 'Y', '결제수단', 70, TO_CHAR(SYSDATE,'YYYY/MM/DD'), '주문번호', '구매자6', '구매자6@이메일', '에러메시지', 'paid', 0, 11);
+INSERT INTO PAYMENT_T VALUES(PAYMENT_SEQ.NEXTVAL, '결제고유번호', 'Y', '결제수단', 110, TO_CHAR(SYSDATE,'YYYY/MM/DD'), '주문번호', '구매자7', '구매자7@이메일', '에러메시지', 'paid', 0, 12);
+INSERT INTO PAYMENT_T VALUES(PAYMENT_SEQ.NEXTVAL, '결제고유번호', 'Y', '결제수단', 130, TO_CHAR(SYSDATE,'YYYY/MM/DD'), '주문번호', '구매자8', '구매자8@이메일', '에러메시지', 'paid', 0, 13);
 COMMIT;
 
 -- ******************************************************************************
