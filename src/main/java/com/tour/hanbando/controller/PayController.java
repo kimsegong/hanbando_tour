@@ -15,6 +15,7 @@ import com.tour.hanbando.dto.PaymentDto;
 import com.tour.hanbando.service.ReserveService;
 
 import lombok.RequiredArgsConstructor;
+import retrofit2.http.POST;
 
 @RequiredArgsConstructor
 @RequestMapping("/payment")
@@ -22,6 +23,7 @@ import lombok.RequiredArgsConstructor;
 public class PayController {
 
   private final ReserveService reserveService;
+  
   
   @ResponseBody
   @PostMapping(value="/payReserve.do", produces="application/json")
@@ -34,6 +36,14 @@ public class PayController {
   public Map<String, Object> modifyReserveStatus(@RequestBody Map<String, String> payload, HttpServletRequest request, RedirectAttributes redirectAttributes) {
     return reserveService.modifyReserveStatusByPayStatus(payload, request, redirectAttributes); 
   }
+ 
+  
+  @ResponseBody
+  @PostMapping("/cancel")
+  public Map<String, Object> refundPayment(HttpServletRequest request, @RequestBody PaymentDto payment) {
+    return reserveService.loadPaymentByMerchantUid(request, payment);
+  }
+  
   
   
 }
