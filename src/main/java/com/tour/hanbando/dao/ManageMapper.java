@@ -9,7 +9,10 @@ import com.tour.hanbando.dto.HotelDto;
 import com.tour.hanbando.dto.InactiveUserDto;
 import com.tour.hanbando.dto.LeaveUserDto;
 import com.tour.hanbando.dto.PackageDto;
+import com.tour.hanbando.dto.RegionDto;
 import com.tour.hanbando.dto.ReviewDto;
+import com.tour.hanbando.dto.RoompriceDto;
+import com.tour.hanbando.dto.RoomtypeDto;
 import com.tour.hanbando.dto.UserDto;
 
 @Mapper
@@ -54,10 +57,25 @@ public interface ManageMapper {
   public int getHotelCount();
   public List<HotelDto> getHotelList(Map<String, Object> map);
   
-  /* 호텔 판매/추천 변경 */
-  public int updateHotelRecommend(HotelDto hotel);
   
+  /* 호텔 객실별 가격 */
+  public List<RoompriceDto> getRoomPrice();
+  /* 호텔 객실 타입 */
+  public List<RoomtypeDto> getRoomType();
+  
+  /* 호텔 객실 가격 변경 */
+  public int updateRoomPrice(RoompriceDto roomprice);
+
   /* 호텔 상품 검색 */
+  
+  /* 지역 목록 */
+  public List<RegionDto> getRegionList();
+  
+  /* 패키지 추천 변경 */
+  public int updatePackageRecommend(PackageDto packageDto);
+  
+  /* 호텔 추천 변경 */
+  public int updateHotelRecommend(HotelDto hotel);
   
   /* 예약 목록 */
   /* 예약 검색 */
