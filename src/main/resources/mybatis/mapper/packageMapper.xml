@@ -519,7 +519,7 @@
        WHERE A.RN BETWEEN #{begin} AND #{end}       
      </select>
      
-     <select id="getHeartCount" resultType="int">
+     <select id="getHeartCount" resultType="int" parameterType="int">
       SELECT COUNT(*)
         FROM HEART_T
        WHERE USER_NO = #{userNo}
