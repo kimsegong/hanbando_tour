@@ -10,13 +10,13 @@ import org.springframework.stereotype.Component;
 public class MyNoticeUtils {
 
   // 블로그 작성시 사용된 이미지가 저장될 경로 반환하기
-  public String getPackageImagePath() {
+  public String getNoticeImagePath() {
     LocalDate today = LocalDate.now();
     return "/notice/" + DateTimeFormatter.ofPattern("yyyy/MM/dd").format(today);
   }
   
   //블로그 이미지가 저장된 어제 경로를 반환
-  public String getPackageImagePathInYesterday() {
+  public String getNoticeImagePathInYesterday() {
     LocalDate date = LocalDate.now();
     date = date.minusDays(1); // 1일 전
     return "/notice/" + DateTimeFormatter.ofPattern("yyyy/MM/dd").format(date);
@@ -25,7 +25,7 @@ public class MyNoticeUtils {
   // 업로드 게시판 작성시 첨부한 파일이 저장될 경로 반환하기
   public String getUploadPath() {
     LocalDate today = LocalDate.now();
-    return "/upload/" + DateTimeFormatter.ofPattern("yyyy/MM/dd").format(today);
+    return "/notice/" + DateTimeFormatter.ofPattern("yyyy/MM/dd").format(today);
   }
   
   // 임시 파일이 저장될 경로 반환하기(zip파일)

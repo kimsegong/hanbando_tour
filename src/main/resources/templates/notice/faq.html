@@ -2,6 +2,24 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 
 <head th:replace="~{/layout/header::head('한반도 투어')}"></head> <!-- 이거 알맞게 바꿔주세요-->
+<style>
+
+.wrap1 > .box1{
+  height:50px;
+}
+
+.wrap1 > .box2{
+  height:50px;
+}
+
+.accordion-button{
+
+}  
+
+</style>
+
+
+
 <body>
   <div th:replace="~{/layout/header::header}"></div>
   
@@ -15,6 +33,76 @@
         <div class="col-10" style="border:1px gray dotted">
             <!--/*여기에 작성/ 다 만들고 style 지워주세요  */-->
        
+
+  <h2>자주묻는질문</h2>
+   
+  <div class="wrap1">
+    <div class="box1"></div>    
+  </div>
+
+  <div class="btn-toolbar mb-3 justify-content-center" role="toolbar" aria-label="Toolbar with button groups">
+  <div class="btn-group me-2" role="group" aria-label="First group">
+    <button type="button" class="btn btn-outline-secondary">국내패키지</button>
+    <button type="button" class="btn btn-outline-secondary">예약/결제</button>
+    <button type="button" class="btn btn-outline-secondary">회원안내</button>
+    <button type="button" class="btn btn-outline-secondary">기타</button>
+  </div>
+  </div>
+  
+    <div class="wrap1">
+    <div class="box2"></div>    
+  </div>
+  
+   <div class="row">
+   <div class="col-1"></div>
+   <div class="col-9">
+   
+  
+  
+<div class="accordion accordion-flush" id="accordionFlushExample">
+  <div class="accordion-item">
+    <h2 class="accordion-header">
+      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
+adasds
+      </button>
+    </h2>
+    <div id="flush-collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
+      <div class="accordion-body">Placeholder content for this accordion, which is intended to demonstrate the <code>.accordion-flush</code> class. This is the first item's accordion body.</div>
+    </div>
+  </div>
+  <div class="accordion-item">
+    <h2 class="accordion-header">
+      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo" aria-expanded="false" aria-controls="flush-collapseTwo">
+    
+      </button>
+    </h2>
+    <div id="flush-collapseTwo" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
+      <div class="accordion-body">Placeholder content for this accordion, which is intended to demonstrate the <code>.accordion-flush</code> class. This is the second item's accordion body. Let's imagine this being filled with some actual content.</div>
+    </div>
+</div>
+  <div class="accordion-item">
+    <h2 class="accordion-header">
+      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseThree" aria-expanded="false" aria-controls="flush-collapseThree">
+        Accordion Item #3
+      </button>
+    </h2>
+    <div id="flush-collapseThree" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
+      <div class="accordion-body">Placeholder content for this accordion, which is intended to demonstrate the <code>.accordion-flush</code> class. This is the third item's accordion body. Nothing more exciting happening here in terms of content, but just filling up the space to make it look, at least at first glance, a bit more representative of how this would look in a real-world application.</div>
+    </div>
+  </div>
+</div>
+ </div>
+ 
+ 
+ 
+ 
+ 
+ </div>           
+            
+  </div>          
+            
+            
+            
             
             
         </div>
@@ -25,7 +113,7 @@
   
   </div>
 
-  
+  </div>
   
   
   <div th:replace="~{/layout/footer::footer}"></div>
