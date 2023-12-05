@@ -593,28 +593,31 @@ public class PackageServiceImpl implements PackageService {
         int removeResult = packageMapper.deleteReview(reviewNo);
         return Map.of("removeResult", removeResult);
       }
-    @Transactional(readOnly=true)
+    
     @Override
-    public Map<String, Object> getHeartPackage(int page, HttpServletRequest request) {
+    public void getHeartPackage(HttpServletRequest request, Model model) {
       
-      int userNo = Integer.parseInt(request.getParameter("userNo"));
       
       Optional<String> opt = Optional.ofNullable(request.getParameter("page"));
-      int total = packageMapper.getHeartCount(userNo);
+      int page = Integer.parseInt(opt.orElse("1"));
       int display = 10;
+      int userNo = Integer.parseInt(request.getParameter("userNo"));
+      int total = packageMapper.getHeartCount(userNo);
       
       myPageUtils.setPaging(page, total, display);
       
       Map<String, Object> map = Map.of("begin", myPageUtils.getBegin()
                                      , "end", myPageUtils.getEnd()
                                      , "userNo", userNo);
-      System.out.println("Map parameters: " + map);
-      List<HeartDto> heartList = packageMapper.selectHeartList(map);
-      System.out.println("Resulting HeartList: " + heartList);
-
-      String paging = myPageUtils.getAjaxPaging();
       
-      return Map.of("heartList", heartList, "paging",paging);
+      List<HeartDto> heartList = packageMapper.selectHeartList(map);
+      System.out.println(heartList.size());
+      model.addAttribute("heartList", heartList);
+      String params = "userNo=" + request.getParameter("userNo");
+      model.addAttribute("paging", myPageUtils.getMvcPaging(request.getContextPath() + "/user/heart.do", params));
+      model.addAttribute("beginNo", total - (page - 1) * display); 
+      System.out.println("$$$$$$$$$$$$" + heartList);
+
     }
     
 }
