@@ -23,7 +23,7 @@
 		      	<!--/*여기에 작성/ 다 만들고 style 지워주세요  */-->
 				   <h2>호텔 게시글작성</h2>
 			<form method="post" id="hotel_add" th:action="@{/hotel/add.do}" accept="image/*" enctype="multipart/form-data" >
-				<input type="hidden" id="hotelNo" name="hotelNo" th:value="${hotelNo}">
+				<input type="hidden" id="hotelNo" name="hotelNo" th:value="${hotelNo}"> 
 			   <div style="margin: 30px 270px;" class="w-50 p-3">
 		<div style="text-align: left;">
 		      <label for="files" class="form-label">메인첨부</label>
@@ -91,14 +91,14 @@
       <input type="checkbox" id="sauna" class="form-check-input">
       <label for="lounge" class="form-check-label">라운지</label>
       <input type="checkbox" id="lounge" class="form-check-input">
-      <label for="roomservice" class="form-check-label">조식</label>
+      <label for="roomservice" class="form-check-label">룸서비스</label>
       <input type="checkbox" id="roomservice" class="form-check-input">
     </div>
 		<div>
     <label for="hotelDetail">호텔 상세</label>
     <textarea id="hotelDetail">체크인: 체크아웃:</textarea>
       
-    <!--/* Button trigger modal */-->
+    <!--/* Button trigger modal */--> 
 		<button type="button" class="btn btn-primary" onclick="openHotelRoom()" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
 		  객실 등록하기 
 		</button>
@@ -247,13 +247,10 @@
               }
             }).open();
           }
-
+          
   function openHotelRoom(){
-		$('.modal-content').load("addRoom.form");
-	}
-  
- 
-
+    $('.modal-content').load("addRoom.form");
+  }
 
 	const fnFileCheck = () => {
         $('#files').change((ev) => {
