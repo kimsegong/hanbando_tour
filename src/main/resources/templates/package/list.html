@@ -29,6 +29,10 @@
         object-fit: cover; /* 이미지가 카드에 맞게 조절될 수 있도록 설정 */
         width: 100%; /* 가로 크기를 100%로 설정하여 카드 안에 꽉 차게 함 */
     }
+  hr {
+    border-top: 3px solid black; /* 두께 조절 가능 */
+    margin: 20px 0; /* 필요에 따라 마진 조절 가능 */
+  }
 
 </style>  
 <body>
@@ -48,7 +52,7 @@
     <!--  </th:block> -->
       <div style="display: flex; justify-content: space-between; align-items: center;">
         <div style="display: inline-block;"> 
-         <span id="count"></span>개의 상품
+         <span id="count"></span>개의 상품🚌
         </div>
         <div class="btn-group btn-group-sm" role="group" aria-label="Small button group" style="display: inline-block;">
           <button type="button" class="btn btn-outline-kong" value="defaultCondition">최신순</button>
@@ -59,9 +63,7 @@
       </div>
       <hr>
       <div class="container">
-        <div class="row" id="package_list"> 
-          
-        </div>
+        <div class="row" id="package_list"></div>
       </div>
 
       
@@ -109,11 +111,11 @@
                 if (resData.packageList != null && resData.packageList.length > 0) {                   
                     $.each(resData.packageList, (i, package) => {
                         let str = '<div class="col-md-4">';
-                        str += '<div class="card">';
+                        str += '<div class="card w-100 p-3">';
                         if (package.productImageDto && package.productImageDto.thumbnail === 1) {
-                            str += '<img src="' + package.productImageDto.imagePath + '/' + package.productImageDto.filesystemName + '" style="height: 200px; " class="card-img-top" alt="Package Image">';
+                            str += '<img src="' + package.productImageDto.imagePath + '/' + package.productImageDto.filesystemName + '" style="height: 250px; " class="card-img-top" alt="Package Image">';
                         } else {
-                            str += '<img src="https://github.com/skal48/portfolio/blob/main/bakdo.jpg?raw=true" style="height: 200px;" class="card-img-top" alt="Package Image">';
+                            str += '<img src="https://github.com/skal48/portfolio/blob/main/bakdo.jpg?raw=true" style="height: 250px;" class="card-img-top" alt="Package Image">';
                         }
                         str += '<div class="card-body">';
                         str += '<p class="card-title">' + package.packageTitle + '</p>';
