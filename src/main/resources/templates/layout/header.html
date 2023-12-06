@@ -42,11 +42,12 @@
              <div class="logo"><a th:href="@{/}"><div class="logom"></div></a></div>
           </div>
           <div class="col-8">
-             <div class="header_search">
-                  <form class="frm_search" method="get" th:action="@{/main/search.do}">
-                  <input type="text" class="form-control header_searchbar w-50 p-3 h-50 d-inline-block" name="query" placeholder="여행지/호텔 입력해주세요🛫" >
-                  <button type="submit" class="btn_search btn btn-no btn-lg">🔎 </button>
-                  </form></div>
+           <div class="header_search">
+             <form class="frm_search" method="get" th:action="@{/main/search.do}">
+              <input type="text" class="form-control header_searchbar w-50 p-3 h-50 d-inline-block" name="query" placeholder="여행지/호텔 입력해주세요🛫" >
+              <button type="submit" class="btn_search btn btn-no btn-lg">🔎 </button>
+             </form>
+            </div>
           </div>
           <div class="col-1" style="margin-top: 50px;">
           <th:block th:if="${session.user == null}">
@@ -118,10 +119,9 @@
   </div>
 </nav> 
       
-</div>      
- 
-   
-   
+</div>     
+
+
 
 </body>
 </html>
