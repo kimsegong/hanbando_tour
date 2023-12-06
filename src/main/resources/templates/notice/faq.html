@@ -2,6 +2,27 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 
 <head th:replace="~{/layout/header::head('한반도 투어')}"></head> <!-- 이거 알맞게 바꿔주세요-->
+<style>
+
+.wrap1 > .box1{
+  height:50px;
+}
+
+.wrap1 > .box2{
+  height:50px;
+}
+
+.wrap1 > .box3{
+  height:50px;
+}
+
+.wrap1 > .box4{
+  height:70px;
+}
+</style>
+
+
+
 <body>
   <div th:replace="~{/layout/header::header}"></div>
   
@@ -15,6 +36,138 @@
         <div class="col-10" style="border:1px gray dotted">
             <!--/*여기에 작성/ 다 만들고 style 지워주세요  */-->
        
+
+  <h2>자주묻는질문</h2>
+   
+  <div class="wrap1">
+    <div class="box1"></div>    
+  </div>
+
+  <div class="btn-toolbar mb-3 justify-content-center" role="toolbar" aria-label="Toolbar with button groups">
+  <div class="btn-group me-2" role="group" aria-label="First group">
+    <a th:href = "@{/notice/faqKorea.do}">
+    <button type="button" class="btn btn-outline-secondary">국내패키지</button>
+    </a>
+    
+    <a th:href = "@{/notice/faqCash.do}">
+    <button type="button" class="btn btn-outline-secondary">예약/결제</button>
+    </a>
+    
+    <a th:href = "@{/notice/faqMember.do}">
+    <button type="button" class="btn btn-outline-secondary">회원안내</button>
+    </a>
+    
+    <a th:href = "@{/notice/faq.do}">
+    <button type="button" class="btn btn-secondary">기타</button>
+    </a>
+    
+  </div>
+
+  </div>
+  
+    <div class="wrap1">
+    <div class="box2"></div>    
+      </div>
+    
+    
+    <div class="row">
+      <div class="col-7"></div>
+      <div class="col-4" style="display: flex; justify-content: flex-end;">
+        <div class="home">
+          <a th:href="@{http://localhost:8080}"><i class="fa-solid fa-house" style="font-size:15px; margin-right: 5px;"></i></a>
+           &nbsp;고객센터  &nbsp;  >   &nbsp; 공지사항
+        </div>
+      </div>
+
+      
+      
+  
+    <div class="wrap1">
+    <div class="box3"></div>    
+  </div>
+  
+   <div class="row">
+   <div class="col-1"></div>
+   <div class="col-9">
+   
+   
+  
+  
+<div class="accordion accordion-flush" id="accordionFlushExample">
+  <div class="accordion-item">
+    <h2 class="accordion-header">
+      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
+        여행 중 물건을 잃어버렸어요!
+      </button>
+    </h2>
+    <div id="flush-collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
+      <div class="accordion-body">한반도여행사를 이용하여 여행하신 후 물건을 잃어버렸을 경우, 한반도여행사 분실물센터로 나의 분실물을 확인하고 물건을 찾아보세요!"</div>
+    </div>
+  </div>
+  
+  
+  <div class="wrap1">
+    <div class="box4"></div>    
+  </div> 
+ 
+ 
+ 
+ 
+ 
+ </div>           
+            
+  </div>          
+            
+            
+        
+        <script>
+          
+        var page = 1;
+        var totalPage = 0;
+          const fnReviewList = () => { 
+        $.ajax({
+          type: 'get',
+          url: '/faq/faqList.do',
+          data: { page: page, faqNo: faqNo},
+          dataType: 'json',
+          success: (resData) => {
+            totalPage = resData.totalPage;
+            $('#faqAccordion').empty();
+            const sessionUserNo = $('#userNo').val();
+            if (resData.reviewList != null && resData.reviewList.length > 0) {
+              $.each(resData.reviewList, (i, review)=> {
+                let str = '<div class="accordion accordion-flush">';
+                str += '<div class="accordion-item">';
+                str += '<h2 class="accordion-header">';
+                str += '<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapse' + i + '" aria-expanded="false" aria-controls="flush-collapse' + i + '">' + review.userDto.name + '님의 리뷰  ' + generateStarRating(review.star) + '</button>';
+                str += '</h2>';
+                str += '<div id="flush-collapse' + i + '" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">';
+                str += '<div class="accordion-body">' + review.reviewContents + '</div>';
+                str += '  <div>';
+                if(sessionUserNo == review.userDto.userNo){                
+                      str += '  <input type="hidden" value="' + review.reviewNo + '">';
+                      str += '  <button type="button" class="btn remove_Review" style="margin-left: 550px;">삭제하기</button>';
+                    }
+                      str += '  </div>';
+                str += '</div>';
+                str += '</div>';
+                str += '</div>';
+                  $('#reviewAccordion').append(str);         
+              });
+            } else {
+              $('#reviewAccordion').append('<div class="text-center">등록된 리뷰가 없습니다.</div>');
+            }
+          },
+          error: (error) => {
+            console.error('Ajax 요청 에러:', error);
+          }
+        });
+      };
+          
+        </script>
+            
+            
+            
             
             
         </div>
@@ -25,7 +178,7 @@
   
   </div>
 
-  
+  </div>
   
   
   <div th:replace="~{/layout/footer::footer}"></div>
