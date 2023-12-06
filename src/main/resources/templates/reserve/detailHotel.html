@@ -34,23 +34,24 @@
                 </colgroup>
                 <tr>
                   <td>이름</td>
-                  <td>이름?</td>
+                  <td th:text="${reserveHo.userDto.name}"></td>
                 </tr>
                 <tr>
                   <td>휴대폰번호</td>
-                  <td>번호?</td>
+                  <td th:text="${reserveHo.userDto.mobile}"></td>
                 </tr>
                 <tr>
                   <td>성별</td>
-                  <td>남여??</td>
+                  <td th:if="${reserveHo.userDto.gender == 'M'}" >남</td>
+                  <td th:if="${reserveHo.userDto.gender == 'F'}" >여</td>
                 </tr>
                 <tr>
                   <td>이메일</td>
-                  <td></td>
+                  <td th:text="${reserveHo.userDto.email}"></td>
                 </tr>
                 <tr>
                   <td>요청사항</td>
-                  <td></td>
+                  <td th:text="${reserveHo.requestedTerm}"></td>
                 </tr>
               </table>
             </div>
@@ -66,38 +67,44 @@
                 </colgroup>
                 <tr>
                   <td>호텔명</td>
-                  <td>호텔이름??</td>
+                  <td th:text="${reserveHo.hotelDto.hotelName}"></td>
                 </tr>
                 <tr>
                   <td>위치</td>
-                  <td>주소??</td>
+                  <td th:text="${reserveHo.hotelDto.hotelAddress}">주소??</td>
                 </tr>
                 <tr>
                   <td>체크인</td>
-                  <td>날짜??</td>
+                  <td th:text="${reserveHo.reserveStart}"></td>
                 </tr>
                 <tr>
                   <td>체크아웃</td>
-                  <td>날짜??</td>
+                  <td th:text="${reserveHo.reserveFinish}"></td>
                 </tr>
                 <tr>
                   <td>객실</td>
-                  <td>예약한객실타입??</td>
+                  <td th:text="${reserveHo.roomtypeDto.roomName}"></td>
                 </tr>
                 <tr>
                   <td>예약상태</td>
-                  <td>예약상태</td>
+                  <td th:if="${reserveHo.reserveStatus == 0}">결제대기</td>
+                  <td th:if="${reserveHo.reserveStatus == 1}">예약완료</td>
+                  <td th:if="${reserveHo.reserveStatus == 2}">취소</td>
                 </tr>
                 <tr>
                   <td>결제금액</td>
-                  <td>원??</td>
+                  <td th:utext="|<strong>${reserveHo.reservePrice}원</strong>|"></td>
                 </tr>
               </table>
             </div>
             
             <div>
               <form id="frm_btn" method="post">
-             
+                <input type="hidden" name="reserveNo" id="reserveNo" th:value="${reserveHo.reserveNo}">
+                <input type="hidden" name="userNo" th:value="${reserveHo.userDto.userNo}">
+                <input type="hidden" name="userName" th:value="${reserveHo.userDto.name}">
+                <input type="hidden" name="userMobile" th:value="${reserveHo.userDto.mobile}">
+                <input type="hidden" name="requestedTerm" th:value="${reserveHo.requestedTerm}">
               </form>
             </div>
             
