@@ -104,7 +104,8 @@ public class ReserveController {
 
   // 호텔 예약관련 요청을 처리
   @GetMapping("/reserveHotelList.do")
-  public String resHotelList() {
+  public String resHotelList(HttpServletRequest request, Model model) {
+    reserveService.loadReserveHotelListByUser(request, model);
     return "reserve/listHotel";
   }
   
@@ -114,7 +115,9 @@ public class ReserveController {
   }
   
   @GetMapping("/detailHotel.do")
-  public String detailHotel() {
+  public String detailHotel(@RequestParam(value="reserveNo", required = false, defaultValue = "0") int reserveNo, Model model) {
+    ReserveDto reserveHo = reserveService.loadReserveHotel(reserveNo);
+    model.addAttribute("reserveHo", reserveHo);
     return "reserve/detailHotel";
   }
   
