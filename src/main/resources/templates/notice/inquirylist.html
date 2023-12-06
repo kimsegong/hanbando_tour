@@ -64,45 +64,32 @@
    <div class="col-2"></div>
    <div class="col-8">
    
-   <table class="table">
-     <tbody>
-       <tr th:each="in : ${inquiryList}" class="title_title">
-         <th:block th:if="${in.userNo==session.user.userNo}">
-           <td>
-           <a th:href="@{|/notice/inquirydetail.do?inquiryNo=${in.inquiryNo}|}" th:text="${in.title}"></a>  
-           </td>
-         </th:block>
-       </tr>
-     </tbody>
-   </table>    
      
    </div>
-   
    
    
      <table class="table">
       <thead>
         <tr>
-          <th scope="col">공지번호</th>
+          <th scope="col">문의번호</th>
+          <th scope="col">문의유형</th>
           <th scope="col">제목</th>
           <th scope="col">작성일</th>
-          <th scope="col">수정일</th>
         </tr>
       </thead>
     <tbody>
-      <th:block th:each="n,vs:${noticeList}">
+      <th:block th:each="i,vs:${inquiryList}">
         <tr class="align-bottom">
-          <td th:text="${beginNo - vs.index}"></td>
+            <td th:text="${i.inquiryNo}"></td>
+            <td th:text="${i.separate}"></td>
             <td>
-             <a th:href="@{|/notice/detail.do?noticeNo=${n.noticeNo}|}" th:text="${n.title}"></a>
+             <a th:href="|@{/notice/inquirydetail.do(inquiryNo=${i.inquiryNo})}|" th:text="${i.title}"></a>
             </td>
-            <td th:text="${n.createdAt}"></td>
-            <td th:text="${n.modifiedAt}"></td>
+            <td th:text="${i.createdAt}"></td>
         </tr>
       </th:block>
     </tbody>
   </table>
-
 
 
 
@@ -151,24 +138,7 @@
       
       
       <script>
-      var frmBtn = $('#frm_btn');
-      
 
-      
-      const fnRemoveNotice = () => {
-        $('#btn_remove').click(() => {
-          event.preventDefault();
-          if(confirm('공지사항 삭제를 선택하셨습니다. 삭제할까요?')){
-          frmBtn.attr('action', '/notice/inquiryremove.do');
-          frmBtn.submit();
-          }
-          
-        })
-      }
-  
-      fnEditNotice();
-      fnRemoveNotice();    
-      
       </script>
       
             

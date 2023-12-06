@@ -34,6 +34,8 @@
   }  
   
 
+  
+
 </style>
 
 
@@ -94,7 +96,7 @@
     
     
     <div class="col-9" style=" margin-top: 50px;">
-      <h2>공지사항</h2>
+      <h2>나의 문의</h2>
       <hr style="border: 1px solid black; margin-bottom: 0; margin-top: 10px;">
     </div>
 
@@ -135,12 +137,11 @@
       
       
       
-    <div>
+<div style="text-align: center;">
   <form id="frm_detail" method="post">
     <input type="hidden" name="inquiryNo" th:value="${inquiry.inquiryNo}">
     <input type="hidden" name="title" th:value="${inquiry.title}">
     <input type="hidden" name="contents" th:value="${inquiry.contents}">
-      <button type="button" id="btn_edit" class="btn btn-outline-primary">수정</button>
       <button type="button" id="btn_remove" class="btn btn-danger btn-sm"style="width: 60px; height: 35px;">삭제</button>
   </form>
 </div>
@@ -211,7 +212,7 @@
       const fnRemoveNotice = () => {
         $('#btn_remove').click(() => {
           event.preventDefault();
-          if(confirm('공지사항 삭제를 선택하셨습니다. 삭제할까요?')){
+          if(confirm('나의1:1문의 삭제를 선택하셨습니다. 삭제할까요?')){
           frmBtn.attr('action', '/notice/inquiryremove.do');
           frmBtn.submit();
           }
