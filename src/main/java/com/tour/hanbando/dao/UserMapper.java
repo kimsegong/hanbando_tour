@@ -29,4 +29,6 @@ public interface UserMapper {
   public int insertKakaoUser(UserDto user);
   //아이디찾기
   public UserDto getFindId(Map<String, Object> map);
+  //비밀번호찾기(아이디랑 핸드폰번호 일치시)
+  public UserDto getFindPw(Map<String, Object> map);
 }
