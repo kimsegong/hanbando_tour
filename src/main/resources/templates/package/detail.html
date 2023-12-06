@@ -271,6 +271,19 @@
     
     
     <script th:inline="javascript">   
+      
+      
+      $('#btn_reserve').click(function(){
+        startDate = $('#reserve_start').val();
+         // 날짜가 선택되었는지 확인
+        if (startDate.trim() === "") {
+            alert("출발일을 선택해주세요.");
+            e.preventDefault();
+        } else {
+            fnGoReserve();
+        }
+      })
+
     
     $.fn.datepicker.dates['ko'] = {
 	    days: ["일요일", "월요일", "화요일", "수요일", "목요일", "금요일", "토요일"],
