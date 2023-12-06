@@ -127,11 +127,11 @@
     <div class="col-5"> 
       <div>
         <form id="frm_inquiry_add" method="post" th:action="@{/notice/addInquiry.do}">
-      <select class="form-select" aria-label="Default select example">
-        <option selected>문의선택</option>
-        <option value="1">호텔문의</option>
-        <option value="2">패키지문의</option>
-        <option value="3">기타문의</option>
+      <select name="separate" class="form-select" aria-label="Default select example">
+        <option value="" selected>문의선택</option>
+        <option value="호텔문의">호텔문의</option>
+        <option value="패키지문의">패키지문의</option>
+        <option value="기타문의">기타문의</option>
       </select>
       </div> 
       
@@ -157,11 +157,15 @@
       </div>
       
       <div>
+      <input type="hidden" name="userNo" th:value="${session.user.userNo}">
       <a th:href = "@{/notice/list.do}">
       <button type="button" class="btn btn-secondary btn-sm">작성 취소</button>&nbsp;&nbsp;&nbsp;
       </a>
       <a th:href = "@{/notice/inquirylist.do}">
       <button type="submit" class="btn btn-outline-primary">문의 완료</button>  
+      </a> 
+      <a th:href = "@{/notice/inquirylist.do}">
+      <button type="button" >목록보기</button>
       </a> 
       </div>
       

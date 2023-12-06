@@ -4,7 +4,7 @@
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.tour.hanbando.dao.InquiryMapper">
-     <select id="getInquiryList" parameterType="Map" resultType="InquiryDto">
+     <select id="getInquiryList"  resultType="InquiryDto">
       SELECT INQUIRY_NO, USER_NO, TITLE, CONTENTS, CREATED_AT, SEPARATE
         FROM INQUIRY_T
       
@@ -21,11 +21,11 @@
            )
            VALUES( 
            INQUIRY_SEQ.NEXTVAL 
-         , 1           
+         , #{userNo}         
          , #{title} 
          , #{contents} 
          , TO_CHAR(SYSDATE, 'YYYY-MM-DD') 
-         , '여행상품'
+         , #{separate}
          ) 
    </insert>
    
@@ -34,5 +34,21 @@
       FROM INQUIRY_T 
      WHERE INQUIRY_NO= #{inquiryNo} 
    </select>
+   
+   <delete id="deleteInquiry" parameterType="int"> 
+  DELETE 
+    FROM INQUIRY_T
+   WHERE INQUIRY_NO = #{inquiryNo}
+  </delete>
+  
+    <update id="updateInquiry" parameterType="InquiryDto"> 
+  UPDATE INQUIRY_T
+     SET TITLE = #{title} 
+   , CONTENTS = #{contents} 
+   , CREATED_AT = TO_CHAR(SYSDATE, 'YYYY/MM/DD') 
+   , MODIFIED_AT = TO_CHAR(SYSDATE, 'YYYY/MM/DD') 
+  WHERE INQUIRY_NO = #{inquiryNo} 
+  </update>
+    
 
 </mapper>
