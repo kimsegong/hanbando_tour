@@ -190,11 +190,11 @@ CREATE TABLE PACKAGE_T (
     MINI_ONE	        VARCHAR2(150 BYTE)	NULL,      -- 패키지 작은 설명1
 	MINI_TWO	        VARCHAR2(150 BYTE)	NULL,      -- 패키지 작은 설명2
 	MINI_THREE	        VARCHAR2(150 BYTE)	NULL,      -- 패키지 작은 설명3
-	PACKAGE_PLAN	    VARCHAR2(500 BYTE)	NULL,      -- 패키지 계획
+	PACKAGE_PLAN	    CLOB            	NULL,      -- 패키지 계획
 	PACKAGE_CONTENTS	CLOB	            NULL,      -- 패키지 내용
 	HOTEL_CONTENTS	    CLOB	            NULL,      -- 호텔 상세
 	PRICE	            NUMBER	            NULL,      -- 가격
-	DANGER	            VARCHAR2(500 BYTE)	NULL,      -- 여행참고사항
+	DANGER	            CLOB             	NULL,      -- 여행참고사항
 	CREATED_AT	        VARCHAR2(100 BYTE)	NULL,      -- 시작일
 	MODIFIED_AT	        VARCHAR2(100 BYTE)	NULL,      -- 수정일
 	HIT             	NUMBER	            DEFAULT 0, -- 조회수
