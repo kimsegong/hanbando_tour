@@ -97,7 +97,7 @@
 		<div>
     <label for="hotelDetail">호텔 상세</label>
     <textarea id="hotelDetail">체크인: 체크아웃:</textarea>
-      
+    </form>
     <!--/* Button trigger modal */--> 
 		<button type="button" class="btn btn-primary" onclick="openHotelRoom()" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
 		  객실 등록하기 
@@ -110,7 +110,7 @@
 		    </div>
 		  </div>
 		</div>  
-      
+      <button type="button" id="temp">이동이동</button>
     </div>
     <!--/*
 		<div class="roomGroup">
@@ -176,7 +176,7 @@
 				      <button type="submit" class="btn btn-primary" style="margin: 32px;">작성완료</button>
 			      </div>
 				 </div>
-				</form>
+
 		    </div>
 		    <div class="col-1">	      
 		    </div>
@@ -186,7 +186,16 @@
 	</div>
 <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 <script th:inline="javascript">
-  console.log($("#hotelNo").val())
+  
+   function openHotelRoom(){
+    $('.modal-content').load("/hotel/addRoom.form?hotelNo="+ $('#hotelNo').val());
+  }
+  
+  $('#temp').click(function(){
+		location.href="/hotel/addRoom.form?hotelNo="+ $('#hotelNo').val();
+		
+	})
+  
   
 	          //본 예제에서는 도로명 주소 표기 방식에 대한 법령에 따라, 내려오는 데이터를 조합하여 올바른 주소를 구성하는 방법을 설명합니다.
           function execDaumPostcode() {
@@ -248,9 +257,7 @@
             }).open();
           }
           
-  function openHotelRoom(){
-    $('.modal-content').load("addRoom.form");
-  }
+ 
 
 	const fnFileCheck = () => {
         $('#files').change((ev) => {
