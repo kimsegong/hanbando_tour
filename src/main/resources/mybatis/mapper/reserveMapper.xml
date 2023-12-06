@@ -293,6 +293,56 @@
     )
   </insert>
   
+  <insert id="insertReserveHotel" parameterType="ReserveDto">
+    <selectKey order="BEFORE" keyProperty="reserveNo" resultType="int">
+      SELECT RESERVE_SEQ.NEXTVAL 
+        FROM DUAL
+    </selectKey>
+    INSERT INTO RESERVE_T (
+        RESERVE_NO
+      , RESERVED_AT
+      , REQUESTED_TERM
+      , AGREE
+      , RESERVE_STATUS
+      , RESERVE_START
+      , RESERVE_FINISH
+      , RESERVE_PERSON
+      , RESERVE_PRICE
+      , USER_NO
+      , HOTEL_NO
+      , ROOM_NO
+    ) VALUES (
+        #{reserveNo}
+      , TO_CHAR(SYSDATE, 'YYYY/MM/DD') 
+      , #{requestedTerm}
+      , #{agree}
+      , #{reserveStatus}
+      , <choose>
+            <when test="reserveStart != null">
+                #{reserveStart}
+            </when>
+            <otherwise>
+                NULL
+            </otherwise>
+        </choose>
+      , <choose>
+            <when test="reserveFinish != null">
+                #{reserveFinish}
+            </when>
+            <otherwise>
+                NULL
+            </otherwise>
+        </choose>
+      , #{reservePerson}
+      , #{reservePrice}
+      , #{userDto.userNo}
+      , #{hotelDto.hotelNo}
+      , #{roomtypeDto.roomNo}  
+    )
+  </insert>
+  
+  
+  
   <insert id="insertPayment" parameterType="PaymentDto">
     <selectKey order="BEFORE" keyProperty="paymentNo" resultType="int">
       SELECT PAYMENT_SEQ.NEXTVAL
