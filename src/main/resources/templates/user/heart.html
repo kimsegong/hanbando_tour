@@ -11,12 +11,14 @@
   <div class="container text-center">  <!-- 그리드 시작 -->  
     <div class="row">
       <div class="col-1">
-    <div class="w3-sidebar w3-bar-block" style="width:8%; height:200px;"> <!-- 사이드바 -->
-      <a href='' class="w3-bar-item w3-button">내 정보</a>
-      <a href='' class="w3-bar-item w3-button">내 예약</a>
+    <div class="w3-sidebar w3-bar-block" style="width:10%; height:200px;"> <!-- 사이드바 -->
+      <a th:href="@{/user/mypage.form}" class="w3-bar-item w3-button">내정보 수정✏️</a>
+      <a th:href="@{/user/modifyPw.form}" class="w3-bar-item w3-button">비밀번호변경하기💡</a>
+      <a th:href="@{/reserve/reserveList.do(userNo=${session.user.userNo})}" class="w3-bar-item w3-button">나의 예약보기📆</a>
     </div>    
       </div>
       <div class="col-10">
+       <p style="font-size: 30px;">💙나의 찜목록💙</p>
        <table class="table w-75 p-3" style="margin: auto;">
           <thead>
             <tr class="table-success">
