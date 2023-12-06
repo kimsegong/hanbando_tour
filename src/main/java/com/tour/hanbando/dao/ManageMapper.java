@@ -52,6 +52,8 @@ public interface ManageMapper {
   public List<PackageDto> getPackageList(Map<String, Object> map);
   
   /* 패키지 상품 검색 */
+  public int getSearchPackageProducCount(Map<String, Object> map);
+  public List<PackageDto> getSearchPackageProductList(Map<String, Object> map);
   
   /* 호텔 상품 목록 */
   public int getHotelCount();
