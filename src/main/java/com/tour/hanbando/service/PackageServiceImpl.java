@@ -51,8 +51,8 @@ public class PackageServiceImpl implements PackageService {
 	  Optional<String> optPage = Optional.ofNullable(request.getParameter("page"));
 	    int page = Integer.parseInt(optPage.orElse("1"));
 	    int display = 9;
-	    int regionNo = Integer.parseInt(request.getParameter("regionNo"));
-	    int total = packageMapper.getPackageCount(regionNo);
+	    int regionNo = Integer.parseInt(request.getParameter("regionNo"));	    
+	    int total = packageMapper.getPackageCount(regionNo, condition);
 
 	    myPageUtils.setPaging(page, total, display);
 
@@ -64,11 +64,10 @@ public class PackageServiceImpl implements PackageService {
 	        "regionNo", regionNo
 	    );
 	    List<PackageDto> packageList = packageMapper.getPackageList(map);
-	    
 	    return Map.of(
 	        "packageList", packageList,
 	        "totalPage", myPageUtils.getTotalPage()
-	        ,"count", packageMapper.getPackageCount(regionNo)
+	        ,"count", packageMapper.getPackageCount(regionNo, condition)
 	    );
 	}
   
