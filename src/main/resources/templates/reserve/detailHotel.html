@@ -34,23 +34,24 @@
                 </colgroup>
                 <tr>
                   <td>이름</td>
-                  <td>이름?</td>
+                  <td th:text="${reserveHo.userDto.name}"></td>
                 </tr>
                 <tr>
                   <td>휴대폰번호</td>
-                  <td>번호?</td>
+                  <td th:text="${reserveHo.userDto.mobile}"></td>
                 </tr>
                 <tr>
                   <td>성별</td>
-                  <td>남여??</td>
+                  <td th:if="${reserveHo.userDto.gender == 'M'}" >남</td>
+                  <td th:if="${reserveHo.userDto.gender == 'F'}" >여</td>
                 </tr>
                 <tr>
                   <td>이메일</td>
-                  <td></td>
+                  <td th:text="${reserveHo.userDto.email}"></td>
                 </tr>
                 <tr>
                   <td>요청사항</td>
-                  <td></td>
+                  <td th:text="${reserveHo.requestedTerm}"></td>
                 </tr>
               </table>
             </div>
@@ -66,38 +67,53 @@
                 </colgroup>
                 <tr>
                   <td>호텔명</td>
-                  <td>호텔이름??</td>
+                  <td th:text="${reserveHo.hotelDto.hotelName}"></td>
                 </tr>
                 <tr>
                   <td>위치</td>
-                  <td>주소??</td>
+                  <td th:text="${reserveHo.hotelDto.hotelAddress}">주소??</td>
                 </tr>
                 <tr>
                   <td>체크인</td>
-                  <td>날짜??</td>
+                  <td th:text="${reserveHo.reserveStart}"></td>
                 </tr>
                 <tr>
                   <td>체크아웃</td>
-                  <td>날짜??</td>
+                  <td th:text="${reserveHo.reserveFinish}"></td>
                 </tr>
                 <tr>
                   <td>객실</td>
-                  <td>예약한객실타입??</td>
+                  <td th:text="${reserveHo.roomtypeDto.roomName}"></td>
                 </tr>
                 <tr>
                   <td>예약상태</td>
-                  <td>예약상태</td>
+                  <td th:if="${reserveHo.reserveStatus == 0}">결제대기</td>
+                  <td th:if="${reserveHo.reserveStatus == 1}">예약완료</td>
+                  <td th:if="${reserveHo.reserveStatus == 2}">취소</td>
                 </tr>
                 <tr>
                   <td>결제금액</td>
-                  <td>원??</td>
+                  <td th:utext="|<strong>${reserveHo.reservePrice}원</strong>|"></td>
                 </tr>
               </table>
             </div>
             
             <div>
               <form id="frm_btn" method="post">
-             
+                <input type="hidden" name="reserveNo" id="reserveNo" th:value="${reserveHo.reserveNo}">
+                <input type="hidden" name="userNo" th:value="${reserveHo.userDto.userNo}">
+                <input type="hidden" name="userName" th:value="${reserveHo.userDto.name}">
+                <input type="hidden" name="userMobile" th:value="${reserveHo.userDto.mobile}">
+                <input type="hidden" name="requestedTerm" th:value="${reserveHo.requestedTerm}">
+                <div th:if="${reserveHo.reserveStatus == 0}">
+                  <div class="d-grid gap-2 col-5 mx-auto" style="margin: 10px auto 25px;">
+                    <button class="btn btn-primary" type="button" th:onclick="requestPay()">결제하기</button>
+                  </div>
+                </div>
+                <button class="btn btn-success" type="button" th:onclick="|location.href='@{/hotel/list.do}'|">다른 호텔 예약하러가기</button>
+                <button type="button" th:onclick="|location.href='@{/reserve/reserveHotelList.do(userNo=${session.user.userNo})}'|" class="btn btn-success">나의 예약목록</button>
+                <button th:if="${reserveHo.reserveStatus != 1}" class="btn btn-outline-secondary" type="button" id="btn_res_modify">예약 수정하러가기</button>
+                <button th:if="${reserveHo.reserveStatus != 2}" class="btn btn-outline-danger" type="button" id="btn_res_cancel">예약 취소하기</button>
               </form>
             </div>
             
@@ -108,6 +124,92 @@
 	  </div>
 	
 	</div>
+
+
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+  <script src="https://cdn.iamport.kr/v1/iamport.js"></script>
+  <script>
+    
+    var IMP = window.IMP;
+    IMP.init("imp14397622");
+ 
+    var today = new Date();   
+    var hours = today.getHours(); // 시
+    var minutes = today.getMinutes();  // 분
+    var seconds = today.getSeconds();  // 초
+    var milliseconds = today.getMilliseconds();
+    var makeMerchantUid = hours +  minutes + seconds + milliseconds;
+    var payAmount = '[[${reserveHo.reservePrice}]]';
+    var reserveNo = '[[${reserveHo.reserveNo}]]';
+    var userEmail = '[[${reserveHo.userDto.email}]]';
+    function requestPay() {
+      IMP.request_pay(
+        {
+          //결제 요청 파라미터 
+          pg: "html5_inicis",
+          pay_method: "card",
+          merchant_uid: "test"+ makeMerchantUid,
+          name: '[[${reserveHo.hotelDto.hotelName}]]',
+          amount: payAmount,
+          buyer_email: userEmail,
+          buyer_name: '[[${reserveHo.userDto.name}]]',
+          buyer_tel: '[[${reserveHo.userDto.mobile}]]' // 필수
+        },
+        function (rsp) {
+          // callback
+          if (rsp.success) {
+            console.log(rsp);
+            // 결제 성공 시: 결제 승인 또는 가상계좌 발급에 성공한 경우 DB에 정보 저장
+            $.ajax({
+              url: "/payment/payReserve.do", 
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              data: JSON.stringify({
+                impUid: rsp.imp_uid,            // 결제 고유번호
+                payYn: rsp.success,             // 성공여부
+                payMethod: rsp.pay_method,      // 결제방식
+                paidAmount: rsp.paid_amount,    // 결제금액
+                paidAt: rsp.paid_at,            // 결제시각
+                buyerName: rsp.buyer_name,
+                buyerEmail: rsp.buyer_email,
+                payStatus: rsp.status,          // 결제상태
+                merchantUid: rsp.merchant_uid,  // 주문번호
+                reserveDto: {
+                  reserveNo: reserveNo
+                  }
+              }),
+              dataType: 'json'
+            }).done(function (data) {
+              console.log(data);
+              // 결제승인시 정보 DB 저장 후 예약상태를 '결제대기' >> '예약완료'로 수정
+              $.ajax({
+                url: "/payment/modifyResStatus", // 두 번째 요청의 URL
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                data: JSON.stringify({
+                  reserveNo: reserveNo,
+                  payStatus: rsp.status
+                })
+              }).done(function (data) {
+                console.log(data);
+                // 두 번째 요청이 성공했을 때의 처리를 여기에 작성합니다.
+                if(data.modifyResStatusResult == '1'){
+                  alert('예약상태가 완료로 변경되었습니다.');
+                  location.reload();
+                }
+              });
+            })
+            alert('성공적으로 결제되었습니다. 예약완료 되었습니다.');
+          } else {
+              console.log(rsp);
+              alert(`결제에 실패하였습니다. ${rsp.error_msg}`);
+          }
+        }
+      );
+    }
+    
+    
+  </script>
 
   <script th:inline="javascript">
  

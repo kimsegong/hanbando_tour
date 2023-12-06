@@ -75,6 +75,10 @@ public class ManageController {
   }
   
   /* 기존 회원 찜목록 */
+  @GetMapping("/heartList.do")
+  public String heartList() {
+    return "manage/heartList";
+  }
 
   
   /* 기존 회원 탈퇴 */
@@ -130,7 +134,8 @@ public class ManageController {
   /* 패키지 상품 검색 */
   @GetMapping("/packageProductSearch.do")
   public String packageProductSearch(HttpServletRequest request, Model model) {
-    return "manage/productList";
+    manageService.loadSearchPackageProductList(request, model);
+    return "manage/packageProductList";
   }
   
   /* 호텔 상품 목록 */
@@ -140,18 +145,18 @@ public class ManageController {
     return "manage/hotelProductList";
   }
   
+  /* 호텔 상품 검색 */
+  @GetMapping("/hotelProductSearch.do")
+  public String hotelProductSearch(HttpServletRequest request, Model model) {
+    manageService.loadSearchHotelProductList(request, model);
+    return "manage/hotelProductList";
+  }
   
   /* 호텔 객실 가격 변경 */
   @PostMapping(value="/modifyRoomPrice.do", produces=MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<Map<String, Object>> modifyRoomPrice(HttpServletRequest request){
     return manageService.modifyRoomPrice(request);
-  }
-  
-  /* 호텔 상품 검색 */
-  @GetMapping("/hotelProductSearch.do")
-  public String hotelProductSearch(HttpServletRequest request, Model model) {
-    return "manage/hotelProductList";
-  }
+  }  
   
   /* 패키지 예약 목록 */
   @GetMapping("/reserveList.do")
