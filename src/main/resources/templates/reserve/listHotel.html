@@ -19,6 +19,7 @@
           </div>
           <div>
             <a th:href="|@{/reserve/reserveList.do(userNo=${session.user.userNo})}|">패키지</a>
+            <span> | </span>
             <a th:href="|@{/reserve/reserveHotelList.do(userNo=${session.user.userNo})}|">호텔</a>
           </div>
           <div>
@@ -35,7 +36,29 @@
                 </tr>
               </thead>
               <tbody>
-              
+                <th:block th:each="resHo,vs:${reserveHotelList}">
+                  <tr>
+                    <td th:text="${beginNo - vs.index}"></td>
+                    <td>
+                      <a th:href="@{/reserve/detailHotel.do(reserveNo=${resHo.reserveNo})}" th:text="|${resHo.reservedAt} - ${resHo.reserveNo}|"></a>
+                    </td>
+                    <td>
+                      <a th:href="@{/hotel/detail.do(hotelNo=${resHo.hotelDto.hotelNo})}" th:text="${resHo.hotelDto.hotelName}"></a>
+                    </td>
+                    <td th:text="${resHo.reservePerson}"></td>
+                    <td th:text="${resHo.reserveStart}"></td>
+                    <td th:text="|${resHo.reservePrice}원|"></td>
+                    <th:block th:if="${resHo.reserveStatus == 0}">
+                      <td th:text="결제대기"></td>
+                    </th:block>
+                    <th:block th:if="${resHo.reserveStatus == 1}">
+                      <td th:text="예약완료"></td>
+                    </th:block>
+                    <th:block th:if="${resHo.reserveStatus == 2}">
+                      <td th:text="취소"></td>
+                    </th:block>
+                  </tr>
+                </th:block>
               </tbody>
              
             </table>

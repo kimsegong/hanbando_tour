@@ -1,17 +1,20 @@
 package com.tour.hanbando.service;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
@@ -216,6 +219,30 @@ public class ReserveServiceImpl implements ReserveService {
   
   @Transactional(readOnly=true)
   @Override
+  public void loadReserveHotelListByUser(HttpServletRequest request, Model model) {
+    Optional<String> opt = Optional.ofNullable(request.getParameter("page"));
+    int page = Integer.parseInt(opt.orElse("1"));
+    int display = 10;
+    int userNo = Integer.parseInt(request.getParameter("userNo"));
+    int total = reserveMapper.getReserveHotelCountByUserNo(userNo);
+    
+    myPageUtils.setPaging(page, total, display);
+    
+    Map<String, Object> map = Map.of("begin", myPageUtils.getBegin()
+                                   , "end", myPageUtils.getEnd() 
+                                   , "userNo", userNo);
+    
+    List<ReserveDto> reserveHotelList = reserveMapper.getReserveHotelListByUser(map);
+    
+    model.addAttribute("reserveHotelList", reserveHotelList);
+    String params = "userNo=" + request.getParameter("userNo");
+    model.addAttribute("paging", myPageUtils.getMvcPaging(request.getContextPath() + "/reserve/reserveList.do", params));
+    model.addAttribute("beginNo", total - (page - 1) * display);
+  }
+  
+  
+  @Transactional(readOnly=true)
+  @Override
   public ReserveDto loadReserve(int reserveNo) {
     return reserveMapper.getReserve(reserveNo);
   }
@@ -227,6 +254,32 @@ public class ReserveServiceImpl implements ReserveService {
     List<TouristDto> tourists = reserveMapper.getTourists(reserveNo);
     return Map.of("tourists", tourists);
   }
+  
+  @Transactional(readOnly=true)
+  @Override
+  public ReserveDto loadReserveHotel(int reserveNo) {
+    return reserveMapper.getReserveHotel(reserveNo);
+  }
+  
+  
+  @Override
+  public PaymentDto loadPaymentByReserveNo(int reserveNo) {
+    return reserveMapper.getPaymentBy(Map.of("reserveNo", reserveNo));
+  }
+  
+  @Override
+  public Map<String, Object> loadPaymentByMerchantUid(HttpServletRequest request, PaymentDto payment) {
+    String accessToken = getAccessToken(null, null);
+    String merchantUid = payment.getMerchantUid();
+    int cancelAmount = payment.getCancelAmount();
+    PaymentDto payinfo = reserveMapper.getPaymentBy(Map.of("merchantUid", merchantUid));
+    int cancelableAmount = (payinfo.getPaidAmount() - cancelAmount); 
+    if(cancelableAmount < 0) {
+      return Map.of("payInfo", HttpStatus.BAD_REQUEST);
+    }
+    return Map.of("payInfo", payinfo);
+  }
+  
   
   
   @Override
@@ -262,6 +315,56 @@ public class ReserveServiceImpl implements ReserveService {
     int modifyResStatusResult = reserveMapper.updateReserveStatus(map);
     return Map.of("modifyResStatusResult", modifyResStatusResult);
   }
+  
+  
+  
+  
+  public String getAccessToken(String apiKey, String apiSecret) {
+    String urlStr = "https://api.iamport.kr/users/getToken";
+    String params = "{\"imp_key\": \"" + apiKey + "\", \"imp_secret\": \"" + apiSecret + "\"}";
+    
+    try {
+      URL url = new URL(urlStr);
+      HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+      
+      conn.setRequestMethod("POST");
+      conn.setRequestProperty("Content-Type", "application/json");
+      conn.setDoOutput(true);
+      
+      OutputStream os = conn.getOutputStream();
+      os.write(params.getBytes());
+      os.flush();
+      os.close();
+      
+      int responseCode = conn.getResponseCode();
+      BufferedReader br;
+      if(responseCode == 200) { // 정상 호출
+        br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+      } else {  // 에러 발생
+        br = new BufferedReader(new InputStreamReader(conn.getErrorStream()));
+      }
+      
+      String inputLine;
+      StringBuffer response = new StringBuffer();
+      while ((inputLine = br.readLine()) != null) {
+        response.append(inputLine);
+      }
+      br.close();
+      
+      return response.toString();
+      
+    } catch (Exception e) {
+      e.printStackTrace();
+      return null;
+    }
+  }
+  
+  
+  
+  
+  
+  
+  
   
   
 }

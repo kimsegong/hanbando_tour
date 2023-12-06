@@ -59,11 +59,13 @@
     <div class="col-4"></div>
     <div class="col-4">    
 
+    <th:block th:if="${session.user != null}">
     <div>
         <a th:href="@{/notice/write.form}">
         <button type="button" class="btn btn-outline-success">새글작성</button>
         </a>
     </div>
+    </th:block>
     </div>
  
     
@@ -98,11 +100,14 @@
       </a>
     </div>
     
+    <th:block th:if="${session.user != null}">
     <div>
       <a th:href="@{/notice/inquirywrite.form}">
       <button type="button" class="btn btn-outline-primary">&nbsp;1:1문의하기&nbsp;</button>  
       </a>
     </div>
+    </th:block>
+    
     </div>
     
     <div class="col-9">  
@@ -159,8 +164,6 @@
 
 
 
-
-    
     
     
     
@@ -184,23 +187,8 @@
       
       <script>
 
-        const fnBlind = () => {
-        $('.btn-outline-success').click((ev) => {
-          let user = /*[[${session.user}]]*/ null;
-          if(user === null){
-            if(confirm('로그인이 필요한 기능입니다. 로그인할까요? 왜안가집니가????')){
-              location.href = '/user/login.form';
-            } else {
-              return;
-            }
-      }
-    })
-   }
 
       
-      
-      
-      fnBlind();
       </script>
       
             
@@ -239,4 +227,3 @@
   <div th:replace="~{/layout/footer::footer}"></div>
 </body>
 </html>
-
