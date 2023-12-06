@@ -1388,4 +1388,3 @@ INSERT INTO INQUIRY_ANSWER_T VALUES(INQUIRY_ANSWER_SEQ.NEXTVAL, 1, 5, '안녕하
 COMMIT;
 
 -- ******************************************************************************
-
