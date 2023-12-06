@@ -11,5 +11,28 @@
 
    </select>
    
+     <select id="getFaqKoreaList" parameterType="Map" resultType="FaqDto">
+    SELECT FAQ_NO, CA_NO, TITLE, CONTENTS, CREATED_AT, MODIFIED_AT
+      FROM FAQ_T
+
+   </select>
+   
+     <select id="getFaqCashList" parameterType="Map" resultType="FaqDto">
+    SELECT FAQ_NO, CA_NO, TITLE, CONTENTS, CREATED_AT, MODIFIED_AT
+      FROM FAQ_T
+
+   </select>
+   
+     <select id="getFaqMemberList" parameterType="Map" resultType="FaqDto">
+    SELECT FAQ_NO, CA_NO, TITLE, CONTENTS, CREATED_AT, MODIFIED_AT
+      FROM FAQ_T
+
+   </select>
+   
+    <select id="getFaqCount" resultType="int">
+      SELECT COUNT(*)
+        FROM FAQ_T
+        WHERE FAQ_NO = #{faqNo}
+    </select>
   
 </mapper>
