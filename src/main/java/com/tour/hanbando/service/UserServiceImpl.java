@@ -22,7 +22,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.fasterxml.jackson.databind.util.JSONPObject;
 import com.tour.hanbando.dao.UserMapper;
 import com.tour.hanbando.dto.InactiveUserDto;
 import com.tour.hanbando.dto.UserDto;
@@ -30,7 +29,6 @@ import com.tour.hanbando.util.MyJavaMailUtils;
 import com.tour.hanbando.util.MyPageUtils;
 import com.tour.hanbando.util.MySecurityUtils;
 
-import kotlinx.serialization.json.Json;
 import lombok.RequiredArgsConstructor;
 import net.nurigo.sdk.NurigoApp;
 import net.nurigo.sdk.message.model.Message;
@@ -59,7 +57,8 @@ public class UserServiceImpl implements UserService {
   private DefaultMessageService messageService;
   
  
-  //인증번호
+  //인증번호(회원가입)
+  
   @Override
   public Map<String, Object> certifiedPhoneNumber(String phoneNumber) throws Exception {
     
@@ -83,7 +82,31 @@ public class UserServiceImpl implements UserService {
       
   }
     
+  //인증번호(비밀번호변경)
   
+  @Override
+  public void findpw(HttpServletRequest request, HttpServletResponse response) {
+    // TODO Auto-generated method stub
+    
+  }
+  
+  @Override
+  public int findpw_id(String email, String mobile) {
+    UserDto result = null;
+    
+    
+     result= userMapper.getFindPw(Map.of("email", email, "mobile", mobile));
+     int user = 0;
+     if(result == null) {
+       user = 0;
+     } else if(result != null) {
+       user = 1;
+     }
+   
+    
+    return user;
+  
+}
   
   
   @Override
