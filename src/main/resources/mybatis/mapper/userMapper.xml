@@ -5,6 +5,7 @@
 
 <mapper namespace="com.tour.hanbando.dao.UserMapper">
 
+
   <select id="getUser" parameterType="Map" resultType="UserDto">
     SELECT USER_NO, EMAIL, PW, NAME, GENDER, MOBILE, POSTCODE, ROAD_ADDRESS, JIBUN_ADDRESS, DETAIL_ADDRESS, AGREE, STATE, AUTH, PW_MODIFIED_AT, JOINED_AT
       FROM USER_T
@@ -92,6 +93,20 @@
        SET PW = #{pw}
          , PW_MODIFIED_AT = SYSDATE
      WHERE USER_NO = #{userNo}
+  </update>
+  
+  <!-- ★★★★(쿼리짜기)로그인 안된 상태에서 찾아지면 로그인이 되고 비밀번호 변경하는것으로 하기-->
+  <update id="modifiedUserPw" parameterType="UserDto">
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
   </update>
 
   <insert id="insertLeaveUser" parameterType="UserDto">
@@ -198,5 +213,17 @@
     )
   </insert>
   
+  <select id="getFindId" parameterType="Map" resultType="UserDto">
+    SELECT EMAIL
+    FROM USER_T
+    WHERE NAME = #{name} AND MOBILE = #{mobile}
+  </select>
+
+<!-- 비밀번호 찾기(아이디와 핸드폰 번호가 일치시)-->
+  <select id="getFindPw" parameterType="Map" resultType="UserDto">
+   SELECT PW
+    FROM USER_T
+    WHERE EMAIL = #{email} AND MOBILE = #{mobile} 
+  </select>
 
 </mapper>

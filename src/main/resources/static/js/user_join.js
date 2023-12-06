@@ -22,7 +22,7 @@ const fnCheckSms = () => {
     alert("인증번호가 발송되었습니다.");
 
     $.ajax({
-      type: 'get',
+      type: 'post',
       url: '/user/execute.form',
       data: 'userPhoneNum=' + sms,
       dataType: 'json',
