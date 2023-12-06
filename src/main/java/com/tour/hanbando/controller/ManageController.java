@@ -75,6 +75,10 @@ public class ManageController {
   }
   
   /* 기존 회원 찜목록 */
+  @GetMapping("/heartList.do")
+  public String heartList() {
+    return "manage/heartList";
+  }
 
   
   /* 기존 회원 탈퇴 */
@@ -130,7 +134,8 @@ public class ManageController {
   /* 패키지 상품 검색 */
   @GetMapping("/packageProductSearch.do")
   public String packageProductSearch(HttpServletRequest request, Model model) {
-    return "manage/productList";
+    manageService.loadSearchPackageProductList(request, model);
+    return "manage/packageProductList";
   }
   
   /* 호텔 상품 목록 */

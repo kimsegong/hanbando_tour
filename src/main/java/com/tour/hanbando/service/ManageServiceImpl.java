@@ -415,6 +415,54 @@ public class ManageServiceImpl implements ManageService {
   }
   
   /**
+   * 패키지여행 상품 검색
+   * 
+   * @author 심희수
+   * @param request
+   * @param model
+   * @return 검색된 패키지여행 상품 목록, 페이징 정보, 검색된 총 패키지여행 상품 수 반환 
+   */
+  @Transactional(readOnly=true)
+  @Override
+  public void loadSearchPackageProductList(HttpServletRequest request, Model model) {
+    
+    int regionNo = Integer.parseInt(request.getParameter("regionNo"));
+    int status = Integer.parseInt(request.getParameter("status"));
+    int recommendStatus = Integer.parseInt(request.getParameter("recommendStatus"));
+    String column = request.getParameter("column");
+    String query = request.getParameter("query");
+    
+    Map<String, Object> map = new HashMap<>();
+    map.put("regionNo", regionNo);
+    map.put("status", status);
+    map.put("recommendStatus", recommendStatus);
+    map.put("column", column);
+    map.put("query", query);
+    
+    int total = manageMapper.getSearchPackageProducCount(map);
+    
+    Optional<String> opt = Optional.ofNullable(request.getParameter("page"));
+    int page = Integer.parseInt(opt.orElse("1"));
+    int display = 20;
+    
+    myPageUtils.setPaging(page, total, display);
+    
+    map.put("begin", myPageUtils.getBegin());
+    map.put("end", myPageUtils.getEnd());
+    
+    List<PackageDto> packageList = manageMapper.getSearchPackageProductList(map);
+    List<RegionDto> regionList = manageMapper.getRegionList();
+    
+    model.addAttribute("packageList", packageList);
+    model.addAttribute("regionList", regionList);
+    model.addAttribute("paging", myPageUtils.getMvcPaging(request.getContextPath() + "/manage/packageProductSearch.do"
+                                                        , "column=" + column + "&query=" + query + "&regionNo=" + regionNo + "&status=" + status + "&recommendStatus=" + recommendStatus));
+    model.addAttribute("beginNo", total - (page - 1) * display);
+    model.addAttribute("total", total);
+    
+  }
+  
+  /**
    * 호텔 상품 목록
    * 
    * @author 심희수
