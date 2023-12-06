@@ -87,8 +87,8 @@
             $.each(resData.hotelList, (i, hotel) => {           
               let str ='';
               str += '<div class="col-md-4">';
-              str += '<div class="card" onclick="location.href=\''+address+hotel.hotelNo + '\'">';
-              str += '<img src="https://github.com/skal48/portfolio/blob/main/hanla.jpg?raw=true" style="height: 150px;" class="card-img-top" alt="Package Image">';
+              str += '<div class="card w-100 p-3" onclick="location.href=\''+address+hotel.hotelNo + '\'">';
+              str += '<img src="https://github.com/skal48/portfolio/blob/main/hanla.jpg?raw=true" style="height: 250px;" class="card-img-top" alt="Package Image">';
               str += '<div class="card-body">';
               str += '<p class="card-title">' + hotel.hotelName + '</p>';
               str += '<p class="card-text">최저 '+resData.price[i] +'원 부터~</p>';
