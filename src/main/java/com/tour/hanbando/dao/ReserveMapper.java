@@ -14,6 +14,7 @@ public interface ReserveMapper {
   
   public int insertReserve(ReserveDto reserve);
   public int insertTourist(TouristDto tourist);
+  public int insertReserveHotel(ReserveDto reserve);
   public int insertPayment(PaymentDto payment);
   
   public int getReserveCount();
