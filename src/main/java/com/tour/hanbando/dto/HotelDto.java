@@ -17,7 +17,7 @@ public class HotelDto {
   private double longitude;
   private String hotelDetail;
   private String phoneNumber;
-  private String HEmail;
+  private String hEmail;
   private String createdAt;
   private String modifiedAt;
   private int hit;
