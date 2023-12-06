@@ -44,12 +44,13 @@
     <div class="col-1">    
     </div>
     <div class="col-10" >
-      
-   <!--  <th:block th:if="session.user.auth == 0}">  -->
+    <th:block th:if="${session.user != null}">
+     <th:block th:if="${session.user.auth == 0}">
       <a th:href="@{/package/write.form}">
         <button type="button" class="admin_btn" style="margin-left: auto;">게시글 작성</button>
       </a> 
-    <!--  </th:block> -->
+     </th:block>
+   </th:block>
       <div style="display: flex; justify-content: space-between; align-items: center;">
         <div style="display: inline-block;"> 
          <span id="count"></span>개의 상품🚌

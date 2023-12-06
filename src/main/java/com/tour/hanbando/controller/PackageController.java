@@ -120,10 +120,12 @@ public class PackageController {
 
   
   @PostMapping("/modifyPackage.do")
-  public String modifyProduct(HttpServletRequest request, RedirectAttributes redirectAttributes) {
-    int modifyResult = packageService.modifyPackage(request);
+  public String modifyProduct(MultipartHttpServletRequest multipartRequest, RedirectAttributes redirectAttributes) throws Exception {
+    int modifyResult = packageService.modifyPackage(multipartRequest);
+    boolean addResult = packageService.addThumbnail(multipartRequest);
     redirectAttributes.addFlashAttribute("modifyResult", modifyResult);
-    return "redirect:/package/detail.do?packageNo=" + request.getParameter("packageNo"); 
+    redirectAttributes.addFlashAttribute("addResult", addResult);
+    return "redirect:/package/detail.do?packageNo=" + multipartRequest.getParameter("packageNo"); 
   }
   
   @GetMapping("/increseHit.do")
