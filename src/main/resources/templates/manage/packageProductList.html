@@ -99,11 +99,17 @@
     background-color: #96B6C5; /* 호버 시 배경 색상 */
   }
   
+  #sel_recommendStatus,
+  #reserve_status,
+  #regionName,
   #column,
   #query {
     height: 38px;
   }
   
+  #sel_recommendStatus,
+  #reserve_status,
+  #regionName,
   #column {
     flex: 1;           /* 셀렉트 박스가 나머지 영역을 모두 차지하도록 설정 */
     margin-right: 5px; /* 셀렉트 박스와 인풋 사이의 간격을 조절 */
@@ -117,11 +123,71 @@
   display: flex;
   justify-content: center; /* 가로 가운데 정렬 */
   align-items: center;     /* 세로 가운데 정렬 */
-  margin: 8% 15%;
-}
+  margin: 2% 15%;
+  }
 
+  #package, #hotel {
+    margin: 20px 10px;
+  }
+  #package a{
+    display: block;
+    padding: 5px;
+    background-color: #EEE0C9; /* 기본 배경 색상 */
+    text-decoration: none;
+    color: #404040;            /* 버튼 텍스트 색상 */
+    border-radius: 10px;         /* 둥근 모서리 */
+    font-size: medium;
+    font-weight: 500;
+  }
+  #hotel a {
+    display: block;
+    padding: 5px 15px;
+    background-color: #F1F0E8; /* 기본 배경 색상 */
+    text-decoration: none;
+    color: #404040;            /* 버튼 텍스트 색상 */
+    border-radius: 10px;         /* 둥근 모서리 */
+    font-size: medium;
+    font-weight: 500;
+  }
+  
+  .btn_select {
+    height: 38px; 
+    color: #fff;               /* 텍스트 색상 */
+    background-color: #96B6C5; /* 기본 배경 색상 */
+    border-color: #fff;        /* 테두리 색상 */
+    border-radius: 10px;         /* 테두리를 둥글게 만듭니다. */
+    transition: all 0.3s;        /* 모든 속성에 대해 0.3초 동안 트랜지션 효과 적용 */
+  }
+  .btn_select:hover {
+    color: #96B6C5;         /* 호버 시 텍스트 색상 */
+    background-color: #fff; /* 호버 시 배경 색상 */
+  }
 
 </style>
+<script th:inline="javascript">
+  
+  $(() => {
+    fnModifyRecommend();
+  })
+  const fnModifyRecommend = () => {
+    $('.btn_select').click((ev) => {
+     const formRecommend = $(ev.target).closest('form');
+      $.ajax({
+        type: 'post',
+        url: '/manage/modifyPackageRecommend.do',
+        data: formRecommend.serialize(),
+        dataType: 'json',
+        success: (resData) => {
+          if(resData.modifyRecommendResult === 1){
+            alert('추천 여부가 변경되었습니다.');
+          } else {
+            alert('추천 여부가 변경되지 않았습니다.');
+          }
+        }
+      })
+    })
+  }
+</script>
 
 <body>
 	<div th:replace="~{/layout/header::header}"></div>
@@ -133,8 +199,7 @@
 		  <div class="row">
 		    <div class="col-1">	      
 		    </div>
-        <div class="col-10" style="border:1px gray dotted">
-            <!--/*여기에 작성/ 다 만들고 style 지워주세요  */-->
+        <div class="col-10" >
 		   
 		   
         		         
@@ -175,6 +240,36 @@
                   <a th:href="@{/manage/hotelProductList.do}">호텔</a>
                 </div>
               </div>
+              
+              <!--/* 검색기능 */-->
+              <div>
+                <form id="frm_search" method="get" th:action="@{/manage/packageProductSearch.do}" >
+                  <select name="regionNo" id="regionName">
+                    <option value="0">전체지역</option>
+                    <th:block th:each="r:${regionList}">
+                      <option th:value="${r.regionNo}" th:text="${r.regionName}"></option>
+                    </th:block>
+                  </select>
+                  <select name="status" id="reserve_status">
+                    <option value="2">예약여부</option>
+                    <option value="1">예약가능</option>
+                    <option value="0">마감</option>
+                  </select>
+                  <select name="recommendStatus" id="sel_recommendStatus">
+                    <option value="2">추천여부</option>
+                    <option value="1">추천</option>
+                    <option value="0">비추천</option>
+                  </select>
+                  <select name="column" id="column" >
+                    <option value="PACKAGE_NO">패키지번호</option>
+                    <option value="PACKAGE_TITLE">패키지명</option>
+                    <option value="PRICE">가격</option>
+                    <option value="CREATED_AT">등록일</option>
+                  </select>
+                  <input type="text" name="query" id="query" placeholder="검색어 입력" >
+                  <button type="submit" id="btn_search_product" >검색</button>
+                </form>
+              </div>
                 
         
               <!--/* 관리 회원목록이 표시될 div */-->
@@ -195,6 +290,7 @@
                         <th scope="col">예약가능여부</th>
                         <th scope="col">정원</th>
                         <th scope="col">등록일</th>
+                        <th scope="col">추천</th>
                       </tr>
                     </thead>
                     <tbody class="table-group-divider table_to_detail">
@@ -220,30 +316,28 @@
                           <td>
                             <a th:href="@{/package/detail.do(packageNo=${p.packageNo})}" th:text="${p.createdAt}"></a>
                           </td>
+                          <td>
+                            <form class="frm_modifyRecommend">
+                              <select name="recommendStatus" class="recommendStatus" >
+                                <option value="1" class="recommend_status_one" th:selected="${p.recommendStatus == 1}">추천</option>
+                                <option value="0" class="recommend_status_zero" th:selected="${p.recommendStatus == 0}">비추천</option>
+                              </select>
+                              <input type="hidden" name="packageNo" th:value="${p.packageNo}">
+                              <button type="button" class="btn_select">저장</button>
+                            </form>
+                          </td>
                         </tr>
                       </th:block>
                     </tbody>
                     <!--/* 페이징 처리 */-->
                     <tfoot>
                       <tr>
-                        <td colspan="7" th:utext="${paging}" class="paging"></td>
+                        <td colspan="8" th:utext="${paging}" class="paging"></td>
                       </tr>
                     </tfoot>
                   </table>
                     
-                  <!--/* 검색기능 */-->
-                  <div>
-                    <form id="frm_search" method="get" th:action="@{/manage/packageProductSearch.do}" >
-                      <select name="column" id="column" >
-                        <option value="PACKAGE_NO">패키지번호</option>
-                        <option value="PACKAGE_TITLE">패키지명</option>
-                        <option value="PRICE">가격</option>
-                        <option value="CREATED_AT">등록일</option>
-                      </select>
-                      <input type="text" name="query" id="query" placeholder="검색어 입력" >
-                      <button type="submit" id="btn_search_product" >검색</button>
-                    </form>
-                  </div>
+
                 
                 </div>
               </div>
