@@ -392,6 +392,7 @@
                         </tr>
                         <tr class="blind show_content">
                           <td colspan="7">
+                            <div th:text="|${h.hotelName}의 전화번호 : ${h.phoneNumber}|"></div>
                             <th:block th:each="r:${roompriceList}">
                               <th:block th:if="${h.hotelNo == r.hotelNo}">
                                 <th:block th:each="rt:${roomtypeList}">
