@@ -130,7 +130,7 @@ public class ManageServiceImpl implements ManageService {
    * 
    * @author 심희수
    * @param request
-   * @return 
+   * @return 수정된 데이터 수 반환
    */
   @Override
   public ResponseEntity<Map<String, Object>> modifyUser(HttpServletRequest request) {
@@ -192,7 +192,6 @@ public class ManageServiceImpl implements ManageService {
    * 
    * @author 심희수
    * @param userNo 탈퇴할 회원번호
-   * @return 탈퇴된 회원의 데이터를 반환
    */
   @Override
   public void leaveUser(HttpServletRequest request, HttpServletResponse response) {
@@ -317,7 +316,6 @@ public class ManageServiceImpl implements ManageService {
    * @author 심희수
    * @param request
    * @param model
-   * @return 탈퇴한 회원 리스트, 페이징 정보, 총 탈퇴 회원수를 반환
    */
   @Transactional(readOnly=true)
   @Override
@@ -348,7 +346,6 @@ public class ManageServiceImpl implements ManageService {
    * @author 심희수
    * @param request
    * @param model
-   * @return 검색된 탈퇴 회원 목록, 페이징 정보, 검색된 총 탈퇴 회원수를 반환
    */
   @Transactional(readOnly=true)
   @Override
@@ -388,7 +385,6 @@ public class ManageServiceImpl implements ManageService {
    * @author 심희수
    * @param request
    * @param model
-   * @return 전체 패키지 목록, 페이징 정보, 총 패키지 상품 수 반환
    */
   @Transactional(readOnly=true)
   @Override
@@ -420,7 +416,6 @@ public class ManageServiceImpl implements ManageService {
    * @author 심희수
    * @param request
    * @param model
-   * @return 검색된 패키지여행 상품 목록, 페이징 정보, 검색된 총 패키지여행 상품 수 반환 
    */
   @Transactional(readOnly=true)
   @Override
@@ -468,7 +463,6 @@ public class ManageServiceImpl implements ManageService {
    * @author 심희수
    * @param request
    * @param model
-   * @return 전체 호텔 목록, 페이징 정보, 총 호텔 상품 수 반환
    */
   @Transactional(readOnly=true)
   @Override
@@ -498,9 +492,64 @@ public class ManageServiceImpl implements ManageService {
     model.addAttribute("total", total);
   }
   
+  /**
+   * 호텔 상품 검색
+   * 
+   * @author 심희수
+   * @param request
+   * @param model
+   */
+  @Transactional(readOnly=true)
+  @Override
+  public void loadSearchHotelProductList(HttpServletRequest request, Model model) {
+    
+    int regionNo = Integer.parseInt(request.getParameter("regionNo"));
+    int status = Integer.parseInt(request.getParameter("status"));
+    int recommendStatus = Integer.parseInt(request.getParameter("recommendStatus"));
+    String column = request.getParameter("column");
+    String query = request.getParameter("query");
+    
+    Map<String, Object> map = new HashMap<>();
+    map.put("regionNo", regionNo);
+    map.put("status", status);
+    map.put("recommendStatus", recommendStatus);
+    map.put("column", column);
+    map.put("query", query);
+    
+    int total = manageMapper.getSearchHotelProductCount(map);
+    
+    Optional<String> opt = Optional.ofNullable(request.getParameter("page"));
+    int page = Integer.parseInt(opt.orElse("1"));
+    int display = 20;
+    
+    myPageUtils.setPaging(page, total, display);
+    
+    map.put("begin", myPageUtils.getBegin());
+    map.put("end", myPageUtils.getEnd());
+    
+    List<HotelDto> hotelList = manageMapper.getSearchHotelProductList(map);
+    List<RoompriceDto> roompriceList = manageMapper.getRoomPrice();
+    List<RoomtypeDto> roomtypeList = manageMapper.getRoomType();
+    List<RegionDto> regionList = manageMapper.getRegionList();
+    
+    model.addAttribute("hotelList", hotelList);
+    model.addAttribute("roompriceList", roompriceList);
+    model.addAttribute("roomtypeList", roomtypeList);
+    model.addAttribute("regionList", regionList);
+    model.addAttribute("paging", myPageUtils.getMvcPaging(request.getContextPath() + "/manage/hotelProductSearch.do"
+                                                        , "column=" + column + "&query=" + query + "&regionNo=" + regionNo + "&status=" + status + "&recommendStatus=" + recommendStatus));
+    model.addAttribute("beginNo", total - (page - 1) * display);
+    model.addAttribute("total", total);
+    
+  }
+  
   
   /**
    * 호텔 객실 가격 변경
+   * 
+   * @author 심희수
+   * @param request
+   * @return 변경된 데이터 수 반환
    */
   @Override
   public ResponseEntity<Map<String, Object>> modifyRoomPrice(HttpServletRequest request) {
@@ -537,6 +586,10 @@ public class ManageServiceImpl implements ManageService {
   
   /**
    * 패키지 추천 여부 변경
+   * 
+   * @author 심희수
+   * @param request
+   * @return 변경된 데이터 수 반환
    */
   @Override
   public ResponseEntity<Map<String, Object>> modifyPackageRecommend(HttpServletRequest request) {
@@ -556,6 +609,10 @@ public class ManageServiceImpl implements ManageService {
   
   /**
    * 호텔 추천 여부 변경
+   * 
+   * @author 심희수
+   * @param request
+   * @return 변경된 데이터 수 반환
    */
   @Override
   public ResponseEntity<Map<String, Object>> modifyHotelRecommend(HttpServletRequest request) {
@@ -579,7 +636,6 @@ public class ManageServiceImpl implements ManageService {
    * @author 심희수
    * @param request
    * @param model
-   * @return 전체 리뷰 목록, 페이징 정보, 총 리뷰 수 반환
    */
   @Transactional(readOnly=true)
   @Override
@@ -610,7 +666,6 @@ public class ManageServiceImpl implements ManageService {
    * @author 심희수
    * @param request
    * @param model
-   * @return 검색한 리뷰 목록, 페이징 정보, 검색한 총 리뷰 수 반환
    */
   @Transactional(readOnly=true)
   @Override
@@ -646,6 +701,10 @@ public class ManageServiceImpl implements ManageService {
   
   /**
    * 리뷰 삭제
+   * 
+   * @author 심희수
+   * @param reviewNo 삭제할 리뷰의 번호 전달
+   * @return 삭제하는 리뷰 정보 반환
    */
   @Override
   public int removeReview(int reviewNo) {
