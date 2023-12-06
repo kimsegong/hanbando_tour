@@ -2,6 +2,23 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 
 <head th:replace="~{/layout/header::head('한반도 투어')}"></head> <!-- 이거 알맞게 바꿔주세요-->
+<style>
+.temp {
+  border: 1px black solid; 
+  height: 500px;
+ }
+.right {
+  border: 1px lightgray solid ;
+ } 
+ hr {
+   color: darkgray;
+ }
+</style>
+
+
+
+
+
 <body>
 	<div th:replace="~{/layout/header::header}"></div>
 	
@@ -12,10 +29,54 @@
 		  <div class="row">
 		    <div class="col-1">	      
 		    </div>
-		    <div class="col-10" style="border:1px gray dotted">
+		    <div class="col-10" style="border:1px gray dotted; height: 500px;">
 		      	<!--/*여기에 작성/ 다 만들고 style 지워주세요  */-->
+    		     
+    		    <th:block th:if="${session.user != null}">
+             <th:block th:if="${session.user.auth == 0}">
+               <button type="button" id="btn_edit">편집</button> 
+               <button type="button" id="btn_remove">삭제</button> 
+             </th:block>
+            </th:block>   
+            <div class="row">
+              <div class="col-8 temp">
+                <div th:text="|조회수 : ${hotel.hit}|"></div>
+                <div class="mainPicture">
+                  <div class="bigPicture"></div>
+                  <div class="owl-carousel owl-theme" id="imageWrapper">
+                    <th:block th:each="hotelImage : ${hotelImage}">
+                      <img class="owl_img" th:src="@{|${hotelImage.imagePath}/${hotelImage.filesystemName}|}">
+                    </th:block>
+                  </div>
+                </div>
+                
+                
+                
+                
+          
+              </div>
+              <div class="col-4 temp">
+                <div class="right">
+                  <div class="title" id="sideTitle" th:text="${hotel.hotelName}"></div>
+                  <hr>
+                  <div class="roomType">방타입</div>
+                  <div class="price">금액</div>
+                  <div class="checkIn">체크인</div>
+                  <div class="checkout">체크아웃</div>
+                  <button type="button">날짜 선택</button>
+                  <hr>
+                  <button type="button">예약하기</button>
+                  <button type="button">찜하기</button>
+                </div>
+                <div id="map" style="width:100%;height:350px;">
+                  <input type="hidden" id="latitude" th:value="${hotel.latitude}">
+                  <input type="hidden" id="longitude" th:value="${hotel.longitude}">
+                </div>
+              </div>
+              
+            </div>
+        
 		   
-		      	
 		      	
 		    </div>
 		    <div class="col-1">	      
@@ -24,7 +85,77 @@
 	  </div>
 	
 	</div>
+<script th:inline="javascript">
+  
+  function kakaoMap(){
+    var latitude = $('#latitude').val();
+    var longitude = $('#longitude').val(); 
+    var title = $('#sideTitle').text()
+    
+    var mapContainer = document.getElementById('map'), // 지도를 표시할 div 
+      mapOption = { 
+          center: new kakao.maps.LatLng(latitude, longitude), // 지도의 중심좌표
+          level: 3 // 지도의 확대 레벨
+      };
+    
+    var map = new kakao.maps.Map(mapContainer, mapOption); // 지도를 생성합니다
+    
+    // 마커가 표시될 위치입니다 
+    var markerPosition  = new kakao.maps.LatLng(latitude, longitude); 
+    
+    // 마커를 생성합니다
+    var marker = new kakao.maps.Marker({
+        position: markerPosition
+    });
+    
+    // 마커가 지도 위에 표시되도록 설정합니다
+    marker.setMap(map);
+    
+    var iwContent = '<div style="padding:5px;">'+title+'<br><a href="https://map.kakao.com/link/map/Hello World!,'+latitude+','+longitude+'" style="color:blue" target="_blank">큰지도보기</a> <a href="https://map.kakao.com/link/to/Hello World!,'+latitude+','+longitude+'" style="color:blue" target="_blank">길찾기</a></div>', // 인포윈도우에 표출될 내용으로 HTML 문자열이나 document element가 가능합니다
+      iwPosition = new kakao.maps.LatLng(33.450701, 126.570667); //인포윈도우 표시 위치입니다
+  
+    // 인포윈도우를 생성합니다
+    var infowindow = new kakao.maps.InfoWindow({
+        position : iwPosition, 
+        content : iwContent 
+    });
+      
+    // 마커 위에 인포윈도우를 표시합니다. 두번째 파라미터인 marker를 넣어주지 않으면 지도 위에 표시됩니다
+    infowindow.open(map, marker); 
+  }
+  
+  $(document).ready(function (e){
+    
+    $(document).on("click","img",function(){
+      var path = $(this).attr('src')
+      showImage(path);
+    });//end click event
+    
+    function showImage(fileCallPath){
+        
+        $(".bigPicture")
+        .html("<img src='"+fileCallPath+"' >")
+        .animate({width:'100%', height: '100%'}, 1000);
+        
+      }//end fileCallPath
+  });
 
+  $(document).ready(function() {
+           var owl = $('.owl-carousel');
+            owl.owlCarousel({
+              items: 3, // 한번에 보여지는 이미지 수
+              loop: true, // 항목들을 무한으로 반복하여 보여줄지 여부
+              autoplay: false, // 자동으로 슬라이드 쇼를 시작할지 여부
+              autoplayTimeout: 4000, // 다음 이미지로 넘어가는 시간 (단위 : 밀리초)
+              autoplayHoverPause: true, // 마우스가 이미지에 위에 있을 때 자동 슬라이드를 일시중지 할지 여부
+            });           
+          });
+  
+  
+  
+  kakaoMap();
+  
+</script>
 	
 	
 	

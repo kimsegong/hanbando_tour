@@ -22,7 +22,7 @@
 		    <div class="col-10" style="border:1px gray dotted">
 		      	<!--/*여기에 작성/ 다 만들고 style 지워주세요  */-->
 				   <h2>호텔 게시글작성</h2>
-			<form method="post" id="hotel_add" th:action="@{/hotel/add.do}" accept="image/*" enctype="multipart/form-data" >
+			<form method="post" id="hotel_add" th:action="@{/hotel/addHotel.do}" accept="image/*" enctype="multipart/form-data" >
 				<input type="hidden" id="hotelNo" name="hotelNo" th:value="${hotelNo}"> 
 			   <div style="margin: 30px 270px;" class="w-50 p-3">
 		<div style="text-align: left;">
@@ -32,7 +32,7 @@
 		  <div class="attached_list mt-2" id="attached_list"></div>
 		  <div>
        <label for="hotelName">호텔 이름 </label> 
-       <input type="text" id="hotelName" class="form-control">
+       <input type="text" id="hotelName" class="form-control" name="hotelName">
       </div>
 		  <div><!-- 추천라디오 및 선택박스 -->
     <div style="display: flex; justify-content: space-between; align-items: center;">
@@ -45,12 +45,27 @@
                 </label>
             </div>
             <div class="form-check">
-                <input class="form-check-input" type="radio" name="recommendStatus"  th:value="2" checked>
+                <input class="form-check-input" type="radio" name="recommendStatus"  th:value="0" checked>
                 <label class="form-check-label" for="recommendStatus">
                     안추천
                 </label>
             </div>
         </div>
+        <div style="text-align: center;">
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="status" th:value="1"checked>
+                <label class="form-check-label" for="status">
+                    게시
+                </label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="status"  th:value="0" >
+                <label class="form-check-label" for="status">
+                    안게시
+                </label>
+            </div>
+        </div>
+        
            <div class="w-25 p-3">
 			    <select id="regionSelect" class="form-select" aria-label="Default select example" name="regionNo">
 			        <option selected>-지역-</option>
@@ -62,11 +77,11 @@
 		
 		<div>
       <label for="hEmail">Email</label>
-      <input type="email" id="hEmail" class="form-control">
+      <input type="email" id="hEmail" class="form-control" name="hEmail">
     </div>
 		<div>
       <label for="phoneNumber">전화번호</label>
-      <input type="text" id="phoneNumber" class="form-control">
+      <input type="text" id="phoneNumber" class="form-control" name="phoneNumber">
     </div>
     <div class="row mb-2">
           <label for="postcode" class="col-sm-3 col-form-label">주소</label>
@@ -75,7 +90,7 @@
         </div>
         
         <div class="row mb-2">
-          <div class="col-sm-6"><input type="text" name="roadAddress" id="roadAddress" class="form-control" placeholder="도로명주소" readonly></div>
+          <div class="col-sm-6"><input type="text" name="hotelAddress" id="roadAddress" class="form-control" placeholder="도로명주소" readonly></div>
           <div class="col-sm-6"><input type="text" name="jibunAddress" id="jibunAddress" class="form-control" placeholder="지번주소" readonly></div>
           <input type="hidden" name="latitude" id="latitude">
           <input type="hidden" name="longitude" id="longitude"  >
@@ -84,34 +99,32 @@
         
     <div>사용할수 있는 시설
       <label for="morning" class="form-check-label">조식</label>
-      <input type="checkbox" id="morning" class="form-check-input">
+      <input type="checkbox" id="morning" class="form-check-input" name="morning" value="1">
       <label for="pool" class="form-check-label">수영장</label>
-      <input type="checkbox" id="pool" class="form-check-input">
+      <input type="checkbox" id="pool" class="form-check-input" name="pool" value="1">
       <label for="sauna" class="form-check-label">사우나</label>
-      <input type="checkbox" id="sauna" class="form-check-input">
+      <input type="checkbox" id="sauna" class="form-check-input" name="sauna" value="1">
       <label for="lounge" class="form-check-label">라운지</label>
-      <input type="checkbox" id="lounge" class="form-check-input">
+      <input type="checkbox" id="lounge" class="form-check-input" name="lounge" value="1">
       <label for="roomservice" class="form-check-label">룸서비스</label>
-      <input type="checkbox" id="roomservice" class="form-check-input">
+      <input type="checkbox" id="roomservice" class="form-check-input" name="roomservice" value="1">
     </div>
 		<div>
     <label for="hotelDetail">호텔 상세</label>
-    <textarea id="hotelDetail">체크인: 체크아웃:</textarea>
-    </form>
+    <textarea id="hotelDetail" name="hotelDetail">체크인: 체크아웃:</textarea>
+    </form> 
     <!--/* Button trigger modal */--> 
 		<button type="button" class="btn btn-primary" onclick="openHotelRoom()" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
 		  객실 등록하기 
 		</button>
-		
+		    </form>
 		<!--/* Modal */-->
 		<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
 		  <div class="modal-dialog">
 		    <div class="modal-content">
 		    </div>
 		  </div>
-		</div>  
-      <button type="button" id="temp">이동이동</button>
-    </div>
+		  
     <!--/*
 		<div class="roomGroup">
       <input type="file" name="files1" class="form-control" multiple>
@@ -176,7 +189,6 @@
 				      <button type="submit" class="btn btn-primary" style="margin: 32px;">작성완료</button>
 			      </div>
 				 </div>
-
 		    </div>
 		    <div class="col-1">	      
 		    </div>
@@ -231,8 +243,8 @@
 
                 var callback = function(result, status) {
                     if (status === kakao.maps.services.Status.OK) {
-                      document.getElementById('latitude').value = result[0].x;
-                      document.getElementById('longitude').value = result[0].y;
+                        document.getElementById('longitude').value = result[0].x;
+                        document.getElementById('latitude').value = result[0].y;
                         console.log(result);
                         console.log(result[0].x);
                     }
