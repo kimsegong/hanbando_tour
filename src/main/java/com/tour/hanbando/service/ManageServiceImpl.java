@@ -21,7 +21,10 @@ import com.tour.hanbando.dto.HotelDto;
 import com.tour.hanbando.dto.InactiveUserDto;
 import com.tour.hanbando.dto.LeaveUserDto;
 import com.tour.hanbando.dto.PackageDto;
+import com.tour.hanbando.dto.RegionDto;
 import com.tour.hanbando.dto.ReviewDto;
+import com.tour.hanbando.dto.RoompriceDto;
+import com.tour.hanbando.dto.RoomtypeDto;
 import com.tour.hanbando.dto.UserDto;
 import com.tour.hanbando.util.MyPageUtils;
 import com.tour.hanbando.util.MySecurityUtils;
@@ -127,7 +130,7 @@ public class ManageServiceImpl implements ManageService {
    * 
    * @author 심희수
    * @param request
-   * @return 
+   * @return 수정된 데이터 수 반환
    */
   @Override
   public ResponseEntity<Map<String, Object>> modifyUser(HttpServletRequest request) {
@@ -189,7 +192,6 @@ public class ManageServiceImpl implements ManageService {
    * 
    * @author 심희수
    * @param userNo 탈퇴할 회원번호
-   * @return 탈퇴된 회원의 데이터를 반환
    */
   @Override
   public void leaveUser(HttpServletRequest request, HttpServletResponse response) {
@@ -314,7 +316,6 @@ public class ManageServiceImpl implements ManageService {
    * @author 심희수
    * @param request
    * @param model
-   * @return 탈퇴한 회원 리스트, 페이징 정보, 총 탈퇴 회원수를 반환
    */
   @Transactional(readOnly=true)
   @Override
@@ -345,7 +346,6 @@ public class ManageServiceImpl implements ManageService {
    * @author 심희수
    * @param request
    * @param model
-   * @return 검색된 탈퇴 회원 목록, 페이징 정보, 검색된 총 탈퇴 회원수를 반환
    */
   @Transactional(readOnly=true)
   @Override
@@ -385,7 +385,6 @@ public class ManageServiceImpl implements ManageService {
    * @author 심희수
    * @param request
    * @param model
-   * @return 전체 패키지 목록, 페이징 정보, 총 패키지 상품 수 반환
    */
   @Transactional(readOnly=true)
   @Override
@@ -402,11 +401,60 @@ public class ManageServiceImpl implements ManageService {
                                    , "end", myPageUtils.getEnd());
     
     List<PackageDto> packageList = manageMapper.getPackageList(map);
+    List<RegionDto> regionList = manageMapper.getRegionList();
 
     model.addAttribute("packageList", packageList);
+    model.addAttribute("regionList", regionList);
     model.addAttribute("paging", myPageUtils.getMvcPaging(request.getContextPath() + "/manage/productList.do"));
     model.addAttribute("beginNo", total - (page - 1) * display);
     model.addAttribute("total", total);
+  }
+  
+  /**
+   * 패키지여행 상품 검색
+   * 
+   * @author 심희수
+   * @param request
+   * @param model
+   */
+  @Transactional(readOnly=true)
+  @Override
+  public void loadSearchPackageProductList(HttpServletRequest request, Model model) {
+    
+    int regionNo = Integer.parseInt(request.getParameter("regionNo"));
+    int status = Integer.parseInt(request.getParameter("status"));
+    int recommendStatus = Integer.parseInt(request.getParameter("recommendStatus"));
+    String column = request.getParameter("column");
+    String query = request.getParameter("query");
+    
+    Map<String, Object> map = new HashMap<>();
+    map.put("regionNo", regionNo);
+    map.put("status", status);
+    map.put("recommendStatus", recommendStatus);
+    map.put("column", column);
+    map.put("query", query);
+    
+    int total = manageMapper.getSearchPackageProducCount(map);
+    
+    Optional<String> opt = Optional.ofNullable(request.getParameter("page"));
+    int page = Integer.parseInt(opt.orElse("1"));
+    int display = 20;
+    
+    myPageUtils.setPaging(page, total, display);
+    
+    map.put("begin", myPageUtils.getBegin());
+    map.put("end", myPageUtils.getEnd());
+    
+    List<PackageDto> packageList = manageMapper.getSearchPackageProductList(map);
+    List<RegionDto> regionList = manageMapper.getRegionList();
+    
+    model.addAttribute("packageList", packageList);
+    model.addAttribute("regionList", regionList);
+    model.addAttribute("paging", myPageUtils.getMvcPaging(request.getContextPath() + "/manage/packageProductSearch.do"
+                                                        , "column=" + column + "&query=" + query + "&regionNo=" + regionNo + "&status=" + status + "&recommendStatus=" + recommendStatus));
+    model.addAttribute("beginNo", total - (page - 1) * display);
+    model.addAttribute("total", total);
+    
   }
   
   /**
@@ -415,7 +463,6 @@ public class ManageServiceImpl implements ManageService {
    * @author 심희수
    * @param request
    * @param model
-   * @return 전체 호텔 목록, 페이징 정보, 총 호텔 상품 수 반환
    */
   @Transactional(readOnly=true)
   @Override
@@ -432,14 +479,140 @@ public class ManageServiceImpl implements ManageService {
                                    , "end", myPageUtils.getEnd());
     List<HotelDto> hotelList = manageMapper.getHotelList(map);
     
+    List<RoompriceDto> roompriceList = manageMapper.getRoomPrice();
+    List<RoomtypeDto> roomtypeList = manageMapper.getRoomType();
+    List<RegionDto> regionList = manageMapper.getRegionList();
+    
     model.addAttribute("hotelList", hotelList);
+    model.addAttribute("roompriceList", roompriceList);
+    model.addAttribute("roomtypeList", roomtypeList);
+    model.addAttribute("regionList", regionList);
     model.addAttribute("paging", myPageUtils.getMvcPaging(request.getContextPath() + "/manage/hotelProductList.do"));
     model.addAttribute("beginNo", total - (page - 1) * display);
     model.addAttribute("total", total);
   }
   
   /**
-   * 호텔 판매/추천 여부 변경
+   * 호텔 상품 검색
+   * 
+   * @author 심희수
+   * @param request
+   * @param model
+   */
+  @Transactional(readOnly=true)
+  @Override
+  public void loadSearchHotelProductList(HttpServletRequest request, Model model) {
+    
+    int regionNo = Integer.parseInt(request.getParameter("regionNo"));
+    int status = Integer.parseInt(request.getParameter("status"));
+    int recommendStatus = Integer.parseInt(request.getParameter("recommendStatus"));
+    String column = request.getParameter("column");
+    String query = request.getParameter("query");
+    
+    Map<String, Object> map = new HashMap<>();
+    map.put("regionNo", regionNo);
+    map.put("status", status);
+    map.put("recommendStatus", recommendStatus);
+    map.put("column", column);
+    map.put("query", query);
+    
+    int total = manageMapper.getSearchHotelProductCount(map);
+    
+    Optional<String> opt = Optional.ofNullable(request.getParameter("page"));
+    int page = Integer.parseInt(opt.orElse("1"));
+    int display = 20;
+    
+    myPageUtils.setPaging(page, total, display);
+    
+    map.put("begin", myPageUtils.getBegin());
+    map.put("end", myPageUtils.getEnd());
+    
+    List<HotelDto> hotelList = manageMapper.getSearchHotelProductList(map);
+    List<RoompriceDto> roompriceList = manageMapper.getRoomPrice();
+    List<RoomtypeDto> roomtypeList = manageMapper.getRoomType();
+    List<RegionDto> regionList = manageMapper.getRegionList();
+    
+    model.addAttribute("hotelList", hotelList);
+    model.addAttribute("roompriceList", roompriceList);
+    model.addAttribute("roomtypeList", roomtypeList);
+    model.addAttribute("regionList", regionList);
+    model.addAttribute("paging", myPageUtils.getMvcPaging(request.getContextPath() + "/manage/hotelProductSearch.do"
+                                                        , "column=" + column + "&query=" + query + "&regionNo=" + regionNo + "&status=" + status + "&recommendStatus=" + recommendStatus));
+    model.addAttribute("beginNo", total - (page - 1) * display);
+    model.addAttribute("total", total);
+    
+  }
+  
+  
+  /**
+   * 호텔 객실 가격 변경
+   * 
+   * @author 심희수
+   * @param request
+   * @return 변경된 데이터 수 반환
+   */
+  @Override
+  public ResponseEntity<Map<String, Object>> modifyRoomPrice(HttpServletRequest request) {
+    
+    int hotelNo = Integer.parseInt(request.getParameter("hotelNo"));
+    int roomNo = Integer.parseInt(request.getParameter("roomNo"));
+    String ssDate = request.getParameter("ssDate");
+    String seDate = request.getParameter("seDate");
+    String jsDate = request.getParameter("jsDate");
+    String jeDate = request.getParameter("jeDate");
+    String bsDate = request.getParameter("bsDate");
+    String beDate = request.getParameter("beDate");
+    int sungPrice = Integer.parseInt(request.getParameter("sungPrice"));
+    int junPrice = Integer.parseInt(request.getParameter("junPrice"));
+    int biPrice = Integer.parseInt(request.getParameter("biPrice"));
+    
+    RoompriceDto roomprice = RoompriceDto.builder()
+                                .hotelNo(hotelNo)
+                                .roomNo(roomNo)
+                                .seDate(seDate)
+                                .ssDate(ssDate)
+                                .sungPrice(sungPrice)
+                                .jsDate(jsDate)
+                                .jeDate(jeDate)
+                                .junPrice(junPrice)
+                                .bsDate(bsDate)
+                                .beDate(beDate)
+                                .biPrice(biPrice)
+                                .build();
+    
+    int modifyPriceResult = manageMapper.updateRoomPrice(roomprice);
+    return new ResponseEntity<>(Map.of("modifyPriceResult", modifyPriceResult), HttpStatus.OK);
+  }
+  
+  /**
+   * 패키지 추천 여부 변경
+   * 
+   * @author 심희수
+   * @param request
+   * @return 변경된 데이터 수 반환
+   */
+  @Override
+  public ResponseEntity<Map<String, Object>> modifyPackageRecommend(HttpServletRequest request) {
+    
+    int recommendStatus = Integer.parseInt(request.getParameter("recommendStatus"));
+    int packageNo = Integer.parseInt(request.getParameter("packageNo"));
+    
+    PackageDto packageDto = PackageDto.builder()
+                              .recommendStatus(recommendStatus)
+                              .packageNo(packageNo)
+                              .build();
+    
+    int modifyRecommendResult = manageMapper.updatePackageRecommend(packageDto);
+    
+    return new ResponseEntity<>(Map.of("modifyRecommendResult", modifyRecommendResult), HttpStatus.OK);
+  }
+  
+  /**
+   * 호텔 추천 여부 변경
+   * 
+   * @author 심희수
+   * @param request
+   * @return 변경된 데이터 수 반환
    */
   @Override
   public ResponseEntity<Map<String, Object>> modifyHotelRecommend(HttpServletRequest request) {
@@ -448,9 +621,9 @@ public class ManageServiceImpl implements ManageService {
     int hotelNo = Integer.parseInt(request.getParameter("hotelNo"));
     
     HotelDto hotel = HotelDto.builder()
-                        .recommendStatus(recommendStatus)
-                        .hotelNo(hotelNo)
-                        .build();
+        .recommendStatus(recommendStatus)
+        .hotelNo(hotelNo)
+        .build();
     
     int modifyRecommendResult = manageMapper.updateHotelRecommend(hotel);
     
@@ -463,7 +636,6 @@ public class ManageServiceImpl implements ManageService {
    * @author 심희수
    * @param request
    * @param model
-   * @return 전체 리뷰 목록, 페이징 정보, 총 리뷰 수 반환
    */
   @Transactional(readOnly=true)
   @Override
@@ -494,7 +666,6 @@ public class ManageServiceImpl implements ManageService {
    * @author 심희수
    * @param request
    * @param model
-   * @return 검색한 리뷰 목록, 페이징 정보, 검색한 총 리뷰 수 반환
    */
   @Transactional(readOnly=true)
   @Override
@@ -530,6 +701,10 @@ public class ManageServiceImpl implements ManageService {
   
   /**
    * 리뷰 삭제
+   * 
+   * @author 심희수
+   * @param reviewNo 삭제할 리뷰의 번호 전달
+   * @return 삭제하는 리뷰 정보 반환
    */
   @Override
   public int removeReview(int reviewNo) {

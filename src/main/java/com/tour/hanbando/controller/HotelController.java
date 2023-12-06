@@ -1,5 +1,6 @@
 package com.tour.hanbando.controller;
 
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -8,10 +9,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -50,11 +51,13 @@ public class HotelController {
       return "redirect:/hotel/list.do";
     }
   }
-  
+  /*************************** 상세 ***************************************************/  
   @GetMapping("detail.do")
-  public String hotelDetail(
-      @RequestParam(value = "packageNo", required = false, defaultValue = "0") int hotelNo, 
-      HttpServletRequest request, Model model) {
+  public String hotelDetail(@RequestParam(value = "hotelNo", required = false, defaultValue = "0") int hotelNo, 
+                                HttpServletRequest request, Model model) {
+    
+   hotelService.hoteDetail(request, hotelNo, model); 
+    
    return "hotel/detail";
   } 
   
@@ -74,25 +77,36 @@ public class HotelController {
   
   
   @PostMapping("addHotel.do")
-  public String writeHotel(MultipartHttpServletRequest multipartHttpServletRequest, RedirectAttributes redirectAttributes) {
+  public String writeHotel(MultipartHttpServletRequest multipartRequest, RedirectAttributes redirectAttributes) throws Exception {
+    System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@" + multipartRequest.getParameter("hotelName"));
+   int hotelResult = hotelService.writeHotel(multipartRequest) ? 1 : 0;
+    
+    redirectAttributes.addFlashAttribute("hotelResult", redirectAttributes); 
+    
+    
     return "redirect:/hotel/list.do";
   }
   
   @GetMapping("addRoom.form")
-  public String HotelRoom(HttpServletRequest request, Model model) {
-   model.addAttribute("hotelNo", request.getAttribute("hotelNo"));
+  public String HotelRoom(@RequestParam(value="hotelNo", required=false, defaultValue="0")int hotelNo, Model model) {
+   model.addAttribute("hotelNo", hotelNo);
     return "hotel/hotelRoom";  
   }
   
-  @PostMapping("addRoom.do")
-  public void writeRoom(MultipartHttpServletRequest multipartRequest, Model model) throws Exception {
+  @ResponseBody
+  @PostMapping("addHotelRoom.do")
+  public int writeRoom(MultipartHttpServletRequest multipartRequest, 
+                        @RequestParam("files") List<MultipartFile> files , Model model) throws Exception {
     
-    System.out.println("@@@@@@@@@@@@뭐가 널인데" + multipartRequest.getParameter("bsDate"));
+    int addResult = hotelService.writeRoom(multipartRequest, files) ? 1 : 0;
     
-    
-    boolean addResult = hotelService.writeRoom(multipartRequest);
-    model.addAttribute("addResult", addResult);
+    return addResult;
     
   }
+  
+
+  
+   
+  
   
 }
