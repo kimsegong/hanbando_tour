@@ -85,8 +85,15 @@
     if(url.searchParams.get("regionNo") == null){
       region = 0;
     } 
-    
-       
+    $(document).ready(function() {
+            const url = new URL(window.location.href);
+            const regionNo = url.searchParams.get("regionNo");   
+            // regionNo가 있을 때 정렬 버튼 숨기기
+            if (regionNo) {
+                $('.btn-group').hide();
+            }
+          });
+
       $('.btn-outline-kong').click(function(){
         param = $(this).val();
         page = 1;
@@ -116,7 +123,7 @@
                         if (package.productImageDto && package.productImageDto.thumbnail === 1) {
                             str += '<img src="' + package.productImageDto.imagePath + '/' + package.productImageDto.filesystemName + '" style="height: 250px; " class="card-img-top" alt="Package Image">';
                         } else {
-                            str += '<img src="https://github.com/skal48/portfolio/blob/main/bakdo.jpg?raw=true" style="height: 250px;" class="card-img-top" alt="Package Image">';
+                            str += '<img src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2Fdc4Q17%2FbtsBykVk229%2FPtJu2VtYGEdKF5YDcZm7xK%2Fimg.jpg" style="height: 250px;" class="card-img-top" alt="Package Image">';
                         }
                         str += '<div class="card-body">';
                         str += '<p class="card-title">' + package.packageTitle + '</p>';
