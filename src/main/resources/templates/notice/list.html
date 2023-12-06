@@ -5,25 +5,29 @@
 
 <style>
   .wrap1 > .box1{
-    height:70px;
+    height:30px;
   }  
 
   .wrap1 > .box2{
-    height:70px;
+    height:30px;
   }    
   
   .wrap1 > .box3{
-  height:70px;
+  height:30px;
   }    
 
   .wrap1 > .box4{
-  height:70px;
+  height:30px;
   }      
   
   .btn-outline-primary {
     padding: 10px 24px !important; /* 버튼 내부의 여백을 조절합니다. */
     font-size: 14px !important; /* 글자 크기를 조절합니다. */
   }
+    .title {
+    font-size: 30px;
+  }
+
 </style>
 
 
@@ -32,90 +36,62 @@
   <div th:replace="~{/layout/header::header}"></div>
   
   <div class="main_wrap">
-  
-  
     <div class="container text-center">
       <div class="row">
-        <div class="col-1">       
+        <div class="col-1">   
+          <div class="w3-sidebar w3-bar-block" style="width:10%; height:200px;"> <!-- 사이드바 -->
+            <a th:href="@{/notice/list.do}" class="w3-bar-item w3-button">공지사항</a>
+            <a th:href="@{/notice/faq.do}" class="w3-bar-item w3-button">자주묻는질문</a>
+            <th:block th:if="${session.user != null}">
+             <a th:href="@{/notice/inquirywrite.form}" class="w3-bar-item w3-button">1:1문의하기</a>
+            </th:block>
+          </div>        
         </div>
-        <div class="col-10" style="border:1px gray dotted">
-            <!--/*여기에 작성/ 다 만들고 style 지워주세요  */-->
+        <div class="col-10">    
+        <p class="title">공지사항</p>
             
-        <h2>공지사항</h2>
-            
+      <div class="row">
+      <div class="col-7"></div>
+      <div class="col-4" style="display: flex; justify-content: flex-end;">
+        <div class="home">
+          <a th:href="@{http://localhost:8080}"><i class="fa-solid fa-house" style="font-size:15px; margin-right: 5px;"></i></a>
+           &nbsp;고객센터  &nbsp;  >   &nbsp; 공지사항
+        </div>
+      </div>
+         
+      <div class = "wrap1">
+        <div class="box1"></div>
+      </div>
+      
+   <div class="container text-center">
     <div class="row">
-    <div class="col-7"></div>
-    <div class="col-4" style="display: flex; justify-content: flex-end;">
-      <div class="home">
-        <a th:href="@{http://localhost:8080}"><i class="fa-solid fa-house" style="font-size:15px; margin-right: 5px;"></i></a>
-         &nbsp;고객센터  &nbsp;  >   &nbsp; 공지사항
+      <div class="col col-lg-2">
+      </div>
+      <div class="col-md-auto">       
+      <th:block th:if="${session.user != null}">
+        <a th:href="@{/notice/write.form}">
+          <button type="button" class="btn btn-outline-success">새글작성</button>
+        </a>
+       </th:block>
+      </div>
+      <div class="col">
       </div>
     </div>
-       
-    <div class = "wrap1">
-      <div class="box1"></div>
-    </div>
-    
-    <div class="col-4"></div>
-    <div class="col-4">    
-
-    <th:block th:if="${session.user != null}">
-    <div>
-        <a th:href="@{/notice/write.form}">
-        <button type="button" class="btn btn-outline-success">새글작성</button>
-        </a>
-    </div>
-    </th:block>
-    </div>
- 
-    
-    
-    
-    <div class="col-4">
-     <form method="get" th:action="@{/notice/search.do}">
-        <div class = "title_search">
-        <input type="radio" class="btn-check" id="option5" name="column" value="TITLE" autocomplete="off" checked>
-        <label class="btn" for="option5">제목</label>
-        <input type="text" name="query" placeholder="검색어 입력" class="search_input">
-        <button type="submit" class="btn btn-outline-success search_btn">검색</button>
-      </div>        
-     </form>
-    </div>
+   </div>
+      
     
     <div class = "wrap1">
       <div class="box2"></div>
+    </div> 
+    
+    <div class="container text-center">
+  <div class="row">
+    <div class="col">
     </div>
-    
- 
-    <div class="col-3"> 
-      <div>
-      <a th:href="@{/notice/list.do}">
-      <button type="button" class="btn btn btn-primary" style="width:125px; height:45px">&nbsp;&nbsp;&nbsp;&nbsp;공지사항&nbsp;&nbsp;&nbsp;&nbsp;</button>  
-      </a>
-      </div> 
-    
-    <div>
-      <a th:href="@{/notice/faq.do}">
-      <button type="button" class="btn btn-outline-primary">자주묻는질문</button>  
-      </a>
-    </div>
-    
-    <th:block th:if="${session.user != null}">
-    <div>
-      <a th:href="@{/notice/inquirywrite.form}">
-      <button type="button" class="btn btn-outline-primary">&nbsp;1:1문의하기&nbsp;</button>  
-      </a>
-    </div>
-    </th:block>
-    
-    </div>
-    
-    <div class="col-9">  
-      <div style="display: flex; flex-direction: column; align-items: center;"> 
-
-    <table class="table">
+    <div class="col-9">
+     <table class="table">
       <thead>
-        <tr>
+        <tr class="table-secondary">
           <th scope="col">공지번호</th>
           <th scope="col">제목</th>
           <th scope="col">작성일</th>
@@ -135,12 +111,33 @@
       </th:block>
     </tbody>
   </table>
+    </div>
+    <div class="col">
+    </div>
+  </div> 
+    <div>  
+      <div style="display: flex; flex-direction: column; align-items: center;"> 
+
+    
   
     <div class = "wrap1">
       <div class="box3"></div>
     </div>
+    
+ 
   
   <tbody>
+    <tr>
+      <form method="get" th:action="@{/notice/search.do}">
+          <div class = "title_search">
+           <div class="input-group mb-3">
+            <span class="input-group-text" id="inputGroup-sizing-default">제목</span>
+            <input type="text" name="query" placeholder="검색어를 입력해주세요" class="form-control search_input" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+            <button type="submit" class="btn btn-secondary search_btn">검색</button>
+           </div>
+        </div>        
+       </form>
+    </tr>
     <tr>
       <td cplspan="5" th:utext="${paging}"></td>
     </tr>

@@ -135,7 +135,28 @@
         })
       }  
    
-            
+const fnNoticeModify = () => {
+  $('#frm_notice_add').submit((ev) => {
+    if ($('#title').val() === '') {
+      alert('제목은 반드시 입력해야 합니다.');
+      $('#title').focus();
+      ev.preventDefault();
+      return;
+    }
+    if ($('#contents').val() === '') {
+      alert('내용은 반드시 입력해야 합니다.');
+      $('#contents').focus();
+      ev.preventDefault();
+      return;
+    }
+  });
+};
+        
+      
+     
+      fnNoticeModify();   
+        
+        
             
             
             

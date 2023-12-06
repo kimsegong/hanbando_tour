@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{/layout/header::head('한반도 투어')}"></head> <!-- 이거 알맞게 바꿔주세요-->
+<style>
+
+.wrap1 > .box1{
+  height:50px;
+}
+
+.wrap1 > .box2{
+  height:50px;
+}
+
+.wrap1 > .box3{
+  height:50px;
+}
+
+.wrap1 > .box4{
+  height:70px;
+}
+</style>
+
+
+
+<body>
+  <div th:replace="~{/layout/header::header}"></div>
+  
+  <div class="main_wrap">
+  
+  
+     <div class="container text-center">
+      <div class="row">
+        <div class="col-1">       
+        </div>
+        <div class="col-10" style="border:1px gray dotted">
+            <!--/*여기에 작성/ 다 만들고 style 지워주세요  */-->
+       
+
+  <h2>자주묻는질문</h2>
+   
+  <div class="wrap1">
+    <div class="box1"></div>    
+  </div>
+
+  <div class="btn-toolbar mb-3 justify-content-center" role="toolbar" aria-label="Toolbar with button groups">
+  <div class="btn-group me-2" role="group" aria-label="First group">
+    <a th:href = "@{/notice/faqKorea.do}">
+    <button type="button" class="btn btn-outline-secondary">국내패키지</button>
+    </a>
+    
+    <a th:href = "@{/notice/faqCash.do}">
+    <button type="button" class="btn btn-outline-secondary">예약/결제</button>
+    </a>
+    
+    <a th:href = "@{/notice/faqMember.do}">
+    <button type="button" class="btn btn-secondary">회원안내</button>
+    </a>
+    
+    <a th:href = "@{/notice/faq.do}">
+    <button type="button" class="btn btn-outline-secondary">기타</button>
+    </a>
+  </div>
+  </div>
+  
+     <div class="wrap1">
+    <div class="box4"></div>    
+      </div>
+    
+    
+    <div class="row">
+      <div class="col-7"></div>
+      <div class="col-4" style="display: flex; justify-content: flex-end;">
+        <div class="home">
+          <a th:href="@{http://localhost:8080}"><i class="fa-solid fa-house" style="font-size:15px; margin-right: 5px;"></i></a>
+           &nbsp;고객센터  &nbsp;  >   &nbsp; 공지사항
+        </div>
+      </div>
+
+      
+      
+  
+    <div class="wrap1">
+    <div class="box2"></div>    
+  </div>
+  
+   <div class="row">
+   <div class="col-1"></div>
+   <div class="col-9">
+   
+  
+  
+<div class="accordion accordion-flush" id="accordionFlushExample">
+  <div class="accordion-item">
+    <h2 class="accordion-header">
+      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
+   웹회원 등록은 어떻게 하나요?
+      </button>
+    </h2>
+    <div id="flush-collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
+      <div class="accordion-body">한반도여행사의 신규 홈페이지는 개인정보보호를 위해 이메일로 아이디를 사용합니다.
+아이디로 사용할 이메일 인증과 비밀번호만 설정하시면, 아주 쉽게 웹회원으로 활동하실 수 있습니다.
+
+<div>
+1. 신규회원 가입자
+- 아이디로 사용할 이메일로 인증 받은 후 비밀번호를 설정하여 등록하기.
+</div>
+
+2. 기존 한반도여행사 웹회원
+- 기존 한반도여행사 홈페이지의 아이디와 비밀번호로 회원 인증 후 아이디로 사용할 이메일로 인증받고 아이디 전환하기!
+
+<div>
+3. 네이버 아이디 사용자
+- 네이버 아이디 가입자는 통합 없이 소셜계정으로 바로 시작하기!</div>
+</div>    
+    </div>
+  </div>
+  <div class="accordion-item">
+    <h2 class="accordion-header">
+      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo" aria-expanded="false" aria-controls="flush-collapseTwo">
+    꼭 기존 아이디로 회원인증을 해야하나요?
+      </button>
+    </h2>
+    <div id="flush-collapseTwo" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
+      <div class="accordion-body">한반도여행사의 홈페이지 개편으로 인해 기존 회원들은 회원인증 후 아이디 전환하여 사용하도록 안내하고 있습니다.
+
+만약 원치 않으시다면, 신규가입 후 이용하셔도 무방하나 과거 예약내역을 확인이 불가능 한 점 안내드립니다.
+
+또한, 네이버 아이디로 로그인 하실 경우 별도의 통합 절차 없이 소셜로그인으로 사용 가능합니다.</div>
+    </div>
+</div>
+
+ </div>
+ 
+  <div class="wrap1">
+    <div class="box3"></div>    
+  </div>
+ 
+ 
+ 
+ </div>           
+            
+  </div>          
+            
+            
+            
+            
+            
+        </div>
+        <div class="col-1">       
+        </div>
+      </div>
+    </div>
+  
+  </div>
+
+  </div>
+  
+  
+  <div th:replace="~{/layout/footer::footer}"></div>
+</body>
+</html>
+

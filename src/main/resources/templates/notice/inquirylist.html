@@ -64,31 +64,52 @@
    <div class="col-2"></div>
    <div class="col-8">
    
-   <table class="table">
-     <tbody>
-       <tr th:each="inquiry : ${inquiryList}" class="title_title">
-       <td th:text="${inquiry.title}"></td>
-       </tr>
-     </tbody>
-   </table>    
      
    </div>
+   
+   
+     <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">문의번호</th>
+          <th scope="col">문의유형</th>
+          <th scope="col">제목</th>
+          <th scope="col">작성일</th>
+        </tr>
+      </thead>
+    <tbody>
+      <th:block th:each="i,vs:${inquiryList}">
+        <tr class="align-bottom">
+            <td th:text="${i.inquiryNo}"></td>
+            <td th:text="${i.separate}"></td>
+            <td>
+             <a th:href="|@{/notice/inquirydetail.do(inquiryNo=${i.inquiryNo})}|" th:text="${i.title}"></a>
+            </td>
+            <td th:text="${i.createdAt}"></td>
+        </tr>
+      </th:block>
+    </tbody>
+  </table>
+
+
+
    <div class="col-2"></div>
    
    
+ 
+   
+   
+
+   
    
    </div>
    
 
 
 
-   
-   <details>
-     <summary>펼치기</summary>
-   <div>
-   
-  </div>
-  </details>
+
+
+
    
 
 
@@ -118,7 +139,6 @@
       
       <script>
 
-      
       </script>
       
             
