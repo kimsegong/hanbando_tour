@@ -29,6 +29,10 @@
         object-fit: cover; /* 이미지가 카드에 맞게 조절될 수 있도록 설정 */
         width: 100%; /* 가로 크기를 100%로 설정하여 카드 안에 꽉 차게 함 */
     }
+  hr {
+    border-top: 3px solid black; /* 두께 조절 가능 */
+    margin: 20px 0; /* 필요에 따라 마진 조절 가능 */
+  }
 
 </style>  
 <body>
@@ -48,7 +52,7 @@
     <!--  </th:block> -->
       <div style="display: flex; justify-content: space-between; align-items: center;">
         <div style="display: inline-block;"> 
-         <span th:text="${count}"></span>개의 상품
+         <span id="count"></span>개의 상품🚌
         </div>
         <div class="btn-group btn-group-sm" role="group" aria-label="Small button group" style="display: inline-block;">
           <button type="button" class="btn btn-outline-kong" value="defaultCondition">최신순</button>
@@ -59,12 +63,8 @@
       </div>
       <hr>
       <div class="container">
-        <div class="row" id="package_list"> 
-          
-        </div>
+        <div class="row" id="package_list"></div>
       </div>
-      
-      
 
       
     </div>
@@ -78,9 +78,14 @@
     var page = 1;
     var totalPage = 0;
     var param = 0;
+    const url = new URL(window.location.href);
     
-
-       var param = null;
+    var region = url.searchParams.get("regionNo");   
+    if(url.searchParams.get("regionNo") == null){
+      region = 0;
+    } 
+    
+       
       $('.btn-outline-kong').click(function(){
         param = $(this).val();
         page = 1;
@@ -89,28 +94,32 @@
           fnGetPackageList(param);
       })
 
-    const fnGetPackageList = (param) => {
+    const fnGetPackageList = (param, region) => {
         $.ajax({
             type: 'get',
             url: '/package/getList.do',
             data: {
                 page: page,
-                condition: param
+                condition: param,
+                regionNo: region || 0
             },
             dataType: 'json',
             success: (resData) => {
                 totalPage = resData.totalPage;
+                $('#count').empty();
+                $('#count').append(resData.count);
                 if (resData.packageList != null && resData.packageList.length > 0) {                   
                     $.each(resData.packageList, (i, package) => {
                         let str = '<div class="col-md-4">';
-                        str += '<div class="card">';
+                        str += '<div class="card w-100 p-3">';
                         if (package.productImageDto && package.productImageDto.thumbnail === 1) {
-                            str += '<img src="' + package.productImageDto.imagePath + '/' + package.productImageDto.filesystemName + '" style="height: 200px; " class="card-img-top" alt="Package Image">';
+                            str += '<img src="' + package.productImageDto.imagePath + '/' + package.productImageDto.filesystemName + '" style="height: 250px; " class="card-img-top" alt="Package Image">';
                         } else {
-                            str += '<img src="https://github.com/skal48/portfolio/blob/main/bakdo.jpg?raw=true" style="height: 200px;" class="card-img-top" alt="Package Image">';
+                            str += '<img src="https://github.com/skal48/portfolio/blob/main/bakdo.jpg?raw=true" style="height: 250px;" class="card-img-top" alt="Package Image">';
                         }
                         str += '<div class="card-body">';
                         str += '<p class="card-title">' + package.packageTitle + '</p>';
+                        str += '<p class="card-text">'+ package.price +'원</p>';
                         str += '<p class="card-text"></p>';
                         str += '<a href="' + '/package/increseHit.do?packageNo=' + package.packageNo + '" class="btn btn-kong">여행가기</a>';
                         str += '</div>';
@@ -149,7 +158,7 @@
         })
     }
 
-    fnGetPackageList(param);
+    fnGetPackageList(param, region);
     fnScroll();
 </script>
 

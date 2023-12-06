@@ -140,10 +140,11 @@ public class ManageController {
     return "manage/hotelProductList";
   }
   
-  /* 호텔 판매/추천 여부 변경 */
-  @PostMapping(value="/modifyRecommend.do", produces=MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<Map<String, Object>> modifyHotelRecommend(HttpServletRequest request){
-    return manageService.modifyHotelRecommend(request);
+  
+  /* 호텔 객실 가격 변경 */
+  @PostMapping(value="/modifyRoomPrice.do", produces=MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<Map<String, Object>> modifyRoomPrice(HttpServletRequest request){
+    return manageService.modifyRoomPrice(request);
   }
   
   /* 호텔 상품 검색 */
@@ -168,6 +169,18 @@ public class ManageController {
   /* 호텔 예약 검색 */
   
   /* 호텔 예약 상세 */
+  
+  /* 패키지 추천 여부 변경 */
+  @PostMapping(value="/modifyPackageRecommend.do", produces=MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<Map<String, Object>> modifyPackageRecommend(HttpServletRequest request){
+    return manageService.modifyPackageRecommend(request);
+  }
+  
+  /* 호텔 추천 여부 변경 */
+  @PostMapping(value="/modifyHotelRecommend.do", produces=MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<Map<String, Object>> modifyHotelRecommend(HttpServletRequest request){
+    return manageService.modifyHotelRecommend(request);
+  }
   
   /* 전체 리뷰 목록 */
   @GetMapping("/reviewList.do")
