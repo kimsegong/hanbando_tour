@@ -36,7 +36,7 @@
   </resultMap>
     
   <!-- 호텔 테이블 -->
-  <resultMap type="HotelDto"              id="HotelMap">
+  <resultMap type="HotelDto"            id="HotelMap">
     <id      column="HOTEL_NO"          property="hotelNo" />
     <result  column="HOTEL_NAME"        property="hotelName" />
     <result  column="HOTEL_ADDRESS"     property="hotelAddress" />
@@ -243,6 +243,47 @@
      WHERE A.RN BETWEEN #{begin} AND #{end}
   </select>
   
+  <!-- 호텔 상품 검색 -->
+  <select id="getSearchHotelProductCount" parameterType="Map" resultType="int">
+    SELECT COUNT(*)
+      FROM HOTEL_T
+       <where>
+         <if test="regionNo != 0">
+           REGION_NO = ${regionNo}
+         </if>
+         <if test="status == 1 or status == 0">
+           AND STATUS = ${status}
+         </if>
+         <if test="recommendStatus == 1 or recommendStatus == 0">
+           AND RECOMMEND_STATUS = ${recommendStatus}
+         </if>
+         <if test="column != null and query != null">
+           AND ${column} LIKE '%' || #{query} || '%'
+         </if>
+       </where> 
+  </select>
+  <select id="getSearchHotelProductList" parameterType="Map" resultMap="HotelMap">
+    SELECT A.HOTEL_NO, A.REGION_NO, A.REGION_NAME, A.HOTEL_NAME, A.HOTEL_ADDRESS, A.LATITUDE, A.LONGITUDE, A.HOTEL_DETAIL, A.PHONE_NUMBER, A.H_EMAIL, A.CREATED_AT, A.MODIFIED_AT, A.HIT, A.STATUS, A.RECOMMEND_STATUS
+      FROM (SELECT ROW_NUMBER() OVER(ORDER BY H.HOTEL_NO DESC) AS RN, H.HOTEL_NO, H.REGION_NO, R.REGION_NAME, H.HOTEL_NAME, H.HOTEL_ADDRESS, H.LATITUDE, H.LONGITUDE, H.HOTEL_DETAIL, H.PHONE_NUMBER, H.H_EMAIL, H.CREATED_AT, H.MODIFIED_AT, H.HIT, H.STATUS, H.RECOMMEND_STATUS
+              FROM REGION_T R INNER JOIN HOTEL_T H
+                ON H.REGION_NO = R.REGION_NO
+               <where>
+                 <if test="regionNo != 0">
+                   H.REGION_NO = ${regionNo}
+                 </if>
+                 <if test="status == 1 or status == 0">
+                   AND H.STATUS = ${status}
+                 </if>
+                 <if test="recommendStatus == 1 or recommendStatus == 0">
+                   AND H.RECOMMEND_STATUS = ${recommendStatus}
+                 </if>
+                 <if test="column != null and query != null">
+                   AND H.${column} LIKE '%' || #{query} || '%'
+                 </if>
+               </where> 
+           ) A
+     WHERE A.RN BETWEEN #{begin} AND #{end}
+  </select>
   
   <!-- 호텔 객실 기간별 가격 -->
   <select id="getRoomPrice" resultType="RoompriceDto">
@@ -259,24 +300,20 @@
   <!-- 호텔 객실 가격 변경 -->
   <update id="updateRoomPrice" parameterType="RoompriceDto">
     UPDATE ROOMPRICE_T
-   SET BI_PRICE = #{biPrice}
-     , BS_DATE = #{bsDate}
-     , BE_DATE = #{beDate}
-     , JUN_PRICE = #{junPrice}
-     , JS_DATE = #{jsDate}
-     , JE_DATE = #{jeDate}
-     , SUNG_PRICE = #{sungPrice}
-     , SS_DATE = #{ssDate}
-     , SE_DATE = #{seDate}
- WHERE HOTEL_NO = #{hotelNo}
-   AND ROOM_NO = #{roomNo}
+       SET BI_PRICE = #{biPrice}
+         , BS_DATE = #{bsDate}
+         , BE_DATE = #{beDate}
+         , JUN_PRICE = #{junPrice}
+         , JS_DATE = #{jsDate}
+         , JE_DATE = #{jeDate}
+         , SUNG_PRICE = #{sungPrice}
+         , SS_DATE = #{ssDate}
+         , SE_DATE = #{seDate}
+     WHERE HOTEL_NO = #{hotelNo}
+       AND ROOM_NO = #{roomNo}
   </update>
 
-  
-  <!-- 호텔 상품 검색 -->
-  
-  
-  
+
   <!-- 지역 목록 -->
   <select id="getRegionList" resultType="RegionDto">
     SELECT REGION_NO, REGION_NAME

@@ -54,11 +54,14 @@ public interface ManageMapper {
   /* 패키지 상품 검색 */
   public int getSearchPackageProducCount(Map<String, Object> map);
   public List<PackageDto> getSearchPackageProductList(Map<String, Object> map);
-  
+    
   /* 호텔 상품 목록 */
   public int getHotelCount();
   public List<HotelDto> getHotelList(Map<String, Object> map);
   
+  /* 호텔 상품 검색 */
+  public int getSearchHotelProductCount(Map<String, Object> map);
+  public List<HotelDto> getSearchHotelProductList(Map<String, Object> map);
   
   /* 호텔 객실별 가격 */
   public List<RoompriceDto> getRoomPrice();
@@ -68,8 +71,6 @@ public interface ManageMapper {
   /* 호텔 객실 가격 변경 */
   public int updateRoomPrice(RoompriceDto roomprice);
 
-  /* 호텔 상품 검색 */
-  
   /* 지역 목록 */
   public List<RegionDto> getRegionList();
   
