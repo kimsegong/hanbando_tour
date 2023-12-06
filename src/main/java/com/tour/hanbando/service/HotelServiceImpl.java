@@ -20,8 +20,10 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.tour.hanbando.dao.HotelMapper;
+import com.tour.hanbando.dto.FacilitiesDto;
 import com.tour.hanbando.dto.HotelDto;
 import com.tour.hanbando.dto.HotelImageDto;
+import com.tour.hanbando.dto.RegionDto;
 import com.tour.hanbando.dto.RoomFeatureDto;
 import com.tour.hanbando.dto.RoompriceDto;
 import com.tour.hanbando.dto.RoomtypeDto;
@@ -74,7 +76,6 @@ public class HotelServiceImpl implements HotelService {
     case 4 :hotelDto = hotelMapper.getPriceHotelList(map);
       break;
     }
-    System.out.println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%" + hotelDto);
     
     if(hotelDto.size() != 0) {
      
@@ -151,19 +152,17 @@ public class HotelServiceImpl implements HotelService {
     hotelMapper.getRoomImage(roomtypeDto);
     hotelMapper.getPrice(roomtypeDto);
     
-    
-    
   }
   
   @Override
-    public void makeHotelNo(Model model) {
+  public void makeHotelNo(Model model) {
       int hotelNo =  hotelMapper.getHotelNo();
       hotelMapper.insertHotelNo(hotelNo);
       model.addAttribute("hotelNo", hotelNo);
-    }
+   }
   
   @Override
-  public boolean writeRoom(MultipartHttpServletRequest multipartRequest) throws Exception {
+  public boolean writeRoom(MultipartHttpServletRequest multipartRequest, List<MultipartFile> files) throws Exception {
     
     int hotelNo = Integer.parseInt(multipartRequest.getParameter("hotelNo"));
     String roomName = multipartRequest.getParameter("roomName");
@@ -246,6 +245,110 @@ public class HotelServiceImpl implements HotelService {
    insertResult += hotelMapper.insertRoomPrice(roompriceDto);                                  
    
     
+    //List<MultipartFile> files = multipartRequest.getFiles("files");
+    
+    // 첨부 없을 때 : [MultipartFile[field="files", filename=, contentType=application/octet-stream, size=0]]
+    // 첨부 1개     : [MultipartFile[field="files", filename="animal1.jpg", contentType=image/jpeg, size=123456]]
+    
+    int attachCount;
+    if(files.get(0).getSize() == 0) {
+      attachCount = 1;
+    } else {
+      attachCount = 0;
+    }
+    
+    
+    for(MultipartFile multipartFile : files) {
+      
+      if(multipartFile != null && !multipartFile.isEmpty()) {
+        
+        String path = hotelFileUtils.getUploadPath();
+        File dir = new File(path);
+        if(!dir.exists()) {
+          dir.mkdirs();
+        }
+        
+        String originalFilename = multipartFile.getOriginalFilename();
+        String filesystemName = hotelFileUtils.getFilesystemName(originalFilename);
+        File file = new File(dir, filesystemName);
+        
+        multipartFile.transferTo(file);
+        
+        String contentType = Files.probeContentType(file.toPath());  // 이미지의 Content-Type은 image/jpeg, image/png 등 image로 시작한다.
+        
+        HotelImageDto hotelImageDto = HotelImageDto.builder()
+                                         .hotelNo(hotelNo)
+                                         .thumbnail(0)
+                                         .roomNo(0)
+                                         .originalName(originalFilename)
+                                         .filesystemName(filesystemName)
+                                         .imagePath(path)
+                                         .build();
+        
+        attachCount += hotelMapper.insertRoomImage(hotelImageDto);
+        
+      }  // if
+      
+    }  // for
+    
+    return (insertResult == 3) && (files.size() == attachCount);
+  }
+  
+  @Override
+  public boolean writeHotel(MultipartHttpServletRequest multipartRequest) throws Exception {
+    
+    int hotelNo = Integer.parseInt(multipartRequest.getParameter("hotelNo"));
+    
+    String hotelName = multipartRequest.getParameter("hotelName");
+    int recommendStatus = Integer.parseInt(multipartRequest.getParameter("recommendStatus"));
+    int status = Integer.parseInt(multipartRequest.getParameter("status"));
+    int regionNo = Integer.parseInt(multipartRequest.getParameter("regionNo"));
+    String hEmail = multipartRequest.getParameter("hEmail");
+    String phoneNumber = multipartRequest.getParameter("phoneNumber");
+    String hotelAddress = multipartRequest.getParameter("hotelAddress");
+    Double latitude = Double.parseDouble(multipartRequest.getParameter("latitude"));
+    Double longitude = Double.parseDouble(multipartRequest.getParameter("longitude"));
+    String hotelDetail = multipartRequest.getParameter("hotelDetail");
+    
+    Optional<String> optMorning = Optional.ofNullable(multipartRequest.getParameter("morning"));
+    Optional<String> optPool = Optional.ofNullable(multipartRequest.getParameter("pool"));
+    Optional<String> optSauna = Optional.ofNullable(multipartRequest.getParameter("sauna"));
+    Optional<String> optLounge = Optional.ofNullable(multipartRequest.getParameter("lounge"));
+    Optional<String> optRoomService = Optional.ofNullable(multipartRequest.getParameter("roomservice"));
+    
+    int morning = Integer.parseInt(optMorning.orElse("0"));
+    int pool = Integer.parseInt(optPool.orElse("0"));
+    int sauna = Integer.parseInt(optSauna.orElse("0"));
+    int lounge = Integer.parseInt(optLounge.orElse("0"));
+    int roomservice = Integer.parseInt(optRoomService.orElse("0"));
+    
+    HotelDto hotelDto = HotelDto.builder()
+                              .hotelNo(hotelNo)
+                              .hotelName(hotelName)
+                              .hotelDetail(hotelDetail)
+                              .phoneNumber(phoneNumber)
+                              .hEmail(hEmail)
+                              .hotelAddress(hotelAddress)
+                              .latitude(latitude)
+                              .longitude(longitude)
+                              .recommendStatus(recommendStatus)
+                              .status(status)
+                              .regionDto(RegionDto.builder().regionNo(regionNo).build())
+                              .build();
+    
+    FacilitiesDto facilitiesDto = FacilitiesDto.builder()
+                                        .hotelNo(hotelNo)
+                                        .lounge(lounge)
+                                        .morning(morning)
+                                        .pool(pool)
+                                        .roomservice(roomservice)
+                                        .sauna(sauna)
+                                        .build();
+                                        
+    int insertResult = hotelMapper.updateHotel(hotelDto);
+    
+    insertResult += hotelMapper.insertFacilities(facilitiesDto);
+                                        
     List<MultipartFile> files = multipartRequest.getFiles("files");
     
     // 첨부 없을 때 : [MultipartFile[field="files", filename=, contentType=application/octet-stream, size=0]]
@@ -276,15 +379,18 @@ public class HotelServiceImpl implements HotelService {
         
         String contentType = Files.probeContentType(file.toPath());  // 이미지의 Content-Type은 image/jpeg, image/png 등 image로 시작한다.
         
+        int thumbnail = 0;
+        if(originalFilename.contains("mainList")) {
+          thumbnail = 1;
+        }
+        
         HotelImageDto hotelImageDto = HotelImageDto.builder()
                                          .hotelNo(hotelNo)
-                                         .thumbnail(0)
-                                         .roomNo(0)
+                                         .thumbnail(thumbnail)
                                          .originalName(originalFilename)
                                          .filesystemName(filesystemName)
                                          .imagePath(path)
                                          .build();
-       
         
         attachCount += hotelMapper.insertRoomImage(hotelImageDto);
         
@@ -292,13 +398,22 @@ public class HotelServiceImpl implements HotelService {
       
     }  // for
     
-    return (insertResult == 3) && (files.size() == insertResult);
+    return (insertResult == 3) && (files.size() == attachCount);
   }
   
   @Override
-  public boolean writeHotel(MultipartHttpServletRequest multipartRequest) throws Exception {
-    // TODO Auto-generated method stub
-    return false;
+  public void hoteDetail(HttpServletRequest request, int hotelNo, Model model) {
+    /*  가져와야하는 거 hotel facility image roomfeature, room price roomimage heart */  
+    
+    HotelDto hotelDto = hotelMapper.getHotel(hotelNo);
+    List<HotelImageDto> hotelImageDto = hotelMapper.getHotelImage(hotelNo);
+    model.addAttribute("hotel", hotelDto);
+    model.addAttribute("hotelImage", hotelImageDto);
+    
+    
+    
   }
+  
+  
   
 }
