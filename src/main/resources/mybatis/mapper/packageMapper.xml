@@ -133,9 +133,14 @@
     <select id="getPackageCount" resultType="int">
       SELECT COUNT(*)
         FROM PACKAGE_T
-      <if test="regionNo != 0">
-        WHERE REGION_NO = #{regionNo}
-      </if>
+       <where>
+          <if test="regionNo != 0">
+            AND REGION_NO = #{regionNo}
+          </if>
+          <if test="condition == 'recommendStatus'">
+            AND RECOMMEND_STATUS = 1
+          </if>
+       </where>
     </select>
     
     <select id="getCount" resultType="int">
@@ -146,55 +151,58 @@
 
     <!-- 패키지리스트불러오기 -->
     <select id="getPackageList" parameterType="Map" resultMap="PackageMap">
-	  SELECT
-	    P.PACKAGE_NO,
-	    P.REGION_NO,
-	    P.THEME_NO,
-	    P.PACKAGE_TITLE,
-	    P.PRICE,
-	    P.HIT,
-	    P.STATUS,
-	    P.RECOMMEND_STATUS,
-	    PI.IMAGE_NO,
-	    PI.THUMBNAIL,
-	    PI.FILESYSTEM_NAME,
-	    PI.IMAGE_PATH
-	  FROM (
-	    SELECT
-	      PT.PACKAGE_NO,
-	      PT.REGION_NO,
-	      PT.THEME_NO,
-	      PT.PACKAGE_TITLE,
-	      PT.PRICE,
-	      PT.HIT,
-	      PT.STATUS,
-	      PT.MAX_PEOPLE,
-	      PT.RECOMMEND_STATUS,
-	      ROW_NUMBER() OVER (
-	        <choose>
-	          <when test="condition == 'rowPrice'">
-	            ORDER BY PT.PRICE ASC
-	          </when>
-	          <when test="condition == 'highPrice'">
-	            ORDER BY PT.PRICE DESC
-	          </when>
-	          <otherwise>
-	            ORDER BY PT.PACKAGE_NO DESC
-	          </otherwise>
-	        </choose>
-	      ) AS RN
-	    FROM PACKAGE_T PT 
-	    <if test="regionNo != 0">
-        WHERE PT.REGION_NO = #{regionNo}
-      </if>
-	  ) P
-	  LEFT JOIN PRODUCT_IMAGE_T PI ON P.PACKAGE_NO = PI.PACKAGE_NO
-	  LEFT JOIN REGION_T R ON P.REGION_NO = R.REGION_NO
-	  LEFT JOIN THEME_T T ON P.THEME_NO = T.THEME_NO
-	  WHERE P.RN BETWEEN #{begin} AND #{end}
-	    <if test="condition == 'recommendStatus'">
-	      AND P.RECOMMEND_STATUS = 1
-	    </if>
+  	  SELECT
+  	    P.PACKAGE_NO,
+  	    P.REGION_NO,
+  	    P.THEME_NO,
+  	    P.PACKAGE_TITLE,
+  	    P.PRICE,
+  	    P.HIT,
+  	    P.STATUS,
+  	    P.RECOMMEND_STATUS,
+  	    PI.IMAGE_NO,
+  	    PI.THUMBNAIL,
+  	    PI.FILESYSTEM_NAME,
+  	    PI.IMAGE_PATH
+  	  FROM (
+  	    SELECT
+  	      PT.PACKAGE_NO,
+  	      PT.REGION_NO,
+  	      PT.THEME_NO,
+  	      PT.PACKAGE_TITLE,
+  	      PT.PRICE,
+  	      PT.HIT,
+  	      PT.STATUS,
+  	      PT.MAX_PEOPLE,
+  	      PT.RECOMMEND_STATUS,
+  	      ROW_NUMBER() OVER (
+  	        <choose>
+  	          <when test="condition == 'rowPrice'">
+  	            ORDER BY PT.PRICE ASC
+  	          </when>
+  	          <when test="condition == 'highPrice'">
+  	            ORDER BY PT.PRICE DESC
+  	          </when>
+  	          <otherwise>
+  	            ORDER BY PT.PACKAGE_NO DESC
+  	          </otherwise>
+  	        </choose>
+  	      ) AS RN
+  	    FROM PACKAGE_T PT 
+  	   <where>
+  	    <if test="regionNo != 0">
+          AND PT.REGION_NO = #{regionNo}
+        </if>
+  	    <if test="condition == 'recommendStatus'">
+  	      AND PT.RECOMMEND_STATUS = 1
+  	    </if>
+  	    </where>
+  	  ) P
+  	  LEFT JOIN PRODUCT_IMAGE_T PI ON P.PACKAGE_NO = PI.PACKAGE_NO
+  	  LEFT JOIN REGION_T R ON P.REGION_NO = R.REGION_NO
+  	  LEFT JOIN THEME_T T ON P.THEME_NO = T.THEME_NO
+  	  WHERE P.RN BETWEEN #{begin} AND #{end}
+  	  ORDER BY P.RN ASC
 	</select>
 	
 

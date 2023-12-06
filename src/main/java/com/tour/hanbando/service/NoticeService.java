@@ -17,4 +17,5 @@ public interface NoticeService {
   public int modifyNotice(HttpServletRequest request);
   public int removeNotice(int NoticeNo);
   public Map<String, Object> imageUpload(MultipartHttpServletRequest multipartRequest);
+  public boolean addNotice(MultipartHttpServletRequest multipartRequest) throws Exception;
 }

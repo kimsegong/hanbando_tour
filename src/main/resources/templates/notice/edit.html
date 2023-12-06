@@ -23,7 +23,7 @@
 <body>
   <div th:replace="~{/layout/header::header}"></div>
   
-  <div class="main_wrap">
+  <div class="main_wrap" th:object="${notice}">
   
   
      <div class="container text-center">
@@ -35,9 +35,9 @@
         
                     <div>
 
-      <form id="frm_notice_modify" method="post" action="${contextPath}/notice/modifyNotice.do">
+      <form id="frm_notice_modify" method="post" th:action="@{/notice/modifyNotice.do}">
         
-        <h1 style="text-align: center;">${notice.noticeNo}번 공지사항 수정</h1>
+       <h1 class="title" th:text="|*{noticeNo}번 공지사항 수정|"></h1>
         
         
         <div class ="wrap2">
@@ -48,7 +48,7 @@
         <!-- 제목  -->
         <div>
           <label for="title">제목</label>
-          <input type="text" name="title" id="title" class="form-control" value="${notice.title}">
+          <input type="text" name="title" id="title" class="form-control" th:value="*{title}">
         </div>
         
         <div class ="wrap1">
@@ -60,7 +60,7 @@
           <label for="contents">내용</label>
         </div>
         <div class="content">  
-          <input type="text" name="contents" id="contents" class="form-control" value="${notice.contents}">  
+          <input type="text" name="contents" id="contents" class="form-control" th:value="*{contents}">  
         </div>
         
         <div class ="wrap3">
@@ -70,7 +70,7 @@
         
       <!-- 수정완료 submit  -->  
       <div>
-        <input type="hidden" name="noticeNo" value="${notice.noticeNo}">
+        <input type="hidden" name="noticeNo" th:value="*{noticeNo}">
         <button class="btn btn-primary col-12" type="submit">수정완료</button>
       </div>
         
@@ -80,7 +80,22 @@
             
             
         
-            
+      <script>
+              const fnNoticeModify = () => {
+        $('#frm_notice_modify').submit((ev) => {
+          if($('#title').val() ===''){
+            alert('제목은 반드시 입력해야 합니다.');
+          $('#title').focus();
+          ev.preventDefault();
+          return;
+          }
+        })
+      }
+     
+      fnNoticeModify();   
+        
+        
+      </script>    
             
             
             

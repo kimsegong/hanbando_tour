@@ -219,6 +219,30 @@ public class ReserveServiceImpl implements ReserveService {
   
   @Transactional(readOnly=true)
   @Override
+  public void loadReserveHotelListByUser(HttpServletRequest request, Model model) {
+    Optional<String> opt = Optional.ofNullable(request.getParameter("page"));
+    int page = Integer.parseInt(opt.orElse("1"));
+    int display = 10;
+    int userNo = Integer.parseInt(request.getParameter("userNo"));
+    int total = reserveMapper.getReserveHotelCountByUserNo(userNo);
+    
+    myPageUtils.setPaging(page, total, display);
+    
+    Map<String, Object> map = Map.of("begin", myPageUtils.getBegin()
+                                   , "end", myPageUtils.getEnd() 
+                                   , "userNo", userNo);
+    
+    List<ReserveDto> reserveHotelList = reserveMapper.getReserveHotelListByUser(map);
+    
+    model.addAttribute("reserveHotelList", reserveHotelList);
+    String params = "userNo=" + request.getParameter("userNo");
+    model.addAttribute("paging", myPageUtils.getMvcPaging(request.getContextPath() + "/reserve/reserveList.do", params));
+    model.addAttribute("beginNo", total - (page - 1) * display);
+  }
+  
+  
+  @Transactional(readOnly=true)
+  @Override
   public ReserveDto loadReserve(int reserveNo) {
     return reserveMapper.getReserve(reserveNo);
   }
@@ -230,6 +254,13 @@ public class ReserveServiceImpl implements ReserveService {
     List<TouristDto> tourists = reserveMapper.getTourists(reserveNo);
     return Map.of("tourists", tourists);
   }
+  
+  @Transactional(readOnly=true)
+  @Override
+  public ReserveDto loadReserveHotel(int reserveNo) {
+    return reserveMapper.getReserveHotel(reserveNo);
+  }
+  
   
   @Override
   public PaymentDto loadPaymentByReserveNo(int reserveNo) {
