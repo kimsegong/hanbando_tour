@@ -8,7 +8,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -75,19 +74,20 @@ public class HotelController {
   
   @PostMapping("addHotel.do")
   public String writeHotel(MultipartHttpServletRequest multipartHttpServletRequest, RedirectAttributes redirectAttributes) {
+   
     return "redirect:/hotel/list.do";
   }
   
   @GetMapping("addRoom.form")
-  public String HotelRoom(HttpServletRequest request, Model model) {
-   model.addAttribute("hotelNo", request.getAttribute("hotelNo"));
+  public String HotelRoom(@RequestParam(value="hotelNo", required=false, defaultValue="0")int hotelNo, Model model) {
+   model.addAttribute("hotelNo", hotelNo);
     return "hotel/hotelRoom";  
   }
-  
-  @PostMapping("addRoom.do")
+  @ResponseBody
+  @PostMapping("addHotelRoom.do")
   public void writeRoom(MultipartHttpServletRequest multipartRequest, Model model) throws Exception {
     
-    System.out.println("@@@@@@@@@@@@뭐가 널인데" + multipartRequest.getParameter("bsDate"));
+    System.out.println("@@@@@@@@@@@@뭐가 널인데" + multipartRequest.getParameter("hotelNo"));
     
     
     boolean addResult = hotelService.writeRoom(multipartRequest);

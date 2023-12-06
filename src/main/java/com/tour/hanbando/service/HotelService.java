@@ -16,4 +16,5 @@ public interface HotelService {
   public void hotelRoomList(HttpServletRequest request, Model model);
   public void makeHotelNo(Model model);
   public boolean writeRoom(MultipartHttpServletRequest multipartRequest) throws Exception;
+  public boolean writeHotel(MultipartHttpServletRequest multipartRequest) throws Exception;
 }
