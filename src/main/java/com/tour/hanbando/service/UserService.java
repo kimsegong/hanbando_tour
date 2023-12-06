@@ -16,13 +16,15 @@ public interface UserService {
   public String getNaverLoginURL(HttpServletRequest request) throws Exception;
   public String getNaverLoginAccessToken(HttpServletRequest request) throws Exception;
   public UserDto getNaverProfile(String accessToken) throws Exception;
-  //카카오톡 로그인
-  //public String getKakaoLoginURL(HttpServletRequest request) throws Exception;
+
   
 //회원가입 시 본인 인증
 //인증번호(전화번호, 인증번호)
   public Map<String, Object> certifiedPhoneNumber(String phoneNumber) throws Exception;
-  
+
+//인증번호(비밀번호 찾기)
+  public void findpw(HttpServletRequest request, HttpServletResponse response);
+  public int findpw_id(String email, String mobile);
 
   public UserDto getUser(String email);
   

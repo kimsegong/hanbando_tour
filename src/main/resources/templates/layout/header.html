@@ -22,42 +22,57 @@
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker3.min.css">
 <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
-<script src="js/owl.carousel.min.js"></script>    
+<script src="/js/owl.carousel.min.js"></script>    
 <script src="https://cdn.ckeditor.com/ckeditor5/40.0.0/decoupled-document/ckeditor.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js" type="text/javascript"></script>
 <script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=c8e918c999e5a28f4d7e1914f1a1956e&libraries=services" type="text/javascript"></script>
 
 
 </head>
+<style>
+ .btn-no {
+   color: white;
+ }
+</style>
 <body>
  <div th:fragment="header" class="header_wrap">   
-   <div class="container text-center header_top">
+   <div class="container text-center header_top" style="margin-bottom: 30px;">
         <div class="row">
           <div class="col-3">
              <div class="logo"><a th:href="@{/}"><div class="logom"></div></a></div>
           </div>
           <div class="col-8">
-             <div class="header_search">
-                  <form class="frm_search" method="get" th:action="@{/main/search.do}">
-                  <input type="text" class="header_searchbar" name="query" placeholder="가고 싶은 곳을 입력하세요" ><button type="submit" class="btn_search">검색</button>
-                  </form></div>
+           <div class="header_search">
+             <form class="frm_search" method="get" th:action="@{/main/search.do}">
+              <input type="text" class="form-control header_searchbar w-50 p-3 h-50 d-inline-block" name="query" placeholder="여행지/호텔 입력해주세요🛫" >
+              <button type="submit" class="btn_search btn btn-no btn-lg">🔎 </button>
+             </form>
+            </div>
           </div>
-          <div class="col-1">
+          <div class="col-1" style="margin-top: 50px;">
+          <th:block th:if="${session.user == null}">
             <div  class="user">
-                  <a th:href="@{/user/login.form}"><i class="fa-regular fa-user fa-2xl" style="color: #96b6c5;"></i><div>&emsp;로그인&emsp;</div></a> 
-                  <a th:href="@{/reserve/reserveList.do?userNo=${session.user.userNo}}"><i class="fa-regular fa-calendar-check fa-2xl" style="color: #96b6c5;"></i><div>내일정</div></a>        
-               </div>  
-               <div class="user">
+             <a th:href="@{/user/login.form}"><i class="fa-regular fa-user fa-2xl" style="color: #96b6c5;"></i><div>&emsp;로그인&emsp;</div></a> 
+             <a th:href="@{/user/login.form}"><i class="fa-solid fa-plane-departure fa-2xl" style="color: #96b6c5;"></i><div>나의예약</div></a>        
+           </div> 
+          </th:block> 
+         <th:block th:if="${session.user != null}"> 
+          <th:block th:if="${session.user.auth == 1}">
+          <div class="user">
             <a th:href="@{/user/mypage.form}"><i class="fa-solid fa-user fa-2xl" style="color: #96b6c5;"></i><div>마이페이지</div></a> 
-            <a th:href="@{/reserve/reserveList.do?userNo=${session.user.userNo}}"><i class="fa-regular fa-calendar-check fa-2xl" style="color: #96b6c5;"></i><div>내일정</div></a>   
+            <a th:href="@{/reserve/reserveList.do(userNo=${session.user.userNo})}"><i class="fa-solid fa-plane-departure fa-2xl" style="color: #96b6c5;"></i><div>나의예약</div></a>   
             <a th:href="@{/user/logout.do}"><i class="fa-solid fa-right-from-bracket fa-2xl" style="color: #96b6c5;"></i><div>로그아웃</div></a>   
           </div>
-               <div class="user">
-            <a th:href="@{/manage/userList.do}"><i class="fa-solid fa-user fa-2xl" style="color: #96b6c5;"></i><div>관리페이지</div></a> 
-            <a th:href="@{/reserve/reserveList.do?userNo=${session.user.userNo}}"><i class="fa-regular fa-calendar-check fa-2xl" style="color: #96b6c5;"></i><div>내일정</div></a>
+         </th:block>
+         </th:block>
+          <th:block th:if="${session.user != null}">
+           <th:block th:if="${session.user.auth == 0}">
+           <div class="user">
+            <a th:href="@{/manage/userList.do}"><i class="fa-solid fa-user fa-2xl" style="color: #96b6c5;"></i><div>관리페이지</div></a>            
             <a th:href="@{/user/logout.do}"><i class="fa-solid fa-right-from-bracket fa-2xl" style="color: #96b6c5;"></i><div>로그아웃</div></a>       
-          </div>   
-          <div th:if="${session.user != null}" style="color: crimson;">로그인 했음</div>
+          </div>  
+          </th:block>                                                                          
+          </th:block>                                                                          
           </div>
         </div>
       </div>
@@ -97,9 +112,6 @@
           </ul>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#">이벤트</a>
-        </li>
-        <li class="nav-item">
           <a class="nav-link" th:href="@{/notice/list.do}">고객센터</a>
         </li>
       </ul>
@@ -107,13 +119,9 @@
   </div>
 </nav> 
       
-</div>      
- 
-   
-   
-   
-   
-   
+</div>     
+
+
 
 </body>
 </html>

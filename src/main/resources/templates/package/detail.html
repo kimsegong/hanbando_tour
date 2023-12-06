@@ -70,10 +70,10 @@
 </style>
 <body>
   <div th:replace="~{/layout/header::header}"></div>
+        <th:block th:if="${session.user != null}">
          <th:block th:if="${session.user.auth == 0}">
          <form id="frm_btn" method="post">
-            <input type="hidden" name="packageNo" class="heart" th:value="${packageDto.packageNo}"> 
-            <input type="hidden" name="userNo" class="heart2" th:value="${session.user.userNo}">  
+            <input type="text" name="packageNo" class="heart" th:value="${packageDto.packageNo}">  
             <input type="hidden" name="regionNo" th:value="${packageDto.regionDto.regionNo}">
             <input type="hidden" name="themeNo" th:value="${packageDto.themeDto.themeNo}">
             <input type="hidden" name="packageTitle" th:value="${packageDto.packageTitle}">
@@ -91,6 +91,7 @@
            <button type="button" id="btn_edit">편집</button> 
            <button type="button" id="btn_remove">삭제</button> 
          </form>
+         </th:block>
          </th:block>
          
   <div class="container text-center">
@@ -174,8 +175,9 @@
             role="tabpanel"
             aria-labelledby="profile-tab" th:text="${packageDto.hotelContents}"></div>
         </div>        
-        
+        <th:block th:if="${session.user != null}">
         <input type="hidden" name="userNo" id="userNo" th:value="${session.user.userNo}">
+        </th:block>
         <div th:each="reservation : ${reserve}">
             <div class="reserveNo" th:text="${reservation.reserveNo}|"th:value="${reservation.reserveNo}"></div>
             <div class="reserveUserNo" th:text="${reservation.userDto.userNo}" th:value="${reservation.userDto.userNo}"></div>
@@ -233,7 +235,9 @@
 				    찜하기				    
 				</span>
 		        <input type="hidden" id="packageNoHeart" name="packageNo" th:value="${packageDto.packageNo}">
+		        <th:block th:if="${session.user != null}">
 		        <input type="hidden" id="userNoHeart" name="userNo" th:value="${session.user.userNo}">
+		        </th:block>
 		        <div><span id="heartIcon"></span></div>
 		    </button>
 		</div>
@@ -241,14 +245,14 @@
 		    <div style="font-weight: bolder; text-align: left; font-size: 25px;" th:text="${packageDto.packageTitle}"></div>
 		    <div style="font-size: 30px; text-align: right;" th:text="|${packageDto.price} 원|"></div>
 		</div>						
-        <div style="text-align: left;">
+       <div style="text-align: left;">
          <span class="badge text-bg-success" th:text="${packageDto.miniOne}"></span>
          <span class="badge text-bg-warning" th:text="${packageDto.miniTwo}"></span>
          <span class="badge text-bg-secondary" th:text="${packageDto.miniThree}"></span>
        </div>
-     <div style="margin-top: 60px; margin-left: 35%;">
+     <div style="margin-top: 60px; margin-left: 40%;">
 	    <div> 
-	        <div class="input-group date" data-provide="datepicker" style="width: 190px;">
+	        <div class="input-group date" data-provide="datepicker" style="width: 210px;">
 	            <input type="text" class="form-control" id="reserve_start" style="border: none;">
 	            <div class="input-group-addon">
 	                <button class="btn btn-kong1">
@@ -267,6 +271,19 @@
     
     
     <script th:inline="javascript">   
+      
+      
+      $('#btn_reserve').click(function(){
+        startDate = $('#reserve_start').val();
+         // 날짜가 선택되었는지 확인
+        if (startDate.trim() === "") {
+            alert("출발일을 선택해주세요.");
+            e.preventDefault();
+        } else {
+            fnGoReserve();
+        }
+      })
+
     
     $.fn.datepicker.dates['ko'] = {
 	    days: ["일요일", "월요일", "화요일", "수요일", "목요일", "금요일", "토요일"],
@@ -295,13 +312,7 @@
         endDate: '+2m'         // 2개월 까지만 열어둠
     });
 
-    
-    function fnGoReserve(){
-      $('#btn_reserve').click(function(){
-         location.href='/reserve/write.form?packageNo=[[${packageDto.packageNo}]]&resStart=' + $('#reserve_start').val();
-      })
-   }
-   
+
      var frmBtn = $('#frm_btn');
     
      const fnEditPackage = () => {
@@ -520,7 +531,8 @@
         })
       })
     }
-
+    
+    
     function generateStarRating(star) {
     let stars = '';
     for (let i = 1; i <= 5; i++) {
@@ -532,28 +544,38 @@
     }
     return stars;
 }
-  	const fnReserveClick = () => {
-          $('#btn_reserve').click(() => {
-            let user = /*[[${session.user}]]*/ null;
-            if(user === null){
-              if(confirm('로그인이 필요한 기능입니다. 로그인할까요?')){
+
+     // 예약넘어가기#####
+    const fnReserveClick = () => {
+    $('#btn_reserve').click(() => {
+        let user = /*[[${session.user}]]*/ null;
+        if (user === null) {
+            if (confirm('로그인이 필요한 기능입니다. 로그인할까요?')) {
                 location.href = '/user/login.form';
-              } else {
+            } else {
                 return;
-              }
             }
-          })
-        }
-        
-  $(document).ready(function () {
-    // 초기 로딩 시 찜 여부 확인 및 아이콘 설정
-    checkHeart();
+          } else {
+              fnGoReserve();
+          }
+      })
+  }
 
-    $('#heartButton').on('click', function () {
-        addHeart();
-    });
-});
+    function fnGoReserve() {
+        location.href = '/reserve/write.form?packageNo=[[${packageDto.packageNo}]]&resStart=' + $('#reserve_start').val();
+    }
+       
 
+  
+   // 찜하기#####
+    $(document).ready(function () {
+      // 초기 로딩 시 찜 여부 확인 및 아이콘 설정
+      checkHeart();
+  
+      $('#heartButton').on('click', function () {
+          addHeart();
+      });
+  });
    function addHeart() {
     var user = /*[[${session.user}]]*/ null;
 
@@ -630,7 +652,7 @@
         },
         success: function () {
             console.log('찜 취소 성공');
-            checkHeart(); // 찜 여부 재확인
+            checkHeart(); 
         },
         error: function (error) {
             console.error('찜 취소 실패:', error);
@@ -651,7 +673,7 @@
             userNo: userNo
         },
         success: function (response) {
-            console.log('찜 여부 확인 결과:', response); // 확인용 로그
+            console.log('찜 여부 확인 결과:', response); 
             if (response.enableHeart) {
                 // 이미 찜한 경우 아이콘 변경
                 $('#heartIcon').html('<i class="fa-solid fa-heart" style="color: #bd1414; font-size: 24px;"></i>');
@@ -667,9 +689,6 @@
 }
 
 
-
- 
-   fnGoReserve();
    fnEditPackage();
    fnRemovePackage();
    fnReviewAdd();

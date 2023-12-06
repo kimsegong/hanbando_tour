@@ -17,7 +17,7 @@ import com.tour.hanbando.dto.ThemeDto;
 public interface PackageMapper {
   
   // 패키지상품 리스트 불러오기
-  public int getPackageCount(int regionNo);
+  public int getPackageCount(int regionNo, String condition);
   public int getCount();
   public List<PackageDto> getPackageList(Map<String, Object> map);
   public List<ProductImageDto> getPackageImageList(int packageNo);
