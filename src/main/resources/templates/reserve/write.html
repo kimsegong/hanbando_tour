@@ -417,8 +417,13 @@
   
     function fnRegTotalPerson(){
       var reservePerson = parseInt($('#reservePerson').val());
+      let adultCount = parseInt($('select[name="adultCnt"]').val());
       if(isNaN(reservePerson) || reservePerson < 1){
         alert('여행 인원을 선택해주세요');
+        ev.preventDefault();
+        return;
+      } else if(reservePerson > 0 && adultCount <= 0){
+        alert('소아 단독 예약은 불가능합니다. 성인인원을 추가해주세요');
         ev.preventDefault();
         return;
       }
