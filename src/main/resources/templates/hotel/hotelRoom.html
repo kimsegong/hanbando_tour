@@ -20,15 +20,15 @@
 	  </div>
 	  <div class="modal-body">
 	    <div class="roomGroup">
-				<form id="frm_room" th:action="@{/hotel/addRoom.do}" methode="post" accept="image/*" enctype="multipart/form-data">
+				<form id="frm_room" name="frm_room" method="post" accept="image/*" enctype="multipart/form-data">
           <input type="hidden" id="hotelNo" name="hotelNo" th:value="${hotelNo}">
-		      <input type="file" name="files1" class="form-control" multiple>
+		      <input type="file" name="files" id="files" class="form-control" multiple>
 		      <label for="roomName" >객실이름</label>
 		      <input type="text" id="roomName" class="form-control" name="roomName">
 		      <label for="roomDetail">객실상세</label>
 		      <textarea id="roomDetail" class="form-control" name="roomDetail"></textarea>
 		      <label for="rView">전망</label>
-		      <input type="text" id="rView" class="form-control"> 
+		      <input type="text" id="rView" class="form-control" name="rView"> 
 		      <label for="bed">침대</label>
 		      <input type="bed" id="bed" class="form-control" name="bed"> 
 		      <label for="shower">욕실</label>
@@ -85,12 +85,34 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
 <script>
   
+  
+  
    $('#btn_room').click(() => {
-     $('#frm_room').submit();
+		 var form = $('#frm_room')[0];
+		 var formData = new FormData(form)
+		 
+		 $.ajax({
+			 type: 'POST',
+			 enctype: 'multipart/form-data',
+			 url: '/hotel/addHotelRoom.do',
+			 data: formData,
+			 processData: false,
+		   contentType: false,
+		   cache: false,
+		   dataType: 'text',
+			 success: (resData) => {
+				 if(resData != null && resData != ""){
+					 if(resData == 1){
+						 alert("등록되었습니다.");
+					 } else if(resData == 0) {
+						 alert("등록되지않았습니다.");
+					 }
+				 }
+			 }
+		 })
    })
-  
-  
-  
+  console.log($('#hotelNo').val());
+    
 </script>
 
 	

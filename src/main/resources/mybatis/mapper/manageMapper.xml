@@ -30,9 +30,6 @@
     <association javaType="ThemeDto" property="themeDto">
       <id        column="THEME_NO"   property="themeNo"/>
     </association>
-    <association javaType="UserDto" property="userDto">
-      <id        column="USER_NO"   property="userNo"/>
-    </association>
     <association javaType="ProductImageDto" property="productImageDto">
       <id        column="IMAGE_NO"          property="imageNo"/>
     </association>
@@ -58,6 +55,7 @@
       <result    column="REGION_NAME" property="regionName"/>
     </association>
   </resultMap>
+  
   
   <!-- 리뷰 테이블 -->
   <resultMap type="ReviewDto"         id="ReviewMap">
@@ -182,12 +180,13 @@
       FROM PACKAGE_T
   </select>
   <select id="getPackageList" parameterType="Map" resultMap="PackageMap">
-    SELECT A.PACKAGE_NO, A.USER_NO, A.REGION_NO, A.REGION_NAME, A.THEME_NO, A.PACKAGE_TITLE, A.MINI_ONE, A.MINI_TWO, A.MINI_THREE, A.PACKAGE_PLAN, A.PACKAGE_CONTENTS, A.HOTEL_CONTENTS, A.PRICE, A.DANGER, A.CREATED_AT, A.MODIFIED_AT, A.HIT, A.STATUS, A.MAX_PEOPLE, A.RECOMMEND_STATUS
-      FROM (SELECT ROW_NUMBER() OVER(ORDER BY P.PACKAGE_NO DESC) AS RN, P.PACKAGE_NO, P.USER_NO, P.REGION_NO, R.REGION_NAME, P.THEME_NO, P.PACKAGE_TITLE, P.MINI_ONE, P.MINI_TWO, P.MINI_THREE, P.PACKAGE_PLAN, P.PACKAGE_CONTENTS, P.HOTEL_CONTENTS, P.PRICE, P.DANGER, P.CREATED_AT, P.MODIFIED_AT, P.HIT, P.STATUS, P.MAX_PEOPLE, P.RECOMMEND_STATUS
+    SELECT A.PACKAGE_NO, A.REGION_NO, A.REGION_NAME, A.THEME_NO, A.PACKAGE_TITLE, A.MINI_ONE, A.MINI_TWO, A.MINI_THREE, A.PACKAGE_PLAN, A.PACKAGE_CONTENTS, A.HOTEL_CONTENTS, A.PRICE, A.DANGER, A.CREATED_AT, A.MODIFIED_AT, A.HIT, A.STATUS, A.MAX_PEOPLE, A.RECOMMEND_STATUS
+      FROM (SELECT ROW_NUMBER() OVER(ORDER BY P.PACKAGE_NO DESC) AS RN, P.PACKAGE_NO, P.REGION_NO, R.REGION_NAME, P.THEME_NO, P.PACKAGE_TITLE, P.MINI_ONE, P.MINI_TWO, P.MINI_THREE, P.PACKAGE_PLAN, P.PACKAGE_CONTENTS, P.HOTEL_CONTENTS, P.PRICE, P.DANGER, P.CREATED_AT, P.MODIFIED_AT, P.HIT, P.STATUS, P.MAX_PEOPLE, P.RECOMMEND_STATUS
               FROM PACKAGE_T P INNER JOIN REGION_T R
                 ON R.REGION_NO = P.REGION_NO) A
      WHERE A.RN BETWEEN #{begin} AND #{end}
   </select>
+  
   
   <!-- 패키지 상품 검색 -->
   
@@ -204,17 +203,60 @@
      WHERE A.RN BETWEEN #{begin} AND #{end}
   </select>
   
-  <!-- 호텔 판매/추천 변경 -->
-  <update id="updateHotelRecommend" parameterType="HotelDto">
-    UPDATE HOTEL_T
-       SET RECOMMEND_STATUS = #{recommendStatus}
-     WHERE HOTEL_NO = #{hotelNo}
+  
+  <!-- 호텔 객실 기간별 가격 -->
+  <select id="getRoomPrice" resultType="RoompriceDto">
+    SELECT HOTEL_NO, ROOM_NO, BI_PRICE, BS_DATE, BE_DATE, JUN_PRICE, JS_DATE, JE_DATE, SUNG_PRICE, SS_DATE, SE_DATE
+      FROM ROOMPRICE_T
+  </select>
+  
+  <!-- 호텔 객실 타입 -->
+  <select id="getRoomType" resultType="RoomtypeDto">
+    SELECT ROOM_NO, HOTEL_NO, ROOM_NAME, ROOM_MANY
+      FROM ROOMTYPE_T
+  </select>
+  
+  <!-- 호텔 객실 가격 변경 -->
+  <update id="updateRoomPrice" parameterType="RoompriceDto">
+    UPDATE ROOMPRICE_T
+   SET BI_PRICE = #{biPrice}
+     , BS_DATE = #{bsDate}
+     , BE_DATE = #{beDate}
+     , JUN_PRICE = #{junPrice}
+     , JS_DATE = #{jsDate}
+     , JE_DATE = #{jeDate}
+     , SUNG_PRICE = #{sungPrice}
+     , SS_DATE = #{ssDate}
+     , SE_DATE = #{seDate}
+ WHERE HOTEL_NO = #{hotelNo}
+   AND ROOM_NO = #{roomNo}
   </update>
+
   
   <!-- 호텔 상품 검색 -->
   
   
   
+  <!-- 지역 목록 -->
+  <select id="getRegionList" resultType="RegionDto">
+    SELECT REGION_NO, REGION_NAME
+      FROM REGION_T
+  </select>
+  
+  
+  <!-- 패키지 추천 변경 -->
+  <update id="updatePackageRecommend" parameterType="PackageDto">
+    UPDATE PACKAGE_T
+       SET RECOMMEND_STATUS = #{recommendStatus}
+     WHERE PACKAGE_NO = #{packageNo}
+  </update>
+  
+  <!-- 호텔 추천 변경 -->
+  <update id="updateHotelRecommend" parameterType="HotelDto">
+    UPDATE HOTEL_T
+       SET RECOMMEND_STATUS = #{recommendStatus}
+     WHERE HOTEL_NO = #{hotelNo}
+  </update>
   
   <!-- 예약 목록 -->
   <!-- 예약 검색 목록 -->

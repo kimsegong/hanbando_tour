@@ -21,7 +21,10 @@ import com.tour.hanbando.dto.HotelDto;
 import com.tour.hanbando.dto.InactiveUserDto;
 import com.tour.hanbando.dto.LeaveUserDto;
 import com.tour.hanbando.dto.PackageDto;
+import com.tour.hanbando.dto.RegionDto;
 import com.tour.hanbando.dto.ReviewDto;
+import com.tour.hanbando.dto.RoompriceDto;
+import com.tour.hanbando.dto.RoomtypeDto;
 import com.tour.hanbando.dto.UserDto;
 import com.tour.hanbando.util.MyPageUtils;
 import com.tour.hanbando.util.MySecurityUtils;
@@ -402,8 +405,10 @@ public class ManageServiceImpl implements ManageService {
                                    , "end", myPageUtils.getEnd());
     
     List<PackageDto> packageList = manageMapper.getPackageList(map);
+    List<RegionDto> regionList = manageMapper.getRegionList();
 
     model.addAttribute("packageList", packageList);
+    model.addAttribute("regionList", regionList);
     model.addAttribute("paging", myPageUtils.getMvcPaging(request.getContextPath() + "/manage/productList.do"));
     model.addAttribute("beginNo", total - (page - 1) * display);
     model.addAttribute("total", total);
@@ -432,14 +437,77 @@ public class ManageServiceImpl implements ManageService {
                                    , "end", myPageUtils.getEnd());
     List<HotelDto> hotelList = manageMapper.getHotelList(map);
     
+    List<RoompriceDto> roompriceList = manageMapper.getRoomPrice();
+    List<RoomtypeDto> roomtypeList = manageMapper.getRoomType();
+    List<RegionDto> regionList = manageMapper.getRegionList();
+    
     model.addAttribute("hotelList", hotelList);
+    model.addAttribute("roompriceList", roompriceList);
+    model.addAttribute("roomtypeList", roomtypeList);
+    model.addAttribute("regionList", regionList);
     model.addAttribute("paging", myPageUtils.getMvcPaging(request.getContextPath() + "/manage/hotelProductList.do"));
     model.addAttribute("beginNo", total - (page - 1) * display);
     model.addAttribute("total", total);
   }
   
+  
   /**
-   * 호텔 판매/추천 여부 변경
+   * 호텔 객실 가격 변경
+   */
+  @Override
+  public ResponseEntity<Map<String, Object>> modifyRoomPrice(HttpServletRequest request) {
+    
+    int hotelNo = Integer.parseInt(request.getParameter("hotelNo"));
+    int roomNo = Integer.parseInt(request.getParameter("roomNo"));
+    String ssDate = request.getParameter("ssDate");
+    String seDate = request.getParameter("seDate");
+    String jsDate = request.getParameter("jsDate");
+    String jeDate = request.getParameter("jeDate");
+    String bsDate = request.getParameter("bsDate");
+    String beDate = request.getParameter("beDate");
+    int sungPrice = Integer.parseInt(request.getParameter("sungPrice"));
+    int junPrice = Integer.parseInt(request.getParameter("junPrice"));
+    int biPrice = Integer.parseInt(request.getParameter("biPrice"));
+    
+    RoompriceDto roomprice = RoompriceDto.builder()
+                                .hotelNo(hotelNo)
+                                .roomNo(roomNo)
+                                .seDate(seDate)
+                                .ssDate(ssDate)
+                                .sungPrice(sungPrice)
+                                .jsDate(jsDate)
+                                .jeDate(jeDate)
+                                .junPrice(junPrice)
+                                .bsDate(bsDate)
+                                .beDate(beDate)
+                                .biPrice(biPrice)
+                                .build();
+    
+    int modifyPriceResult = manageMapper.updateRoomPrice(roomprice);
+    return new ResponseEntity<>(Map.of("modifyPriceResult", modifyPriceResult), HttpStatus.OK);
+  }
+  
+  /**
+   * 패키지 추천 여부 변경
+   */
+  @Override
+  public ResponseEntity<Map<String, Object>> modifyPackageRecommend(HttpServletRequest request) {
+    
+    int recommendStatus = Integer.parseInt(request.getParameter("recommendStatus"));
+    int packageNo = Integer.parseInt(request.getParameter("packageNo"));
+    
+    PackageDto packageDto = PackageDto.builder()
+                              .recommendStatus(recommendStatus)
+                              .packageNo(packageNo)
+                              .build();
+    
+    int modifyRecommendResult = manageMapper.updatePackageRecommend(packageDto);
+    
+    return new ResponseEntity<>(Map.of("modifyRecommendResult", modifyRecommendResult), HttpStatus.OK);
+  }
+  
+  /**
+   * 호텔 추천 여부 변경
    */
   @Override
   public ResponseEntity<Map<String, Object>> modifyHotelRecommend(HttpServletRequest request) {
@@ -448,9 +516,9 @@ public class ManageServiceImpl implements ManageService {
     int hotelNo = Integer.parseInt(request.getParameter("hotelNo"));
     
     HotelDto hotel = HotelDto.builder()
-                        .recommendStatus(recommendStatus)
-                        .hotelNo(hotelNo)
-                        .build();
+        .recommendStatus(recommendStatus)
+        .hotelNo(hotelNo)
+        .build();
     
     int modifyRecommendResult = manageMapper.updateHotelRecommend(hotel);
     

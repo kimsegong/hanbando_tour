@@ -31,15 +31,15 @@ public class PackageController {
   private final PackageService packageService;
   
   @GetMapping("/list.do")
-    public String list(Model model) {
-     model.addAttribute("count", packageService.getTotalPackageCount());
+    public String list(Model model) {     
      return "package/list"; 
     }
   
   @ResponseBody
   @GetMapping(value="/getList.do", produces="application/json")
   public Map<String, Object> getList(@RequestParam(value = "condition", required = false, defaultValue = "defaultCondition") String condition, 
-		  @RequestParam(value = "recommendStatus", required = false, defaultValue = "0") int recommendStatus , HttpServletRequest request){	
+		  @RequestParam(value = "recommendStatus", required = false, defaultValue = "0") int recommendStatus , 
+		  HttpServletRequest request){	
 	  return packageService.getPackageList(request, condition, recommendStatus);
   }  
   
@@ -197,5 +197,12 @@ public class PackageController {
     return "redirect:/package/detail.do?packageNo=" + request.getParameter("packageNo"); 
   }
   
+  @ResponseBody
+  @GetMapping(value="/checkHeart.do", produces="application/json")
+  public Map<String, Object> checkHeart(
+          @RequestParam(value="packageNo", required=false, defaultValue="0") int packageNo,
+          @RequestParam(value="userNo", required=false, defaultValue="0") int userNo) {
+      return packageService.checkHeart(packageNo, userNo);
+  }
 
 }

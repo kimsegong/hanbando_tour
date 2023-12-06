@@ -28,6 +28,5 @@ public class PackageDto {
   private int recommendStatus;
   private RegionDto regionDto;
   private ThemeDto themeDto;
-  private UserDto userDto;
   private ProductImageDto productImageDto; 
 }
