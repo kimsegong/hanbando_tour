@@ -52,6 +52,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
       .addResourceLocations("file:/mainBanner/");
     registry.addResourceHandler("/package/**")
     .addResourceLocations("file:/package/");
+    registry.addResourceHandler("/hotel/**")
+    .addResourceLocations("file:/hotel/");
   }
   
   

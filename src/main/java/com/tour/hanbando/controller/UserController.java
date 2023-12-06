@@ -7,6 +7,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -14,7 +16,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -28,14 +29,15 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Controller
 public class UserController {
+  private Logger logger = LoggerFactory.getLogger(UserController.class);
   
   private final UserService userService;
   private final PackageService packageService; 
 
   
- //인증번호
+ //인증번호(회원가입)
   @ResponseBody
-  @GetMapping(value="/execute.form", produces="application/json")
+  @PostMapping(value="/execute.form", produces="application/json")
   public Map<String, Object> sendSMS(@RequestParam String userPhoneNum) throws Exception {
       // 문자 보내기
     Map<String, Object> map = userService.certifiedPhoneNumber(userPhoneNum);
@@ -44,8 +46,24 @@ public class UserController {
       // 인증번호 반환 {"cerNum": 12345}
   }
 
+ //인증번호(비밀번호변경)
+  @PostMapping("/findpwCheck.do")
+  public String findpw(HttpServletRequest request, HttpServletResponse response) {
+    userService.findpw(request,response);
+    return"";
+  }
+ @GetMapping("/changePw.form")
+ public String changePw() {
+   
+   return "user/lostPw";
+ }
 
   
+  @GetMapping("/findPwModified.form")
+  public String findPwModified() {
+    return "user/findPwModified";
+  }
+
   @GetMapping("/login.form")
   public String loginForm(HttpServletRequest request, Model model) throws Exception {
     // referer : 이전 주소가 저장되는 요청 Header 값
@@ -241,15 +259,32 @@ public class UserController {
   }
   //아이디 찾기-일치검사
   //아이디 찾기 
-    @RequestMapping(value = "/find_id.do", method = RequestMethod.POST, produces="application/json")
+    @PostMapping(value = "/find_id.do", produces="application/json")
     @ResponseBody
     public UserDto find_id(@RequestParam("name") String name, @RequestParam("mobile") String mobile) {
+      UserDto result = userService.find_id(name, mobile);
       
-    UserDto result = userService.find_id(name, mobile);
+      if (result == null) {
+        result = new UserDto();
+      }
       
-    return result;
+      return result;
     }
   
-  
+    //비밀번호 찾기
+    @PostMapping(value = "/find_pw.do", produces="application/json")
+    @ResponseBody
+    public int find_pw(@RequestParam("email") String email, @RequestParam("mobile") String mobile) {
+      int result = userService.findpw_id(email, mobile);
+      
+      return result;
+    }
+   //비밀번호 일치여부 창검사
+      @GetMapping("/pwCorrect.form")
+      public String pwCorrect() {
+        return "user/pwCorrect";
+      }
+      
+      
+
 }
-  
