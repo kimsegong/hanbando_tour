@@ -13,6 +13,17 @@
  hr {
    color: darkgray;
  }
+.bigPicture {
+  border: 1px gray solid;
+  width: 100%;
+}
+.bigPicture > img{
+  width: 100%;
+}
+.owl_img{
+  
+}
+ 
 </style>
 
 
@@ -148,6 +159,8 @@
               autoplay: false, // 자동으로 슬라이드 쇼를 시작할지 여부
               autoplayTimeout: 4000, // 다음 이미지로 넘어가는 시간 (단위 : 밀리초)
               autoplayHoverPause: true, // 마우스가 이미지에 위에 있을 때 자동 슬라이드를 일시중지 할지 여부
+              dots: false,
+              nav: true,
             });           
           });
   
