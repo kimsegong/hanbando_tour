@@ -66,28 +66,63 @@
    
    <table class="table">
      <tbody>
-       <tr th:each="inquiry : ${inquiryList}" class="title_title">
-       <td th:text="${inquiry.title}"></td>
+       <tr th:each="in : ${inquiryList}" class="title_title">
+         <th:block th:if="${in.userNo==session.user.userNo}">
+           <td>
+           <a th:href="@{|/notice/inquirydetail.do?inquiryNo=${in.inquiryNo}|}" th:text="${in.title}"></a>  
+           </td>
+         </th:block>
        </tr>
      </tbody>
    </table>    
      
    </div>
+   
+   
+   
+     <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">공지번호</th>
+          <th scope="col">제목</th>
+          <th scope="col">작성일</th>
+          <th scope="col">수정일</th>
+        </tr>
+      </thead>
+    <tbody>
+      <th:block th:each="n,vs:${noticeList}">
+        <tr class="align-bottom">
+          <td th:text="${beginNo - vs.index}"></td>
+            <td>
+             <a th:href="@{|/notice/detail.do?noticeNo=${n.noticeNo}|}" th:text="${n.title}"></a>
+            </td>
+            <td th:text="${n.createdAt}"></td>
+            <td th:text="${n.modifiedAt}"></td>
+        </tr>
+      </th:block>
+    </tbody>
+  </table>
+
+
+
+
    <div class="col-2"></div>
    
+   
+ 
+   
+   
+
    
    
    </div>
    
 
 
-<div>
 
-<details>
-    <summary>접기 버튼</summary>
-Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
-</details>
-</div>
+
+
+
    
 
 
@@ -116,7 +151,23 @@ Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem
       
       
       <script>
+      var frmBtn = $('#frm_btn');
+      
 
+      
+      const fnRemoveNotice = () => {
+        $('#btn_remove').click(() => {
+          event.preventDefault();
+          if(confirm('공지사항 삭제를 선택하셨습니다. 삭제할까요?')){
+          frmBtn.attr('action', '/notice/inquiryremove.do');
+          frmBtn.submit();
+          }
+          
+        })
+      }
+  
+      fnEditNotice();
+      fnRemoveNotice();    
       
       </script>
       
