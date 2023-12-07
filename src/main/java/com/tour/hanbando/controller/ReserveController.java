@@ -117,6 +117,7 @@ public class ReserveController {
     model.addAttribute("hotel", reserveService.loadHotelInfoWithWriteform(Integer.parseInt(request.getParameter("hotelNo"))));
     model.addAttribute("room", reserveService.loadRoomInfoWithWriteform(Integer.parseInt(request.getParameter("roomNo"))));
     model.addAttribute("roomNo", request.getParameter("roomNo")); 
+    // 체크인, 체크아웃, 총금액 받아와야 함
     return "reserve/writeHotel";
   }
   
