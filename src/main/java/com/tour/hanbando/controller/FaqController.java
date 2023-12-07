@@ -7,9 +7,15 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.tour.hanbando.dto.FaqDto;
+import com.tour.hanbando.dto.NoticeDto;
 import com.tour.hanbando.service.FaqService;
 import com.tour.hanbando.service.NoticeService;
 
@@ -22,16 +28,16 @@ import lombok.RequiredArgsConstructor;
 public class FaqController {
   private final FaqService faqService;
   
-  @GetMapping("faq.do")
-  public String faq(HttpServletRequest request, Model model) {
-    faqService.loadFaqList(request, model);
-    return "notice/faq";
+  @GetMapping("/faqList.do")
+  public String faq(HttpServletRequest request) {
+    return "notice/faqList";
   }
   
+  
   @ResponseBody
-  @GetMapping(value="/faqList.do", produces="application/json")
-  public Map<String, Object> reviewList(HttpServletRequest request){
-    return faqService.loadOfList(request);
+  @GetMapping(value="/loadFaqList.do", produces="application/json")
+  public Map<String, Object> fapList(HttpServletRequest request){
+    return faqService.loadFaqList(request);
   }
   
   @GetMapping("faqCash.do")
@@ -51,4 +57,53 @@ public class FaqController {
     faqService.loadFaqMemberList(request, model);
     return "notice/faqMember";
   }
+  
+  @GetMapping("/faqWrite.form")
+  public String write(HttpServletRequest request, Model model) {
+    faqService.getFaqDetail(request, model);
+    return "notice/faqWrite";
+  }
+  
+  @PostMapping("/addFaq.do")
+  public String addNotice(HttpServletRequest request, RedirectAttributes redirectAttributes) {
+    int addResult = faqService.addFaq(request);
+    redirectAttributes.addFlashAttribute("addResult", addResult);
+    return "redirect:/notice/faqList.do";
+}
+  
+  @GetMapping("/faqDetailWrite.form")
+  public String faqDetailWrite() {
+    return "notice/faqDetailWrite"; 
+  }
+  
+  @PostMapping("/addDetailFaq.do")
+  public String addFaqDetail(HttpServletRequest request) {
+      faqService.addFaqDetail(request);
+      return "redirect:/notice/faqWrite.form";
+  }
+  
+  @ResponseBody
+  @PostMapping(value="/faqRemove.do" , produces="application/json")
+  public Map<String, Object> faqRemove(@RequestParam(value="faqNo", required=false, defaultValue="0") int faqNo) {
+    return faqService.removeFaq(faqNo);
+ }
+ 
+  @PostMapping("/modifyFaq.do")
+  public String modifyFaq(HttpServletRequest request, RedirectAttributes redirectAttributes) {
+    int modifyResult = faqService.modifyFaq(request);
+    redirectAttributes.addFlashAttribute("modifyResult", modifyResult);
+    return "redirect:/notice/faqList";
+  }
+
+  @PostMapping("/faqEdit.form")
+  public String edit(@RequestParam(value="faqNo", required=false, defaultValue="0") int faqNo, 
+      HttpServletRequest request, Model model) {
+    FaqDto faq = faqService.getFaq(faqNo);
+    faqService.getFaqDetail(request, model);
+    model.addAttribute("faq", faq);
+    return "notice/faqEdit";
+  }
+  
+  
+  
 }
