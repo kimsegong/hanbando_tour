@@ -8,9 +8,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 
+import com.tour.hanbando.dao.InquiryAnswerMapper;
 import com.tour.hanbando.dao.InquiryMapper;
+import com.tour.hanbando.dto.InquiryAnswerDto;
 import com.tour.hanbando.dto.InquiryDto;
-import com.tour.hanbando.dto.NoticeDto;
 
 import lombok.RequiredArgsConstructor;
 
@@ -19,6 +20,7 @@ import lombok.RequiredArgsConstructor;
 @Service
 public class InquiryServiceImpl implements InquiryService {
   private final InquiryMapper inquiryMapper;
+  private final InquiryAnswerMapper inquiryAnswerMapper;
   
   @Transactional
   @Override
@@ -79,4 +81,26 @@ public class InquiryServiceImpl implements InquiryService {
     
     return modifyResult;
   } 
+  
+  @Override
+  public int addInquiryAnswer(HttpServletRequest request) {
+    int inquiryNo=Integer.parseInt(request.getParameter("inquiryNo"));
+    String contents = request.getParameter("contents");
+    int userNo=Integer.parseInt(request.getParameter("userNo"));
+    
+    InquiryAnswerDto answer = InquiryAnswerDto.builder()
+                             .userNo(userNo)
+                             .inquiryNo(inquiryNo)
+                             .contents(contents)
+                             .build();
+    
+    int addResult = inquiryMapper.insertInquiryAnswer(answer);
+    
+    return addResult;
+  }
+  @Override
+  public InquiryAnswerDto loadInquiryAnswer(int inquiryNo) {
+    
+    return inquiryMapper.getInquiryAnswer(inquiryNo);
+  }
 }
