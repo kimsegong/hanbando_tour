@@ -6,6 +6,7 @@ import java.util.Map;
 import org.apache.ibatis.annotations.Mapper;
 
 import com.tour.hanbando.dto.NoticeDto;
+import com.tour.hanbando.dto.ProductImageDto;
 
 @Mapper
 public interface NoticeMapper {
@@ -17,4 +18,6 @@ public interface NoticeMapper {
   public NoticeDto getNotice(int noticeNo);
   public int deleteNotice(int NoticeNo);
   public int updateNotice(NoticeDto notice);
+  public int insertNotices(NoticeDto noticeDto);
+  public int insertNoticeImage(ProductImageDto image);
 }

@@ -34,14 +34,17 @@
   
      <div class="container text-center">
       <div class="row">
-        <div class="col-1">       
+        <div class="col-1">  
+          <div class="w3-sidebar w3-bar-block" style="width:10%; height:200px;"> <!-- 사이드바 -->
+            <a th:href="@{/notice/faqDetailWrite.form}" class="w3-bar-item w3-button">세부메뉴 작성</a>        
+          </div>   
         </div>
-        <div class="col-10" style="border:1px gray dotted">
+        <div class="col-10">
             <!--/*여기에 작성/ 다 만들고 style 지워주세요  */-->
         
               <div>
 
-      <form id="frm_notice_add" method="post" th:action="@{/notice/addNotice.do}">
+      <form id="frm_faq_add" method="post" th:action="@{/notice/addFaq.do}">
         
         <h1 style="text-align: center;">공지사항을 작성하세요</h1>
         
@@ -56,6 +59,13 @@
           <label for="title">제목</label>
           <input type="text" name="title" id="title" class="form-control">
         </div>
+        <div class="w-25 p-3">
+         <select id="faqDetailSelect" class="form-select" aria-label="Default select example" name="caNo">
+             <option selected>-분류-</option>
+             <option th:each="faqCa : ${faqCaList}" th:value="${faqCa.caNo}" th:text="${faqCa.caTitle}"></option>
+         </select>
+        </div>
+        
         
         <div class ="wrap1">
          <div class="box2"></div>
@@ -69,15 +79,15 @@
           <textarea name="contents" id="contents" class="form-control"></textarea>
         </div>
         
+        <!---->
+        
         <div class ="wrap1">
          <div class="box3"></div>
         </div>
         
         <div class="col-1"></div>
         <div class="col-10">
-          <div class="file_up" style="padding-left:230px">
-          <input type="file" name="files" id="files" class="form-control" style="width:300px;">
-          </div>
+  
           
         <div class ="wrap1">
           <div class="box4"></div>
@@ -94,7 +104,7 @@
         
         <!-- 작성완료 submit  -->  
         <div>
-          <a th:href="@{/notice/list.do}">
+          <a th:href="@{/notice/faqList.do}">
           <button type="submit" class="btn btn-primary col-12">작성완료</button>
           </a>
         </div>
@@ -109,34 +119,9 @@
             
      <script>
        
-           const fnFileCheck = () => {
-        $('#files').change((ev) => {
-          $('#attached_list').empty();
-          let maxSize = 1024 * 1024 * 100;
-          let maxSizePerFile = 1024 * 1024 * 10;
-          let totalSize = 0;
-          let files = ev.target.files;
-          for(let i = 0; i < files.length; i++){
-            totalSize += files[i].size;
-            if(files[i].size > maxSizePerFile){
-              alert('각 첨부파일의 최대 크기는 10MB입니다.');
-              $(ev.target).val('');
-              $('#attached_list').empty();
-              return;
-            }
-            $('#attached_list').append('<div>' + files[i].name + '</div>');
-          }
-          if(totalSize > maxSize){
-            alert('전체 첨부파일의 최대 크기는 100MB입니다.');
-            $(ev.target).val('');
-            $('#attached_list').empty();
-            return;
-          }
-        })
-      }  
-   
+
 const fnNoticeModify = () => {
-  $('#frm_notice_add').submit((ev) => {
+  $('#frm_faq_add').submit((ev) => {
     if ($('#title').val() === '') {
       alert('제목은 반드시 입력해야 합니다.');
       $('#title').focus();

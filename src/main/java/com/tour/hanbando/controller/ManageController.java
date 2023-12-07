@@ -158,23 +158,6 @@ public class ManageController {
     return manageService.modifyRoomPrice(request);
   }  
   
-  /* 패키지 예약 목록 */
-  @GetMapping("/reserveList.do")
-  public String reserveList(HttpServletRequest request, Model model) {
-    return "manage/reserveList";
-  }
-  
-  /* 패키지 예약 검색 */
-  
-  /* 패키지 예약 상세 */
-  
-  /* 호텔 예약 목록 */
-  
-  
-  /* 호텔 예약 검색 */
-  
-  /* 호텔 예약 상세 */
-  
   /* 패키지 추천 여부 변경 */
   @PostMapping(value="/modifyPackageRecommend.do", produces=MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<Map<String, Object>> modifyPackageRecommend(HttpServletRequest request){
@@ -185,6 +168,35 @@ public class ManageController {
   @PostMapping(value="/modifyHotelRecommend.do", produces=MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<Map<String, Object>> modifyHotelRecommend(HttpServletRequest request){
     return manageService.modifyHotelRecommend(request);
+  }
+  
+  /* 예약 목록 */
+  @GetMapping("/reserveList.do")
+  public String reserveList(HttpServletRequest request, Model model) {
+    manageService.loadReserveList(request, model);
+    return "manage/reserveList";
+  }
+  
+  /* 예약 검색 */
+  @GetMapping("/searchReserve.do")
+  public String searchReserve(HttpServletRequest request, Model model) {
+    manageService.loadSearchReserveList(request, model);
+    return "manage/reserveList";
+  }
+  
+  /* 패키지 예약 상세 */
+  @GetMapping("/reservePackageDetail.do")
+  public String reservePackageDetail(@RequestParam(value="reserveNo", required=false, defaultValue="0") int reserveNo
+                                   , Model model) {
+    manageService.getReservePackageDetail(reserveNo, model);
+    return "manage/reservePackageDetail";
+  }
+  /* 호텔 예약 상세 */
+  @GetMapping("/reserveHotelDetail.do")
+  public String reserveHotelDetail(@RequestParam(value="reserveNo", required=false, defaultValue="0") int reserveNo
+                                 , Model model) {
+    manageService.getReserveHotelDetail(reserveNo, model);
+    return "manage/reserveHotelDetail";
   }
   
   /* 전체 리뷰 목록 */

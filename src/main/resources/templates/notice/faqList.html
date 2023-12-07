@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{/layout/header::head('한반도 투어')}"></head> <!-- 이거 알맞게 바꿔주세요-->
+<style>
+
+.wrap1 > .box1{
+  height:50px;
+}
+
+.wrap1 > .box2{
+  height:50px;
+}
+
+.wrap1 > .box3{
+  height:50px;
+}
+
+.wrap1 > .box4{
+  height:70px;
+}
+</style>
+
+
+
+<body>
+  <div th:replace="~{/layout/header::header}"></div>
+  
+  <div class="main_wrap">
+  
+  
+     <div class="container text-center">
+      <div class="row">
+        <div class="col-1">       
+        </div>
+        <div class="col-10">
+            <!--/*여기에 작성/ 다 만들고 style 지워주세요  */-->
+       
+
+  <h2>자주묻는질문</h2>
+   
+  <div class="wrap1">
+    <div class="box1"></div>    
+  </div>
+
+  <div class="btn-toolbar mb-3 justify-content-center" role="toolbar" aria-label="Toolbar with button groups">
+  <div class="btn-group me-2" role="group" aria-label="First group">
+
+    
+    <a th:href = "@{/notice/faqKorea.do}">
+    <button type="button" class="btn btn-outline-secondary">국내패키지</button>
+    </a>
+    
+    <a th:href = "@{/notice/faqCash.do}">
+    <button type="button" class="btn btn-outline-secondary">예약/결제</button>
+    </a>
+    
+    <a th:href = "@{/notice/faqMember.do}">
+    <button type="button" class="btn btn-outline-secondary">회원안내</button>
+    </a>
+    
+    <a th:href = "@{/notice/faqList.do}">
+    <button type="button" class="btn btn-secondary">기타</button>
+    </a>
+
+    
+  </div>
+  </div> 
+
+
+
+  </div>
+  
+    <div class="wrap1">
+    <div class="box2"></div>    
+      </div>
+    
+    
+    <div class="row">
+      <div class="col-7"></div>
+      <div class="col-4" style="display: flex; justify-content: flex-end;">
+        <div class="home">
+          <a th:href="@{http://localhost:8080}"><i class="fa-solid fa-house" style="font-size:15px; margin-right: 5px;"></i></a>
+           &nbsp;고객센터  &nbsp;  >   &nbsp; 공지사항
+        </div>
+      </div>
+
+      
+      
+  
+    <div class="wrap1">
+    <div class="box3"></div>    
+  </div>
+  
+   <div class="row">
+   <div class="col-1"></div>
+   <div class="col-9">
+   <th:block th:if="${session.user != null}">
+   <input type="hidden" name="userNo" id="userNo" th:value="${session.user.userNo}">   
+   </th:block>
+   <div id="faqAccordion"></div>
+  
+
+  
+  <div class="wrap1">
+    <div class="box4"></div>    
+  </div> 
+ 
+ 
+ 
+ 
+ 
+ </div>           
+            
+  </div>          
+                    
+        </div>
+        <div class="col-1">       
+        </div>
+      </div>
+    </div>
+  
+  </div>
+
+  </div>
+  
+          
+<script th:inline="javascript">
+          
+     var page = 1;
+     var totalPage = 0;
+     
+      const fnFaqList = () => { 
+        $.ajax({
+          type: 'get',
+          url: '/notice/loadFaqList.do',
+          data: { page: page},
+          dataType: 'json',
+          success: (resData) => {
+            totalPage = resData.totalPage;
+            $('#faqAccordion').empty();
+            const sessionUserNo = $('#userNo').val();
+            if (resData.faqList != null && resData.faqList.length > 0) {
+              $.each(resData.faqList, (i, faq)=> {
+                let str = '<div class="accordion accordion-flush">';
+                str += '<div class="accordion-item">';
+                str += '<h2 class="accordion-header">';
+                str += '<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapse' + i + '" aria-expanded="false" aria-controls="flush-collapse' + i + '">' + faq.title + '제목' + '</button>';
+                str += '</h2>';
+                str += '<div id="flush-collapse' + i + '" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">';
+                str += '<div class="accordion-body">' + faq.contents + '</div>';
+                str += '  <div>';
+               if (sessionUserNo == 1) {
+              str += '  <div class="edit-form-wrapper">';
+              str += '    <button type="button" class="btn btn-primary edit-faq-btn" data-bs-toggle="collapse" data-bs-target="#editFormCollapse' + faq.faqNo + '">수정하러하기</button>';
+              str += '    <div class="collapse" id="editFormCollapse' + faq.faqNo + '">';
+              str += '      <form class="edit-form" id="frm_faq_btn" method="post" action="/notice/faqEdit.form">';
+              str += '        <input type="hidden" id=faqNo name="faqNo" value="' + faq.faqNo + '">';
+              str += '        <div class="mb-3">';
+              str += '          <label for="title" class="form-label">제목</label>';
+              str += '          <input type="text" class="form-control" id="title" name="title" value="' + faq.title + '">';
+              str += '        </div>';
+      
+              str += '        <div class="mb-3">';
+              str += '          <label for="contents" class="form-label">내용</label>';
+              str += '          <textarea class="form-control" id="contents" name="contents">' + faq.contents + '</textarea>';
+              str += '        </div>';
+      
+              str += '        <button type="button" class="btn btn-primary edit-faq-btn" id= "edit_btn">수정하기</button>';
+              str += '      </form>';
+              str += '    </div>';
+              str += '    <button type="button" class="btn btn-danger remove_Faq">삭제하기</button>';
+              str += '  </div>';
+             }
+             str += '</div>';
+             str += '</div>';
+             str += '</div>';
+             $('#faqAccordion').append(str);     
+              });
+            } else {
+              $('#faqAccordion').append('<div class="text-center">등록된 질문이 없습니다.</div>');
+            }
+          },
+          error: (error) => {
+            console.error('Ajax 요청 에러:', error);
+          }
+        });
+      };
+ 
+
+  const fnFaqRemove = () => {
+      $(document).on('click', '.remove_Faq', (ev) => {
+        if(!confirm('자주묻는질문을 삭제할까요?')){
+          return;
+        }
+        const faqNo = $('#faqNo').val();
+        $.ajax({
+          // 요청
+          type: 'post',
+          url: '/notice/faqRemove.do',
+          data: {faqNo: faqNo},
+          // 응답
+          dataType: 'json',
+          success: (resData) => { 
+            if(resData.removeResult === 1){
+              alert('해당 질문이 삭제되었습니다.');
+              fnFaqList();
+            } else {
+              alert('해당 질문이 삭제되지 않았습니다.');
+            }
+          }
+        })
+      })
+    }
+    
+$(document).on('click', '#edit_btn', (ev) => {
+    // 수정 폼을 서버에 전송
+    const faqNo = $('#faqNo').val();
+    const title = $('#title').val();
+    const contents = $('#contents').val();
+    $.ajax({
+        type: 'post',
+        url: '/notice/modifyFaq.do',
+        data: {
+            faqNo: faqNo,
+            title: title,
+            contents: contents
+        },
+        dataType: 'json',
+        success: (resData) => {
+            // 서버로부터의 응답 처리
+            if (resData.modifyResult === 1) {
+                alert('수정이 완료되었습니다.');
+                fnFaqList();
+            } else {
+                alert('수정에 실패했습니다.');
+            }
+        },
+        error: (error) => {
+            console.error('Ajax 요청 에러:', error);
+        }
+    });
+});
+
+
+
+      fnFaqList();
+      fnFaqRemove();
+          
+  </script>
+            
+  
+  
+  <div th:replace="~{/layout/footer::footer}"></div>
+</body>
+</html>

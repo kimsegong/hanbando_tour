@@ -98,25 +98,20 @@
     
     <div class="col-1" style="font-size:18px;">
       
-      
-    <div>
-    분류
-    </div>
+
     
     <div class = "wrap1">
       <div class="box3"></div>
     </div>
     
-    <div>
-    제목  
-    </div>  
+  
     
     <div class = "wrap1">
       <div class="box4"></div>
     </div>
     
     <div>
-    내용      
+    답변      
     </div>
     </div>  
     
@@ -125,28 +120,20 @@
     
     
     <div class="col-5"> 
-      <div>
-        <form id="frm_inquiry_add" method="post" th:action="@{/notice/addInquiry.do}">
-      <select name="separate" class="form-select" aria-label="Default select example">
-        <option value="" selected>문의선택</option>
-        <option value="호텔문의">호텔문의</option>
-        <option value="패키지문의">패키지문의</option>
-        <option value="기타문의">기타문의</option>
-      </select>
-      </div> 
+
       
       <div class = "wrap1">
       <div class="box5"></div>
       </div>
       
 
-      <div class="title_input">
-        <input type="text" name="title" id="title" placeholder="제목 입력" class="search_input" style="width:450px">
-      </div>
+
       
       <div class = "wrap1">
       <div class="box6"></div>
       </div>
+      
+      <form id="frm_inquiry_answer" method="post" th:action="@{/notice/addInquiryAnswer.do}">
       
       <div class="contents_input">
         <textarea name="contents" id="contents" placeholder="내용 입력" class="search_input" style="width: 450px; height: 290px;"></textarea>
@@ -158,15 +145,12 @@
       
       <div>
       <input type="hidden" name="userNo" th:value="${session.user.userNo}">
-      <a th:href = "@{/notice/list.do}">
+      <input type="hidden" name="inquiryNo" th:value="${inquiryNo}">
+      <a th:href = "@{/notice/inquirylist.do}">
       <button type="button" class="btn btn-secondary btn-sm">작성 취소</button>&nbsp;&nbsp;&nbsp;
       </a>
-      <a th:href = "@{/notice/inquirylist.do}">
-      <button type="submit" class="btn btn-outline-primary" style="margin-right: 8px;">문의 완료</button>  
-      </a> 
-      <a th:href = "@{/notice/inquirylist.do}">
-      <button type="button" class="btn btn-outline-primary">목록보기</button>
-      </a> 
+      
+      <button type="submit" class="btn btn-outline-primary" style="margin-right: 8px;">답변 완료</button>  
       </div>
       
       </form>

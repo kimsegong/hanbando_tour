@@ -63,21 +63,23 @@ public interface ManageService {
     /* 호텔 객실 가격 변경 */
     public ResponseEntity<Map<String, Object>> modifyRoomPrice(HttpServletRequest request);    
     
-    /* 패키지 예약 검색 */
-    
-    /* 패키지 예약 상세 */
-    
-    /* 호텔 예약 목록 */
-    
-    /* 호텔 예약 검색 */
-    
-    /* 호텔 예약 상세 */
-    
     /* 패키지 추천 변경 */
     public ResponseEntity<Map<String, Object>> modifyPackageRecommend(HttpServletRequest request);
     
     /* 호텔 추천 변경 */
     public ResponseEntity<Map<String, Object>> modifyHotelRecommend(HttpServletRequest request);
+    
+    /* 예약 목록 */
+    public void loadReserveList(HttpServletRequest request, Model model);
+    
+    /* 예약 검색 */
+    public void loadSearchReserveList(HttpServletRequest request, Model model);
+    
+    /* 패키지 예약 상세 */
+    public void getReservePackageDetail(int reserveNo, Model model);
+    
+    /* 호텔 예약 상세 */
+    public void getReserveHotelDetail(int reserveNo, Model model);
     
     /* 전체 리뷰 목록 */
     public void loadReviewList(HttpServletRequest request, Model model);
