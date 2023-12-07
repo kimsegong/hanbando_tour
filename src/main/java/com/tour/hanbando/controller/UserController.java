@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.tour.hanbando.dto.UserDto;
 import com.tour.hanbando.service.PackageService;
@@ -47,21 +48,34 @@ public class UserController {
   }
 
  //인증번호(비밀번호변경)
-  @PostMapping("/findpwCheck.do")
-  public String findpw(HttpServletRequest request, HttpServletResponse response) {
-    userService.findpw(request,response);
-    return"";
+  @GetMapping("/findpwCheck.do")
+  public String findpw(HttpServletRequest request, Model model) {
+    String email = request.getParameter("email");
+    String mobile = request.getParameter("mobile");
+    model.addAttribute("email", email);
+    model.addAttribute("mobile", mobile);
+    return"user/lostPw";
   }
+  
  @GetMapping("/changePw.form")
  public String changePw() {
    
    return "user/lostPw";
  }
+ 
+ //비밀번호 변경 후 
 
   
   @GetMapping("/findPwModified.form")
   public String findPwModified() {
     return "user/findPwModified";
+  }
+  
+  
+  @PostMapping("/doulbeModified.do")
+  public String doulbeModified(HttpServletRequest request, HttpServletResponse response) {
+   userService.doublemodifiyPw(request, response);
+   return "redirect:/user/changePw.form";
   }
 
   @GetMapping("/login.form")
