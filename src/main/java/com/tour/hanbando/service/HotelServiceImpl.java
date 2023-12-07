@@ -145,6 +145,9 @@ public class HotelServiceImpl implements HotelService {
     model.addAttribute("region", hotelMapper.getRegion());
   }
   
+  
+  /************************이거 인서트 할때 룸 추가하면 보여줄때 쓰는 서비스********************************/
+  
   @Override
   public void hotelRoomList(HttpServletRequest request, Model model) {
     
@@ -153,7 +156,7 @@ public class HotelServiceImpl implements HotelService {
     List<RoomtypeDto> roomtypeDto = hotelMapper.getRoomtype(hotelNo);
     hotelMapper.getRoomFeature(roomtypeDto);
     hotelMapper.getRoomImage(roomtypeDto);
-    hotelMapper.getPrice(roomtypeDto);
+    hotelMapper.getPrice(hotelNo);
     
   }
   
@@ -413,7 +416,7 @@ public class HotelServiceImpl implements HotelService {
     List<HotelImageDto> hotelImageDto = hotelMapper.getHotelImage(hotelNo);
     
     List<RoomtypeDto> roomtypeDto = hotelMapper.getRoomtype(hotelNo);
-    //List<RoompriceDto> roompriceDtos = hotelMapper.getPrice(roomtypeDto);
+    List<RoompriceDto> roompriceDto = hotelMapper.getPrice(hotelNo);
     
     List<HotelDto> hotel = new ArrayList<>();
     hotel.add(hotelDto); // 가격 가져올려고 
@@ -423,7 +426,7 @@ public class HotelServiceImpl implements HotelService {
     model.addAttribute("hotel", hotelDto);
     model.addAttribute("hotelImage", hotelImageDto);
     model.addAttribute("fac", facilitiesDto);
-    model.addAttribute("price", price);
+    model.addAttribute("price", roompriceDto);
     model.addAttribute("roomType", roomtypeDto);
     
     
