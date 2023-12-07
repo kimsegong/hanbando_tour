@@ -75,7 +75,11 @@ public interface ManageService {
     /* 예약 검색 */
     public void loadSearchReserveList(HttpServletRequest request, Model model);
     
-    /* 예약 상세 */
+    /* 패키지 예약 상세 */
+    public void getReservePackageDetail(int reserveNo, Model model);
+    
+    /* 호텔 예약 상세 */
+    public void getReserveHotelDetail(int reserveNo, Model model);
     
     /* 전체 리뷰 목록 */
     public void loadReviewList(HttpServletRequest request, Model model);
