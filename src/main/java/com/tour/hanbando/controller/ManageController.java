@@ -5,6 +5,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.ibatis.annotations.Param;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -186,12 +187,14 @@ public class ManageController {
   
   /* 패키지 예약 상세 */
   @GetMapping("/reservePackageDetail.do")
-  public String reservePackageDetail() {
+  public String reservePackageDetail(@RequestParam(value="reserveNo", required=false, defaultValue="0") int reserveNo
+                                   , Model model) {
     return "manage/reservePackageDetail";
   }
   /* 호텔 예약 상세 */
   @GetMapping("/reserveHotelDetail.do")
-  public String reserveHotelDetail() {
+  public String reserveHotelDetail(@RequestParam(value="reserveNo", required=false, defaultValue="0") int reserveNo
+                                 , Model model) {
     return "manage/reserveHotelDetail";
   }
   
