@@ -10,6 +10,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.tour.hanbando.dto.HotelDto;
 import com.tour.hanbando.dto.PaymentDto;
 import com.tour.hanbando.dto.ReserveDto;
+import com.tour.hanbando.dto.RoomtypeDto;
 
 public interface ReserveService {
 
@@ -21,6 +22,7 @@ public interface ReserveService {
   public void loadReserveListByUser(HttpServletRequest request, Model model);
   public void loadReserveHotelListByUser(HttpServletRequest request, Model model);
   public HotelDto loadHotelInfoWithWriteform(int hotelNo);
+  public RoomtypeDto loadRoomInfoWithWriteform(int roomNo);
   
   public ReserveDto loadReserve(int reserveNo);
   public Map<String, Object> loadTourists(HttpServletRequest request);

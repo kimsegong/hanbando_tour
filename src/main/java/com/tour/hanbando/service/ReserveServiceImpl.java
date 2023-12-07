@@ -26,6 +26,7 @@ import com.tour.hanbando.dto.HotelDto;
 import com.tour.hanbando.dto.PackageDto;
 import com.tour.hanbando.dto.PaymentDto;
 import com.tour.hanbando.dto.ReserveDto;
+import com.tour.hanbando.dto.RoomtypeDto;
 import com.tour.hanbando.dto.TouristDto;
 import com.tour.hanbando.dto.UserDto;
 import com.tour.hanbando.util.MyPageUtils;
@@ -248,6 +249,12 @@ public class ReserveServiceImpl implements ReserveService {
   public HotelDto loadHotelInfoWithWriteform(int hotelNo) {
     HotelDto hotel = hotelMapper.getHotel(hotelNo);
     return hotel;
+  }
+  
+  @Override
+  public RoomtypeDto loadRoomInfoWithWriteform(int roomNo) {
+    RoomtypeDto room = hotelMapper.roomtype(roomNo);
+    return room;
   }
   
   @Transactional(readOnly=true)
