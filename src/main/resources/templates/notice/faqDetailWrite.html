@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{/layout/header::head('자주묻는질문분류메뉴')}"></head>
+<body>
+	
+	<div th:replace="~{/layout/header::header}"></div>
+	
+	<div class="container text-center">  <!-- 그리드 시작 -->  
+	  <div class="row">
+	    <div class="col-1">
+	    </div>
+	    <div class="col-10" >
+		<h2>세부사항작성</h2>
+	 <form method="post" th:action="@{/notice/addFaq.do}">
+	  <div style="margin: 30px 270px;" class="w-50 p-3">		 		  
+    <div>        
+        <div>
+    	    <label for="regionName" class="form-label"></label>
+	        <input type="text" name="caTitle" id="caTitle" class="form-control" placeholder="제목을 작성해주세요">
+    	  </div>    	  	  
+
+		   <div class="d-grid gap-2 col-6 mx-auto">    
+		      <button type="submit" class="btn btn-primary" style="margin: 32px;">작성완료</button>
+	      </div>
+		 </div>
+		 </div>
+		</form>
+		
+		</div>
+    <div class="col-1">      
+    </div>
+  </div>
+  </div>
+
+
+<div th:replace="~{/layout/footer::footer}"></div>
+</body>
+</html>
+
