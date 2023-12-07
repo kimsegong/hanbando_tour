@@ -1,5 +1,6 @@
 package com.tour.hanbando.controller;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -31,7 +32,6 @@ public class ReserveController {
 
   private final ReserveService reserveService;
   private final PackageService packageService;
-  private final HotelService hotelService;
   
   // 패키지 예약관련 요청을 처리
   @GetMapping("/reserveList.do")
@@ -116,6 +116,7 @@ public class ReserveController {
   public String reserveHotel(HttpServletRequest request, Model model) {
     model.addAttribute("hotel", reserveService.loadHotelInfoWithWriteform(Integer.parseInt(request.getParameter("hotelNo"))));
     model.addAttribute("room", reserveService.loadRoomInfoWithWriteform(Integer.parseInt(request.getParameter("roomNo"))));
+    model.addAttribute("roomNo", request.getParameter("roomNo")); 
     return "reserve/writeHotel";
   }
   
@@ -125,6 +126,16 @@ public class ReserveController {
     model.addAttribute("reserveHo", reserveHo);
     return "reserve/detailHotel";
   }
+  
+  @PostMapping("/addReserveHotel.do")
+  public String addReserveHotel(HttpServletRequest request, RedirectAttributes redirectAttributes) {
+    Map<String, Object> map = reserveService.addReserveHotel(request);
+    int addReserveHotelResult = (Integer) map.get("addResult");
+    redirectAttributes.addFlashAttribute("addReserveHotelResult", addReserveHotelResult);
+    return "redirect:/reserve/detailHotel.do?reserveNo=" + map.get("reserveNo");
+  }
+  
+  
   
   
 }

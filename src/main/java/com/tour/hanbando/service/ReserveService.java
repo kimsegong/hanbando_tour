@@ -16,6 +16,7 @@ public interface ReserveService {
 
   public Map<String, Object> addReserve(HttpServletRequest request) throws Exception;
   public int addTourist(HttpServletRequest request) throws Exception;
+  public Map<String, Object> addReserveHotel(HttpServletRequest request);
   public Map<String, Object> addPayment(HttpServletRequest request, PaymentDto payment);
   
   public void loadReserveList(HttpServletRequest request, Model model);

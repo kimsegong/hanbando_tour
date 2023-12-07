@@ -19,7 +19,7 @@
             <h2><strong>호텔 예약하기</strong></h2>
 		      </div>
 		      
-          <form id="frm_reserve">
+          <form id="frm_reserve" method="post">
     	      <div>
               <ul>
                 <li>
@@ -28,6 +28,7 @@
                 <li>
                   <h4 th:text="${room.roomName}"></h4>
                 </li>
+                <li th:text="${room.roomDetail}"></li>
                 <li>체크인</li>
                 <li>체크아웃</li>
               </ul>
@@ -130,9 +131,11 @@
             </div>
                  
             <input type="hidden" name="userNo" th:value="${session.user.userNo}">
-            <input type="hidden" name="hotelNo">
-            <input type="hidden" name="roomNo">
+            <input type="hidden" name="hotelNo" th:value="${hotel.hotelNo}">
+            <input type="hidden" name="roomNo" th:value="${roomNo}">
             <input type="hidden" name="resStatus" th:value="0">
+            <input type="hidden" name="reservePerson" th:value="2">
+            <input type="hidden" name="totalReservePrice" th:value="100">
             <input type="hidden" name="resStart">
             <input type="hidden" name="resFinish">
         
@@ -148,8 +151,17 @@
 	  </div>
 	
 	</div>
-  <script>
+  <script th:inline="javascript">
     
+    function fnAddReserveHotel(){
+      $('#btn_reserve').click(function(){
+        $('#frm_reserve').attr('action', '/reserve/addReserveHotel.do');
+        $('#frm_reserve').submit();
+      })
+    }
+    
+    
+    fnAddReserveHotel();
   </script>
 	
 
