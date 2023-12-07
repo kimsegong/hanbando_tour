@@ -125,7 +125,7 @@
 									<div class="col-3 temp">
 										<div id="carouselExample" class="carousel slide">
 										  <div class="carousel-inner">
-                        <th:block th:each="roomImage : ${roomImage}">
+                        <th:block th:each="roomImage : ${hotelImage}">
   										    <div th:if="${roomImage.roomNo == roomType.roomFeatureDto.roomNo}" class="carousel-item">
   										      <img th:src="@{|${roomImage.imagePath}/${roomImage.filesystemName}|}" class="d-block w-100" >
   										    </div>
