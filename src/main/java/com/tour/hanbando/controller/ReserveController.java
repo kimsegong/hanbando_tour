@@ -14,9 +14,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.tour.hanbando.dto.HotelDto;
 import com.tour.hanbando.dto.PackageDto;
 import com.tour.hanbando.dto.PaymentDto;
 import com.tour.hanbando.dto.ReserveDto;
+import com.tour.hanbando.service.HotelService;
 import com.tour.hanbando.service.PackageService;
 import com.tour.hanbando.service.ReserveService;
 
@@ -29,6 +31,7 @@ public class ReserveController {
 
   private final ReserveService reserveService;
   private final PackageService packageService;
+  private final HotelService hotelService;
   
   // 패키지 예약관련 요청을 처리
   @GetMapping("/reserveList.do")
@@ -111,6 +114,8 @@ public class ReserveController {
   
   @GetMapping("/writeHotel.form")
   public String reserveHotel(HttpServletRequest request, Model model) {
+    model.addAttribute("hotel", reserveService.loadHotelInfoWithWriteform(Integer.parseInt(request.getParameter("hotelNo"))));
+    System.out.println(model.getAttribute("hotel"));
     return "reserve/writeHotel";
   }
   

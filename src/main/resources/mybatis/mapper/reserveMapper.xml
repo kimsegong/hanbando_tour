@@ -410,19 +410,6 @@
       FROM RESERVE_T
      WHERE RESERVE_NO = #{reserveNo}
   </delete>
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-
 
 
 </mapper>

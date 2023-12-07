@@ -20,7 +20,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.tour.hanbando.dao.HotelMapper;
 import com.tour.hanbando.dao.ReserveMapper;
+import com.tour.hanbando.dto.HotelDto;
 import com.tour.hanbando.dto.PackageDto;
 import com.tour.hanbando.dto.PaymentDto;
 import com.tour.hanbando.dto.ReserveDto;
@@ -37,6 +39,7 @@ import lombok.RequiredArgsConstructor;
 public class ReserveServiceImpl implements ReserveService {
 
   private final ReserveMapper reserveMapper;
+  private final HotelMapper hotelMapper;
   private final MyPageUtils myPageUtils;
   private final MySecurityUtils mySecurityUtils;
   
@@ -240,6 +243,12 @@ public class ReserveServiceImpl implements ReserveService {
     model.addAttribute("beginNo", total - (page - 1) * display);
   }
   
+  
+  @Override
+  public HotelDto loadHotelInfoWithWriteform(int hotelNo) {
+    HotelDto hotel = hotelMapper.getHotel(hotelNo);
+    return hotel;
+  }
   
   @Transactional(readOnly=true)
   @Override
