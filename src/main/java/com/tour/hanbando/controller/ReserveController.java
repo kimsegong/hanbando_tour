@@ -110,7 +110,7 @@ public class ReserveController {
   }
   
   @GetMapping("/writeHotel.form")
-  public String reserveHotel() {
+  public String reserveHotel(HttpServletRequest request, Model model) {
     return "reserve/writeHotel";
   }
   
