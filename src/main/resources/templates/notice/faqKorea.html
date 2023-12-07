@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{/layout/header::head('한반도 투어')}"></head> <!-- 이거 알맞게 바꿔주세요-->
+<style>
+
+.wrap1 > .box1{
+  height:50px;
+}
+
+.wrap1 > .box2{
+  height:50px;
+}
+
+.wrap1 > .box3{
+  height:50px;
+}
+
+.wrap1 > .box4{
+  height:70px;
+}
+</style>
+
+
+
+<body>
+  <div th:replace="~{/layout/header::header}"></div>
+  
+  <div class="main_wrap">
+  
+  
+     <div class="container text-center">
+      <div class="row">
+        <div class="col-1">       
+        </div>
+        <div class="col-10" style="border:1px gray dotted">
+            <!--/*여기에 작성/ 다 만들고 style 지워주세요  */-->
+       
+
+  <h2>자주묻는질문</h2>
+   
+  <div class="wrap1">
+    <div class="box1"></div>    
+  </div>
+
+  <div class="btn-toolbar mb-3 justify-content-center" role="toolbar" aria-label="Toolbar with button groups">
+  <div class="btn-group me-2" role="group" aria-label="First group">
+    <a th:href = "@{/notice/faqKorea.do}">
+    <button type="button" class="btn btn-secondary">국내패키지</button>
+    </a>
+    
+    <a th:href = "@{/notice/faqCash.do}">
+    <button type="button" class="btn btn-outline-secondary">예약/결제</button>
+    </a>
+    
+    <a th:href = "@{/notice/faqMember.do}">
+    <button type="button" class="btn btn-outline-secondary">회원안내</button>
+    </a>
+    
+    <a th:href = "@{/notice/faq.do}">
+    <button type="button" class="btn btn-outline-secondary">기타</button>
+    </a>
+  </div>
+  </div>
+  
+  
+    <div class="wrap1">
+    <div class="box4"></div>    
+      </div>
+    
+    
+    <div class="row">
+      <div class="col-7"></div>
+      <div class="col-4" style="display: flex; justify-content: flex-end;">
+        <div class="home">
+          <a th:href="@{http://localhost:8080}"><i class="fa-solid fa-house" style="font-size:15px; margin-right: 5px;"></i></a>
+           &nbsp;고객센터  &nbsp;  >   &nbsp; 공지사항
+        </div>
+      </div>
+      
+      
+  
+    <div class="wrap1">
+    <div class="box2"></div>    
+  </div>
+  
+   <div class="row">
+   <div class="col-1"></div>
+   <div class="col-9">
+   
+  
+  
+<div class="accordion accordion-flush" id="accordionFlushExample">
+  <div class="accordion-item">
+    <h2 class="accordion-header">
+      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
+   차량에 몇명이 탑승하나요?
+      </button>
+    </h2>
+    <div id="flush-collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
+      <div class="accordion-body">한반도여행사는 고객님의 쾌적한 여행을 위해 45인승 관관버스 차량 기준 1인 2좌석 제도를 실행하고 있습니다. (45인승 관광버스기준 최소 12명, 최대 21명 탑승)
+
+쾌적한 여행을 위하여 차내 취식 및 일행 간 대화는 자제 부탁드리며, 마스크 착용을 권장 드립니다.</div>
+    </div>
+  </div>
+  <div class="accordion-item">
+    <h2 class="accordion-header">
+      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo" aria-expanded="false" aria-controls="flush-collapseTwo">
+       여행자보험은 포함인가요?
+      </button>
+    </h2>
+    <div id="flush-collapseTwo" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
+      <div class="accordion-body">여행자보험 가입을 원하실 경우에는 개별가입을 권장합니다.
+</div>
+    </div>
+</div>
+  <div class="accordion-item">
+    <h2 class="accordion-header">
+      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseThree" aria-expanded="false" aria-controls="flush-collapseThree">
+        승차 장소는 어디인가요?
+      </button>
+    </h2>
+    <div id="flush-collapseThree" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
+      <div class="accordion-body"> 해당 상품의 지역에 따라 승차장소가 결정되니, 필히 예약상품의 승차장소를 확인해주세요!!
+
+
+<div>★ 출발 10분전 대기해 주시기 바랍니다!!</div></div>
+    </div>
+  </div>
+</div>
+ </div>
+ 
+ 
+ <div class="wrap1">
+   <div class="box3">
+ </div>
+ 
+ 
+ </div>           
+            
+  </div>          
+            
+            
+            
+            
+            
+        </div>
+        <div class="col-1">       
+        </div>
+      </div>
+    </div>
+  
+  </div>
+
+  </div>
+  
+  
+  <div th:replace="~{/layout/footer::footer}"></div>
+</body>
+</html>
+

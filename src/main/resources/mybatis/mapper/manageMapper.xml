@@ -56,6 +56,44 @@
     </association>
   </resultMap>
   
+  <!-- 예약 테이블 -->
+  <resultMap type="ReserveDto"       id="ReserveMap">
+    <id      column="RESERVE_NO"     property="reserveNo" />
+    <result  column="RESERVED_AT"    property="reservedAt"/>
+    <result  column="REQUESTED_TERM" property="requestedTerm"/>
+    <result  column="AGREE"          property="agree"/>
+    <result  column="DEPARTURE_LOC"  property="departureLoc"/>
+    <result  column="RESERVE_STATUS" property="reserveStatus"/>
+    <result  column="RESERVE_START"  property="reserveStart"/>
+    <result  column="RESERVE_FINISH" property="reserveFinish"/>
+    <result  column="RESERVE_PERSON" property="reservePerson"/>
+    <result  column="RESERVE_PRICE"  property="reservePrice"/>
+    <association javaType="UserDto"      property="userDto">
+      <id        column="USER_NO"        property="userNo"/>
+      <result    column="EMAIL"          property="email"/>
+      <result    column="PW"             property="pw"/>
+      <result    column="NAME"           property="name"/>
+      <result    column="GENDER"         property="gender"/>
+      <result    column="MOBILE"         property="mobile"/>
+      <result    column="POSTCODE"       property="postcode"/>
+      <result    column="ROAD_ADDRESS"   property="roadAddress"/>
+      <result    column="JIBUN_ADDRESS"  property="jibunAddress"/>
+      <result    column="DETAIL_ADDRESS" property="detailAddress"/>
+      <result    column="AGREE"          property="agree"/>
+      <result    column="STATE"          property="state"/>
+      <result    column="AUTH"           property="auth"/>
+      <result    column="PW_MODIFIED_AT" property="pwModifiedAt"/>
+      <result    column="JOINED_AT"      property="joinedAt"/>
+    </association>
+    <association javaType="PackageDto"  property="packageDto">
+      <id        column="PACKAGE_NO"    property="packageNo" />
+      <result    column="PACKAGE_TITLE" property="packageTitle"/>
+    </association>
+    <association javaType="HotelDto" property="hotelDto">
+      <id        column="HOTEL_NO"   property="hotelNo" />
+      <result    column="HOTEL_NAME" property="hotelName"/>
+    </association>
+  </resultMap>
   
   <!-- 리뷰 테이블 -->
   <resultMap type="ReviewDto"         id="ReviewMap">
@@ -336,7 +374,89 @@
   </update>
   
   <!-- 예약 목록 -->
+  <select id="getReserveCount" resultType="int">
+    SELECT COUNT(*)
+      FROM RESERVE_T
+  </select>
+  <select id="getReserveList" parameterType="Map" resultMap="ReserveMap">
+    SELECT *
+      FROM (SELECT A.*, ROW_NUMBER() OVER(ORDER BY A.RESERVE_NO DESC) AS RN
+              FROM (SELECT R.RESERVE_NO, R.RESERVED_AT, R.REQUESTED_TERM, R.AGREE, R.DEPARTURE_LOC, R.RESERVE_STATUS, R.RESERVE_START, R.RESERVE_FINISH, R.RESERVE_PERSON, R.RESERVE_PRICE, R.ROOM_NO,
+                           R.USER_NO, U.NAME,
+                           R.PACKAGE_NO, P.PACKAGE_TITLE,
+                           R.HOTEL_NO, H.HOTEL_NAME
+                      FROM RESERVE_T R LEFT OUTER JOIN USER_T U
+                        ON U.USER_NO = R.USER_NO LEFT OUTER JOIN PACKAGE_T P
+                        ON P.PACKAGE_NO = R.PACKAGE_NO LEFT OUTER JOIN HOTEL_T H
+                        ON H.HOTEL_NO = R.HOTEL_NO) A 
+            )
+     WHERE RN BETWEEN #{begin} AND #{end}
+  </select>
+  
   <!-- 예약 검색 목록 -->
+  <select id="getSearchReserveCount" parameterType="Map" resultType="int">
+    SELECT COUNT(*)
+      FROM (SELECT R.RESERVE_NO, R.RESERVED_AT, R.REQUESTED_TERM, R.AGREE, R.DEPARTURE_LOC, R.RESERVE_STATUS, R.RESERVE_START, R.RESERVE_FINISH, R.RESERVE_PERSON, R.RESERVE_PRICE, R.ROOM_NO,
+                   R.USER_NO, U.NAME,
+                   R.PACKAGE_NO, P.PACKAGE_TITLE,
+                   R.HOTEL_NO, H.HOTEL_NAME
+              FROM RESERVE_T R LEFT OUTER JOIN USER_T U
+                ON U.USER_NO = R.USER_NO LEFT OUTER JOIN PACKAGE_T P
+                ON P.PACKAGE_NO = R.PACKAGE_NO LEFT OUTER JOIN HOTEL_T H
+                ON H.HOTEL_NO = R.HOTEL_NO
+           ) A 
+       <where>
+         <if test="columnGubun != ''">
+           A.${columnGubun} IS NOT NULL
+         </if>
+         <if test="reserveStatus == 0 or reserveStatus == 1 or reserveStatus == 2">
+           AND A.RESERVE_STATUS = ${reserveStatus}
+         </if>
+         <if test="columnRe != null and queryRe != null">
+           AND A.${columnRe} LIKE '%' || #{queryRe} || '%'
+         </if>
+         <if test="columnPro != '' and queryPro != null">
+           AND A.${columnPro} LIKE '%' || #{queryPro} || '%'
+         </if>
+         <if test="columnProName != '' and queryProName != null">
+           AND A.${columnProName} LIKE '%' || #{queryProName} || '%'
+         </if>
+       </where>
+  </select>
+  <select id="getSearchReserveList" parameterType="Map" resultMap="ReserveMap">
+    SELECT *
+      FROM (SELECT A.*, ROW_NUMBER() OVER(ORDER BY A.RESERVE_NO DESC) AS RN
+              FROM (SELECT R.RESERVE_NO, R.RESERVED_AT, R.REQUESTED_TERM, R.AGREE, R.DEPARTURE_LOC, R.RESERVE_STATUS, R.RESERVE_START, R.RESERVE_FINISH, R.RESERVE_PERSON, R.RESERVE_PRICE, R.ROOM_NO,
+                           R.USER_NO, U.NAME,
+                           R.PACKAGE_NO, P.PACKAGE_TITLE,
+                           R.HOTEL_NO, H.HOTEL_NAME
+                      FROM RESERVE_T R LEFT OUTER JOIN USER_T U
+                        ON U.USER_NO = R.USER_NO LEFT OUTER JOIN PACKAGE_T P
+                        ON P.PACKAGE_NO = R.PACKAGE_NO LEFT OUTER JOIN HOTEL_T H
+                        ON H.HOTEL_NO = R.HOTEL_NO
+                   ) A 
+                       <where>
+                         <if test="columnGubun != ''">
+                           A.${columnGubun} IS NOT NULL
+                         </if>
+                         <if test="reserveStatus == 0 or reserveStatus == 1 or reserveStatus == 2">
+                           AND A.RESERVE_STATUS = ${reserveStatus}
+                         </if>
+                         <if test="columnRe != null and queryRe != null">
+                           AND A.${columnRe} LIKE '%' || #{queryRe} || '%'
+                         </if>
+                         <if test="columnPro != '' and queryPro != null">
+                           AND A.${columnPro} LIKE '%' || #{queryPro} || '%'
+                         </if>
+                         <if test="columnProName != '' and queryProName != null">
+                           AND A.${columnProName} LIKE '%' || #{queryProName} || '%'
+                         </if>
+                       </where>
+           )
+     WHERE RN BETWEEN #{begin} AND #{end}
+  </select>
+
+  
   <!-- 예약 상세 -->
   
   <!-- 리뷰 목록 -->

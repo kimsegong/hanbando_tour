@@ -83,6 +83,7 @@ public class MainServiceImpl implements MainService {
     
     return map;
   }
+  
   @Transactional(readOnly = true)
   @Override
   public Map<String, Object> getThemePackage() {
@@ -94,6 +95,7 @@ public class MainServiceImpl implements MainService {
     
     return Map.of("themePackageList",packageDto);
   }
+  
   @Transactional(readOnly = true)
   @Override
   public void bannerList(Model model) {
