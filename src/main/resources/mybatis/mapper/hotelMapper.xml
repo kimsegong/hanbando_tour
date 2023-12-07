@@ -540,7 +540,18 @@
      FROM ROOMTYPE_T
     WHERE ROOM_NO = #{roomNo}
  </select>
- 
+ <select id="countReserveRoom" parameterType="Map" resultType="int">
+	 <![CDATA[ 
+   SELECT NVL(CNT,0)
+  	 FROM ( SELECT COUNT(*) AS CNT
+				      FROM RESERVE_T
+				     WHERE (RESERVE_START = #{checkin}
+				        OR (RESERVE_START <  #{checkin} AND RESERVE_FINISH > #{checkin})
+				        OR (RESERVE_START >  #{checkin} AND RESERVE_START < #{checkout}))
+				       AND ROOM_NO = #{roomNo}
+				     )
+		]]>		     
+  </select>
  
  </mapper>
  

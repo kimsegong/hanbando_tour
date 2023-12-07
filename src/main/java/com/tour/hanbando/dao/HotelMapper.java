@@ -45,4 +45,5 @@ public interface HotelMapper {
   public List<RoompriceDto> getPrice(int hotelNo);
   
   public RoomtypeDto roomtype(int roomNo);
+  public int countReserveRoom(Map<String, Object> map);
 }
