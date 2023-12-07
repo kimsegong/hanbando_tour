@@ -11,6 +11,6 @@ import lombok.NoArgsConstructor;
 @Builder
 public class FaqCaDto {
   private int caNo;
-  private int caTitle;
+  private String caTitle;
 
 }
