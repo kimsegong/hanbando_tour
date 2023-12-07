@@ -541,7 +541,7 @@
     WHERE R.HOTEL_NO = #{hotelNo}
  </select>
  
- <select id="RoomType" parameterType="int" resultType="RoomtypeDto">
+ <select id="roomtype" parameterType="int" resultType="RoomtypeDto">
    SELECT ROOM_NO, HOTEL_NO, ROOM_DETAIL, ROOM_NAME, ROOM_MANY, R_VIEW, BLEAKFAST, SMOKE, PEOPLE, BED, SHOWER, R_SIZE
      FROM ROOMTYPE_T
     WHERE ROOM_NO = #{roomNo}
