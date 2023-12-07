@@ -130,7 +130,7 @@ public class HotelServiceImpl implements HotelService {
     } else {
       hPrice.clear();
     }
-    Collections.reverse(hPrice);
+   
     
     return hPrice;
   }
@@ -426,13 +426,15 @@ public class HotelServiceImpl implements HotelService {
       
     }
     
+    List<RoomtypeDto> roomtypeDto = hotelMapper.getRoomtype(hotelNo);
+    //List<RoompriceDto> roompriceDtos = hotelMapper.getPrice(roomtypeDto);
     
     
     List<HotelDto> hotel = new ArrayList<>();
     hotel.add(hotelDto); // 가격 가져올려고 
     
     List<Integer> price = getPrice(hotel);
-    List<RoomtypeDto> roomtypeDto = hotelMapper.getRoomtype(hotelNo);
+    
     model.addAttribute("hotel", hotelDto);
     model.addAttribute("hotelImage", hotelImageDto);
     model.addAttribute("fac", facilitiesDto);
