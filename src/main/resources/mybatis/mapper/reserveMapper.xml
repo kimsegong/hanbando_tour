@@ -85,7 +85,6 @@
       <result column="RECOMMEND_STATUS" property="recommendStatus"/>
     </association>
     <association javaType="RoomtypeDto" property="roomtypeDto">
-      <id column="ROOM_NO" property="roomNo"/>
       <result column="HOTEL_NO" property="hotelNo"/>
       <result column="ROOM_DETAIL" property="roomDetail"/>
       <result column="ROOM_NAME" property="roomName"/>
@@ -306,7 +305,6 @@
       , RESERVE_STATUS
       , RESERVE_START
       , RESERVE_FINISH
-      , RESERVE_PERSON
       , RESERVE_PRICE
       , USER_NO
       , HOTEL_NO
@@ -333,7 +331,6 @@
                 NULL
             </otherwise>
         </choose>
-      , #{reservePerson}
       , #{reservePrice}
       , #{userDto.userNo}
       , #{hotelDto.hotelNo}
