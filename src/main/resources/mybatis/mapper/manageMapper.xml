@@ -378,6 +378,10 @@
     SELECT COUNT(*)
       FROM RESERVE_T
   </select>
+  <select id="getReservePeopleCount" resultType="int">
+    SELECT SUM(RESERVE_PERSON)
+      FROM RESERVE_T
+  </select>
   <select id="getReserveList" parameterType="Map" resultMap="ReserveMap">
     SELECT *
       FROM (SELECT A.*, ROW_NUMBER() OVER(ORDER BY A.RESERVE_NO DESC) AS RN
@@ -396,6 +400,35 @@
   <!-- 예약 검색 목록 -->
   <select id="getSearchReserveCount" parameterType="Map" resultType="int">
     SELECT COUNT(*)
+      FROM (SELECT R.RESERVE_NO, R.RESERVED_AT, R.REQUESTED_TERM, R.AGREE, R.DEPARTURE_LOC, R.RESERVE_STATUS, R.RESERVE_START, R.RESERVE_FINISH, R.RESERVE_PERSON, R.RESERVE_PRICE, R.ROOM_NO,
+                   R.USER_NO, U.NAME,
+                   R.PACKAGE_NO, P.PACKAGE_TITLE,
+                   R.HOTEL_NO, H.HOTEL_NAME
+              FROM RESERVE_T R LEFT OUTER JOIN USER_T U
+                ON U.USER_NO = R.USER_NO LEFT OUTER JOIN PACKAGE_T P
+                ON P.PACKAGE_NO = R.PACKAGE_NO LEFT OUTER JOIN HOTEL_T H
+                ON H.HOTEL_NO = R.HOTEL_NO
+           ) A 
+       <where>
+         <if test="columnGubun != ''">
+           A.${columnGubun} IS NOT NULL
+         </if>
+         <if test="reserveStatus == 0 or reserveStatus == 1 or reserveStatus == 2">
+           AND A.RESERVE_STATUS = ${reserveStatus}
+         </if>
+         <if test="columnRe != null and queryRe != null">
+           AND A.${columnRe} LIKE '%' || #{queryRe} || '%'
+         </if>
+         <if test="columnPro != '' and queryPro != null">
+           AND A.${columnPro} LIKE '%' || #{queryPro} || '%'
+         </if>
+         <if test="columnProName != '' and queryProName != null">
+           AND A.${columnProName} LIKE '%' || #{queryProName} || '%'
+         </if>
+       </where>
+  </select>
+  <select id="getSearchResevePeopleCount" parameterType="Map" resultType="int">
+    SELECT SUM(A.RESERVE_PERSON)
       FROM (SELECT R.RESERVE_NO, R.RESERVED_AT, R.REQUESTED_TERM, R.AGREE, R.DEPARTURE_LOC, R.RESERVE_STATUS, R.RESERVE_START, R.RESERVE_FINISH, R.RESERVE_PERSON, R.RESERVE_PRICE, R.ROOM_NO,
                    R.USER_NO, U.NAME,
                    R.PACKAGE_NO, P.PACKAGE_TITLE,
@@ -457,7 +490,10 @@
   </select>
 
   
-  <!-- 예약 상세 -->
+  <!-- 패키지 예약 상세 -->
+  
+  
+  <!-- 호텔 예약 상세 -->
   
   <!-- 리뷰 목록 -->
   <select id="getReviewCount" resultType="int">

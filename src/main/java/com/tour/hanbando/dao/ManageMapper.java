@@ -83,10 +83,12 @@ public interface ManageMapper {
   
   /* 예약 목록 */
   public int getReserveCount();
+  public int getReservePeopleCount();
   public List<ReserveDto> getReserveList(Map<String, Object> map);
   
   /* 예약 검색 */
   public int getSearchReserveCount(Map<String, Object> map);
+  public int getSearchResevePeopleCount(Map<String, Object> map);
   public List<ReserveDto> getSearchReserveList(Map<String, Object> map);
   
   /* 예약 상세 */
