@@ -15,7 +15,7 @@
     
       <h1 class="title">비밀번호 변경하기</h1>
     
-      <form id="frm_modify_pw" class="mt-5" method="post" >
+      <form id="frm_modify_pw" class="mt-5" method="post" th:action="@{/user/doulbeModified.do}" >
           
         <div class="row mb-2">
           <label for="pw" class="col-sm-3 col-form-label">비밀번호</label>
@@ -32,7 +32,8 @@
         </div>
         
         <div class="text-center mt-3">
-          <input type="hidden" name="userNo" >
+          <input type="hidden" name="email" th:value="${email}" >
+          <input type="hidden" th:value="${mobile}" >
           <button type="submit" class="btn btn-primary">비밀번호변경하기</button>
         </div>
         
