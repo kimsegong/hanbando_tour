@@ -133,7 +133,7 @@
     WHERE RN = 1 AND HOTEL_NO 
 		<foreach item="item" index="index" collection="list" open="in(" separator="," close=")">
      #{item.hotelNo}
-      </foreach>
+    </foreach>
       ORDER BY DECODE(HOTEL_NO,
     <foreach item="item" index="index" collection="list" separator="," close=")">  
      #{item.hotelNo}, (9 - ${index})  
@@ -488,7 +488,8 @@
                )
  </insert>         
  <select id="getHotel" parameterType="int" resultMap="HotelMap">
-   SELECT REGION_NO,
+   SELECT HOTEL_NO,
+   				REGION_NO,
           HOTEL_NAME,
           HOTEL_ADDRESS,
           LATITUDE,
@@ -512,9 +513,19 @@
           FILESYSTEM_NAME,
           IMAGE_PATH
      FROM HOTEL_IMAGE_T
-    WHERE HOTEL_NO = #{hotelNo} AND ROOM_NO IS NULL
+     WHERE HOTEL_NO = #{hotelNo} 
+     ORDER BY ROOM_NO ASC
  </select>
-      
+ <select id="getFacilityies" parameterType="int" resultType="FacilitiesDto">
+	 SELECT HOTEL_NO, 
+	 				POOL, 
+	 				MORNING, 
+	 				SAUNA, 
+	 				LOUNGE, 
+	 				ROOMSERVICE
+ 		 FROM FACILITIES_T
+ 	  WHERE HOTEL_NO = #{hotelNo}
+ </select>  
  </mapper>
  
 
