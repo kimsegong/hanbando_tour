@@ -1,11 +1,52 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 
-<head th:replace="~{/layout/header::head('예약 상세')}"></head> <!-- 이거 알맞게 바꿔주세요-->
+<head th:replace="~{/layout/header::head('호텔 예약상세')}"></head>
 <style>
-  .blind {
-    display: none;
+  
+  .main_title {
+    border-bottom: 1px solid #ccc;
+    text-align: left;
   }
+  
+  .main_title span {
+    font-size: 3em; 
+    font-weight: bold;
+  }
+  
+  .res_info_title {
+    text-align: left;
+    margin-bottom: 2%;
+  }
+  
+  .res_info_title span {
+    font-size: 2em; 
+    font-weight: bold;
+  }
+  .res_info {
+    border-bottom: 1px solid #ccc;
+  }
+  .res_info {
+    font-size: 1.3em; 
+  }
+  
+  .main_title span,
+  .res_info_title span {
+    color: #404040; /* 기본 글씨 색상 */
+  }
+  
+  #show_list
+   {
+    height: 40px; 
+    width: 35%;
+    font-size: 1.2em; 
+    color: #fff;         /* 텍스트 색상 */
+    background-color: #96B6C5; /* 기본 배경 색상 */
+    border-color: #fff;  /* 테두리 색상 */
+    border-radius: 10px;      /* 테두리를 둥글게 만듭니다. */
+    transition: all 0.3s;     /* 모든 속성에 대해 0.3초 동안 트랜지션 효과 적용 */
+  }
+  
 </style>
 <body>
 	<div th:replace="~{/layout/header::header}"></div>
@@ -19,101 +60,96 @@
 		    </div>
 		    <div class="col-10" style="border:1px gray dotted">
 		      	<!--/*여기에 작성/ 다 만들고 style 지워주세요  */-->
-		       <div>
-              <h2><strong>예약내역상세</strong></h2>
+		      	
+		      	
+		      	
+		      	<div>
+            
+           <div class="main_title">
+              <span>호텔 예약 상세 내역</span>
+            </div>
+            
+            <!--/* 예약한 사람의 정보를 나타낸다 */-->
+            <div class="res_info_title">
+              <span>예약자 정보</span>
+            </div>
+            
+            <div class="res_info content">
+              
+              <div class="mb-3 row">
+                <div class="col-2">
+                  <label for="name" class="col-form-label">이름</label>
+                </div>
+                <div class="col-5">
+                  <input type="text" id="name" th:value="${reserve.userDto.name}" readonly class="form-control-plaintext m_email">
+                </div>
+              </div>
+              <div class="mb-3 row">
+                <div class="col-2">
+                  <label for="mobile" class="col-form-label">휴대폰번호</label>
+                </div>
+                <div class="col-5">
+                  <input type="text" id="mobile" th:value="${reserve.userDto.mobile}" readonly class="form-control-plaintext m_email">
+                </div>
+              </div>
+              <div class="mb-3 row">
+                <div class="col-2">
+                  <label for="gender" class="col-form-label">성별</label>
+                </div>
+                <div class="col-5">
+                  <input type="text" id="gender" th:if="${reserve.userDto.gender== 'F'}" value="여자" readonly class="form-control-plaintext m_email">
+                  <input type="text" id="gender" th:if="${reserve.userDto.gender== 'M'}" value="남자" readonly class="form-control-plaintext m_email">
+                  <input type="text" id="gender" th:if="${reserve.userDto.gender== 'NO'}" value="선택안함" readonly class="form-control-plaintext m_email">
+                </div>
+              </div>
+              <div class="mb-3 row">
+                <div class="col-2">
+                  <label for="email" class="col-form-label">이메일</label>
+                </div>
+                <div class="col-5">
+                  <input type="text" id="email" th:value="${reserve.userDto.email}" readonly class="form-control-plaintext m_email">
+                </div>
+              </div>
+              <div class="mb-3 row">
+                <div class="col-2">
+                  <label for="requestedTerm" class="col-form-label">요청사항</label>
+                </div>
+                <div class="col-5">
+                  <input type="text" id="requestedTerm" th:value="${reserve.requestedTerm}" readonly class="form-control-plaintext m_email">
+                </div>
+              </div>
+              
+              
             </div>
             
             <div>
-              <h4><strong>예약자정보</strong></h4>
-            </div>
-            <div class="d-grid gap-2 col-8  mx-auto">
-              <table class="table">
-                <colgroup>
-                  <col style="width:20%;">
-                  <col >
-                </colgroup>
-                <tr>
-                  <td>이름</td>
-                  <td>이름?</td>
-                </tr>
-                <tr>
-                  <td>휴대폰번호</td>
-                  <td>번호?</td>
-                </tr>
-                <tr>
-                  <td>성별</td>
-                  <td>남여??</td>
-                </tr>
-                <tr>
-                  <td>이메일</td>
-                  <td></td>
-                </tr>
-                <tr>
-                  <td>요청사항</td>
-                  <td></td>
-                </tr>
-              </table>
+              
             </div>
             
+            <!--/* 예약한 패키지의 정보를 나타낸다 */-->
+            <div class="res_info_title content">
+              <span>예약 호텔 정보</span>
+            </div>
+            
+            <div class="res_info">
+              
+              
+              
+              
+            </div>
+            
+            
+            <!--/* 예약 관리 목록 페이지로 돌아가는 버튼 */-->
             <div>
-              <h4><strong>예약 정보</strong></h4>
-            </div>
-            <div class="d-grid gap-2 col-8  mx-auto">
-              <table class="table">
-                <colgroup>
-                  <col style="width:20%;">
-                  <col>
-                </colgroup>
-                <tr>
-                  <td>호텔명</td>
-                  <td>호텔이름??</td>
-                </tr>
-                <tr>
-                  <td>위치</td>
-                  <td>주소??</td>
-                </tr>
-                <tr>
-                  <td>체크인</td>
-                  <td>날짜??</td>
-                </tr>
-                <tr>
-                  <td>체크아웃</td>
-                  <td>날짜??</td>
-                </tr>
-                <tr>
-                  <td>객실</td>
-                  <td>예약한객실타입??</td>
-                </tr>
-                <tr>
-                  <td>예약상태</td>
-                  <td>예약상태</td>
-                </tr>
-                <tr>
-                  <td>결제금액</td>
-                  <td>원??</td>
-                </tr>
-              </table>
+              <a th:href="@{/manage/reserveList.do}"><button id="show_list">목록보기</button></a>
             </div>
             
-            <div>
-              <form id="frm_btn" method="post">
-             
-              </form>
-            </div>
-            
-		    </div>
-		    <div class="col-1">	      
-		    </div>
-		  </div>
-	  </div>
-	
-	</div>
-
-  <script th:inline="javascript">
- 
-  </script>
-
-
+          </div>
+		      	
+		      	
+		      	
+		      	
+		      	
 	
 	
 	
