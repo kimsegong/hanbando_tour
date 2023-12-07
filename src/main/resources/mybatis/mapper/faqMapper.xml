@@ -89,7 +89,6 @@
       UPDATE FAQ_T 
          SET TITLE = #{title} 
        , CONTENTS = #{contents} 
-       , CA_NO = #{caNo}  
       WHERE FAQ_NO = #{faqNo} 
   </update>
   

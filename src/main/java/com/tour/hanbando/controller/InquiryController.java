@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.tour.hanbando.dto.InquiryAnswerDto;
 import com.tour.hanbando.dto.InquiryDto;
 import com.tour.hanbando.service.InquiryService;
 
@@ -56,6 +57,8 @@ public class InquiryController {
       , Model model){
     InquiryDto inquiry = inquiryService.loadInquiry(inquiryNo);
     model.addAttribute("inquiry", inquiry);
+    InquiryAnswerDto answer = inquiryService.loadInquiryAnswer(inquiryNo);
+    model.addAttribute("answer", answer);
     return "notice/inquirydetail";
   }
   
@@ -65,5 +68,19 @@ public class InquiryController {
     redirectAttributes.addFlashAttribute("modifyResult", modifyResult);
     return "redirect:/notice/inquirydetail.do?inquiryNo=" + request.getParameter("inquiryNo");
   }
-
+  
+  /* 1:1문의 작성하기 */
+  @PostMapping("/addInquiryAnswer.do")
+  public String addInquiryAnswer(HttpServletRequest request, RedirectAttributes redirectAttributes) {
+    int addResult = inquiryService.addInquiryAnswer(request);
+    redirectAttributes.addFlashAttribute("addResult", addResult);
+    return "redirect:/notice/inquirydetail.do?inquiryNo=" + request.getParameter("inquiryNo");
+  }
+  
+  
+  @PostMapping("/inquiryAnswerWrite.form")
+  public String inquiryAnswerWrite(HttpServletRequest request, Model model) {
+    model.addAttribute("inquiryNo", request.getParameter("inquiryNo"));
+    return "notice/inquiryAnswerWrite";
+  }
 }
