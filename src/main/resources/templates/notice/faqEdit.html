@@ -23,7 +23,7 @@
 <body>
   <div th:replace="~{/layout/header::header}"></div>
   
-  <div class="main_wrap" th:object="${notice}">
+  <div class="main_wrap">
   
   
      <div class="container text-center">
@@ -33,11 +33,11 @@
         <div class="col-10" style="border:1px gray dotted">
             <!--/*여기에 작성/ 다 만들고 style 지워주세요  */-->
         
-                    <div>
+        <div>
 
-      <form id="frm_notice_modify" method="post" th:action="@{/notice/modifyNotice.do}">
+      <form id="frm_faq_modify" method="post" th:action="@{/notice/modifyFaq.do}">
         
-       <h1 class="title" th:text="|*{noticeNo}번 공지사항 수정|"></h1>
+       <h1 class="title" th:text="|${faq.faqNo}번 공지사항 수정|"></h1>
         
         
         <div class ="wrap2">
@@ -48,19 +48,23 @@
         <!-- 제목  -->
         <div>
           <label for="title">제목</label>
-          <input type="text" name="title" id="title" class="form-control" th:value="*{title}">
+          <input type="text" name="title" id="title" class="form-control" th:value="${faq.title}">
         </div>
-        
+        <div class="w-25 p-3">
+         <select id="faqDetailSelect" class="form-select" aria-label="Default select example" name="caNo">
+             <option selected>-분류-</option>
+             <option th:each="faqCa : ${faqCaList}" th:value="${faqCa.caNo}" th:text="${faqCa.caTitle}" th:selected="${faqCa.caNo == faq.caNo}"></option>
+         </select>
+        </div>
         <div class ="wrap1">
          <div class="box1"></div>
         </div>
       
         <!-- 내용  -->  
-        <div>
-          <label for="contents">내용</label>
-        </div>
+
         <div class="content">  
-          <input type="text" name="contents" id="contents" class="form-control" th:value="*{contents}">  
+          <label for="contents">내용</label>
+          <input type="text" name="contents" id="contents" class="form-control" th:value="${faq.contents}">  
         </div>
         
         <div class ="wrap3">
@@ -70,7 +74,7 @@
         
       <!-- 수정완료 submit  -->  
       <div>
-        <input type="hidden" name="noticeNo" th:value="*{noticeNo}">
+        <input type="hidden" name="faqNo" th:value="${faq.faqNo}">
         <button class="btn btn-primary col-12" type="submit">수정완료</button>
       </div>
         
@@ -79,43 +83,7 @@
             
             
             
-        
-      <script>
-              const fnNoticeModify = () => {
-        $('#frm_notice_modify').submit((ev) => {
-          if($('#title').val() ===''){
-            alert('제목은 반드시 입력해야 합니다.');
-          $('#title').focus();
-          ev.preventDefault();
-          return;
-          }
-        })
-      }
      
-      fnNoticeModify();   
-        
-        
-      </script>    
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
         </div>
         <div class="col-1">       
         </div>
@@ -125,6 +93,23 @@
   </div>
 
   
+        
+      <script>
+              const fnFaqModify = () => {
+        $('#frm_faq_modify').submit((ev) => {
+          if($('#title').val() ===''){
+            alert('제목은 반드시 입력해야 합니다.');
+          $('#title').focus();
+          ev.preventDefault();
+          return;
+          }
+        })
+      }
+     
+      fnFaqModify();   
+        
+        
+      </script>    
   
   
   <div th:replace="~{/layout/footer::footer}"></div>

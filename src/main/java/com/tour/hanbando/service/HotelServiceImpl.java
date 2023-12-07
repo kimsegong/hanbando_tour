@@ -58,11 +58,8 @@ public class HotelServiceImpl implements HotelService {
     Map<String, Object> map = Map.of("begin", begin
                                    , "end", end
                                    , "btnVal", btnVal);
-              
     
-    List<Integer> hPrice = new ArrayList<>();
     List<HotelDto> hotelDto = new ArrayList<>();
-    
     
     switch (btnVal) {
     case 0 : hotelDto = hotelMapper.selectHotelList(map);
@@ -77,10 +74,22 @@ public class HotelServiceImpl implements HotelService {
       break;
     }
     
+   List<Integer> hPrice = getPrice(hotelDto);
+    
+    Map<String, Object> hotel = Map.of("hotelList", hotelDto
+                                      ,"price", hPrice
+                                      ,"count", hotelMapper.countHotel()
+                                      ,"totalPage", myPageUtils.getTotalPage());
+    
+    return hotel;
+  }
+  
+  public List<Integer> getPrice(List<HotelDto> hotelDto){
+    
+    List<Integer> hPrice = new ArrayList<>();
     if(hotelDto.size() != 0) {
-     
-      List<RoompriceDto> roompriceDto = hotelMapper.getListPrice(hotelDto);
       
+      List<RoompriceDto> roompriceDto = hotelMapper.getListPrice(hotelDto);
       /* 요금 구하기 */
       Date date = new Date();
       SimpleDateFormat sdf = new SimpleDateFormat("MMdd");
@@ -107,29 +116,23 @@ public class HotelServiceImpl implements HotelService {
         }
         
         if(biStart <= today && today <= biEnd) {
-         price = roompriceDto.get(i).getBiPrice();
+          price = roompriceDto.get(i).getBiPrice();
         }else if(jsStart <= today && today <= jsEnd) {
-         price = roompriceDto.get(i).getJunPrice();
+          price = roompriceDto.get(i).getJunPrice();
         }else if(ssStart <= today && today <= ssEnd) {
-         price = roompriceDto.get(i).getSungPrice();
+          price = roompriceDto.get(i).getSungPrice();
         } else {
           price = roompriceDto.get(i).getBiPrice();
         }
-        
         
         hPrice.add(price);
       }
     } else {
       hPrice.clear();
     }
-    Collections.reverse(hPrice);
+   
     
-    Map<String, Object> hotel = Map.of("hotelList", hotelDto
-                                      ,"price", hPrice
-                                      ,"count", hotelMapper.countHotel()
-                                      ,"totalPage", myPageUtils.getTotalPage());
-    
-    return hotel;
+    return hPrice;
   }
   
   @Override
@@ -142,6 +145,9 @@ public class HotelServiceImpl implements HotelService {
     model.addAttribute("region", hotelMapper.getRegion());
   }
   
+  
+  /************************이거 인서트 할때 룸 추가하면 보여줄때 쓰는 서비스********************************/
+  
   @Override
   public void hotelRoomList(HttpServletRequest request, Model model) {
     
@@ -150,7 +156,7 @@ public class HotelServiceImpl implements HotelService {
     List<RoomtypeDto> roomtypeDto = hotelMapper.getRoomtype(hotelNo);
     hotelMapper.getRoomFeature(roomtypeDto);
     hotelMapper.getRoomImage(roomtypeDto);
-    hotelMapper.getPrice(roomtypeDto);
+    hotelMapper.getPrice(hotelNo);
     
   }
   
@@ -403,13 +409,25 @@ public class HotelServiceImpl implements HotelService {
   
   @Override
   public void hoteDetail(HttpServletRequest request, int hotelNo, Model model) {
-    /*  가져와야하는 거 hotel facility image roomfeature, room price roomimage heart */  
+    /*  가져와야하는 거  room price roomimage heart */  
     
     HotelDto hotelDto = hotelMapper.getHotel(hotelNo);
+    FacilitiesDto facilitiesDto = hotelMapper.getFacilityies(hotelNo);
     List<HotelImageDto> hotelImageDto = hotelMapper.getHotelImage(hotelNo);
+    
+    List<RoomtypeDto> roomtypeDto = hotelMapper.getRoomtype(hotelNo);
+    List<RoompriceDto> roompriceDto = hotelMapper.getPrice(hotelNo);
+    
+    List<HotelDto> hotel = new ArrayList<>();
+    hotel.add(hotelDto); // 가격 가져올려고 
+    
+    List<Integer> price = getPrice(hotel);
+    System.out.println(hotelImageDto.size());
     model.addAttribute("hotel", hotelDto);
     model.addAttribute("hotelImage", hotelImageDto);
-    
+    model.addAttribute("fac", facilitiesDto);
+    model.addAttribute("price", roompriceDto);
+    model.addAttribute("roomType", roomtypeDto);
     
     
   }

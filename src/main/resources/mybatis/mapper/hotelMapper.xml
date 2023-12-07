@@ -25,6 +25,32 @@
       </association>
   </resultMap>
   
+  
+  <resultMap type="RoomtypeDto" id="RoomtypeMap">
+    <result column="HOTEL_NO" property="hotelNo"/>
+    <result column="ROOM_DETAIL" property="roomDetail"/>
+    <result column="ROOM_NAME" property="roomName"/>
+    <result column="ROOM_MANY" property="roomMany"/>
+    <result column="R_VIEW" property="rView"/>
+    <result column="BLEAKFAST" property="bleakfast"/>
+    <result column="SMOKE" property="smoke"/>
+    <result column="PEOPLE" property="people"/>
+    <result column="BED" property="bed"/>
+    <result column="SHOWER" property="shower"/>
+    <result column="R_SIZE" property="rSize"/>
+      <association javaType="RoomFeatureDto" property="roomFeatureDto">
+        <result column="ROOM_NO" property="roomNo"/>
+        <result column="TOWEL" property="towel"/>
+        <result column="WATER" property="water"/>
+        <result column="COFFEE" property="coffee"/>
+        <result column="DRIER" property="drier"/>
+        <result column="IRON" property="iron"/>
+        <result column="MINIBAR" property="minibar"/>
+     </association>
+ </resultMap>
+  
+  
+  
   <!-- 리뷰테이블 -->
     <resultMap type="ReviewDto" id="ReviewMap">
             <id column="REVIEW_NO" property="reviewNo"/>            
@@ -133,10 +159,10 @@
     WHERE RN = 1 AND HOTEL_NO 
 		<foreach item="item" index="index" collection="list" open="in(" separator="," close=")">
      #{item.hotelNo}
-      </foreach>
+    </foreach>
       ORDER BY DECODE(HOTEL_NO,
     <foreach item="item" index="index" collection="list" separator="," close=")">  
-     #{item.hotelNo}, (9 - ${index})  
+     #{item.hotelNo}, ${index}
     </foreach>  
   </select>
   
@@ -308,12 +334,6 @@
    VALUES (#{hotelNo})
  </insert>
  
- <select id="getRoomtype" parameterType="int" resultType="RoomTypeDto">
-   SELECT ROOM_NO, HOTEL_NO, ROOM_DETAIL, ROOM_NAME, ROOM_MANY, R_VIEW, BLEAKFAST, SMOKE, PEOPLE, BED, SHOWER, R_SIZE
-     FROM ROOMTYPE_T
-    WHERE HOTEL_NO = #{hotelNo}
- </select>
- 
  <select id="getRoomImage" resultType="HotelImageDto">
    SELECT HOTEL_NO, ROOM_NO, THUMBNAIL, FILESYSTEM_NAME, IMAGE_PATH
      FROM HOTEL_IMAGE_T
@@ -327,30 +347,11 @@
     </foreach>  
  </select>
  
- <select id="getRoomFeature" resultType="RoomFeatureDto">
-   SELECT ROOM_NO, TOWEL, WATER, COFFEE, DRIER, IRON, MINIBAR
-     FROM ROOM_FEATURE_T
-    WHERE ROOM_NO 
-     <foreach item="item" index="index" collection="list" open="in(" separator="," close=")">
-      #{item.roomNo}
-     </foreach>
-     ORDER BY DECODE(ROOM_NO,
-     <foreach item="item" index="index" collection="list" separator="," close=")">  
-     #{item.roomNo}, (list.size() - ${index})  
-    </foreach>  
- </select>
- 
- <select id="getPrice" resultType="RoompriceDto">
+ <select id="getPrice" parameterType="int" resultType="RoompriceDto">
    SELECT HOTEL_NO, ROOM_NO, BI_PRICE, BS_DATE, BE_DATE, JUN_PRICE, JS_DATE, JE_DATE, SUNG_PRICE, SS_DATE, SE_DATE
      FROM ROOMPRICE_T
-    WHERE ROOM_NO 
-    <foreach item="item" index="index" collection="list" open="in(" separator="," close=")">
-      #{item.roomNo}, index  
-     </foreach>
-     ORDER BY DECODE(ROOM_NO,
-     <foreach item="item" index="index" collection="list" separator="," close=")">  
-     #{item.roomNo}, (list.size() - ${index})  
-    </foreach>  
+    WHERE HOTEL_NO = #{hotelNo} 
+    
  </select>
  
  <insert id="insertRoomtype" parameterType="RoomtypeDto">
@@ -488,7 +489,8 @@
                )
  </insert>         
  <select id="getHotel" parameterType="int" resultMap="HotelMap">
-   SELECT REGION_NO,
+   SELECT HOTEL_NO,
+   				REGION_NO,
           HOTEL_NAME,
           HOTEL_ADDRESS,
           LATITUDE,
@@ -512,9 +514,34 @@
           FILESYSTEM_NAME,
           IMAGE_PATH
      FROM HOTEL_IMAGE_T
-    WHERE HOTEL_NO = #{hotelNo} AND ROOM_NO IS NULL
+    WHERE HOTEL_NO = #{hotelNo} 
+    ORDER BY ROOM_NO ASC
  </select>
-      
+ <select id="getFacilityies" parameterType="int" resultType="FacilitiesDto">
+	 SELECT HOTEL_NO, 
+	 				POOL, 
+	 				MORNING, 
+	 				SAUNA, 
+	 				LOUNGE, 
+	 				ROOMSERVICE
+ 		 FROM FACILITIES_T
+ 	  WHERE HOTEL_NO = #{hotelNo}
+ </select>  
+ <select id="getRoomtype" parameterType="int" resultMap="RoomtypeMap">
+   SELECT R. ROOM_NO, R.HOTEL_NO, R.ROOM_DETAIL, R.ROOM_NAME, R.ROOM_MANY, R.R_VIEW, R.BLEAKFAST, R.SMOKE, R.PEOPLE, R.BED, R.SHOWER, R.R_SIZE,
+          RF.TOWEL, RF.WATER, RF.COFFEE, RF.DRIER, RF.IRON, RF.MINIBAR
+     FROM ROOMTYPE_T R INNER JOIN ROOM_FEATURE_T RF
+       ON R.ROOM_NO = RF.ROOM_NO
+    WHERE R.HOTEL_NO = #{hotelNo}
+ </select>
+ 
+ <select id="roomtype" parameterType="int" resultType="RoomtypeDto">
+   SELECT ROOM_NO, HOTEL_NO, ROOM_DETAIL, ROOM_NAME, ROOM_MANY, R_VIEW, BLEAKFAST, SMOKE, PEOPLE, BED, SHOWER, R_SIZE
+     FROM ROOMTYPE_T
+    WHERE ROOM_NO = #{roomNo}
+ </select>
+ 
+ 
  </mapper>
  
 

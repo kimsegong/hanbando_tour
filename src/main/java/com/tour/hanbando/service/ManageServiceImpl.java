@@ -22,9 +22,11 @@ import com.tour.hanbando.dto.InactiveUserDto;
 import com.tour.hanbando.dto.LeaveUserDto;
 import com.tour.hanbando.dto.PackageDto;
 import com.tour.hanbando.dto.RegionDto;
+import com.tour.hanbando.dto.ReserveDto;
 import com.tour.hanbando.dto.ReviewDto;
 import com.tour.hanbando.dto.RoompriceDto;
 import com.tour.hanbando.dto.RoomtypeDto;
+import com.tour.hanbando.dto.TouristDto;
 import com.tour.hanbando.dto.UserDto;
 import com.tour.hanbando.util.MyPageUtils;
 import com.tour.hanbando.util.MySecurityUtils;
@@ -628,6 +630,135 @@ public class ManageServiceImpl implements ManageService {
     int modifyRecommendResult = manageMapper.updateHotelRecommend(hotel);
     
     return new ResponseEntity<>(Map.of("modifyRecommendResult", modifyRecommendResult), HttpStatus.OK);
+  }
+  
+  /**
+   * 예약 관리 목록
+   * 
+   * @author 심희수
+   * @param request
+   * @param model
+   */
+  @Transactional(readOnly=true)
+  @Override
+  public void loadReserveList(HttpServletRequest request, Model model) {
+    
+    Optional<String> opt = Optional.ofNullable(request.getParameter("page"));
+    int page = Integer.parseInt(opt.orElse("1"));
+    int total = manageMapper.getReserveCount();
+    int display = 20;
+    int people = manageMapper.getReservePeopleCount();
+    
+    myPageUtils.setPaging(page, total, display);
+    
+    Map<String, Object> map = Map.of("begin", myPageUtils.getBegin()
+                                   , "end", myPageUtils.getEnd());
+    
+    List<ReserveDto> reserveList = manageMapper.getReserveList(map);
+    
+    model.addAttribute("reserveList", reserveList);
+    model.addAttribute("paging", myPageUtils.getMvcPaging(request.getContextPath() + "/manage/reserveList.do"));
+    model.addAttribute("beginNo", total - (page - 1) * display);
+    model.addAttribute("total", total);
+    model.addAttribute("people", people);
+    
+  }
+  
+  /**
+   * 예약 검색
+   * 
+   * @author 심희수
+   * @param request
+   * @param model
+   */
+  @Transactional(readOnly=true)
+  @Override
+  public void loadSearchReserveList(HttpServletRequest request, Model model) {
+
+    String columnGubun = request.getParameter("columnGubun");
+    int reserveStatus = Integer.parseInt(request.getParameter("reserveStatus"));
+    String columnRe = request.getParameter("columnRe");
+    String queryRe = request.getParameter("queryRe");
+    String columnPro = request.getParameter("columnPro");
+    String queryPro = request.getParameter("queryPro");
+    String columnProName = request.getParameter("columnProName");
+    String queryProName = request.getParameter("queryProName");
+    
+    Map<String, Object> map = new HashMap<>();
+    map.put("columnGubun", columnGubun);
+    map.put("reserveStatus", reserveStatus);
+    map.put("columnRe", columnRe);
+    map.put("queryRe", queryRe);
+    map.put("columnPro", columnPro);
+    map.put("queryPro", queryPro);
+    map.put("columnProName", columnProName);
+    map.put("queryProName", queryProName);
+    
+    int total = manageMapper.getSearchReserveCount(map);
+    int people = manageMapper.getSearchResevePeopleCount(map);
+    
+    Optional<String> opt = Optional.ofNullable(request.getParameter("page"));
+    int page = Integer.parseInt(opt.orElse("1"));
+    int display = 20;
+    
+    myPageUtils.setPaging(page, total, display);
+    
+    map.put("begin", myPageUtils.getBegin());
+    map.put("end", myPageUtils.getEnd());
+    
+    List<ReserveDto> reserveList = manageMapper.getSearchReserveList(map);
+    
+    model.addAttribute("reserveList", reserveList);
+    model.addAttribute("paging", myPageUtils.getMvcPaging(request.getContextPath() + "/manage/searchReserve.do"
+                                                        , "columnGubun=" + columnGubun
+                                                        + "&reserveStatus=" + reserveStatus
+                                                        + "&columnRe=" + columnRe
+                                                        + "&queryRe=" + queryRe
+                                                        + "&columnPro=" + columnPro
+                                                        + "&queryPro=" + queryPro
+                                                        + "&columnProName=" + columnProName
+                                                        + "&queryProName=" + queryProName));
+    model.addAttribute("beginNo", total - (page - 1) * display);
+    model.addAttribute("total", total);
+    model.addAttribute("people", people);
+  }
+  
+  /**
+   * 패키지 예약 상세
+   * 
+   * @author 심희수
+   * @param reserveNo
+   * @param model
+   */
+  @Transactional(readOnly=true)
+  @Override
+  public void getReservePackageDetail(int reserveNo, Model model) {
+    
+    ReserveDto reserve = manageMapper.getReservePackage(reserveNo);
+    List<TouristDto> tourist = manageMapper.getTourist(reserveNo);
+    int adult = manageMapper.getAdultCount(reserveNo);
+    int child = manageMapper.getChildCount(reserveNo);
+    
+    model.addAttribute("reserve", reserve);
+    model.addAttribute("tourist", tourist);
+    model.addAttribute("adult", adult);
+    model.addAttribute("child", child);
+  }
+  
+  /**
+   * 호텔 예약 상세
+   * 
+   * @author 심희수
+   * @param reserveNo
+   * @param model
+   */
+  @Transactional(readOnly=true)
+  @Override
+  public void getReserveHotelDetail(int reserveNo, Model model) {
+
+    ReserveDto reserve = manageMapper.getReserveHotel(reserveNo);
+    
+    model.addAttribute("reserve", reserve);
   }
   
   /**

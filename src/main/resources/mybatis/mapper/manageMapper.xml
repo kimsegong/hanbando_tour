@@ -5,7 +5,7 @@
 
 <mapper namespace="com.tour.hanbando.dao.ManageMapper">
   
-  <!-- 패키지테이블 -->
+  <!-- 패키지 DTO -->
   <resultMap type="PackageDto"          id="PackageMap">
     <id      column="PACKAGE_NO"        property="packageNo"/>
     <result  column="PACKAGE_TITLE"     property="packageTitle"/>
@@ -35,7 +35,7 @@
     </association>
   </resultMap>
     
-  <!-- 호텔 테이블 -->
+  <!-- 호텔 DTO -->
   <resultMap type="HotelDto"            id="HotelMap">
     <id      column="HOTEL_NO"          property="hotelNo" />
     <result  column="HOTEL_NAME"        property="hotelName" />
@@ -56,8 +56,61 @@
     </association>
   </resultMap>
   
+  <!-- 예약 DTO -->
+  <resultMap type="ReserveDto"       id="ReserveMap">
+    <id      column="RESERVE_NO"     property="reserveNo" />
+    <result  column="RESERVED_AT"    property="reservedAt"/>
+    <result  column="REQUESTED_TERM" property="requestedTerm"/>
+    <result  column="AGREE"          property="agree"/>
+    <result  column="DEPARTURE_LOC"  property="departureLoc"/>
+    <result  column="RESERVE_STATUS" property="reserveStatus"/>
+    <result  column="RESERVE_START"  property="reserveStart"/>
+    <result  column="RESERVE_FINISH" property="reserveFinish"/>
+    <result  column="RESERVE_PERSON" property="reservePerson"/>
+    <result  column="RESERVE_PRICE"  property="reservePrice"/>
+    <association javaType="UserDto"      property="userDto">
+      <id        column="USER_NO"        property="userNo"/>
+      <result    column="EMAIL"          property="email"/>
+      <result    column="PW"             property="pw"/>
+      <result    column="NAME"           property="name"/>
+      <result    column="GENDER"         property="gender"/>
+      <result    column="MOBILE"         property="mobile"/>
+      <result    column="POSTCODE"       property="postcode"/>
+      <result    column="ROAD_ADDRESS"   property="roadAddress"/>
+      <result    column="JIBUN_ADDRESS"  property="jibunAddress"/>
+      <result    column="DETAIL_ADDRESS" property="detailAddress"/>
+      <result    column="AGREE"          property="agree"/>
+      <result    column="STATE"          property="state"/>
+      <result    column="AUTH"           property="auth"/>
+      <result    column="PW_MODIFIED_AT" property="pwModifiedAt"/>
+      <result    column="JOINED_AT"      property="joinedAt"/>
+    </association>
+    <association javaType="PackageDto"  property="packageDto">
+      <id        column="PACKAGE_NO"    property="packageNo" />
+      <result    column="PACKAGE_TITLE" property="packageTitle"/>
+      <result    column="DANGER"        property="danger"/>
+    </association>
+    <association javaType="HotelDto" property="hotelDto">
+      <id        column="HOTEL_NO"   property="hotelNo" />
+      <result    column="HOTEL_NAME" property="hotelName"/>
+      <result    column="HOTEL_ADDRESS" property="hotelAddress"/>
+    </association>
+  </resultMap>
   
-  <!-- 리뷰 테이블 -->
+  <!-- 여행객 DTO -->
+  <resultMap type="TouristDto"   id="TouristMap" >
+    <id      column="TOURIST_NO" property="touristNo" />
+    <result  column="NAME"       property="name" />
+    <result  column="BIRTH_DATE" property="birthDate" />
+    <result  column="GENDER"     property="gender" />
+    <result  column="MOBILE"     property="mobile" />
+    <result  column="AGE_CASE"   property="ageCase" />
+    <association javaType="ReserveDto" property="reserveDto">
+      <id        column="RESERVE_NO"   property="reserveNo" />
+    </association>
+  </resultMap>
+  
+  <!-- 리뷰 DTO -->
   <resultMap type="ReviewDto"         id="ReviewMap">
     <id      column="REVIEW_NO"       property="reviewNo"/>
     <result  column="PACKAGE_NO"      property="packageNo" />
@@ -336,8 +389,165 @@
   </update>
   
   <!-- 예약 목록 -->
+  <select id="getReserveCount" resultType="int">
+    SELECT COUNT(*)
+      FROM RESERVE_T
+  </select>
+  <select id="getReservePeopleCount" resultType="int">
+    SELECT SUM(RESERVE_PERSON)
+      FROM RESERVE_T
+  </select>
+  <select id="getReserveList" parameterType="Map" resultMap="ReserveMap">
+    SELECT *
+      FROM (SELECT A.*, ROW_NUMBER() OVER(ORDER BY A.RESERVE_NO DESC) AS RN
+              FROM (SELECT R.RESERVE_NO, R.RESERVED_AT, R.REQUESTED_TERM, R.AGREE, R.DEPARTURE_LOC, R.RESERVE_STATUS, R.RESERVE_START, R.RESERVE_FINISH, R.RESERVE_PERSON, R.RESERVE_PRICE, R.ROOM_NO,
+                           R.USER_NO, U.NAME,
+                           R.PACKAGE_NO, P.PACKAGE_TITLE,
+                           R.HOTEL_NO, H.HOTEL_NAME
+                      FROM RESERVE_T R LEFT OUTER JOIN USER_T U
+                        ON U.USER_NO = R.USER_NO LEFT OUTER JOIN PACKAGE_T P
+                        ON P.PACKAGE_NO = R.PACKAGE_NO LEFT OUTER JOIN HOTEL_T H
+                        ON H.HOTEL_NO = R.HOTEL_NO) A 
+            )
+     WHERE RN BETWEEN #{begin} AND #{end}
+  </select>
+  
   <!-- 예약 검색 목록 -->
-  <!-- 예약 상세 -->
+  <select id="getSearchReserveCount" parameterType="Map" resultType="int">
+    SELECT COUNT(*)
+      FROM (SELECT R.RESERVE_NO, R.RESERVED_AT, R.REQUESTED_TERM, R.AGREE, R.DEPARTURE_LOC, R.RESERVE_STATUS, R.RESERVE_START, R.RESERVE_FINISH, R.RESERVE_PERSON, R.RESERVE_PRICE, R.ROOM_NO,
+                   R.USER_NO, U.NAME,
+                   R.PACKAGE_NO, P.PACKAGE_TITLE,
+                   R.HOTEL_NO, H.HOTEL_NAME
+              FROM RESERVE_T R LEFT OUTER JOIN USER_T U
+                ON U.USER_NO = R.USER_NO LEFT OUTER JOIN PACKAGE_T P
+                ON P.PACKAGE_NO = R.PACKAGE_NO LEFT OUTER JOIN HOTEL_T H
+                ON H.HOTEL_NO = R.HOTEL_NO
+           ) A 
+       <where>
+         <if test="columnGubun != ''">
+           A.${columnGubun} IS NOT NULL
+         </if>
+         <if test="reserveStatus == 0 or reserveStatus == 1 or reserveStatus == 2">
+           AND A.RESERVE_STATUS = ${reserveStatus}
+         </if>
+         <if test="columnRe != null and queryRe != null">
+           AND A.${columnRe} LIKE '%' || #{queryRe} || '%'
+         </if>
+         <if test="columnPro != '' and queryPro != null">
+           AND A.${columnPro} LIKE '%' || #{queryPro} || '%'
+         </if>
+         <if test="columnProName != '' and queryProName != null">
+           AND A.${columnProName} LIKE '%' || #{queryProName} || '%'
+         </if>
+       </where>
+  </select>
+  <select id="getSearchResevePeopleCount" parameterType="Map" resultType="int">
+    SELECT SUM(A.RESERVE_PERSON)
+      FROM (SELECT R.RESERVE_NO, R.RESERVED_AT, R.REQUESTED_TERM, R.AGREE, R.DEPARTURE_LOC, R.RESERVE_STATUS, R.RESERVE_START, R.RESERVE_FINISH, R.RESERVE_PERSON, R.RESERVE_PRICE, R.ROOM_NO,
+                   R.USER_NO, U.NAME,
+                   R.PACKAGE_NO, P.PACKAGE_TITLE,
+                   R.HOTEL_NO, H.HOTEL_NAME
+              FROM RESERVE_T R LEFT OUTER JOIN USER_T U
+                ON U.USER_NO = R.USER_NO LEFT OUTER JOIN PACKAGE_T P
+                ON P.PACKAGE_NO = R.PACKAGE_NO LEFT OUTER JOIN HOTEL_T H
+                ON H.HOTEL_NO = R.HOTEL_NO
+           ) A 
+       <where>
+         <if test="columnGubun != ''">
+           A.${columnGubun} IS NOT NULL
+         </if>
+         <if test="reserveStatus == 0 or reserveStatus == 1 or reserveStatus == 2">
+           AND A.RESERVE_STATUS = ${reserveStatus}
+         </if>
+         <if test="columnRe != null and queryRe != null">
+           AND A.${columnRe} LIKE '%' || #{queryRe} || '%'
+         </if>
+         <if test="columnPro != '' and queryPro != null">
+           AND A.${columnPro} LIKE '%' || #{queryPro} || '%'
+         </if>
+         <if test="columnProName != '' and queryProName != null">
+           AND A.${columnProName} LIKE '%' || #{queryProName} || '%'
+         </if>
+       </where>
+  </select>
+  <select id="getSearchReserveList" parameterType="Map" resultMap="ReserveMap">
+    SELECT *
+      FROM (SELECT A.*, ROW_NUMBER() OVER(ORDER BY A.RESERVE_NO DESC) AS RN
+              FROM (SELECT R.RESERVE_NO, R.RESERVED_AT, R.REQUESTED_TERM, R.AGREE, R.DEPARTURE_LOC, R.RESERVE_STATUS, R.RESERVE_START, R.RESERVE_FINISH, R.RESERVE_PERSON, R.RESERVE_PRICE, R.ROOM_NO,
+                           R.USER_NO, U.NAME,
+                           R.PACKAGE_NO, P.PACKAGE_TITLE,
+                           R.HOTEL_NO, H.HOTEL_NAME
+                      FROM RESERVE_T R LEFT OUTER JOIN USER_T U
+                        ON U.USER_NO = R.USER_NO LEFT OUTER JOIN PACKAGE_T P
+                        ON P.PACKAGE_NO = R.PACKAGE_NO LEFT OUTER JOIN HOTEL_T H
+                        ON H.HOTEL_NO = R.HOTEL_NO
+                   ) A 
+                       <where>
+                         <if test="columnGubun != ''">
+                           A.${columnGubun} IS NOT NULL
+                         </if>
+                         <if test="reserveStatus == 0 or reserveStatus == 1 or reserveStatus == 2">
+                           AND A.RESERVE_STATUS = ${reserveStatus}
+                         </if>
+                         <if test="columnRe != null and queryRe != null">
+                           AND A.${columnRe} LIKE '%' || #{queryRe} || '%'
+                         </if>
+                         <if test="columnPro != '' and queryPro != null">
+                           AND A.${columnPro} LIKE '%' || #{queryPro} || '%'
+                         </if>
+                         <if test="columnProName != '' and queryProName != null">
+                           AND A.${columnProName} LIKE '%' || #{queryProName} || '%'
+                         </if>
+                       </where>
+           )
+     WHERE RN BETWEEN #{begin} AND #{end}
+  </select>
+
+  
+  <!-- 패키지 예약 상세 -->
+  <select id="getReservePackage" parameterType="int" resultMap="ReserveMap">
+    SELECT RES.RESERVE_NO, RES.RESERVED_AT, RES.REQUESTED_TERM, RES.AGREE, RES.DEPARTURE_LOC, RES.RESERVE_STATUS, RES.RESERVE_START, RES.RESERVE_FINISH, RES.RESERVE_PERSON, RES.RESERVE_PRICE
+         , RES.USER_NO, U.EMAIL, U.NAME, U.GENDER, U.MOBILE
+         , RES.PACKAGE_NO, PAC.PACKAGE_TITLE, PAC.DANGER
+      FROM RESERVE_T RES INNER JOIN USER_T U
+        ON U.USER_NO = RES.USER_NO INNER JOIN PACKAGE_T PAC
+        ON PAC.PACKAGE_NO = RES.PACKAGE_NO
+     WHERE RES.RESERVE_NO = #{reserveNo}
+  </select>
+  
+  <!-- 호텔 예약 상세 -->
+  <select id="getReserveHotel" parameterType="int" resultMap="ReserveMap">
+    SELECT RES.RESERVE_NO, RES.RESERVED_AT, RES.REQUESTED_TERM, RES.AGREE, RES.DEPARTURE_LOC, RES.RESERVE_STATUS, RES.RESERVE_START, RES.RESERVE_FINISH, RES.RESERVE_PERSON, RES.RESERVE_PRICE
+         , RES.USER_NO, U.EMAIL, U.NAME, U.GENDER, U.MOBILE
+         , RES.HOTEL_NO, HO.HOTEL_NAME, HO.HOTEL_ADDRESS
+      FROM RESERVE_T RES INNER JOIN USER_T U
+        ON U.USER_NO = RES.USER_NO INNER JOIN HOTEL_T HO
+        ON HO.HOTEL_NO = RES.HOTEL_NO
+     WHERE RES.RESERVE_NO = #{reserveNo}
+  </select>
+  
+  <!-- 여행객 상세 -->
+  <select id="getTourist" parameterType="int" resultMap="TouristMap">
+    SELECT RES.RESERVE_NO, TOU.TOURIST_NO, TOU.NAME, TOU.BIRTH_DATE, TOU.GENDER, TOU.MOBILE, TOU.AGE_CASE
+      FROM RESERVE_T RES INNER JOIN TOURIST_T TOU
+        ON TOU.RESERVE_NO = RES.RESERVE_NO
+     WHERE RES.RESERVE_NO = #{reserveNo}
+  </select>
+  <select id="getAdultCount" parameterType="int" resultType="int">
+    SELECT COUNT(TOU.AGE_CASE)
+      FROM RESERVE_T RES INNER JOIN TOURIST_T TOU
+        ON TOU.RESERVE_NO = RES.RESERVE_NO
+     WHERE RES.RESERVE_NO = #{reserveNo}
+       AND TOU.AGE_CASE = 0
+  </select>
+  <select id="getChildCount" parameterType="int" resultType="int">
+    SELECT COUNT(TOU.AGE_CASE)
+  FROM RESERVE_T RES INNER JOIN TOURIST_T TOU
+    ON TOU.RESERVE_NO = RES.RESERVE_NO
+     WHERE RES.RESERVE_NO = #{reserveNo}
+       AND TOU.AGE_CASE = 1
+  </select>
   
   <!-- 리뷰 목록 -->
   <select id="getReviewCount" resultType="int">

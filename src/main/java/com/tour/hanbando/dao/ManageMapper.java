@@ -10,9 +10,11 @@ import com.tour.hanbando.dto.InactiveUserDto;
 import com.tour.hanbando.dto.LeaveUserDto;
 import com.tour.hanbando.dto.PackageDto;
 import com.tour.hanbando.dto.RegionDto;
+import com.tour.hanbando.dto.ReserveDto;
 import com.tour.hanbando.dto.ReviewDto;
 import com.tour.hanbando.dto.RoompriceDto;
 import com.tour.hanbando.dto.RoomtypeDto;
+import com.tour.hanbando.dto.TouristDto;
 import com.tour.hanbando.dto.UserDto;
 
 @Mapper
@@ -81,8 +83,25 @@ public interface ManageMapper {
   public int updateHotelRecommend(HotelDto hotel);
   
   /* 예약 목록 */
+  public int getReserveCount();
+  public int getReservePeopleCount();
+  public List<ReserveDto> getReserveList(Map<String, Object> map);
+  
   /* 예약 검색 */
-  /* 예약 상세 */
+  public int getSearchReserveCount(Map<String, Object> map);
+  public int getSearchResevePeopleCount(Map<String, Object> map);
+  public List<ReserveDto> getSearchReserveList(Map<String, Object> map);
+  
+  /* 패키지 예약 상세 */
+  public ReserveDto getReservePackage(int reserveNo);
+  
+  /* 호텔 예약 상세 */
+  public ReserveDto getReserveHotel(int reserveNo);
+  
+  /* 여행객 예약 상세 */
+  public List<TouristDto> getTourist(int reserveNo);
+  public int getAdultCount(int reserveNo);
+  public int getChildCount(int reserveNo);
   
   /* 리뷰 목록 */
   public int getReviewCount();
@@ -96,7 +115,4 @@ public interface ManageMapper {
   public int deleteReview(int reviewNo);
   
   
-  /*  */
-  
-
 }

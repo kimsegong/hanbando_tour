@@ -85,7 +85,6 @@
       <result column="RECOMMEND_STATUS" property="recommendStatus"/>
     </association>
     <association javaType="RoomtypeDto" property="roomtypeDto">
-      <id column="ROOM_NO" property="roomNo"/>
       <result column="HOTEL_NO" property="hotelNo"/>
       <result column="ROOM_DETAIL" property="roomDetail"/>
       <result column="ROOM_NAME" property="roomName"/>
@@ -194,7 +193,7 @@
     SELECT RES.RESERVE_NO, RES.RESERVED_AT, RES.REQUESTED_TERM, RES.AGREE, RES.RESERVE_STATUS, RES.RESERVE_START, RES.RESERVE_FINISH, RES.RESERVE_PERSON, RES.RESERVE_PRICE
          , U.USER_NO, U.NAME, U.EMAIL, U.GENDER, U.MOBILE, U.AUTH
          , H.HOTEL_NO, H.HOTEL_NAME, H.HOTEL_ADDRESS, H.HOTEL_DETAIL
-         , RT.ROOM_NO, RT.ROOM_NAME
+         , RT.ROOM_NAME
       FROM USER_T U INNER JOIN RESERVE_T RES
         ON U.USER_NO = RES.USER_NO INNER JOIN HOTEL_T H
         ON H.HOTEL_NO = RES.HOTEL_NO INNER JOIN ROOMTYPE_T RT
@@ -293,7 +292,7 @@
     )
   </insert>
   
-  <insert id="insertReserveHotel" parameterType="ReserveDto">
+  <insert id="insertReserveHotel" parameterType="ReserveDto" useGeneratedKeys="true" keyProperty="reserveNo">
     <selectKey order="BEFORE" keyProperty="reserveNo" resultType="int">
       SELECT RESERVE_SEQ.NEXTVAL 
         FROM DUAL
@@ -306,7 +305,6 @@
       , RESERVE_STATUS
       , RESERVE_START
       , RESERVE_FINISH
-      , RESERVE_PERSON
       , RESERVE_PRICE
       , USER_NO
       , HOTEL_NO
@@ -333,11 +331,10 @@
                 NULL
             </otherwise>
         </choose>
-      , #{reservePerson}
       , #{reservePrice}
       , #{userDto.userNo}
       , #{hotelDto.hotelNo}
-      , #{roomtypeDto.roomNo}  
+      , #{roomtypeDto.roomFeatureDto.roomNo}  
     )
   </insert>
   
@@ -410,19 +407,6 @@
       FROM RESERVE_T
      WHERE RESERVE_NO = #{reserveNo}
   </delete>
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-
 
 
 </mapper>

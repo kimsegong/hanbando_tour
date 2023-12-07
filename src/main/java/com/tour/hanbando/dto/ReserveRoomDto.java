@@ -9,11 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 @Builder
-public class FaqDto {
-  private int faqNo;
-  private int caNo;
-  private String title;
-  private String contents;
-  private String createdAt;
-  private String modifiedAt;
+public class ReserveRoomDto {
+  private int roomNo;
+  private int cnt;
 }
