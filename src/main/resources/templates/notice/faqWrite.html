@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{/layout/header::head('한반도 투어')}"></head> <!-- 이거 알맞게 바꿔주세요-->
+    <style>
+      .content > .form-control {
+        height: 400px;
+      }
+      
+      .wrap1 > .box1{
+        height: 50px;
+      }
+      
+      .wrap1 > .box2{
+        height: 50px;
+      }
+      
+      .wrap1 > .box3{
+        height: 30px;
+      }
+      
+      .wrap1 > .box4{
+        height: 50px;
+      }
+            
+    </style>
+
+<body>
+  <div th:replace="~{/layout/header::header}"></div>
+  
+  <div class="main_wrap">
+    
+    <div class="wrap wrap_9">
+  
+     <div class="container text-center">
+      <div class="row">
+        <div class="col-1">  
+          <div class="w3-sidebar w3-bar-block" style="width:10%; height:200px;"> <!-- 사이드바 -->
+            <a th:href="@{/notice/faqDetailWrite.form}" class="w3-bar-item w3-button">세부메뉴 작성</a>        
+          </div>   
+        </div>
+        <div class="col-10">
+            <!--/*여기에 작성/ 다 만들고 style 지워주세요  */-->
+        
+              <div>
+
+      <form id="frm_faq_add" method="post" th:action="@{/notice/addFaq.do}">
+        
+        <h1 style="text-align: center;">공지사항을 작성하세요</h1>
+        
+        
+        <div class ="wrap1">
+         <div class="box1"></div>
+        </div>
+        
+        
+        <!-- 제목  -->
+        <div>
+          <label for="title">제목</label>
+          <input type="text" name="title" id="title" class="form-control">
+        </div>
+        <div class="w-25 p-3">
+         <select id="faqDetailSelect" class="form-select" aria-label="Default select example" name="caNo">
+             <option selected>-분류-</option>
+             <option th:each="faqCa : ${faqCaList}" th:value="${faqCa.caNo}" th:text="${faqCa.caTitle}"></option>
+         </select>
+        </div>
+        
+        
+        <div class ="wrap1">
+         <div class="box2"></div>
+        </div>
+      
+        <!-- 내용  -->  
+        <div>
+          <label for="contents">내용</label>
+        </div>
+        <div class="content">  
+          <textarea name="contents" id="contents" class="form-control"></textarea>
+        </div>
+        
+        <!---->
+        
+        <div class ="wrap1">
+         <div class="box3"></div>
+        </div>
+        
+        <div class="col-1"></div>
+        <div class="col-10">
+  
+          
+        <div class ="wrap1">
+          <div class="box4"></div>
+        </div>
+         
+        </div>
+        </div>
+        
+
+        
+        
+        
+        
+        
+        <!-- 작성완료 submit  -->  
+        <div>
+          <a th:href="@{/notice/faqList.do}">
+          <button type="submit" class="btn btn-primary col-12">작성완료</button>
+          </a>
+        </div>
+      </form>
+      </div>
+     </div>       
+            
+            
+        
+            
+            
+            
+     <script>
+       
+
+const fnNoticeModify = () => {
+  $('#frm_faq_add').submit((ev) => {
+    if ($('#title').val() === '') {
+      alert('제목은 반드시 입력해야 합니다.');
+      $('#title').focus();
+      ev.preventDefault();
+      return;
+    }
+    if ($('#contents').val() === '') {
+      alert('내용은 반드시 입력해야 합니다.');
+      $('#contents').focus();
+      ev.preventDefault();
+      return;
+    }
+  });
+};
+        
+      
+     
+      fnNoticeModify();   
+        
+        
+            
+            
+            
+            
+            
+            
+     fnFileCheck();      
+            
+            
+     </script>      
+            
+            
+            
+            
+            
+            
+            
+        </div>
+        <div class="col-1">       
+        </div>
+      </div>
+    </div>
+  
+  </div>
+
+  
+  
+  
+  <div th:replace="~{/layout/footer::footer}"></div>
+</body>
+</html>
+
