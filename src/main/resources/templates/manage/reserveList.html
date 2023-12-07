@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 
-<head th:replace="~{/layout/header::head('패키지예약 관리')}"></head> 
+<head th:replace="~{/layout/header::head('예약 관리')}"></head>
 <style>
   
   .second_main_wrap {
@@ -19,6 +19,10 @@
   .listWrap1 {
     height: 100%;
     width: 100%;
+  }
+  
+  #sel_search {
+    margin: 5% auto;
   }
   
   #userList a,
@@ -81,12 +85,18 @@
     width: 90%;
   }
   
+  .total_position {
+    display: flex;
+    justify-content: space-between;
+  }
+  
   table a:hover {
     color: #96B6C5;
   }
   
   #btn_search_reserve {
     height: 38px; 
+    width: 60px;
     color: #96B6C5;         /* 텍스트 색상 */
     background-color: #fff; /* 기본 배경 색상 */
     border-color: #96B6C5;  /* 테두리 색상 */
@@ -99,12 +109,15 @@
     background-color: #96B6C5; /* 호버 시 배경 색상 */
   }
   
-  #column,
-  #query {
+  .sel {
+    width: 100px;
+  }
+  .sel,
+  .query {
     height: 38px;
   }
   
-  #column {
+  .sel {
     flex: 1;           /* 셀렉트 박스가 나머지 영역을 모두 차지하도록 설정 */
     margin-right: 5px; /* 셀렉트 박스와 인풋 사이의 간격을 조절 */
   }
@@ -118,7 +131,20 @@
   justify-content: center; /* 가로 가운데 정렬 */
   align-items: center;     /* 세로 가운데 정렬 */
   margin: 8% 15%;
-}
+ }
+
+  .sel_second {
+   margin-top: 2%;
+  }
+  .sel_first {
+    display: flex;
+  }
+  .sel_f_first {
+    margin-left: 13.5%;
+  }
+  .sel_f_scond {
+    margin-left: 8.8%;
+  }
 
 
 </style>
@@ -133,8 +159,7 @@
 		  <div class="row">
 		    <div class="col-1">	      
 		    </div>
-        <div class="col-10" style="border:1px gray dotted">
-            <!--/*여기에 작성/ 다 만들고 style 지워주세요  */-->
+        <div class="col-10" >
      
 		   
         		         
@@ -166,66 +191,120 @@
             
             <div class="split2">
                 
-              <!--/* 각 상품관리 페이지로 이동 가능한 상단 목록 */-->
-              <div class="listWrap2">
-                <div id="package">
-                  <a th:href="@{/manage/productList.do}">패키지</a>
-                </div>
-                <div id="hotel">
-                  <a th:href="@{/manage/hotelProductList.do}">호텔</a>
-                </div>
+              <!--/* 검색기능 */-->
+              <div id="sel_search">
+                <form id="frm_search" method="get" th:action="@{/manage/searchReserve.do}" >
+                  <div class="sel_first">
+                    <div class="sel_f_first">
+                      <select name="columnGubun" class="sel">
+                        <option value="">상품유형</option>
+                        <option value="PACKAGE_NO">패키지</option>
+                        <option value="HOTEL_NO">호텔</option>
+                      </select>
+                      <select name="reserveStatus" class="sel">
+                        <option value="3">예약상태</option>
+                        <option value="0">결제대기</option>
+                        <option value="1">예약완료</option>
+                        <option value="2">취소</option>
+                    </select>
+                    </div>
+                    <div class="sel_f_scond">
+                      <select name="columnRe" class="sel">
+                        <option value="RESERVE_NO">예약번호</option>
+                        <option value="NAME">예약자</option>
+                        <option value="RESERVED_AT">예약일</option>
+                        <option value="RESERVE_START">시작일</option>
+                        <option value="RESERVE_PERSON">인원</option>
+                        <option value="RESERVE_PRICE">금액</option>
+                      </select>
+                      <input type="text" name="queryRe" class="query" placeholder="검색어 입력" >
+                    </div>
+                  </div>
+                  <div class="sel_second">
+                    <select name="columnPro" class="sel">
+                      <option value="">상품번호</option>
+                      <option value="PACKAGE_NO">패키지번호</option>
+                      <option value="HOTEL_NO">호텔번호</option>
+                    </select>
+                    <input type="text" name="queryPro" class="query" placeholder="검색어 입력" >
+                    <select name="columnProName" class="sel">
+                      <option value="">상품명</option>
+                      <option value="PACKAGE_TITLE">패키지명</option>
+                      <option value="HOTEL_NAME">호텔명</option>
+                    </select>
+                    <input type="text" name="queryProName" class="query" placeholder="검색어 입력" >
+                    <button type="submit" id="btn_search_reserve" >검색</button>
+                  </form>
+                  </div>
               </div>
                 
         
-              <!--/* 관리 회원목록이 표시될 div */-->
+              <!--/* 관리 예약목록이 표시될 div */-->
               <div class="listMainWrap">
                   
-                <!--/* 총 회원 수를 표시 */-->
-                <div style="text-align: left;" th:text="|총 ${total}개|"></div>
+                <!--/* 총 예약 수를 표시 */-->
+                <div class="total_position">
+                <div th:text="|총 ${total}개|"></div>      
+                <div th:text="|총 ${total}명|"></div>                  
+                </div>
                   
-                <!--/* 전체 목록을 나타내는 테이블 */-->
+                <!--/* 전체 예약목록을 나타내는 테이블 */-->
                 <div>
                   <table border="1" class="table table-hover">
                     <thead>
                       <tr>
-                        <th scope="col">회원번호</th>
-                        <th scope="col">이메일</th>
-                        <th scope="col">이름</th>
-                        <th scope="col">전화번호</th>
-                        <th scope="col">성별</th>
-                        <th scope="col">가입형태</th>
-                        <th scope="col">가입일</th>
-                        <th scope="col">권한</th>
+                        <th scope="col">예약번호</th>
+                        <th scope="col">상품번호</th>
+                        <th scope="col">유형</th>
+                        <th scope="col">예약자</th>
+                        <th scope="col">상품명</th>
+                        <th scope="col">예약일</th>
+                        <th scope="col">시작일</th>
+                        <th scope="col">인원</th>
+                        <th scope="col">금액</th>
+                        <th scope="col">예약상태</th>
                       </tr>
                     </thead>
                     <tbody class="table-group-divider table_to_detail">
-                      <th:block th:each="u:${userList}">
+                      <th:block th:each="r:${reserveList}">
                         <tr>
-                          <th scope="row" th:text="${u.userNo}"></th>
+                          <th scope="row" th:text="${r.reserveNo}"></th>
                           <td>
-                            <a th:href="@{/manage/userDetail.do(userNo=${u.userNo})}" th:text="${u.email}"></a>
+                            <a th:if="${r.hotelDto == null}" th:text="${r.packageDto.packageNo}" th:href="@{/manage/reservePackageDetail.do}" ></a>
+                            <a th:if="${r.packageDto == null}" th:text="${r.hotelDto.hotelNo}" th:href="@{/manage/reserveHotelDetail.do}" ></a>
                           </td>
                           <td>
-                            <a th:href="@{/manage/userDetail.do(userNo=${u.userNo})}" th:text="${u.name}"></a>
+                            <a th:href="@{/manage/reservePackageDetail.do(reserveNo=${r.reserveNo})}" th:if="${r.hotelDto == null}">패키지</a>
+                            <a th:href="@{/manage/reserveHotelDetail.do(reserveNo=${r.reserveNo})}" th:if="${r.packageDto == null}">호텔</a>
                           </td>
                           <td>
-                            <a th:href="@{/manage/userDetail.do(userNo=${u.userNo})}" th:text="${u.mobile}"></a>
+                            <a th:if="${r.hotelDto == null}" th:text="${r.userDto.name}" th:href="@{/manage/reservePackageDetail.do}" ></a>
+                            <a th:if="${r.packageDto == null}" th:text="${r.userDto.name}" th:href="@{/manage/reserveHotelDetail.do}" ></a>
                           </td>
                           <td>
-                            <a th:href="@{/manage/userDetail.do(userNo=${u.userNo})}" th:if="${u.gender == 'F'}">여자</a>
-                            <a th:href="@{/manage/userDetail.do(userNo=${u.userNo})}" th:if="${u.gender == 'M'}">남자</a>
+                            <a th:if="${r.hotelDto == null}" th:text="${r.packageDto.packageTitle}" th:href="@{/manage/reservePackageDetail.do(reserveNo=${r.reserveNo})}"></a>
+                            <a th:if="${r.packageDto == null}" th:text="${r.hotelDto.hotelName}" th:href="@{/manage/reserveHotelDetail.do(reserveNo=${r.reserveNo})}"></a>
                           </td>
                           <td>
-                            <a th:href="@{/manage/userDetail.do(userNo=${u.userNo})}" th:if="${u.state == 0}">일반회원</a>
-                            <a th:href="@{/manage/userDetail.do(userNo=${u.userNo})}" th:if="${u.state == 1}">네이버 간편로그인</a>
-                            <a th:href="@{/manage/userDetail.do(userNo=${u.userNo})}" th:if="${u.state == 2}">카카오 간편로그인</a>
+                            <a th:if="${r.hotelDto == null}" th:text="${r.reservedAt}" th:href="@{/manage/reservePackageDetail.do}" ></a>
+                            <a th:if="${r.packageDto == null}" th:text="${r.reservedAt}" th:href="@{/manage/reserveHotelDetail.do}" ></a>
                           </td>
                           <td>
-                            <a th:href="@{/manage/userDetail.do(userNo=${u.userNo})}" th:text="${u.joinedAt}"></a>
+                            <a th:if="${r.hotelDto == null}" th:text="${r.reserveStart}" th:href="@{/manage/reservePackageDetail.do}" ></a>
+                            <a th:if="${r.packageDto == null}" th:text="${r.reserveStart}" th:href="@{/manage/reserveHotelDetail.do}" ></a>
                           </td>
                           <td>
-                            <th:block th:if="${u.auth != 1}">관리자</th:block>
-                            <th:block th:if="${u.auth == 1}">회원</th:block>
+                            <a th:if="${r.hotelDto == null}" th:text="${r.reservePerson}" th:href="@{/manage/reservePackageDetail.do}" ></a>
+                            <a th:if="${r.packageDto == null}" th:text="${r.reservePerson}" th:href="@{/manage/reserveHotelDetail.do}" ></a>
+                          </td>
+                          <td>
+                            <a th:if="${r.hotelDto == null}" th:text="${r.reservePrice}" th:href="@{/manage/reservePackageDetail.do}" ></a>
+                            <a th:if="${r.packageDto == null}" th:text="${r.reservePrice}" th:href="@{/manage/reserveHotelDetail.do}" ></a>
+                          </td>
+                          <td>
+                            <th:block th:if="${r.reserveStatus == 0}">결제대기</th:block>
+                            <th:block th:if="${r.reserveStatus == 1}">예약완료</th:block>
+                            <th:block th:if="${r.reserveStatus == 2}" >취소</th:block>
                           </td>
                         </tr>
                       </th:block>
@@ -233,25 +312,11 @@
                     <!--/* 페이징 처리 */-->
                     <tfoot>
                       <tr>
-                        <td colspan="8" th:utext="${paging}" class="paging"></td>
+                        <td colspan="10" th:utext="${paging}" class="paging"></td>
                       </tr>
                     </tfoot>
                   </table>
                     
-                  <!--/* 검색기능 */-->
-                  <div>
-                    <form id="frm_search" method="get" th:action="@{/manage/packageProductSearch.do}" >
-                      <select name="column" id="column" >
-                        <option value="USER_NO">회원번호</option>
-                        <option value="EMAIL">이메일</option>
-                        <option value="NAME">이름</option>
-                        <option value="MOBILE">전화번호</option>
-                        <option value="JOINED_AT">가입일</option>
-                      </select>
-                      <input type="text" name="query" id="query" placeholder="검색어 입력" >
-                      <button type="submit" id="btn_search_reserve" >검색</button>
-                    </form>
-                  </div>
                 
                 </div>
               </div>

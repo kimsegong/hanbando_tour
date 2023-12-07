@@ -34,6 +34,8 @@
   }  
   
 
+  
+
 </style>
 
 
@@ -94,7 +96,7 @@
     
     
     <div class="col-9" style=" margin-top: 50px;">
-      <h2>공지사항</h2>
+      <h2>나의 문의</h2>
       <hr style="border: 1px solid black; margin-bottom: 0; margin-top: 10px;">
     </div>
 
@@ -104,7 +106,7 @@
     
     <div class="col-9">   
     <div class="row">
-      <h4 class="notice-text" style="font-size: 16px; font-weight: bold;" th:text="|공지사항 : ${notice.title}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;작성일:&nbsp;&nbsp;&nbsp;${notice.createdAt}|"></h4>
+      <h4 class="notice-text" style="font-size: 16px; font-weight: bold;" th:text="|제목 : ${inquiry.title}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;작성일:&nbsp;&nbsp;&nbsp;${inquiry.createdAt}|"></h4>
     </div>
       <hr style="border: 1px solid black; margin-bottom: 0; margin-top: 10px;">    
     </div>
@@ -119,7 +121,7 @@
         <div class="box3"></div>
       </div>    
       
-      <div class="contents" th:text="${notice.contents}"></div>
+      <div class="contents" th:text="${inquiry.contents}"></div>
         
        
       </div>
@@ -132,23 +134,22 @@
       <div class="col-3"></div>
  
       <div class="col-9"  style="padding-left:10px; padding-right: 40px;">
-      <div class="text-center">
-      <div>
-        <form id="frm_btn" method="post">
-            <input type="hidden" name="noticeNo" th:value="${notice.noticeNo}">
-            <input type="hidden" name="title" th:value="${notice.title}">
-            <input type="hidden" name="contents" th:value="${notice.contents}">
-                <form class="frm_remove" method="post" th:action="@{/notice/remove.do}" style="display: inline;">
-                  <th:block th:if="${session.user != null}">
-                      <input type="hidden" name="noticeNo" th:value="${notice.noticeNo}">
-                      <button type="submit" id="btn_edit" class="btn btn-outline-primary">수정</button>
-                      <button type="submit" id="btn_remove" class="btn btn-danger btn-sm"style="width: 60px; height: 35px;">삭제</button>
-                  </th:block>
-                </form>
-        </form>
-      </div> 
+      
+      
+      
+<div style="text-align: center;">
+  <form id="frm_detail" method="post">
+    <input type="hidden" name="inquiryNo" th:value="${inquiry.inquiryNo}">
+    <input type="hidden" name="title" th:value="${inquiry.title}">
+    <input type="hidden" name="contents" th:value="${inquiry.contents}">
+      <button type="button" id="btn_remove" class="btn btn-danger btn-sm"style="width: 60px; height: 35px;">삭제</button>
+  </form>
+</div>
+      
+      
+      
       </div>
-      </div>
+      
            
 
       
@@ -179,24 +180,7 @@
 
 
 
-    <div>
-        <th:block th:if="${#lists.isEmpty(attachList)}">
-          <div>첨부 없음</div>          
-        </th:block>
-        <th:block th:if="${not #lists.isEmpty(attachList)}">
-          <th:block th:each="atc:${attachList}">
-            <div class="attach" th:data-attach_no="${atc.attachNo}">
-              <th:block th:if="${atc.hasThumbnail == 1}">
-                <img th:src="@{|${atc.path}/s_${atc.filesystemName}|}" alt="썸네일" width="50">
-              </th:block>
-              <th:block th:if="${atc.hasThumbnail == 0}">
-                <img th:src="@{/image/attach1.png}" alt="썸네일" width="50">
-              </th:block>
-              <a th:text="${atc.originalFilename}"></a>
-            </div>
-          </th:block>
-        </th:block>
-      </div>
+   
       
     
     
@@ -221,30 +205,22 @@
       
       <script>
       
-      var frmBtn = $('#frm_btn');
+      var frmBtn = $('#frm_detail');
       
-      const fnEditNotice = () => {
-        $('#btn_edit').click(() => {
-          event.preventDefault();
-          if(confirm('수정할꺼에요?')){
-          frmBtn.attr('action', '/notice/edit.form');
-          frmBtn.submit();
-          }
-        })
-      }
+  
       
       const fnRemoveNotice = () => {
         $('#btn_remove').click(() => {
           event.preventDefault();
-          if(confirm('공지사항 삭제를 선택하셨습니다. 삭제할까요?')){
-          frmBtn.attr('action', '/notice/remove.do');
+          if(confirm('나의1:1문의 삭제를 선택하셨습니다. 삭제할까요?')){
+          frmBtn.attr('action', '/notice/inquiryremove.do');
           frmBtn.submit();
           }
           
         })
       }
   
-      fnEditNotice();
+     
       fnRemoveNotice();      
       
       
