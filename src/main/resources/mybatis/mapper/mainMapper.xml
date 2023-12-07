@@ -41,7 +41,6 @@
 	<select id="searchPackageList" parameterType="Map" resultType="PackageDto">
 		SELECT
         P.PACKAGE_NO,
-        P.USER_NO,
         P.REGION_NO,
         R.REGION_NAME,
         P.THEME_NO,
@@ -68,7 +67,6 @@
     FROM (
         SELECT
             PT.PACKAGE_NO,
-            PT.USER_NO,
             PT.REGION_NO,
             PT.THEME_NO,
             PT.PACKAGE_TITLE,
@@ -170,7 +168,7 @@
     SELECT COUNT(*)
       FROM THEME_T
   </select>
-  <select id="getThemePackage" parameterType="int" resultMap="PackageMap">
+  <select id="getThemePackage" parameterType="int" resultType="PackageDto">
     SELECT P.PACKAGE_NO, P.PACKAGE_TITLE, P.PRICE, T.THEME_NO, T.THEME_NAME  
       FROM PACKAGE_T P LEFT OUTER JOIN THEME_T T
         ON P.THEME_NO = T.THEME_NO
