@@ -100,7 +100,7 @@
               <div class="right">
                 <form th:action="@{/reserve/writeHotel.form}" method="get">
                   <div class="title" id="sideTitle" th:text="${hotel.hotelName}"></div>
-                  <input type="hidden" name="hotelNo" th:value="${hotel.hotelNo}">
+                  <input type="hidden" id="hotelNo" name="hotelNo" th:value="${hotel.hotelNo}">
                   <input type="hidden" id="reserveRoomNo" name="roomNo">
                   <div class="roomType">방타입</div>
                   <div class="price">금액</div>
@@ -344,6 +344,7 @@
    roomNumber = document.getElementById(roomNo).value;
    document.getElementById('reserveRoomNo').value = roomNumber;
    console.log(document.getElementById('reserveRoomNo').value);
+   console.log(document.getElementById('hotelNo').value);
  }
   
   const fnReviewAdd = () => {
