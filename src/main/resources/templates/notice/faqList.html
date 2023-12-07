@@ -45,6 +45,8 @@
 
   <div class="btn-toolbar mb-3 justify-content-center" role="toolbar" aria-label="Toolbar with button groups">
   <div class="btn-group me-2" role="group" aria-label="First group">
+
+    
     <a th:href = "@{/notice/faqKorea.do}">
     <button type="button" class="btn btn-outline-secondary">국내패키지</button>
     </a>
@@ -57,11 +59,15 @@
     <button type="button" class="btn btn-outline-secondary">회원안내</button>
     </a>
     
-    <a th:href = "@{/notice/faq.do}">
+    <a th:href = "@{/notice/faqList.do}">
     <button type="button" class="btn btn-secondary">기타</button>
     </a>
+
     
   </div>
+  </div> 
+
+
 
   </div>
   
@@ -89,22 +95,11 @@
    <div class="row">
    <div class="col-1"></div>
    <div class="col-9">
+   <input type="hidden" name="userNo" id="userNo" th:value="${session.user.userNo}">
    
-   
+   <div id="faqAccordion"></div>
   
-  
-<div class="accordion accordion-flush" id="accordionFlushExample">
-  <div class="accordion-item">
-    <h2 class="accordion-header">
-      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
-        여행 중 물건을 잃어버렸어요!
-      </button>
-    </h2>
-    <div id="flush-collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
-      <div class="accordion-body">한반도여행사를 이용하여 여행하신 후 물건을 잃어버렸을 경우, 한반도여행사 분실물센터로 나의 분실물을 확인하고 물건을 찾아보세요!"</div>
-    </div>
-  </div>
-  
+
   
   <div class="wrap1">
     <div class="box4"></div>    
@@ -117,59 +112,7 @@
  </div>           
             
   </div>          
-            
-            
-        
-        <script>
-          
-        var page = 1;
-        var totalPage = 0;
-          const fnReviewList = () => { 
-        $.ajax({
-          type: 'get',
-          url: '/faq/faqList.do',
-          data: { page: page, faqNo: faqNo},
-          dataType: 'json',
-          success: (resData) => {
-            totalPage = resData.totalPage;
-            $('#faqAccordion').empty();
-            const sessionUserNo = $('#userNo').val();
-            if (resData.reviewList != null && resData.reviewList.length > 0) {
-              $.each(resData.reviewList, (i, review)=> {
-                let str = '<div class="accordion accordion-flush">';
-                str += '<div class="accordion-item">';
-                str += '<h2 class="accordion-header">';
-                str += '<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapse' + i + '" aria-expanded="false" aria-controls="flush-collapse' + i + '">' + review.userDto.name + '님의 리뷰  ' + generateStarRating(review.star) + '</button>';
-                str += '</h2>';
-                str += '<div id="flush-collapse' + i + '" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">';
-                str += '<div class="accordion-body">' + review.reviewContents + '</div>';
-                str += '  <div>';
-                if(sessionUserNo == review.userDto.userNo){                
-                      str += '  <input type="hidden" value="' + review.reviewNo + '">';
-                      str += '  <button type="button" class="btn remove_Review" style="margin-left: 550px;">삭제하기</button>';
-                    }
-                      str += '  </div>';
-                str += '</div>';
-                str += '</div>';
-                str += '</div>';
-                  $('#reviewAccordion').append(str);         
-              });
-            } else {
-              $('#reviewAccordion').append('<div class="text-center">등록된 리뷰가 없습니다.</div>');
-            }
-          },
-          error: (error) => {
-            console.error('Ajax 요청 에러:', error);
-          }
-        });
-      };
-          
-        </script>
-            
-            
-            
-            
-            
+                    
         </div>
         <div class="col-1">       
         </div>
@@ -179,6 +122,107 @@
   </div>
 
   </div>
+  
+          
+<script th:inline="javascript">
+          
+     var page = 1;
+     var totalPage = 0;
+     
+      const fnFaqList = () => { 
+        $.ajax({
+          type: 'get',
+          url: '/notice/loadFaqList.do',
+          data: { page: page},
+          dataType: 'json',
+          success: (resData) => {
+            totalPage = resData.totalPage;
+            $('#faqAccordion').empty();
+            const sessionUserNo = $('#userNo').val();
+            if (resData.faqList != null && resData.faqList.length > 0) {
+              $.each(resData.faqList, (i, faq)=> {
+                let str = '<div class="accordion accordion-flush">';
+                str += '<div class="accordion-item">';
+                str += '<h2 class="accordion-header">';
+                str += '<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapse' + i + '" aria-expanded="false" aria-controls="flush-collapse' + i + '">' + faq.title + '제목' + '</button>';
+                str += '</h2>';
+                str += '<div id="flush-collapse' + i + '" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">';
+                str += '<div class="accordion-body">' + faq.contents + '</div>';
+                str += '  <div>';
+              if(sessionUserNo == 1){                
+                    str += '  <input type="hidden" id="faqNo" value="' + faq.faqNo + '">';
+                    str += '  <form id="frm_faq_btn" method="post">';
+                    str += '  <button type="submit" class="btn" id="edit_Faq" style="margin-left: 550px;">수정하기</button>';
+                    str += '  </form>';
+                    str += '  <button type="button" class="btn remove_Faq" style="margin-left: 550px;">삭제하기</button>';
+                  }
+                    str += '  </div>';
+                str += '</div>';
+                str += '</div>';
+                str += '</div>';
+                  $('#faqAccordion').append(str);         
+              });
+            } else {
+              $('#faqAccordion').append('<div class="text-center">등록된 질문이 없습니다.</div>');
+            }
+          },
+          error: (error) => {
+            console.error('Ajax 요청 에러:', error);
+          }
+        });
+      };
+ 
+
+  const fnFaqRemove = () => {
+      $(document).on('click', '.remove_Faq', (ev) => {
+        if(!confirm('자주묻는질문을 삭제할까요?')){
+          return;
+        }
+        const faqNo = $('#faqNo').val();
+        $.ajax({
+          // 요청
+          type: 'post',
+          url: '/notice/faqRemove.do',
+          data: {faqNo: faqNo},
+          // 응답
+          dataType: 'json',
+          success: (resData) => { 
+            if(resData.removeResult === 1){
+              alert('해당 질문이 삭제되었습니다.');
+              fnFaqList();
+            } else {
+              alert('해당 질문이 삭제되지 않았습니다.');
+            }
+          }
+        })
+      })
+    }
+         
+  var frmBtn = $('#frm_faq_btn');
+             
+  const fnModifyFaqClick = () => {
+    $('#edit_faq').click(() => {
+      frmBtn.attr('action', '/notice/faqEdit.form');
+      frmBtn.submit();
+    })
+  }
+    
+
+
+
+
+
+
+
+
+
+
+      fnFaqList();
+      fnFaqRemove();
+      fnModifyFaqClick();
+          
+  </script>
+            
   
   
   <div th:replace="~{/layout/footer::footer}"></div>
