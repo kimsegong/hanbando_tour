@@ -22,6 +22,6 @@ public interface FaqMapper {
   public List<FaqCaDto> getFaqDetail(Map<String, Object> map);
   public int insertFaq(FaqDto faq);
   public int deleteFaq(int FaqNo);
-  public int updateFaq(FaqDto notice);
+  public int updateFaq(FaqDto faq);
 
 }

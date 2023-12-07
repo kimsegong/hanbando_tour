@@ -1,5 +1,6 @@
 package com.tour.hanbando.controller;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -88,21 +89,20 @@ public class FaqController {
     return faqService.removeFaq(faqNo);
  }
  
-  @PostMapping("/modifyFaq.do")
-  public String modifyFaq(HttpServletRequest request, RedirectAttributes redirectAttributes) {
-    int modifyResult = faqService.modifyFaq(request);
-    redirectAttributes.addFlashAttribute("modifyResult", modifyResult);
-    return "redirect:/notice/faqList";
+  @ResponseBody
+  @PostMapping(value="/modifyFaq.do", produces="application/json") 
+  public Map<String, Object> modifyFaq(HttpServletRequest request, RedirectAttributes redirectAttributes) {
+      Map<String, Object> response = new HashMap<>();
+      
+      // Modify FAQ and get the result
+      int modifyResult = faqService.modifyFaq(request);
+      
+      // Add the result to the response
+      response.put("modifyResult", modifyResult);
+      
+      return response;
   }
 
-  @PostMapping("/faqEdit.form")
-  public String edit(@RequestParam(value="faqNo", required=false, defaultValue="0") int faqNo, 
-      HttpServletRequest request, Model model) {
-    FaqDto faq = faqService.getFaq(faqNo);
-    faqService.getFaqDetail(request, model);
-    model.addAttribute("faq", faq);
-    return "notice/faqEdit";
-  }
   
   
   
