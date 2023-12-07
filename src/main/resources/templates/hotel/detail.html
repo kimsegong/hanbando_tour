@@ -125,15 +125,14 @@
 									<div class="col-3 temp">
 										<div id="carouselExample" class="carousel slide">
 										  <div class="carousel-inner">
-										    <div class="carousel-item active">
-										      <img src="..." class="d-block w-100" >
-										    </div>
-										    <div class="carousel-item">
-										      <img src="..." class="d-block w-100" >
-										    </div>
-										    <div class="carousel-item">
-										      <img src="..." class="d-block w-100" >
-										    </div>
+                        <th:block th:each="roomImage : ${roomImage}">
+                          <div th:text="${roomImage.roomNo}"></div>
+                          <div th:text="${roomType.roomFeatureDto.roomNo}"></div>
+  										    <div th:if="${roomImage.roomNo == roomType.roomFeatureDto.roomNo}" class="carousel-item">
+  										      <img th:src="@{|${roomImage.imagePath}/${roomImage.filesystemName}|}" class="d-block w-100" >
+  										    </div>
+                        </th:block>
+										    
 										  </div>
 										  <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
 										    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -147,8 +146,10 @@
 										<div th:text="|침대 : ${roomType.bed}|"></div>
 										<div th:text="|전망 : ${roomType.rView}|"></div>
 										<div th:text="|허용인원 : ${roomType.people} 명|"></div>
-										<div>조식</div>
-										<div>흡연</div>
+										<div th:if="${roomType.bleakfast == 0}">조식 : <i class="fa-solid fa-x" style="color: #96b2c5;"></i></div>
+										<div th:if="${roomType.bleakfast == 1}">조식 : <i class="fa-sharp fa-solid fa-o" style="color: #96b6c5;"></i></div>
+										<div th:if="${roomType.smoke == 0}">흡연 : <i class="fa-solid fa-x" style="color: #96b2c5;"></i></div>
+										<div th:if="${roomType.smoke == 1}">흡연 : <i class="fa-sharp fa-solid fa-o" style="color: #96b6c5;"></i></div>
 										<div th:text="|${roomType.shower}|"></div>
 										<div th:text="|방크기 : ${roomType.rSize}|"></div>
 									</div>
@@ -156,18 +157,18 @@
 										<div th:text="${roomType.roomName}"></div>
 										<div th:text="${roomType.roomDetail}"></div>
 										<div>
-											<i class="fa-solid fa-bottle-water fa-2xl" style="color: #9399a5;"></i>
-											<i class="fa-solid fa-bottle-water fa-2xl" style="color: #2f7fa7;"></i>
-											<i class="fa-solid fa-mug-saucer fa-2xl" style="color: #9399a5;"></i>
-											<i class="fa-solid fa-mug-saucer fa-2xl" style="color: #2f7fa7;"></i>
-											<i class="fa-solid fa-wind fa-2xl" style="color: #9399a5;"></i>
-											<i class="fa-solid fa-wind fa-2xl" style="color: #2f7fa7;"></i>
-											<i class="fa-solid fa-rug fa-2xl" style="color: #9399a5;"></i>
-											<i class="fa-solid fa-rug fa-2xl" style="color: #2f7fa7;"></i>
-											<i class="fa-solid fa-martini-glass fa-2xl" style="color: #9399a5;"></i>
-											<i class="fa-solid fa-martini-glass fa-2xl" style="color: #2f7fa7;"></i>
-											<i class="fa-solid fa-shirt fa-2xl" style="color: #9399a5;"></i>
-											<i class="fa-solid fa-shirt fa-2xl" style="color: #2f7fa7;"></i>
+											<i th:if="${roomType.roomFeatureDto.water == 0}" class="fa-solid fa-bottle-water fa-2xl" style="color: #9399a5;"></i>
+											<i th:if="${roomType.roomFeatureDto.water == 1}" class="fa-solid fa-bottle-water fa-2xl" style="color: #2f7fa7;"></i>
+											<i th:if="${roomType.roomFeatureDto.coffee == 0}" class="fa-solid fa-mug-saucer fa-2xl" style="color: #9399a5;"></i>
+											<i th:if="${roomType.roomFeatureDto.coffee == 1}" class="fa-solid fa-mug-saucer fa-2xl" style="color: #2f7fa7;"></i>
+											<i th:if="${roomType.roomFeatureDto.drier == 0}" class="fa-solid fa-wind fa-2xl" style="color: #9399a5;"></i>
+											<i th:if="${roomType.roomFeatureDto.drier == 1}" class="fa-solid fa-wind fa-2xl" style="color: #2f7fa7;"></i>
+											<i th:if="${roomType.roomFeatureDto.towel == 0}" class="fa-solid fa-rug fa-2xl" style="color: #9399a5;"></i>
+											<i th:if="${roomType.roomFeatureDto.towel == 1}" class="fa-solid fa-rug fa-2xl" style="color: #2f7fa7;"></i>
+											<i th:if="${roomType.roomFeatureDto.minibar == 0}" class="fa-solid fa-martini-glass fa-2xl" style="color: #9399a5;"></i>
+											<i th:if="${roomType.roomFeatureDto.minibar == 1}" class="fa-solid fa-martini-glass fa-2xl" style="color: #2f7fa7;"></i>
+											<i th:if="${roomType.roomFeatureDto.iron == 0}" class="fa-solid fa-shirt fa-2xl" style="color: #9399a5;"></i>
+											<i th:if="${roomType.roomFeatureDto.iron == 1}" class="fa-solid fa-shirt fa-2xl" style="color: #2f7fa7;"></i>
 										</div>
 										
 									</div>
