@@ -247,14 +247,12 @@ public class ReserveServiceImpl implements ReserveService {
   
   @Override
   public HotelDto loadHotelInfoWithWriteform(int hotelNo) {
-    HotelDto hotel = hotelMapper.getHotel(hotelNo);
-    return hotel;
+    return hotelMapper.getHotel(hotelNo);;
   }
   
   @Override
   public RoomtypeDto loadRoomInfoWithWriteform(int roomNo) {
-    RoomtypeDto room = hotelMapper.roomtype(roomNo);
-    return room;
+    return hotelMapper.roomtype(roomNo);
   }
   
   @Transactional(readOnly=true)
