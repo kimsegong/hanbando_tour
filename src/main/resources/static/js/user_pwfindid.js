@@ -55,7 +55,7 @@ const fnCheckSms = () => {
 
           if (smsPassed = $('#authNumber').val() == resData.cerNum) {
             alert('핸드폰이 인증되었습니다.');
-            window.location.href = "/user/changePw.form";
+            $('#findForm').submit();
           } else {
             alert('핸드폰 인증이 실패했습니다.');
           }

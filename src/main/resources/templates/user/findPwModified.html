@@ -13,7 +13,7 @@
             <div class="row">
                 <div class="col-1"></div>
                 <div class="col-10" style="border:1px gray dotted">
-                    <form id="findForm" th:action="@{/user/findpwCheck.do}" method="post">
+                    <form id="findForm" th:action="@{/user/findpwCheck.do}" method="get">
                        <div class="w3-content w3-container w3-margin-top">
     <div class="w3-container w3-card-4">
       
@@ -51,7 +51,7 @@
     </div>
   </div>
                     </form>
-                    <script th:src="@{/js/user_pwfindid.js}"></script>
+               <script th:src="@{/js/user_pwfindid.js}"></script>
                 </div>
             </div>
         </div>

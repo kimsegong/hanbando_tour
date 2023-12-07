@@ -23,11 +23,12 @@ public interface UserService {
   public Map<String, Object> certifiedPhoneNumber(String phoneNumber) throws Exception;
 
 //인증번호(비밀번호 찾기)
-  public void findpw(HttpServletRequest request, HttpServletResponse response);
   public int findpw_id(String email, String mobile);
-
   public UserDto getUser(String email);
+
   
+//비밀번호 찾기(인증후)
+  public void doublemodifiyPw(HttpServletRequest request, HttpServletResponse response);
   //네이버
   public void naverJoin(HttpServletRequest request, HttpServletResponse response);
   public void naverLogin(HttpServletRequest request, HttpServletResponse response, UserDto naverProfile) throws Exception;
