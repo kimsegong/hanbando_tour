@@ -1,5 +1,6 @@
 package com.tour.hanbando.controller;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -14,9 +15,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.tour.hanbando.dto.HotelDto;
 import com.tour.hanbando.dto.PackageDto;
 import com.tour.hanbando.dto.PaymentDto;
 import com.tour.hanbando.dto.ReserveDto;
+import com.tour.hanbando.service.HotelService;
 import com.tour.hanbando.service.PackageService;
 import com.tour.hanbando.service.ReserveService;
 
@@ -110,7 +113,11 @@ public class ReserveController {
   }
   
   @GetMapping("/writeHotel.form")
-  public String reserveHotel() {
+  public String reserveHotel(HttpServletRequest request, Model model) {
+    model.addAttribute("hotel", reserveService.loadHotelInfoWithWriteform(Integer.parseInt(request.getParameter("hotelNo"))));
+    model.addAttribute("room", reserveService.loadRoomInfoWithWriteform(Integer.parseInt(request.getParameter("roomNo"))));
+    model.addAttribute("roomNo", request.getParameter("roomNo")); 
+    // 체크인, 체크아웃, 총금액 받아와야 함
     return "reserve/writeHotel";
   }
   
@@ -120,6 +127,16 @@ public class ReserveController {
     model.addAttribute("reserveHo", reserveHo);
     return "reserve/detailHotel";
   }
+  
+  @PostMapping("/addReserveHotel.do")
+  public String addReserveHotel(HttpServletRequest request, RedirectAttributes redirectAttributes) {
+    Map<String, Object> map = reserveService.addReserveHotel(request);
+    int addReserveHotelResult = (Integer) map.get("addResult");
+    redirectAttributes.addFlashAttribute("addReserveHotelResult", addReserveHotelResult);
+    return "redirect:/reserve/detailHotel.do?reserveNo=" + map.get("reserveNo");
+  }
+  
+  
   
   
 }
