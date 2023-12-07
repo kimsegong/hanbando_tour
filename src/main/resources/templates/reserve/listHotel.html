@@ -29,7 +29,6 @@
                   <th>순번</th>
                   <th>예약날짜/예약번호</th>
                   <th>호텔명</th>
-                  <th>인원</th>
                   <th>호텔 체크인/체크아웃</th>
                   <th>금액</th>
                   <th>예약상태</th>
@@ -45,7 +44,6 @@
                     <td>
                       <a th:href="@{/hotel/detail.do(hotelNo=${resHo.hotelDto.hotelNo})}" th:text="${resHo.hotelDto.hotelName}"></a>
                     </td>
-                    <td th:text="${resHo.reservePerson}"></td>
                     <td th:text="${resHo.reserveStart}"></td>
                     <td th:text="|${resHo.reservePrice}원|"></td>
                     <th:block th:if="${resHo.reserveStatus == 0}">
