@@ -6,9 +6,8 @@
 <mapper namespace="com.tour.hanbando.dao.FaqMapper">
 
   <select id="getFaqList" parameterType="Map" resultType="FaqDto">
-    SELECT FAQ_NO, CA_NO, TITLE, CONTENTS, CREATED_AT, MODIFIED_AT
+    SELECT FAQ_NO, CA_NO, TITLE, CONTENTS, CREATED_AT, MODIFIED_AT 
       FROM FAQ_T
-
    </select>
    
      <select id="getFaqKoreaList" parameterType="Map" resultType="FaqDto">
@@ -29,10 +28,69 @@
 
    </select>
    
+     <select id="getFaq" parameterType="int" resultType="FaqDto">
+    SELECT FAQ_NO, CA_NO, TITLE, CONTENTS
+      FROM FAQ_T
+     WHERE FAQ_NO = #{faqNo}
+   </select>
+   
     <select id="getFaqCount" resultType="int">
       SELECT COUNT(*)
         FROM FAQ_T
-        WHERE FAQ_NO = #{faqNo}
     </select>
+    
+    <select id="getFaqCaList" parameterType="Map" resultType="FaqDto">
+    SELECT CA_NO, CA_TITLE
+      FROM FAQ_CA_T
+   </select>
+   
+      <insert id="insertFaq" parameterType="FaqDto"> 
+    INSERT INTO FAQ_T( 
+           FAQ_NO 
+         , CA_NO 
+         , TITLE
+         , CONTENTS
+         , CREATED_AT
+         , MODIFIED_AT 
+         )
+         
+         VALUES( 
+         FAQ_SEQ.NEXTVAL 
+       , #{caNo}  
+       , #{title}
+       , #{contents}
+       , TO_CHAR(SYSDATE, 'YYYY/MM/DD') 
+       , TO_CHAR(SYSDATE, 'YYYY/MM/DD')  
+       ) 
+   </insert>
+  
+   <insert id="insertFaqDetail" parameterType="faqCaDto">
+        INSERT INTO FAQ_CA_T (
+            CA_NO
+          , CA_TITLE
+        ) VALUES (
+            FAQ_CA_SEQ.NEXTVAL
+          , #{caTitle}
+        )
+    </insert>
+    
+    <select id="getFaqDetail" resultType="faqCaDto">
+      SELECT CA_NO, CA_TITLE
+        FROM FAQ_CA_T     
+    </select>
+    
+    <delete id="deleteFaq" parameterType="int"> 
+      DELETE 
+        FROM FAQ_T
+       WHERE FAQ_NO = #{faqNo}
+    </delete>
+    
+    <update id="updateFaq" parameterType="FaqDto"> 
+      UPDATE FAQ_T 
+         SET TITLE = #{title} 
+       , CONTENTS = #{contents} 
+       , CA_NO = #{caNo}  
+      WHERE FAQ_NO = #{faqNo} 
+  </update>
   
 </mapper>

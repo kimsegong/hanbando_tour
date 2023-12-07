@@ -3,18 +3,17 @@ package com.tour.hanbando.service;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
-
 import com.tour.hanbando.dao.FaqMapper;
-import com.tour.hanbando.dao.NoticeMapper;
+import com.tour.hanbando.dto.FaqCaDto;
 import com.tour.hanbando.dto.FaqDto;
 import com.tour.hanbando.dto.NoticeDto;
-import com.tour.hanbando.dto.ReviewDto;
 import com.tour.hanbando.util.MyPageUtils;
 
 import lombok.RequiredArgsConstructor;
@@ -29,14 +28,25 @@ public class FaqServiceImpl implements FaqService {
   
 @Transactional(readOnly=true)  
 @Override
-public void loadFaqList(HttpServletRequest request, Model model) {
-  // TODO Auto-generated method stub
+public Map<String, Object> loadFaqList(HttpServletRequest request) {
   
-  Map<String, Object> map = new HashMap<>();
+  Optional<String> opt = Optional.ofNullable(request.getParameter("page"));
+  int page = Integer.parseInt(opt.orElse("1"));
+  int total = faqMapper.getFaqCount();
+  int display = 10;
+  
+  myPageUtils.setPaging(page, total, display);
+  
+  Map<String, Object> map = Map.of("begin", myPageUtils.getBegin()
+                                 , "end", myPageUtils.getEnd());
   
   List<FaqDto> faqList = faqMapper.getFaqList(map);
   
-  model.addAttribute("faqList", faqList);
+  String paging = myPageUtils.getAjaxPaging();
+  Map<String, Object> result = new HashMap<String, Object>();
+  result.put("faqList", faqList);
+  result.put("paging", paging);
+  return result;
   
 }
 @Override
@@ -87,7 +97,7 @@ public Map<String, Object> loadOfList(HttpServletRequest request) {
           e.printStackTrace();  
       }
   }
-  int total = faqMapper.getFaqCount(faqNo);
+  int total = faqMapper.getFaqCount();
   int display = 10;
   
   myPageUtils.setPaging(page, total, display);
@@ -102,6 +112,78 @@ public Map<String, Object> loadOfList(HttpServletRequest request) {
   result.put("faqList", faqList);
   result.put("paging", paging);
   return result;
+}
+
+@Override
+public int addFaq(HttpServletRequest request) {
+  String title = request.getParameter("title");
+  String contents = request.getParameter("contents");
+  
+  
+  FaqDto faq = FaqDto.builder()
+                   .caNo(Integer.parseInt(request.getParameter("caNo")))
+                   .title(title)
+                   .contents(contents)
+                   .build();
+  
+  int addResult = faqMapper.insertFaq(faq);
+  
+  return addResult;
+}
+
+@Override
+public int addFaqDetail(HttpServletRequest request) {
+     String caTitle = request.getParameter("caTitle");
+     
+     FaqCaDto faqCaDto = FaqCaDto.builder()
+                           .caTitle(caTitle)
+                           .build();
+     
+     int faqCaResult = faqMapper.insertFaqDetail(faqCaDto);
+     
+     return faqCaResult;
+ }
+
+@Transactional(readOnly=true)
+@Override
+public void getFaqDetail(HttpServletRequest request, Model model) {
+  
+    String caNo = request.getParameter("caNo");
+    
+    Map<String, Object> map = new HashMap<>();
+    
+    map.put("caNo", caNo);
+
+    List<FaqCaDto> faqCaList = faqMapper.getFaqDetail(map);
+    
+    model.addAttribute("faqCaList", faqCaList);
+}
+
+@Override
+public Map<String, Object> removeFaq(int FaqNo) {
+  int removeResult = faqMapper.deleteFaq(FaqNo);
+  return Map.of("removeResult", removeResult);
+}
+
+@Override
+public int modifyFaq(HttpServletRequest request) {
+  String title = request.getParameter("title");
+  String contents = request.getParameter("contents");
+//수정할 제목/내용/블로그번호를 가진 BlogDto
+  FaqDto faq = FaqDto.builder()
+                  .title(title)
+                  .caNo(Integer.parseInt(request.getParameter("caNo")))
+                  .contents(contents)
+                  .build();
+  
+  // BLOG_T 수정
+  int modifyResult = faqMapper.updateFaq(faq);
+  
+  return modifyResult;
+}
+
+public FaqDto getFaq(int faqNo) {
+  return faqMapper.getFaq(faqNo);
 }
 }
 
