@@ -2,18 +2,11 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 
 <head th:replace="~{/layout/header::head('패키지상품 관리')}"></head> 
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 <style>
   
-  .second_main_wrap {
-    display: flex;
-  }
-
-  .split1 {
-    flex: 0 0 20%;
-  }
-
   .split2 {
-    flex: 0 0 80%;
+    margin-left: 20%;
   }
   
   .listWrap1 {
@@ -205,7 +198,7 @@
         		         
           <div class="second_main_wrap">
               
-            <div class="split1">
+            <div class="split1 w3-sidebar w3-bar-block">
                 
               <!--/* 각 관리 페이지로 이동 가능한 좌측 목록 */-->
               <div class="listWrap1">
