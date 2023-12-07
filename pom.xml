@@ -18,6 +18,13 @@
 	</properties>
 	<dependencies>
     
+    <!-- 타임리프 추가 라이브러리 -->
+    <dependency>
+      <groupId>org.thymeleaf.extras</groupId>
+      <artifactId>thymeleaf-extras-java8time</artifactId>
+    </dependency>
+    
+    
     <!-- CoolSMS(Maven) -->
     <dependency>
         <groupId>net.nurigo</groupId>

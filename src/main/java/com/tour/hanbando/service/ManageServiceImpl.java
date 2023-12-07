@@ -26,6 +26,7 @@ import com.tour.hanbando.dto.ReserveDto;
 import com.tour.hanbando.dto.ReviewDto;
 import com.tour.hanbando.dto.RoompriceDto;
 import com.tour.hanbando.dto.RoomtypeDto;
+import com.tour.hanbando.dto.TouristDto;
 import com.tour.hanbando.dto.UserDto;
 import com.tour.hanbando.util.MyPageUtils;
 import com.tour.hanbando.util.MySecurityUtils;
@@ -720,6 +721,44 @@ public class ManageServiceImpl implements ManageService {
     model.addAttribute("beginNo", total - (page - 1) * display);
     model.addAttribute("total", total);
     model.addAttribute("people", people);
+  }
+  
+  /**
+   * 패키지 예약 상세
+   * 
+   * @author 심희수
+   * @param reserveNo
+   * @param model
+   */
+  @Transactional(readOnly=true)
+  @Override
+  public void getReservePackageDetail(int reserveNo, Model model) {
+    
+    ReserveDto reserve = manageMapper.getReservePackage(reserveNo);
+    List<TouristDto> tourist = manageMapper.getTourist(reserveNo);
+    int adult = manageMapper.getAdultCount(reserveNo);
+    int child = manageMapper.getChildCount(reserveNo);
+    
+    model.addAttribute("reserve", reserve);
+    model.addAttribute("tourist", tourist);
+    model.addAttribute("adult", adult);
+    model.addAttribute("child", child);
+  }
+  
+  /**
+   * 호텔 예약 상세
+   * 
+   * @author 심희수
+   * @param reserveNo
+   * @param model
+   */
+  @Transactional(readOnly=true)
+  @Override
+  public void getReserveHotelDetail(int reserveNo, Model model) {
+
+    ReserveDto reserve = manageMapper.getReserveHotel(reserveNo);
+    
+    model.addAttribute("reserve", reserve);
   }
   
   /**

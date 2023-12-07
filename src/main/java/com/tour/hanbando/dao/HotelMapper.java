@@ -42,7 +42,7 @@ public interface HotelMapper {
   public List<RoomtypeDto> getRoomtype(int hotelNo);
   public List<HotelImageDto> getRoomImage(List<RoomtypeDto> roomtypeDto);
   public List<RoomFeatureDto> getRoomFeature(List<RoomtypeDto> roomtypeDto);
-  public List<RoompriceDto> getPrice(List<RoomtypeDto> roomtypeDto);
+  public List<RoompriceDto> getPrice(int hotelNo);
   
   public RoomtypeDto roomtype(int roomNo);
 }

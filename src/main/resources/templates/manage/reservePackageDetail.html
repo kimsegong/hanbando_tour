@@ -1,7 +1,63 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 
-<head th:replace="~{/layout/header::head('예약 상세')}"></head> 
+<head th:replace="~{/layout/header::head('패키지 예약상세')}"></head> 
+
+<style>
+  
+  .main_title {
+    border-bottom: 1px solid #ccc;
+    text-align: left;
+  }
+  
+  .main_title span {
+    font-size: 3em; 
+    font-weight: bold;
+  }
+  
+  .res_info_title {
+    text-align: left;
+    margin-bottom: 2%;
+  }
+  
+  .res_info_title span {
+    font-size: 2em; 
+    font-weight: bold;
+  }
+  .res_info {
+    border-bottom: 1px solid #ccc;
+  }
+  .res_info {
+    font-size: 1.3em; 
+  }
+  .res_info_table table {
+    margin-bottom: 4%;
+    font-size: 1.3em; 
+  }
+  
+  .total_position {
+    display: flex;
+    font-size: 1.1em; 
+  }
+  
+  .main_title span,
+  .res_info_title span {
+    color: #404040; /* 기본 글씨 색상 */
+  }
+  
+  #show_list
+   {
+    height: 40px; 
+    width: 35%;
+    font-size: 1.2em; 
+    color: #fff;         /* 텍스트 색상 */
+    background-color: #96B6C5; /* 기본 배경 색상 */
+    border-color: #fff;  /* 테두리 색상 */
+    border-radius: 10px;      /* 테두리를 둥글게 만듭니다. */
+    transition: all 0.3s;     /* 모든 속성에 대해 0.3초 동안 트랜지션 효과 적용 */
+  }
+  
+</style>
 
 <body>
 	<div th:replace="~{/layout/header::header}"></div>
@@ -13,127 +69,178 @@
 		  <div class="row">
 		    <div class="col-1">	      
 		    </div>
-		    <div class="col-10" style="border:1px gray dotted">
-		      	<!--/*여기에 작성/ 다 만들고 style 지워주세요  */-->
+		    <div class="col-10">
 		      	
 		      	
-		      	
-		       <div>
-              <h2><strong>예약내역상세</strong></h2>
+		      <div>
+            
+		       <div class="main_title">
+              <span>패키지 예약 상세 내역</span>
             </div>
             
-            <div>
-              <h4><strong>예약자정보</strong></h4>
-            </div>
-            <div class="d-grid gap-2 col-8  mx-auto">
-              <table class="table">
-                <colgroup>
-                  <col style="width:20%;">
-                  <col >
-                </colgroup>
-                <tr>
-                  <td>이름</td>
-                  <td ></td>
-                </tr>
-                <tr>
-                  <td>휴대폰번호</td>
-                  <td ></td>
-                </tr>
-                <tr>
-                  <td>성별</td>
-                  <td  >여</td>
-                </tr>
-                <tr>
-                  <td>이메일</td>
-                  <td ></td>
-                </tr>
-                <tr>
-                  <td>요청사항</td>
-                  <td ></td>
-                </tr>
-              </table>
+            <!--/* 예약한 사람의 정보를 나타낸다 */-->
+            <div class="res_info_title">
+              <span>예약자 정보</span>
             </div>
             
-            <div>
-              <h4><strong>예약상품정보</strong></h4>
-            </div>
-            <div class="d-grid gap-2 col-8  mx-auto">
-              <table class="table">
-                <colgroup>
-                  <col style="width:20%;">
-                  <col>
-                </colgroup>
-                <tr>
-                  <td>상품명</td>
-                  <td ></td>
-                </tr>
-                <tr>
-                  <td>출발일</td>
-                  <td ></td>
-                </tr>
-                <tr>
-                  <td>총인원</td>
-                  <td>
-                    <span th:text="|총 명|"></span>
-                    <span>
-                      <button type="button" id="btn_peopleInfo" class="btn btn-outline-success btn-sm" style="margin-left: 10px;">상세보기</button>
-                    </span>
-                    <div class="blind">
-                      <table class="table">
-                        <thead>
-                          <tr>
-                            <th>성인/소아</th>
-                            <th>이름</th>
-                            <th>생년월일</th>
-                            <th>성별</th>
-                            <th>연락처</th>
-                          </tr>
-                        </thead>
-                        <tbody id="tourPeopleInfo">
-                        <!-- 여행자 정보가 추가되는 부분 -->
-                        </tbody>
-                      </table>
-                    </div>
-                  </td>
-                </tr>
-                <tr>
-                  <td>출발지</td>
-                  <td >잠실</td>
-                </tr>
-                <tr>
-                  <td>예약상태</td>
-                  <td >예약완료</td>
-                </tr>
-                <tr>
-                  <td>주의사항</td>
-                  <td ></td>
-                </tr>
-                <tr>
-                  <td>결제금액</td>
-                  <td ></td>
-                </tr>
-              </table>
-            </div>
-            
-            <div>
-              <form id="frm_btn" method="post">
-                <input type="hidden" name="reserveNo" id="reserveNo" >
-                <input type="hidden" name="userNo" >
-                <input type="hidden" name="userName" >
-                <input type="hidden" name="userMobile" >
-                <input type="hidden" name="requestedTerm">
-                <input type="hidden" name="departureLoc" >
-                <div >
-                  <div class="d-grid gap-2 col-5 mx-auto" style="margin: 10px auto 25px;">
-                    <button class="btn btn-primary" type="button" th:onclick="requestPay()">결제하기</button>
-                  </div>
+            <div class="res_info content">
+              
+              <div class="mb-3 row">
+                <div class="col-2">
+                  <label for="name" class="col-form-label">이름</label>
                 </div>
-                <button class="btn btn-success" type="button" >다른 상품 예약하러가기</button>
-                <button type="button"  class="btn btn-success">나의 예약목록</button>
-                <button  class="btn btn-outline-secondary" type="button" id="btn_res_modify">예약 수정하러가기</button>
-                <button  class="btn btn-outline-danger" type="button" id="btn_res_cancel">예약 취소하기</button>
-              </form>
+                <div class="col-5">
+                  <input type="text" id="name" th:value="${reserve.userDto.name}" readonly class="form-control-plaintext m_email">
+                </div>
+              </div>
+              <div class="mb-3 row">
+                <div class="col-2">
+                  <label for="mobile" class="col-form-label">휴대폰번호</label>
+                </div>
+                <div class="col-5">
+                  <input type="text" id="mobile" th:value="${reserve.userDto.mobile}" readonly class="form-control-plaintext m_email">
+                </div>
+              </div>
+              <div class="mb-3 row">
+                <div class="col-2">
+                  <label for="gender" class="col-form-label">성별</label>
+                </div>
+                <div class="col-5">
+                  <input type="text" id="gender" th:if="${reserve.userDto.gender== 'F'}" value="여자" readonly class="form-control-plaintext m_email">
+                  <input type="text" id="gender" th:if="${reserve.userDto.gender== 'M'}" value="남자" readonly class="form-control-plaintext m_email">
+                  <input type="text" id="gender" th:if="${reserve.userDto.gender== 'NO'}" value="선택안함" readonly class="form-control-plaintext m_email">
+                </div>
+              </div>
+              <div class="mb-3 row">
+                <div class="col-2">
+                  <label for="email" class="col-form-label">이메일</label>
+                </div>
+                <div class="col-5">
+                  <input type="text" id="email" th:value="${reserve.userDto.email}" readonly class="form-control-plaintext m_email">
+                </div>
+              </div>
+              <div class="mb-3 row">
+                <div class="col-2">
+                  <label for="requestedTerm" class="col-form-label">요청사항</label>
+                </div>
+                <div class="col-5">
+                  <input type="text" id="requestedTerm" th:value="${reserve.requestedTerm}" readonly class="form-control-plaintext m_email">
+                </div>
+              </div>
+              
+              
             </div>
+            
+            <div>
+              
+            </div>
+            
+            <!--/* 예약한 패키지의 정보를 나타낸다 */-->
+            <div class="res_info_title content">
+              <span>예약 패키지 정보</span>
+            </div>
+            
+            <div class="res_info">
+              
+              <div class="mb-3 row">
+                <div class="col-2">
+                  <label for="packageTitle" class="col-form-label">상품명</label>
+                </div>
+                <div class="col-5">
+                  <input type="text" id="packageTitle" th:value="${reserve.packageDto.packageTitle}" readonly class="form-control-plaintext m_email">
+                </div>
+              </div>
+              <div class="mb-3 row">
+                <div class="col-2">
+                  <label for="reserve_term" class="col-form-label">여행기간</label>
+                </div>
+                <div class="col-5">
+                  <input type="text" id="reserve_term" th:value="|${reserve.reserveStart} ~ ${reserve.reserveFinish}|" readonly class="form-control-plaintext m_email">
+                </div>
+              </div>
+              <div class="mb-3 row">
+                <div class="col-2">
+                  <label for="departureLoc" class="col-form-label">출발지</label>
+                </div>
+                <div class="col-5">
+                  <input type="text" id="departureLoc" th:if="${reserve.departureLoc == 'Jamsil'}" value="잠실" readonly class="form-control-plaintext m_email">
+                  <input type="text" id="departureLoc" th:if="${reserve.departureLoc == 'seoulStation'}" value="서울역" readonly class="form-control-plaintext m_email">
+                  <input type="text" id="departureLoc" th:if="${reserve.departureLoc == 'DDP'}" value="동대문" readonly class="form-control-plaintext m_email">
+                  <input type="text" id="departureLoc" th:if="${reserve.departureLoc == 'byOwn'}" value="자차이용" readonly class="form-control-plaintext m_email">
+                </div>
+              </div>
+              <div class="mb-3 row">
+                <div class="col-2">
+                  <label for="reserveStatus" class="col-form-label">예약상태</label>
+                </div>
+                <div class="col-5">
+                  <input type="text" id="reserveStatus" th:if="${reserve.reserveStatus == 0}" value="결제대기" readonly class="form-control-plaintext m_email">
+                  <input type="text" id="reserveStatus" th:if="${reserve.reserveStatus == 1}" value="예약완료" readonly class="form-control-plaintext m_email">
+                  <input type="text" id="reserveStatus" th:if="${reserve.reserveStatus == 2}" value="취소" readonly class="form-control-plaintext m_email">
+                </div>
+              </div>
+              <div class="mb-3 row">
+                <div class="col-2">
+                  <label for="reservePrice" class="col-form-label">결제금액</label>
+                </div>
+                <div class="col-5">
+                  <input type="text" id="reservePrice" th:value="|${reserve.reservePrice} 원|" readonly class="form-control-plaintext m_email">
+                </div>
+              </div>
+              
+              
+            </div>
+            
+            <!--/* 실제 여행객의 정보를 나타낸다 */-->
+            <div class="res_info_title">
+              <span>여행자 정보</span> 
+            </div>
+            
+            <div class="total_position">
+              <div th:text="|총 ${reserve.reservePerson}명|"></div>
+              <div th:text="| (성인 ${adult}명 / 소아 ${child}명)|"></div>
+            </div>
+            
+            <div class="res_info_table">
+              <table class="table">
+                <thead>
+                  <tr class="table-secondary">
+                    <th>구분</th>
+                    <th>이름</th>
+                    <th>생년월일</th>
+                    <th>성별</th>
+                    <th>연락처</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <th:blcok th:each="t:${tourist}">
+                    <tr>
+                      <td >
+                        <th:block th:if="${t.ageCase == 0}">성인</th:block>
+                        <th:block th:if="${t.ageCase == 1}">소아</th:block>
+                      </td>
+                      <td th:text="${t.name}"></td>
+                      <td th:text="${t.birthDate}"></td>
+                      <td>
+                        <th:block th:if="${t.gender == 'F'}">여자</th:block>
+                        <th:block th:if="${t.gender == 'M'}">남자</th:block>
+                      </td>
+                      <td th:text="${t.mobile}"></td>
+                    </tr>
+                  </th:blcok>
+                </tbody>
+              </table>
+            </div>
+            
+            <!--/* 예약 관리 목록 페이지로 돌아가는 버튼 */-->
+            <div>
+              <a th:href="@{/manage/reserveList.do}"><button id="show_list">목록보기</button></a>
+            </div>
+            
+          </div>
+
+            
+
             
 		    </div>
 		    <div class="col-1">	      
