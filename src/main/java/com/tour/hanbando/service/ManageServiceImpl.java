@@ -646,6 +646,7 @@ public class ManageServiceImpl implements ManageService {
     int page = Integer.parseInt(opt.orElse("1"));
     int total = manageMapper.getReserveCount();
     int display = 20;
+    int people = manageMapper.getReservePeopleCount();
     
     myPageUtils.setPaging(page, total, display);
     
@@ -658,6 +659,7 @@ public class ManageServiceImpl implements ManageService {
     model.addAttribute("paging", myPageUtils.getMvcPaging(request.getContextPath() + "/manage/reserveList.do"));
     model.addAttribute("beginNo", total - (page - 1) * display);
     model.addAttribute("total", total);
+    model.addAttribute("people", people);
     
   }
   
@@ -692,6 +694,7 @@ public class ManageServiceImpl implements ManageService {
     map.put("queryProName", queryProName);
     
     int total = manageMapper.getSearchReserveCount(map);
+    int people = manageMapper.getSearchResevePeopleCount(map);
     
     Optional<String> opt = Optional.ofNullable(request.getParameter("page"));
     int page = Integer.parseInt(opt.orElse("1"));
@@ -716,6 +719,7 @@ public class ManageServiceImpl implements ManageService {
                                                         + "&queryProName=" + queryProName));
     model.addAttribute("beginNo", total - (page - 1) * display);
     model.addAttribute("total", total);
+    model.addAttribute("people", people);
   }
   
   /**
