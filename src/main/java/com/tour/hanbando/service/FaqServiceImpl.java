@@ -165,25 +165,25 @@ public Map<String, Object> removeFaq(int FaqNo) {
   return Map.of("removeResult", removeResult);
 }
 
-@Override
-public int modifyFaq(HttpServletRequest request) {
-  String title = request.getParameter("title");
-  String contents = request.getParameter("contents");
-//수정할 제목/내용/블로그번호를 가진 BlogDto
-  FaqDto faq = FaqDto.builder()
-                  .title(title)
-                  .caNo(Integer.parseInt(request.getParameter("caNo")))
-                  .contents(contents)
-                  .build();
-  
-  // BLOG_T 수정
-  int modifyResult = faqMapper.updateFaq(faq);
-  
-  return modifyResult;
+   @Override
+   public int modifyFaq(HttpServletRequest request) {
+     int faqNo = Integer.parseInt(request.getParameter("faqNo"));
+     String title = request.getParameter("title");
+     String contents = request.getParameter("contents");
+   //수정할 제목/내용/블로그번호를 가진 BlogDto
+     FaqDto faq = FaqDto.builder()
+                   .faqNo(faqNo)
+                     .title(title)
+                     .contents(contents)
+                     .build();
+     
+     // BLOG_T 수정
+     int modifyResult = faqMapper.updateFaq(faq);
+     
+     return modifyResult;
+   }
+   
+   public FaqDto getFaq(int faqNo) {
+     return faqMapper.getFaq(faqNo);
+   }
 }
-
-public FaqDto getFaq(int faqNo) {
-  return faqMapper.getFaq(faqNo);
-}
-}
-

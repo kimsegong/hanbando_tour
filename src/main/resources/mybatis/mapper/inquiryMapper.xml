@@ -7,10 +7,15 @@
      <select id="getInquiryList"  resultType="InquiryDto">
       SELECT INQUIRY_NO, USER_NO, TITLE, CONTENTS, CREATED_AT, SEPARATE
         FROM INQUIRY_T
-      
      </select>
 
-     <insert id="insertInquiry" parameterType="InquiryDto"> 
+     <select id="getInquiryAnswer" parameterType="int" resultType="InquiryAnswerDto">
+     SELECT ANSWER_NO, USER_NO, INQUIRY_NO, CONTENTS, CREATED_AT
+       FROM INQUIRY_ANSWER_T
+      WHERE INQUIRY_NO= #{inquiryNo} 
+     </select>
+     
+      <insert id="insertInquiry" parameterType="InquiryDto"> 
       INSERT INTO INQUIRY_T( 
              INQUIRY_NO 
            , USER_NO  
@@ -49,6 +54,23 @@
    , MODIFIED_AT = TO_CHAR(SYSDATE, 'YYYY/MM/DD') 
   WHERE INQUIRY_NO = #{inquiryNo} 
   </update>
+  
+       <insert id="insertInquiryAnswer" parameterType="InquiryAnswerDto"> 
+      INSERT INTO INQUIRY_ANSWER_T( 
+             ANSWER_NO
+           , USER_NO  
+           , INQUIRY_NO 
+           , CONTENTS 
+           , CREATED_AT        
+           )
+           VALUES( 
+           INQUIRY_ANSWER_SEQ.NEXTVAL 
+         , #{userNo}         
+         , #{inquiryNo} 
+         , #{contents} 
+         , TO_CHAR(SYSDATE, 'YYYY-MM-DD') 
+         ) 
+   </insert>
     
 
 </mapper>
