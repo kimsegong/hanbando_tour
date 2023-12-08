@@ -100,10 +100,11 @@
         
         
         
-        
-        
-        <!-- 작성완료 submit  -->  
+     <!-- 작성완료 submit  -->  
         <div>
+           <form id="frm_detail" method="post">
+            <input type="hidden" name="faqCaNo" th:value="${faqCa.caNo}">
+            <input type="hidden" name="title" th:value="${faqCa.Title}">
           <a th:href="@{/notice/faqList.do}">
           <button type="submit" class="btn btn-primary col-12">작성완료</button>
           </a>
@@ -112,12 +113,24 @@
       </div>
      </div>       
             
-            
-        
-            
+     
             
             
-     <script>
+            
+            
+            
+            
+            
+            
+            
+        </div>
+        <div class="col-1">       
+        </div>
+      </div>
+    </div>
+  
+  </div>
+      <script th:inline="javascript">
        
 
 const fnNoticeModify = () => {
@@ -152,20 +165,6 @@ const fnNoticeModify = () => {
             
             
      </script>      
-            
-            
-            
-            
-            
-            
-            
-        </div>
-        <div class="col-1">       
-        </div>
-      </div>
-    </div>
-  
-  </div>
 
   
   

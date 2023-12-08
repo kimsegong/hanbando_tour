@@ -29,7 +29,7 @@
          , #{userNo}         
          , #{title} 
          , #{contents} 
-         , TO_CHAR(SYSDATE, 'YYYY-MM-DD') 
+         , TO_CHAR(SYSDATE, 'YYYY/MM/DD') 
          , #{separate}
          ) 
    </insert>
@@ -68,7 +68,7 @@
          , #{userNo}         
          , #{inquiryNo} 
          , #{contents} 
-         , TO_CHAR(SYSDATE, 'YYYY-MM-DD') 
+         , TO_CHAR(SYSDATE, 'YYYY/MM/DD') 
          ) 
    </insert>
     

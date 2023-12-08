@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Mapper;
 
 import com.tour.hanbando.dto.FaqCaDto;
 import com.tour.hanbando.dto.FaqDto;
+import com.tour.hanbando.dto.InquiryAnswerDto;
 import com.tour.hanbando.dto.NoticeDto;
 import com.tour.hanbando.dto.ReviewDto;
 
@@ -23,5 +24,5 @@ public interface FaqMapper {
   public int insertFaq(FaqDto faq);
   public int deleteFaq(int FaqNo);
   public int updateFaq(FaqDto faq);
-
+  public FaqCaDto getFaqCa(int faqCaNo);
 }
