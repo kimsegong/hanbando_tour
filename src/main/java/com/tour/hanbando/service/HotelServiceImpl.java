@@ -6,6 +6,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -15,6 +16,9 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
@@ -23,9 +27,12 @@ import com.tour.hanbando.dto.FacilitiesDto;
 import com.tour.hanbando.dto.HotelDto;
 import com.tour.hanbando.dto.HotelImageDto;
 import com.tour.hanbando.dto.RegionDto;
+import com.tour.hanbando.dto.ReserveDto;
+import com.tour.hanbando.dto.ReviewDto;
 import com.tour.hanbando.dto.RoomFeatureDto;
 import com.tour.hanbando.dto.RoompriceDto;
 import com.tour.hanbando.dto.RoomtypeDto;
+import com.tour.hanbando.dto.UserDto;
 import com.tour.hanbando.util.HotelFileUtils;
 import com.tour.hanbando.util.MyPageUtils;
 
@@ -452,5 +459,82 @@ public class HotelServiceImpl implements HotelService {
     
     return sample;
   }
+
+  @Override
+  public Map<String, Object> addReview(HttpServletRequest request) {
   
+    String reviewContents = request.getParameter("reviewContents");
+    int userNo = Integer.parseInt(request.getParameter("userNo"));
+    int hotelNo = Integer.parseInt(request.getParameter("hotelNo"));
+    int star = Integer.parseInt(request.getParameter("star"));
+    
+    ReviewDto review = ReviewDto.builder()                            
+                          .reviewContents(reviewContents)
+                          .hotelNo(hotelNo)
+                          .star(star)
+                          .userDto(UserDto.builder()
+                                    .userNo(userNo)
+                                    .build())                            
+                          .build();
+
+    int addReviewResult = hotelMapper.insertReview(review);
+    
+    return Map.of("addReviewResult", addReviewResult);
+    
+  }
+  
+  @Transactional(readOnly=true)
+  @Override
+  public List<ReserveDto> getReserveUser(int hotelNo) {
+      List<ReserveDto> reserve = hotelMapper.getReserve(hotelNo);
+      return reserve ;
+  }
+  
+  
+  @Transactional(readOnly=true)
+  @Override
+  public Map<String, Object> loadReviewList(HttpServletRequest request) {
+  
+    
+    int hotelNo = Integer.parseInt(request.getParameter("hotelNo"));
+    int sort = Integer.parseInt(request.getParameter("sort"));
+    
+    String pageParameter = request.getParameter("page");
+    int page = 1;  // 기본값 설정
+    if (pageParameter != null && !pageParameter.isEmpty()) {
+        try {
+            page = Integer.parseInt(pageParameter);
+        } catch (NumberFormatException e) {             
+            e.printStackTrace();  
+        }
+    }
+    int total = hotelMapper.getReviewCount(hotelNo);
+    int display = 10;
+    
+    myPageUtils.setPaging(page, total, display);
+    
+    Map<String, Object> map = Map.of("hotelNo", hotelNo
+                                   , "sort", sort
+                                   , "begin", myPageUtils.getBegin()
+                                   , "end", myPageUtils.getEnd());
+    
+    List<ReviewDto> reviewList = hotelMapper.getReviewList(map);
+    String paging = myPageUtils.getAjaxPaging();
+    Map<String, Object> result = new HashMap<String, Object>();
+    result.put("reviewList", reviewList);
+    result.put("paging", paging);
+    return result;
+  }
+  
+  @Override
+  public double getAverageRating(int hotelNo) {
+    return hotelMapper.starAve(hotelNo);
+  }
+  
+  @Override
+  public Map<String, Object> removeReview(int reviewNo) {
+      int removeResult = hotelMapper.deleteReview(reviewNo);
+      return Map.of("removeResult", removeResult);
+    }
+
 }
