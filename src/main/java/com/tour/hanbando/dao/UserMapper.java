@@ -18,6 +18,9 @@ public interface UserMapper {
   public int insertUser(UserDto user);
   public int updateUser(UserDto user);
   public int updateUserPw(UserDto user);
+  
+  //비밀번호 찾기 인증후 변경
+  public int modifiedUserPw(UserDto user);
   public int insertLeaveUser(UserDto user);
   public int deleteUser(UserDto user);
   public int insertInactiveUser();
@@ -31,4 +34,6 @@ public interface UserMapper {
   public UserDto getFindId(Map<String, Object> map);
   //비밀번호찾기(아이디랑 핸드폰번호 일치시)
   public UserDto getFindPw(Map<String, Object> map);
+  //
+  public int recentpWChange(Map<String, Object> map);
 }
