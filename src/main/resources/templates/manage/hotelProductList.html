@@ -389,7 +389,7 @@
                             <th:block th:each="r:${roompriceList}">
                               <th:block th:if="${h.hotelNo == r.hotelNo}">
                                 <th:block th:each="rt:${roomtypeList}">
-                                  <th:block th:if="${r.roomNo == rt.roomNo}">
+                                  <th:block th:if="${r.roomNo == rt.roomFeatureDto.roomNo}">
                                     <h3 th:text="${rt.roomName}"></h3>
                                   </th:block>
                                 </th:block>
