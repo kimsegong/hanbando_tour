@@ -76,7 +76,7 @@
     <div class="col-3"> 
       <div>
       <a th:href="@{/notice/list.do}">
-      <button type="button" class="btn btn btn-primary" style="width:125px; height:45px">&nbsp;&nbsp;&nbsp;&nbsp;공지사항&nbsp;&nbsp;&nbsp;&nbsp;</button>  
+      <button type="button" class="btn btn-outline-primary" style="width:125px; height:45px">&nbsp;&nbsp;&nbsp;&nbsp;공지사항&nbsp;&nbsp;&nbsp;&nbsp;</button>  
       </a>
       </div> 
     
@@ -88,7 +88,7 @@
     
     <div>
       <a th:href="@{/notice/inquirywrite.form}">
-      <button type="button" class="btn btn-outline-primary" style="font-size: 14.5px; padding: 10px 22px;">&nbsp;1:1문의하기&nbsp;</button>  
+      <button type="button" class="btn btn btn-primary" style="font-size: 14.5px; padding: 10px 22px;">&nbsp;1:1문의하기&nbsp;</button>  
       </a>
     </div>
     </div>
@@ -123,9 +123,19 @@
       
       <div class="contents" th:text="${inquiry.contents}"></div>
       
+      
+      <details>
+    <summary style="text-align: center;">열어버리기</summary>
       <th:block th:if="${#objects.nullSafe(answer, null)}">
       <div th:text="${answer.contents}"></div>
       </th:block> 
+      
+      
+      </details>
+      
+      
+      
+      
       </div>
       
       <div class="wrap1">
@@ -145,7 +155,8 @@
     <input type="hidden" name="title" th:value="${inquiry.title}">
     <input type="hidden" name="contents" th:value="${inquiry.contents}">
       <button type="button" id="btn_remove" class="btn btn-danger btn-sm"style="width: 60px; height: 35px;">삭제</button>
-      <button type="button" id="btn_answer" class="btn btn-danger btn-sm"style="width: 60px; height: 35px;">답변</button>
+      <button type="button" id="btn_answer" class="btn btn-danger btn-sm" style="width: 60px; height: 35px;"
+                th:unless="${#objects.nullSafe(answer, null)}">답변</button>
   </form>
 </div>
       
