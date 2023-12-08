@@ -34,4 +34,13 @@ public interface ReserveMapper {
   public int deleteReserve(int reserveNo);
   
   public int updateReserveStatus(Map<String, Object> map);
+  
+  
+  public int getDaysAfterPwModified(Map<String, Object> map);
+  
+  
+  
+  
+  
+  
 }
