@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{/layout/header::head('한반도 투어')}"></head> <!-- 이거 알맞게 바꿔주세요-->
+
+<style>
+  .wrap1 > .box1{
+    height:70px;
+  }  
+  
+  .wrap1 > .box2{
+  height:70px;
+  }  
+  
+  .wrap1 > .box3{
+  height:58px;
+  }  
+  
+  .wrap1 > .box4{
+  height:58px;
+  }  
+
+  .wrap1 > .box5{
+  height:58px;
+  }  
+  
+  .wrap1 > .box6{
+  height:58px;
+  }  
+  
+  .wrap1 > .box7{
+  height:80px;
+  }  
+  .wrap1 > .box8{
+  height:80px;
+  }  
+  .title_input > .search_input{
+  text-align:left;
+  }
+  
+  .btn-outline-primary{
+    height:30px;
+  }
+ 
+</style>
+
+
+<body>
+  <div th:replace="~{/layout/header::header}"></div>
+  
+  <div class="main_wrap">
+  
+  
+    <div class="container text-center">
+      <div class="row">
+        <div class="col-1">       
+        </div>
+        <div class="col-10" style="border:1px gray dotted">
+            <!--/*여기에 작성/ 다 만들고 style 지워주세요  */-->
+            
+      <div class = "wrap1">
+        <div class="box1"></div>
+      </div>
+            
+    <div class="row">
+    <div class="col-7"></div>
+    <div class="col-4" style="display: flex; justify-content: flex-end;">
+      <div class="home">
+        <a th:href="@{http://localhost:8080}"><i class="fa-solid fa-house" style="font-size:15px; margin-right: 5px;"></i></a>
+         &nbsp;고객센터  &nbsp;  >   &nbsp; 1:1문의하기
+      </div>
+    </div>
+       
+    <div class = "wrap1">
+      <div class="box2"></div>
+    </div>
+    
+ 
+    <div class="col-3"> 
+      <div>
+      <a th:href="@{/notice/list.do}">
+      <button type="button" class="btn btn-outline-primary" style="height:40px;">&nbsp;&nbsp;&nbsp;&nbsp;공지사항&nbsp;&nbsp;&nbsp;&nbsp;</button>  
+      </a>
+      </div> 
+    
+    <div>
+      <a th:href="@{/notice/faqList.do}">
+      <button type="button" class="btn btn-outline-primary" style="height:40px;">자주묻는질문</button>  
+      </a>
+    </div>
+    
+    <div>
+      <a th:href="@{/notice/inquirywrite.form}">
+      <button type="button" class="btn btn btn-primary" style="height:40px;">&nbsp;1:1문의하기&nbsp;</button>  
+      </a>
+    </div>
+    </div>
+    
+    <div class="col-1" style="font-size:18px;">
+      
+
+    
+    <div class = "wrap1">
+      <div class="box3"></div>
+    </div>
+    
+  
+    
+    <div class = "wrap1">
+      <div class="box4"></div>
+    </div>
+    
+    <div>
+    답변      
+    </div>
+    </div>  
+    
+    
+
+    
+    
+    <div class="col-5"> 
+
+      
+      <div class = "wrap1">
+      <div class="box5"></div>
+      </div>
+      
+
+
+      
+      <div class = "wrap1">
+      <div class="box6"></div>
+      </div>
+      
+      <form id="frm_inquiry_answer" method="post" th:action="@{/notice/addInquiryAnswer.do}">
+      
+      <div class="contents_input">
+        <textarea name="contents" id="contents" placeholder="내용 입력" class="search_input" style="width: 450px; height: 290px;"></textarea>
+      </div>  
+
+      <div class = "wrap1">
+      <div class="box7"></div>    
+      </div>
+      
+      <div>
+      <input type="hidden" name="userNo" th:value="${session.user.userNo}">
+      <input type="hidden" name="inquiryNo" th:value="${inquiryNo}">
+      <a th:href = "@{/notice/inquirylist.do}">
+      <button type="button" class="btn btn-secondary btn-sm">작성 취소</button>&nbsp;&nbsp;&nbsp;
+      </a>
+      
+      <button type="submit" class="btn btn-outline-primary" style="margin-right: 8px;">답변 완료</button>  
+      </div>
+      
+      </form>
+      
+      <div class = "wrap1">
+      <div class="box8"></div>    
+      </div>     
+
+      
+    </div>
+
+
+    
+    
+
+
+
+
+
+    
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+      
+      </div>
+      </div>
+      </div>
+      
+      
+      
+      
+      
+      <script>
+
+      
+      </script>
+      
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+        </div>
+        <div class="col-1">       
+        </div>
+      </div>
+    </div>
+  
+  </div>
+
+  
+  
+  
+  <div th:replace="~{/layout/footer::footer}"></div>
+</body>
+</html>
+

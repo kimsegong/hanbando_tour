@@ -20,10 +20,14 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.tour.hanbando.dao.HotelMapper;
 import com.tour.hanbando.dao.ReserveMapper;
+import com.tour.hanbando.dto.HotelDto;
 import com.tour.hanbando.dto.PackageDto;
 import com.tour.hanbando.dto.PaymentDto;
 import com.tour.hanbando.dto.ReserveDto;
+import com.tour.hanbando.dto.RoomFeatureDto;
+import com.tour.hanbando.dto.RoomtypeDto;
 import com.tour.hanbando.dto.TouristDto;
 import com.tour.hanbando.dto.UserDto;
 import com.tour.hanbando.util.MyPageUtils;
@@ -37,6 +41,7 @@ import lombok.RequiredArgsConstructor;
 public class ReserveServiceImpl implements ReserveService {
 
   private final ReserveMapper reserveMapper;
+  private final HotelMapper hotelMapper;
   private final MyPageUtils myPageUtils;
   private final MySecurityUtils mySecurityUtils;
   
@@ -118,6 +123,55 @@ public class ReserveServiceImpl implements ReserveService {
     }
     return result;
   }
+  
+  @Override
+  public Map<String, Object> addReserveHotel(HttpServletRequest request) {
+
+    String requestedTerm = null;
+    if(request.getParameter("reqTerm") == null) {
+      requestedTerm = "";
+    } else {
+      requestedTerm = mySecurityUtils.preventXSS(request.getParameter("reqTerm"));
+    }
+    
+    int agree = 0;
+    String requiredA = request.getParameter("requiredA");
+    String marketingA = request.getParameter("marketingA");
+    if(marketingA != null && requiredA.equals("0")) {
+      agree = 1;
+    }
+    
+    int reserveStatus = Integer.parseInt(request.getParameter("resStatus"));
+    String reserveStart = request.getParameter("resStart").replace("-", "/");
+//    String reserveFinish = "null";
+    int reservePrice = Integer.parseInt(request.getParameter("totalReservePrice"));
+    int userNo = Integer.parseInt(request.getParameter("userNo"));
+    int hotelNo = Integer.parseInt(request.getParameter("hotelNo"));
+    int roomNo = Integer.parseInt(request.getParameter("roomNo"));
+    
+    ReserveDto reserve = ReserveDto.builder()
+                            .requestedTerm(requestedTerm)
+                            .agree(agree)
+                            .reserveStatus(reserveStatus)
+                            .reserveStart(reserveStart)
+//                            .reserveFinish(reserveFinish)
+                            .reservePrice(reservePrice)
+                            .userDto(UserDto.builder()
+                                          .userNo(userNo)
+                                          .build())
+                            .hotelDto(HotelDto.builder()
+                                          .hotelNo(hotelNo)
+                                          .build())
+                            .roomtypeDto(RoomtypeDto.builder()
+                                          .roomFeatureDto(RoomFeatureDto.builder()
+                                                              .roomNo(roomNo)
+                                                              .build())
+                                          .build())
+                            .build();
+    
+    return Map.of("addResult", reserveMapper.insertReserveHotel(reserve), "reserveNo", reserve.getReserveNo());
+  }
+  
   
   @Override
   public Map<String, Object> addPayment(HttpServletRequest request, PaymentDto payment) {
@@ -240,6 +294,17 @@ public class ReserveServiceImpl implements ReserveService {
     model.addAttribute("beginNo", total - (page - 1) * display);
   }
   
+  @Transactional(readOnly=true)
+  @Override
+  public HotelDto loadHotelInfoWithWriteform(int hotelNo) {
+    return hotelMapper.getHotel(hotelNo);
+  }
+  
+  @Transactional(readOnly=true)
+  @Override
+  public RoomtypeDto loadRoomInfoWithWriteform(int roomNo) {
+    return hotelMapper.roomtype(roomNo);
+  }
   
   @Transactional(readOnly=true)
   @Override
@@ -261,7 +326,7 @@ public class ReserveServiceImpl implements ReserveService {
     return reserveMapper.getReserveHotel(reserveNo);
   }
   
-  
+  @Transactional(readOnly=true)
   @Override
   public PaymentDto loadPaymentByReserveNo(int reserveNo) {
     return reserveMapper.getPaymentBy(Map.of("reserveNo", reserveNo));

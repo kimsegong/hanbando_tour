@@ -4,7 +4,7 @@ import java.io.File;
 import java.nio.file.Files;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -17,7 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.tour.hanbando.dao.HotelMapper;
 import com.tour.hanbando.dto.FacilitiesDto;
@@ -31,7 +30,6 @@ import com.tour.hanbando.util.HotelFileUtils;
 import com.tour.hanbando.util.MyPageUtils;
 
 import lombok.RequiredArgsConstructor;
-import net.coobird.thumbnailator.Thumbnails;
 
 @Transactional
 @RequiredArgsConstructor
@@ -145,6 +143,9 @@ public class HotelServiceImpl implements HotelService {
     model.addAttribute("region", hotelMapper.getRegion());
   }
   
+  
+  /************************이거 인서트 할때 룸 추가하면 보여줄때 쓰는 서비스********************************/
+  
   @Override
   public void hotelRoomList(HttpServletRequest request, Model model) {
     
@@ -153,7 +154,7 @@ public class HotelServiceImpl implements HotelService {
     List<RoomtypeDto> roomtypeDto = hotelMapper.getRoomtype(hotelNo);
     hotelMapper.getRoomFeature(roomtypeDto);
     hotelMapper.getRoomImage(roomtypeDto);
-    hotelMapper.getPrice(roomtypeDto);
+    hotelMapper.getPrice(hotelNo);
     
   }
   
@@ -413,22 +414,43 @@ public class HotelServiceImpl implements HotelService {
     List<HotelImageDto> hotelImageDto = hotelMapper.getHotelImage(hotelNo);
     
     List<RoomtypeDto> roomtypeDto = hotelMapper.getRoomtype(hotelNo);
-    //List<RoompriceDto> roompriceDtos = hotelMapper.getPrice(roomtypeDto);
+    List<RoompriceDto> roompriceDto = hotelMapper.getPrice(hotelNo);
     
     List<HotelDto> hotel = new ArrayList<>();
     hotel.add(hotelDto); // 가격 가져올려고 
     
     List<Integer> price = getPrice(hotel);
-    System.out.println(hotelImageDto.size());
+    List<Integer> countReserveRoom = new ArrayList<>();
+    for(int i = 0; i < roomtypeDto.size(); i++) {
+      countReserveRoom.add(i, getDate(roomtypeDto.get(i)));
+      
+    }
+    System.out.println("############"+countReserveRoom); 
+    
     model.addAttribute("hotel", hotelDto);
     model.addAttribute("hotelImage", hotelImageDto);
     model.addAttribute("fac", facilitiesDto);
-    model.addAttribute("price", price);
+    model.addAttribute("lowPrice", price);
+    model.addAttribute("price", roompriceDto);
+    model.addAttribute("countReserveRoom", countReserveRoom);
     model.addAttribute("roomType", roomtypeDto);
-    
-    
   }
   
-  
+  public int getDate(RoomtypeDto roomtypeDto){
+    
+    SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
+    Calendar calendar = Calendar.getInstance();
+    String today = sdf.format(calendar.getTime());
+    calendar.add(Calendar.DATE, +1);
+    String nextDay = sdf.format(calendar.getTime()); 
+    Map<String, Object> map = Map.of("roomNo", roomtypeDto.getRoomFeatureDto().getRoomNo() ,
+                                      "checkin", today ,  
+                                      "checkout", nextDay);
+    
+    int sample = hotelMapper.countReserveRoom(map);
+    
+    
+    return sample;
+  }
   
 }

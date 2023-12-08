@@ -15,45 +15,135 @@
 		    <div class="col-10" style="border:1px gray dotted">
 		      	<!--/*여기에 작성/ 다 만들고 style 지워주세요  */-->
 		      <!--/* 패키지 또는 호텔 번호를 받아오고 필요시 다른 정보도 받아오기 */-->
-		      <div>
+		      <div style="margin: 20px auto;">
             <h2><strong>호텔 예약하기</strong></h2>
 		      </div>
 		      
-		      <div>
-            <h3 class="col-8" style="margin-left: 30px;">호텔명??</h3>
-		      </div>
-		      <div>
-            <h4><strong>예약자 정보</strong></h4>
-          </div>
-		      <div class="col-8" style="margin: 0 auto;">
-  		      <table class="table">
-              <tbody>
-                <tr>
-                  <td>이름</td>
-                  <td th:text="${session.user.name}"></td>
-                  <td>휴대폰번호</td>
-                  <td th:text="${session.user.mobile}"></td>
-                </tr>
-                <tr>
-                  <td>성별</td>
-                  <td th:if="${session.user.gender == 'M'}">남</td>
-                  <td th:if="${session.user.gender == 'F'}">여</td>
-                  <td>이메일</td>
-                  <td th:text="${session.user.email}"></td>
-                </tr>
-                <tr>
-                  <td>요청사항</td>
-                  <td colspan="3">
-                    <div>
-                      <textarea class="form-control" id="reqTerm" name="reqTerm" rows="3" cols="50" placeholder="내용을 입력해주세요" ></textarea>
-                    </div>
-                  </td>
-                </tr>
-              </tbody>
-            </table>	
-		      </div>	
+          <form id="frm_reserve" method="post">
+    	      <div>
+              <ul>
+                <li>
+                  <h4 th:text="${hotel.hotelName}"></h4>
+                </li>
+                <li>
+                  <h4 th:text="${room.roomName}"></h4>
+                </li>
+                <li th:text="${room.roomDetail}"></li>
+                <li>체크인</li>
+                <li>체크아웃</li>
+              </ul>
+    	      </div>
+    	      <div style="margin-top: 40px;">
+              <h4><strong>예약자 정보</strong></h4>
+            </div>
+          
+  		      <div class="col-8" style="margin: 0 auto;">
+    		      <table class="table">
+                <tbody>
+                  <tr>
+                    <td>이름</td>
+                    <td th:text="${session.user.name}"></td>
+                    <td>휴대폰번호</td>
+                    <td th:text="${session.user.mobile}"></td>
+                  </tr>
+                  <tr>
+                    <td>성별</td>
+                    <td th:if="${session.user.gender == 'M'}">남</td>
+                    <td th:if="${session.user.gender == 'F'}">여</td>
+                    <td>이메일</td>
+                    <td th:text="${session.user.email}"></td>
+                  </tr>
+                  <tr>
+                    <td>요청사항</td>
+                    <td colspan="3">
+                      <div>
+                        <textarea class="form-control" id="reqTerm" name="reqTerm" rows="3" cols="50" placeholder="내용을 입력해주세요" ></textarea>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>	
+  		      </div>	
+         
+            <!-- 약관 동의 -->
+            <div class="agreeFrom">
+              <h4><strong>약관 동의</strong></h4>
+            </div>
+            <div class="col-8" style="margin: 0 auto;">
+              <table class="table">
+                <tbody class="d-grid gap-2 col-8 mx-auto">
+                  <tr>
+                    <td>
+                      <div>
+                        <span>
+                          <input type="checkbox" id="chkAgree" name="requiredA" value="0" class="chk_each">
+                          <label for="chkAgree">개인정보 수집에 동의합니다(필수)</label>
+                        </span>
+                      </div>
+                    </td>
+                    <td>
+                      <a href="#" >자세히</a>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <div>
+                        <span>
+                          <input type="checkbox" id="chkMarketing" name="marketingA" value="1" class="chk_each">
+                          <label for="chkMarketing">마케팅 이용 정보 수집에 동의합니다(선택)</label>
+                        </span>
+                      </div>
+                    </td>
+                    <td>
+                      <a href="#" >자세히</a>
+                    </td>
+                  </tr>
+                </tbody>
+                <tfoot class="d-grid gap-2 col-8 mx-auto">
+                  <tr>
+                    <td>
+                      <div>
+                        <span>
+                          <input type="checkbox" id="chkAll">
+                          <label for="chkAll">모든 약관에 동의합니다.</label>
+                        </span>
+                      </div>
+                    </td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+            <div style="margin-top: 40px;">
+              <h4><strong>결제정보</strong></h4>
+            </div>
+            <div class="col-5" style="margin: 0 auto;">
+              <table class="table">
+                <tbody>
+                  <tr>
+                    <th>결제가격</th>
+                    <td>
+                      <span id="totalPrice">??</span>
+                      원
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+                 
+            <input type="hidden" name="userNo" th:value="${session.user.userNo}">
+            <input type="hidden" name="hotelNo" th:value="${hotel.hotelNo}">
+            <input type="hidden" name="roomNo" th:value="${roomNo}">
+            <input type="hidden" name="resStatus" th:value="0">
+            <input type="hidden" name="reservePerson" th:value="2">
+            <input type="hidden" name="totalReservePrice" th:value="100">
+            <input type="hidden" name="resStart">
+            <input type="hidden" name="resFinish">
+        
+            <div class="d-grid gap-2 col-6 mx-auto" style="margin-top: 40px;">
+              <button type="button" id="btn_reserve" class="btn btn-success">예약하기</button>
+            </div>
+          </form>
 		      
-		  
           
 		    <div class="col-1">	      
 		    </div>
@@ -61,7 +151,18 @@
 	  </div>
 	
 	</div>
-
+  <script th:inline="javascript">
+    
+    function fnAddReserveHotel(){
+      $('#btn_reserve').click(function(){
+        $('#frm_reserve').attr('action', '/reserve/addReserveHotel.do');
+        $('#frm_reserve').submit();
+      })
+    }
+    
+    
+    fnAddReserveHotel();
+  </script>
 	
 
 	<div th:replace="~{/layout/footer::footer}"></div>

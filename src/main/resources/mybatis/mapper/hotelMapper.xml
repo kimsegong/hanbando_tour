@@ -347,17 +347,11 @@
     </foreach>  
  </select>
  
- <select id="getPrice" resultType="RoompriceDto">
+ <select id="getPrice" parameterType="int" resultType="RoompriceDto">
    SELECT HOTEL_NO, ROOM_NO, BI_PRICE, BS_DATE, BE_DATE, JUN_PRICE, JS_DATE, JE_DATE, SUNG_PRICE, SS_DATE, SE_DATE
      FROM ROOMPRICE_T
-    WHERE ROOM_NO 
-    <foreach item="item" index="index" collection="list" open="in(" separator="," close=")">
-      #{item.roomNo}, index  
-     </foreach>
-     ORDER BY DECODE(ROOM_NO,
-     <foreach item="item" index="index" collection="list" separator="," close=")">  
-     #{item.roomNo}, (list.size() - ${index})  
-    </foreach>  
+    WHERE HOTEL_NO = #{hotelNo} 
+    
  </select>
  
  <insert id="insertRoomtype" parameterType="RoomtypeDto">
@@ -545,9 +539,19 @@
    SELECT ROOM_NO, HOTEL_NO, ROOM_DETAIL, ROOM_NAME, ROOM_MANY, R_VIEW, BLEAKFAST, SMOKE, PEOPLE, BED, SHOWER, R_SIZE
      FROM ROOMTYPE_T
     WHERE ROOM_NO = #{roomNo}
-   
  </select>
- 
+ <select id="countReserveRoom" parameterType="Map" resultType="int">
+	 <![CDATA[ 
+   SELECT NVL(CNT,0)
+  	 FROM ( SELECT COUNT(*) AS CNT
+				      FROM RESERVE_T
+				     WHERE (RESERVE_START = #{checkin}
+				        OR (RESERVE_START <  #{checkin} AND RESERVE_FINISH > #{checkin})
+				        OR (RESERVE_START >  #{checkin} AND RESERVE_START < #{checkout}))
+				       AND ROOM_NO = #{roomNo}
+				     )
+		]]>		     
+  </select>
  
  </mapper>
  
