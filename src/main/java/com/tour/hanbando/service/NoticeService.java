@@ -18,4 +18,8 @@ public interface NoticeService {
   public int removeNotice(int NoticeNo);
   public Map<String, Object> imageUpload(MultipartHttpServletRequest multipartRequest);
   public boolean addNotice(MultipartHttpServletRequest multipartRequest) throws Exception;
+
+  public Map<String, Object> getAttachList(HttpServletRequest request);
+  public Map<String, Object> addAttach(MultipartHttpServletRequest multipartRequest) throws Exception;
+
 }
