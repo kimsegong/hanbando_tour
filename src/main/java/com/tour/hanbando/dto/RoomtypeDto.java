@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 @Builder
 public class RoomtypeDto {
   private int hotelNo;
+  private int roomNo;
   private String roomDetail;
   private String roomName;
   private int roomMany;
@@ -21,5 +22,4 @@ public class RoomtypeDto {
   private String bed;
   private String shower;
   private int rSize;
-  private RoomFeatureDto roomFeatureDto;
 }
