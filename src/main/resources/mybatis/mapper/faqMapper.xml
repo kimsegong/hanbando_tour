@@ -8,7 +8,9 @@
   <select id="getFaqList" parameterType="Map" resultType="FaqDto">
     SELECT FAQ_NO, CA_NO, TITLE, CONTENTS, CREATED_AT, MODIFIED_AT 
       FROM FAQ_T
-     WHERE CA_NO = #{caNo}
+     <if test="caNo != 0">
+        WHERE CA_NO = #{caNo}
+      </if>
    </select>
    
    <select id="getFaq" parameterType="int" resultType="FaqDto">
@@ -22,7 +24,7 @@
         FROM FAQ_T
     </select>
     
-    <select id="getFaqCaList" parameterType="Map" resultType="FaqDto">
+    <select id="getFaqCaList" resultType="FaqCaDto">
     SELECT CA_NO, CA_TITLE
       FROM FAQ_CA_T
    </select>

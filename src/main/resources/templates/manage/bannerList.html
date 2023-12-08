@@ -77,6 +77,7 @@
   .image_wrapper {
    display: inline-block;
    text-align: center;
+   margin-top: 10px;
    margin-bottom: 20px;
   }
   .input-group-text {
@@ -98,6 +99,33 @@
 		height: 300px;
 		margin-bottom: 20px;
 	}
+	
+	.complete, .btn_address {
+    height: 35px; 
+    width: 60px;
+    color: #96B6C5;         /* 텍스트 색상 */
+    background-color: #fff; /* 기본 배경 색상 */
+    border-color: #96B6C5;  /* 테두리 색상 */
+    border-radius: 10px;      /* 테두리를 둥글게 만듭니다. */
+    transition: all 0.3s;     /* 모든 속성에 대해 0.3초 동안 트랜지션 효과 적용 */
+  }
+  
+  .btn_address {
+    height: 35px; 
+    width: 100px;
+    color: #96B6C5;         /* 텍스트 색상 */
+    background-color: #fff; /* 기본 배경 색상 */
+    border-color: #96B6C5;  /* 테두리 색상 */
+    border-radius: 10px;      /* 테두리를 둥글게 만듭니다. */
+    transition: all 0.3s;     /* 모든 속성에 대해 0.3초 동안 트랜지션 효과 적용 */
+  }
+  
+  
+  .complete:hover, .btn_address:hover {
+    color: #fff;               /* 호버 시 텍스트 색상 */
+    background-color: #96B6C5; /* 호버 시 배경 색상 */
+  }
+	
 </style>
   
 <body>
@@ -113,10 +141,7 @@
 		  <div class="row">
 		    <div class="col-1">	      
 		    </div>
-        <div class="col-10" style="border:1px gray dotted">
-            <!--/*여기에 작성/ 다 만들고 style 지워주세요  */-->
-		   
-        		         
+        <div class="col-10" >
           <div class="second_main_wrap">
               
             <div class="split1 w3-sidebar w3-bar-block">
@@ -143,9 +168,9 @@
               <div class="split2">
                 
                 
-                <th:block th:each="b,vs:${bannerList}">
+                <th:block th:each="b,vs:${bannerList}" >
                   
-                  <div class="bannerWrapper" style = "border: 1px gray solid;" >
+                  <div class="bannerWrapper" style="border:1px lightgrey solid" >
                      <form class="banner" method="post" name="bannerImage" th:action="@{/main/bannerAdd.do}" enctype="multipart/form-data"  >
                        <div class="image_wrapper">
                          <div th:id="'previewId'+${b.bannerNo}"></div>
