@@ -219,36 +219,6 @@
       
       
       
-      <script>
-      
-      var frmBtn = $('#frm_btn');
-      
-      const fnEditNotice = () => {
-        $('#btn_edit').click(() => {
-          event.preventDefault();
-          if(confirm('수정할꺼에요?')){
-          frmBtn.attr('action', '/notice/edit.form');
-          frmBtn.submit();
-          }
-        })
-      }
-      
-      const fnRemoveNotice = () => {
-        $('#btn_remove').click(() => {
-          event.preventDefault();
-          if(confirm('공지사항 삭제를 선택하셨습니다. 삭제할까요?')){
-          frmBtn.attr('action', '/notice/remove.do');
-          frmBtn.submit();
-          }
-          
-        })
-      }
-  
-      fnEditNotice();
-      fnRemoveNotice();      
-      
-      
-      </script>
       
             
             
@@ -278,8 +248,40 @@
       </div>
     </div>
   
+  
   </div>
 
+       <script th:inline="javascript">
+      
+      var frmBtn = $('#frm_btn');
+      
+      const fnEditNotice = () => {
+        $('#btn_edit').click(() => {
+          event.preventDefault();
+          if(confirm('수정할꺼에요?')){
+          frmBtn.attr('action', '/notice/edit.form');
+          frmBtn.submit();
+          }
+        })
+      }
+      
+      const fnRemoveNotice = () => {
+        $('#btn_remove').click(() => {
+          event.preventDefault();
+          if(confirm('공지사항 삭제를 선택하셨습니다. 삭제할까요?')){
+          frmBtn.attr('action', '/notice/remove.do');
+          frmBtn.submit();
+          }
+          
+        })
+      }
+  
+      fnEditNotice();
+      fnRemoveNotice();      
+      
+      
+      </script>
+  
   
   
   
