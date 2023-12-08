@@ -55,24 +55,7 @@
       <result    column="REGION_NAME" property="regionName"/>
     </association>
   </resultMap>
-  
-  <!-- 객실 타입 DTO -->
-  <resultMap type="RoomtypeDto"   id="RoomtypeMap" >
-    <id      column="HOTEL_NO"    property="hotelNo" />
-    <result  column="ROOM_DETAIL" property="roomDetail" />
-    <result  column="ROOM_NAME"   property="roomName" />
-    <result  column="ROOM_MANY"   property="roomMany" />
-    <result  column="R_VIEW"      property="rView" />
-    <result  column="BLEAKFAST"   property="bleakfast" />
-    <result  column="SMOKE"       property="smoke" />
-    <result  column="PEOPLE"      property="people" />
-    <result  column="BED"         property="bed" />
-    <result  column="SHOWER"      property="shower" />
-    <result  column="R_SIZE"     property="rSize" />
-    <association javaType="RoomFeatureDto" property="roomFeatureDto">
-      <id        column="ROOM_NO"          property="roomNo" />
-    </association>
-  </resultMap>
+
   
   <!-- 예약 DTO -->
   <resultMap type="ReserveDto"       id="ReserveMap">
@@ -364,7 +347,7 @@
   </select>
   
   <!-- 호텔 객실 타입 -->
-  <select id="getRoomType" resultMap="RoomtypeMap">
+  <select id="getRoomType" resultType="RoomtypeDto">
     SELECT ROOM_NO, HOTEL_NO, ROOM_NAME, ROOM_MANY
       FROM ROOMTYPE_T
   </select>
@@ -401,7 +384,7 @@
      WHERE PACKAGE_NO = #{packageNo}
   </update>
   
-  <!-- 호텔 예약/추천 변경 -->
+  <!-- 호텔 판매/추천 변경 -->
   <update id="updateHotelRecommend" parameterType="HotelDto">
     UPDATE HOTEL_T
        SET RECOMMEND_STATUS = #{recommendStatus}
