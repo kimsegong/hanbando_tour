@@ -76,10 +76,10 @@ public interface ManageMapper {
   /* 지역 목록 */
   public List<RegionDto> getRegionList();
   
-  /* 패키지 추천 변경 */
+  /* 패키지 예약/추천 변경 */
   public int updatePackageRecommend(PackageDto packageDto);
   
-  /* 호텔 추천 변경 */
+  /* 호텔 예약/추천 변경 */
   public int updateHotelRecommend(HotelDto hotel);
   
   /* 예약 목록 */

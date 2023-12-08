@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 @Component
 public class MyPageUtils {
 
+
   private int page;     // 현재 페이지 번호(요청 파라미터로 받는다.)
   private int total;    // 전체 항목의 개수(DB에서 구한 뒤 받는다.)
   private int display;  // 한 페이지에 표시할 항목의 개수(요청 파라미터로 받는다.)
@@ -52,7 +53,7 @@ public class MyPageUtils {
     
     StringBuilder sb = new StringBuilder();
     
-    sb.append("<div>");
+    sb.append("<div class=\"paging\">");
     
     // 이전 블록
     if(beginPage == 1) {
@@ -64,7 +65,7 @@ public class MyPageUtils {
     // 페이지 번호
     for(int p = beginPage; p <= endPage; p++) {
       if(p == page) {
-        sb.append("<a>" + p + "</a>");
+        sb.append("<a class=\"now_page\">" + p + "</a>");
       } else {
         sb.append("<a href=\"" + url + "?page=" + p + "\">" + p + "</a>");
       }
@@ -83,26 +84,25 @@ public class MyPageUtils {
     
   }
   
-  /* 파라미터가 있을때 */
   public String getMvcPaging(String url, String params) {
     
     StringBuilder sb = new StringBuilder();
     
-    sb.append("<div>");
+    sb.append("<div class=\"paging\">");
     
     // 이전 블록
     if(beginPage == 1) {
       sb.append("<a>이전</a>");
     } else {
-      sb.append("<a href=\"" + url + "?page=" + (beginPage - 1) + "&"+ params +"\">이전</a>");
+      sb.append("<a href=\"" + url + "?page=" + (beginPage - 1) + "&" + params + "\">이전</a>");
     }
     
     // 페이지 번호
     for(int p = beginPage; p <= endPage; p++) {
       if(p == page) {
-        sb.append("<a>" + p + "</a>");
+        sb.append("<a class=\"now_page\">" + p + "</a>");
       } else {
-        sb.append("<a href=\"" + url + "?page=" + p + "&"+ params +"\">" + p + "</a>");
+        sb.append("<a href=\"" + url + "?page=" + p + "&" + params + "\">" + p + "</a>");
       }
     }
     
@@ -110,7 +110,7 @@ public class MyPageUtils {
     if(endPage == totalPage) {
       sb.append("<a>다음</a>");
     } else {
-      sb.append("<a href=\"" + url + "?page=" + (endPage + 1) + "&"+ params +"\">다음</a>");
+      sb.append("<a href=\"" + url + "?page=" + (endPage + 1) + "&" + params + "\">다음</a>");
     }
     
     sb.append("</div>");
@@ -118,29 +118,26 @@ public class MyPageUtils {
     return sb.toString();
     
   }
-  
-  
+
   public String getAjaxPaging() {
     
     StringBuilder sb = new StringBuilder();
     
-    sb.append("<div>");
+    sb.append("<div class=\"paging\">");
     
     // 이전 블록
     if(beginPage == 1) {
       sb.append("<a>이전</a>");
     } else {
-      
-      sb.append("<a href=\"javascript:fnAjaxPaging("+ (beginPage - 1) +")\">이전</a>");
+      sb.append("<a href=\"javascript:fnAjaxPaging(" + (beginPage-1) + ")\">이전</a>");
     }
     
     // 페이지 번호
     for(int p = beginPage; p <= endPage; p++) {
       if(p == page) {
-        sb.append("<a>" + p + "</a>");
+        sb.append("<a class=\"now_page\">" + p + "</a>");
       } else {
-        
-        sb.append("<a href=\"javascript:fnAjaxPaging("+ p +")\">"+ p +"</a>");
+        sb.append("<a href=\"javascript:fnAjaxPaging(" + p + ")\">" + p + "</a>");
       }
     }
     
@@ -148,8 +145,7 @@ public class MyPageUtils {
     if(endPage == totalPage) {
       sb.append("<a>다음</a>");
     } else {
-      
-      sb.append("<a href=\"javascript:fnAjaxPaging("+ (endPage+1) +")\">다음</a>");
+      sb.append("<a href=\"javascript:fnAjaxPaging(" + (endPage+1) + ")\">다음</a>");
     }
     
     sb.append("</div>");

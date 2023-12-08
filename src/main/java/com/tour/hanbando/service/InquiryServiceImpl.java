@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 
-import com.tour.hanbando.dao.InquiryAnswerMapper;
 import com.tour.hanbando.dao.InquiryMapper;
 import com.tour.hanbando.dto.InquiryAnswerDto;
 import com.tour.hanbando.dto.InquiryDto;
@@ -20,7 +19,6 @@ import lombok.RequiredArgsConstructor;
 @Service
 public class InquiryServiceImpl implements InquiryService {
   private final InquiryMapper inquiryMapper;
-  private final InquiryAnswerMapper inquiryAnswerMapper;
   
   @Transactional
   @Override

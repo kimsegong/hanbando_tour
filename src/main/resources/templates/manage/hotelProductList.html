@@ -198,17 +198,17 @@
 
   const fnModifyRecommend = () => {
     $('.btn_select').click((ev) => {
-     const formRecommend = $(ev.target).closest('form');
+     const formStatus = $(ev.target).closest('tr').find('.frm_modifyRecommend');
       $.ajax({
         type: 'post',
         url: '/manage/modifyHotelRecommend.do',
-        data: formRecommend.serialize(),
+        data: formStatus.serialize(),
         dataType: 'json',
         success: (resData) => {
           if(resData.modifyRecommendResult === 1){
-            alert('추천 여부가 변경되었습니다.');
+            alert('예약/추천 여부가 변경되었습니다.');
           } else {
-            alert('추천 여부가 변경되지 않았습니다.');
+            alert('예약/추천 여부가 변경되지 않았습니다.');
           }
         }
       })
@@ -332,10 +332,10 @@
               </div>
                 
         
-              <!--/* 관리 회원목록이 표시될 div */-->
+              <!--/* 관리 호텔목록이 표시될 div */-->
               <div class="listMainWrap">
                   
-                <!--/* 총 회원 수를 표시 */-->
+                <!--/* 총 호텔 수를 표시 */-->
                 <div style="text-align: left;" th:text="|총 ${total}개|"></div>
                   
                 <!--/* 전체 목록을 나타내는 테이블 */-->
@@ -363,8 +363,12 @@
                             <a th:href="@{/hotel/detail.do(hotelNo=${h.hotelNo})}" th:text="${h.hotelName}"></a>
                           </td>
                           <td>
-                            <a th:href="@{/hotel/detail.do(hotelNo=${h.hotelNo})}" th:if="${h.status == 1}">판매중</a>
-                            <a th:href="@{/hotel/detail.do(hotelNo=${h.hotelNo})}" th:if="${h.status == 0}">판매안함</a>
+                            <form class="frm_modifyRecommend">
+                              <select name="status" class="status" >
+                                <option value="1" th:selected="${h.status == 1}">판매중</option>
+                                <option value="0" th:selected="${h.status == 0}">판매안함</option>
+                              </select>
+                            </form>
                           </td>
                           <td class="open_contents">
                             가격보기
@@ -389,7 +393,7 @@
                             <th:block th:each="r:${roompriceList}">
                               <th:block th:if="${h.hotelNo == r.hotelNo}">
                                 <th:block th:each="rt:${roomtypeList}">
-                                  <th:block th:if="${r.roomNo == rt.roomNo}">
+                                  <th:block th:if="${r.roomNo == rt.roomFeatureDto.roomNo}">
                                     <h3 th:text="${rt.roomName}"></h3>
                                   </th:block>
                                 </th:block>
