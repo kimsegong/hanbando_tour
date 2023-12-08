@@ -26,4 +26,5 @@ public interface HotelService {
   public double getAverageRating(int hotelNo);
   public List<ReserveDto> getReserveUser(int hotelNo); 
   public Map<String, Object> removeReview(int reviewNo);
+  public int getHeart (HttpServletRequest request);
 }

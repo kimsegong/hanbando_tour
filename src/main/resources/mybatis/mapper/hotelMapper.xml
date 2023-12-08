@@ -591,7 +591,7 @@
  		 FROM FACILITIES_T
  	  WHERE HOTEL_NO = #{hotelNo}
  </select>  
- <select id="getRoomtype" parameterType="int" resultMap="RoomtypeMap">
+ <select id="getRoomtype" parameterType="int" resultType ="RoomtypeDto">
    SELECT R. ROOM_NO, R.HOTEL_NO, R.ROOM_DETAIL, R.ROOM_NAME, R.ROOM_MANY, R.R_VIEW, R.BLEAKFAST, R.SMOKE, R.PEOPLE, R.BED, R.SHOWER, R.R_SIZE,
           RF.TOWEL, RF.WATER, RF.COFFEE, RF.DRIER, RF.IRON, RF.MINIBAR
      FROM ROOMTYPE_T R INNER JOIN ROOM_FEATURE_T RF
@@ -635,12 +635,12 @@
     )
   </insert>
   
-  
  <select id="getReviewCount" parameterType="int" resultType="int">
         SELECT COUNT(*)
           FROM REVIEW_T
          WHERE HOTEL_NO = #{hotelNo}
  </select>
+ 
  <select id="getReviewList" parameterType="Map" resultMap="ReviewMap">
     SELECT A.REVIEW_NO, A.HOTEL_NO, A.STAR, A.USER_NO, A.REVIEW_CONTENTS, A.REGIST_AT, A.NAME
       FROM (SELECT
@@ -656,21 +656,37 @@
              WHERE C.HOTEL_NO = #{hotelNo}) A
      WHERE A.RN BETWEEN #{begin} AND #{end}
   </select>
+  
   <select id="starAve" resultType="double">
     SELECT AVG(STAR) AS AVERAGE_RATING
       FROM REVIEW_T
      WHERE HOTEL_NO = #{hotelNo}      
   </select>
+  
   <delete id="deleteReview" parameterType="int">
      DELETE 
        FROM REVIEW_T
       WHERE REVIEW_NO = #{reviewNo}
   </delete>
+  
  <select id="getReserve" parameterType="int" resultMap="ReserveMap">
     SELECT RESERVE_NO, USER_NO
       FROM RESERVE_T
      WHERE HOTEL_NO = #{hotelNo} 
  </select>
+ 
+ <delete id="deleteHeart" parameterType="HeartDto">
+    DELETE FROM HEART_T WHERE USER_NO = #{userNo} AND HOTEL_NO=#{hotelNo}
+</delete>
+
+<insert id="insertHeart" parameterType="HeartDto">
+    INSERT INTO HEART_T(HOTEL_NO, USER_NO) VALUES (#{hotelNo}, #{userNo})
+</insert>
+
+<select id="getCountHeart" parameterType="HeartDto" resultType="int">
+    SELECT COUNT(*) FROM HEART_T WHERE HOTEL_NO = #{hotelNo} AND USER_NO = #{userNo}
+</select>
+ 
  
  
  </mapper>
