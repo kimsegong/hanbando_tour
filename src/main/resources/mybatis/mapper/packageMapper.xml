@@ -464,7 +464,7 @@
          ORDER BY STAR ASC;    
       </select>
       
-      <select id="starAve" resultType="int">
+      <select id="starAve" resultType="double">
         SELECT AVG(STAR) AS AVERAGE_RATING
           FROM REVIEW_T
          WHERE PACKAGE_NO = #{packageNo}      
