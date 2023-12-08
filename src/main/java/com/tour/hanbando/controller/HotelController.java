@@ -84,7 +84,7 @@ public class HotelController {
       Map<String, Object> response = new HashMap<>();
 
       try {
-        double averageRating = hotelService.getAverageRating(hotelNo);
+          double averageRating = hotelService.getAverageRating(hotelNo);
           response.put("success", true);
           response.put("averageRating", averageRating);
       } catch (Exception e) {
