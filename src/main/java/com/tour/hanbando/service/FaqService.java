@@ -6,6 +6,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.ui.Model;
 
+import com.tour.hanbando.dto.FaqCaDto;
 import com.tour.hanbando.dto.FaqDto;
 
 public interface FaqService {
@@ -20,4 +21,5 @@ public interface FaqService {
   public Map<String, Object> removeFaq(int faqNo);
   public int modifyFaq(HttpServletRequest request);
   public FaqDto getFaq(int faqNo);
+  public FaqCaDto loadFaqCa(int faqCaNo);
 }

@@ -38,9 +38,11 @@ public class MySecurityUtils {
   
   // 크로스 사이트 스크립팅(Cross Site Scripting) 방지
   public String preventXSS(String source) {
+    if (source == null) {
+        return null;  // source가 null인 경우 처리
+    }
     return source.replace("<", "&lt;").replace(">", "&gt;");
-  }
-  
+}
   
   
   

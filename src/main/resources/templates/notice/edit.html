@@ -80,22 +80,6 @@
             
             
         
-      <script>
-              const fnNoticeModify = () => {
-        $('#frm_notice_modify').submit((ev) => {
-          if($('#title').val() ===''){
-            alert('제목은 반드시 입력해야 합니다.');
-          $('#title').focus();
-          ev.preventDefault();
-          return;
-          }
-        })
-      }
-     
-      fnNoticeModify();   
-        
-        
-      </script>    
             
             
             
@@ -122,8 +106,25 @@
       </div>
     </div>
   
+ 
   </div>
 
+      <script th:inline="javascript">
+              const fnNoticeModify = () => {
+        $('#frm_notice_modify').submit((ev) => {
+          if($('#title').val() ===''){
+            alert('제목은 반드시 입력해야 합니다.');
+          $('#title').focus();
+          ev.preventDefault();
+          return;
+          }
+        })
+      }
+     
+      fnNoticeModify();   
+        
+        
+      </script>    
   
   
   
