@@ -142,7 +142,7 @@ public class ReserveServiceImpl implements ReserveService {
     }
     
     int reserveStatus = Integer.parseInt(request.getParameter("resStatus"));
-    String reserveStart = request.getParameter("resStart").replace("-", "/");
+    String reserveStart = request.getParameter("resStart");
 //    String reserveFinish = "null";
     int reservePrice = Integer.parseInt(request.getParameter("totalReservePrice"));
     int userNo = Integer.parseInt(request.getParameter("userNo"));

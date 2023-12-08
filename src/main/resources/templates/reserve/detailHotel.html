@@ -83,7 +83,28 @@
                 </tr>
                 <tr>
                   <td>객실</td>
-                  <td th:text="${reserveHo.roomtypeDto.roomName}"></td>
+                  <td>
+                    <span th:text="${reserveHo.roomtypeDto.roomName}"></span>
+                    <span>
+                      <button type="button"  id="btn_roomInfo" class="btn btn-outline-success btn-sm" style="margin-left: 10px;"  data-bs-toggle="modal" data-bs-target="#exampleModal">상세</button>
+                    </span>
+                    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                      <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                          </div>
+                          <div class="modal-body" id="roomInfo">
+                            방정보??
+                          </div>
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </td>
                 </tr>
                 <tr>
                   <td>예약상태</td>
@@ -211,10 +232,54 @@
   </script>
 
   <script th:inline="javascript">
- 
+    
+    function fnCheckReserveResult(){
+      if('[[${addReserveHotelResult}]]' == '1') {
+        alert('예약되었습니다. 결제를 진행해주시면 예약이 확정됩니다.');
+      }
+    }
+    
+    function fnGetRoomInfo(){
+      $('#btn_roomInfo').click(function(){
+        $.ajax({
+          type: 'get',
+          url: '/reserve/getRoomInfo.do',
+          data: 'roomNo=[[${reserveHo.roomtypeDto.roomFeatureDto.roomNo}]]',
+          datatype: 'json',
+          success:(function(resData){
+            $('#roomInfo').empty();
+            let str = '';
+            str += '<div>';
+            str += '  <div>침대 : ' + resData.room.bed + '</div>';
+            str += '  <div>전망 : ' + resData.room.rview + '</div>';
+            str += '  <div>허용인원 : 최대 ' + resData.room.people + '명</div>';
+            if(resData.room.bleakfast == '0'){
+              str += '  <div>조식 : <i class="fa-solid fa-x" style="color: #96b2c5;"></i></div>';
+            } else {
+              str += '  <div>조식 : <i class="fa-sharp fa-solid fa-o" style="color: #96b6c5;"></i></div>';
+            }
+            if(resData.room.smoke == '0'){
+              str += '  <div>흡연 : <i class="fa-solid fa-x" style="color: #96b2c5;"></i></div>';
+            } else {
+              str += '  <div>흡연 : <i class="fa-sharp fa-solid fa-o" style="color: #96b6c5;"></i></div>';
+            }
+            str += '  <div>방크기 : ' + resData.room.rsize + '</div>';
+            str += '</div>';
+            
+            $('#roomInfo').append(str);
+            
+          })
+        })
+      })
+    }
+    
+    
+    
+    fnGetRoomInfo();
+    fnCheckReserveResult()
   </script>
 
-
+  
 	
 	
 	

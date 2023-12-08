@@ -39,7 +39,7 @@
                   <tr>
                     <td th:text="${beginNo - vs.index}"></td>
                     <td>
-                      <a th:href="@{/reserve/detailHotel.do(reserveNo=${resHo.reserveNo})}" th:text="|${resHo.reservedAt} - ${resHo.reserveNo}|"></a>
+                      <a th:href="@{/reserve/detailHotel.do(reserveNo=${resHo.reserveNo}, roomNo=${resHo.roomtypeDto.roomFeatureDto.roomNo})}" th:text="|${resHo.reservedAt} - ${resHo.reserveNo}|"></a>
                     </td>
                     <td>
                       <a th:href="@{/hotel/detail.do(hotelNo=${resHo.hotelDto.hotelNo})}" th:text="${resHo.hotelDto.hotelName}"></a>
