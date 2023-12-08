@@ -555,7 +555,7 @@ public class PackageServiceImpl implements PackageService {
     }
     
     @Override
-    public int getAverageRating(int packageNo) {
+    public double getAverageRating(int packageNo) {
       return packageMapper.starAve(packageNo);
     }
     
