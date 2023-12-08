@@ -587,7 +587,7 @@ public class ManageServiceImpl implements ManageService {
   }
   
   /**
-   * 패키지 추천 여부 변경
+   * 패키지 예약/추천 여부 변경
    * 
    * @author 심희수
    * @param request
@@ -598,10 +598,12 @@ public class ManageServiceImpl implements ManageService {
     
     int recommendStatus = Integer.parseInt(request.getParameter("recommendStatus"));
     int packageNo = Integer.parseInt(request.getParameter("packageNo"));
+    int status = Integer.parseInt(request.getParameter("status"));
     
     PackageDto packageDto = PackageDto.builder()
                               .recommendStatus(recommendStatus)
                               .packageNo(packageNo)
+                              .status(status)
                               .build();
     
     int modifyRecommendResult = manageMapper.updatePackageRecommend(packageDto);
@@ -610,7 +612,7 @@ public class ManageServiceImpl implements ManageService {
   }
   
   /**
-   * 호텔 추천 여부 변경
+   * 호텔 예약/추천 여부 변경
    * 
    * @author 심희수
    * @param request
@@ -621,10 +623,12 @@ public class ManageServiceImpl implements ManageService {
     
     int recommendStatus = Integer.parseInt(request.getParameter("recommendStatus"));
     int hotelNo = Integer.parseInt(request.getParameter("hotelNo"));
+    int status = Integer.parseInt(request.getParameter("status"));
     
     HotelDto hotel = HotelDto.builder()
         .recommendStatus(recommendStatus)
         .hotelNo(hotelNo)
+        .status(status)
         .build();
     
     int modifyRecommendResult = manageMapper.updateHotelRecommend(hotel);

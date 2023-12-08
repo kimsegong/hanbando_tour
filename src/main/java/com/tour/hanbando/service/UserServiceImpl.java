@@ -26,7 +26,6 @@ import com.tour.hanbando.dao.UserMapper;
 import com.tour.hanbando.dto.InactiveUserDto;
 import com.tour.hanbando.dto.UserDto;
 import com.tour.hanbando.util.MyJavaMailUtils;
-import com.tour.hanbando.util.MyPageUtils;
 import com.tour.hanbando.util.MySecurityUtils;
 
 import lombok.RequiredArgsConstructor;
@@ -543,6 +542,7 @@ public class UserServiceImpl implements UserService {
   @Override
   public void kakaoLogin(HttpServletRequest request, HttpServletResponse response, UserDto kakaoProfile)
       throws Exception {
+    
     String email = kakaoProfile.getEmail();
     UserDto user = userMapper.getUser(Map.of("email", email));
     
@@ -561,6 +561,10 @@ public class UserServiceImpl implements UserService {
     }
     
   }
+    
+  //**카카오톡 간편로그인페이지
+  
+ 
     
   
   
