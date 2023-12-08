@@ -92,7 +92,7 @@
                       <div class="modal-dialog modal-dialog-centered">
                         <div class="modal-content">
                           <div class="modal-header">
-                            <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+                            <h1 class="modal-title fs-5" id="exampleModalLabel">객실 상세정보</h1>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                           </div>
                           <div class="modal-body" id="roomInfo">
@@ -229,6 +229,7 @@
       );
     }
     
+    // reserveNo로 결제내역 가져오는 함수
     function refundPayment1(){
       $('#btn_cancel').click(function(){
         $.ajax({
@@ -238,13 +239,13 @@
           dataType: 'json',
           success:(function(resP){
             console.log(resP);
-            refundPayment2(resP);
+            refundPayment2(resP); // 한번더 검증을 위해 변수전달
           })
         })
       })
     }
     
-    
+    // merchantUid와 취소할 금액으로 내역 다시 조회
     function refundPayment2(resP) {
       // resP.payLog : 예약번호로 조회된 결제내역
       // result.payInfo : merchantUid로 조회된 결제내역 PaymentDto
@@ -305,7 +306,7 @@
         $.ajax({
           type: 'get',
           url: '/reserve/getRoomInfo.do',
-          data: 'roomNo=[[${reserveHo.roomtypeDto.roomFeatureDto.roomNo}]]',
+          data: 'roomNo=[[${reserveHo.roomtypeDto.roomNo}]]',
           datatype: 'json',
           success:(function(resData){
             $('#roomInfo').empty();

@@ -164,9 +164,7 @@ public class ReserveServiceImpl implements ReserveService {
                                           .hotelNo(hotelNo)
                                           .build())
                             .roomtypeDto(RoomtypeDto.builder()
-                                          .roomFeatureDto(RoomFeatureDto.builder()
-                                                              .roomNo(roomNo)
-                                                              .build())
+                                          .roomNo(roomNo)
                                           .build())
                             .build();
     
