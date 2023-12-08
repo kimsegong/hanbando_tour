@@ -167,9 +167,11 @@
           <input type="hidden" name="inquiryNo" th:value="${inquiry.inquiryNo}">
           <input type="hidden" name="title" th:value="${inquiry.title}">
           <input type="hidden" name="contents" th:value="${inquiry.contents}">
+            <th:block th:if="${session.user.auth == 0}">
             <button type="button" id="btn_remove" class="btn btn-danger btn-sm"style="width: 60px; height: 35px;">삭제</button>
             <button type="button" id="btn_answer" class="btn btn-danger btn-sm" style="width: 60px; height: 35px;"
                       th:unless="${#objects.nullSafe(answer, null)}">답변</button>
+            </th:block>
         </form>
       </div>
     
