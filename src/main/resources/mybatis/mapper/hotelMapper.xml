@@ -598,6 +598,20 @@
        ON R.ROOM_NO = RF.ROOM_NO
     WHERE R.HOTEL_NO = #{hotelNo}
  </select>
+ <select id="getRoomFeature" resultType="RoomFeatureDto">
+ SELECT ROOM_NO,
+        TOWEL, 
+        WATER, 
+        COFFEE, 
+        DRIER, 
+        IRON, 
+        MINIBAR
+  FROM ROOM_FEATURE_T 
+    WHERE ROOM_NO 
+    <foreach item="item" index="index" collection="list" open="in(" separator="," close=")">
+         #{item.roomNo}
+    </foreach>
+ </select>
  
  <select id="roomtype" parameterType="int" resultType="RoomtypeDto">
    SELECT ROOM_NO, HOTEL_NO, ROOM_DETAIL, ROOM_NAME, ROOM_MANY, R_VIEW, BLEAKFAST, SMOKE, PEOPLE, BED, SHOWER, R_SIZE
