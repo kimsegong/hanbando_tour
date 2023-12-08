@@ -163,7 +163,7 @@ public class PackageController {
       Map<String, Object> response = new HashMap<>();
 
       try {
-          int averageRating = packageService.getAverageRating(packageNo);
+          double averageRating = packageService.getAverageRating(packageNo);
           response.put("success", true);
           response.put("averageRating", averageRating);
       } catch (Exception e) {

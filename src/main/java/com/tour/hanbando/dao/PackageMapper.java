@@ -55,7 +55,7 @@ public interface PackageMapper {
   public int getReviewCount(int productNo);
   public List<ReviewDto> getReviewList(Map<String, Object> map);
   public List<ReviewDto> getReviewStarList(Map<String, Object> map);
-  public int starAve(int packageNo);
+  public double starAve(int packageNo);
   public int deleteReview(int reviewNo);
   
   // 부가요소
