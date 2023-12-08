@@ -29,11 +29,16 @@ public interface UserMapper {
   public int deleteInactiveUser(String email);
   public int insertNaverUser(UserDto user);
   //카카오
-  public int insertKakaoUser(UserDto user);
+  public int kakaoJoin(UserDto user);
   //아이디찾기
   public UserDto getFindId(Map<String, Object> map);
   //비밀번호찾기(아이디랑 핸드폰번호 일치시)
   public UserDto getFindPw(Map<String, Object> map);
   //
   public int recentpWChange(Map<String, Object> map);
+  
+  //
+  public UserDto changePw90(String email);
+  public int updatePw90(UserDto user);
+  public int autoupdatetmpPw(UserDto user);
 }
