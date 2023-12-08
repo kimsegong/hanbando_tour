@@ -18,10 +18,14 @@
 	</properties>
 	<dependencies>
     
+
+
+    
     <!-- 타임리프 추가 라이브러리 -->
     <dependency>
-      <groupId>org.thymeleaf.extras</groupId>
-      <artifactId>thymeleaf-extras-java8time</artifactId>
+	      <groupId>org.thymeleaf.extras</groupId>
+	      <artifactId>thymeleaf-extras-java8time</artifactId>
+	      <version>3.0.4.RELEASE</version>
     </dependency>
     
     
