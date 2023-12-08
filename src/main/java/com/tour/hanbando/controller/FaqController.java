@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.tour.hanbando.dto.FaqCaDto;
 import com.tour.hanbando.dto.FaqDto;
 import com.tour.hanbando.dto.NoticeDto;
 import com.tour.hanbando.service.FaqService;
@@ -30,10 +31,12 @@ public class FaqController {
   private final FaqService faqService;
   
   @GetMapping("/faqList.do")
-  public String faq(HttpServletRequest request) {
-    return "notice/faqList";
+  public String faq(HttpServletRequest request, Model model) {
+      Map<String, Object> faqCa = faqService.loadFaqCaList(request, model);
+      model.addAttribute("faqCa", faqCa.get("faqCaList")); 
+      return "notice/faqList";
   }
-  
+
   
   @ResponseBody
   @GetMapping(value="/loadFaqList.do", produces="application/json")

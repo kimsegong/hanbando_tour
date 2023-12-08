@@ -48,9 +48,19 @@ public Map<String, Object> loadFaqList(HttpServletRequest request) {
   Map<String, Object> result = new HashMap<String, Object>();
   result.put("faqList", faqList);
   result.put("paging", paging);
+
   return result;
   
 }
+public Map<String, Object> loadFaqCaList(HttpServletRequest request, Model model) {
+    List<FaqCaDto> faqCaList = faqMapper.getFaqCaList();
+    Map<String, Object> result = new HashMap<>();
+    result.put("faqCaList", faqCaList);
+    model.addAttribute("faqCaList", faqCaList);
+    return result;
+}
+
+
 @Override
 public void loadFaqCashList(HttpServletRequest request, Model model) {
   

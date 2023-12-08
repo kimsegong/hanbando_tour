@@ -62,20 +62,29 @@
               </tbody>
               <tfoot th:if="${not #lists.isEmpty(reserveList)}">
                 <tr>
-                  <td colspan="7" th:utext="${paging}"></td>
+                  <td colspan="7" th:utext="${paging}" class="paging"></td>
                 </tr>
               </tfoot>
             </table>
           </div>
-		      	
 		    </div>
+		  
 		    <div class="col-1">	      
 		    </div>
 		  </div>
 	  </div>
 	
 	</div>
-	
+	<script th:inline="javascript">
+    
+    function fnCheckResCancel(){
+      if('[[${cancelResult}]]' == 1){
+        alert('예약이 취소되었습니다.');
+      }
+    }
+  
+    fnCheckResCancel();
+  </script>
 
 	<div th:replace="~{/layout/footer::footer}"></div>
 </body>

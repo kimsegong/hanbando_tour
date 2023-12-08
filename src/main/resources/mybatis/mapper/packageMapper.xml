@@ -201,7 +201,7 @@
   	  LEFT JOIN PRODUCT_IMAGE_T PI ON P.PACKAGE_NO = PI.PACKAGE_NO
   	  LEFT JOIN REGION_T R ON P.REGION_NO = R.REGION_NO
   	  LEFT JOIN THEME_T T ON P.THEME_NO = T.THEME_NO
-  	  WHERE P.RN BETWEEN #{begin} AND #{end}
+  	  WHERE (P.RN BETWEEN #{begin} AND #{end}) AND PI.THUMBNAIL = 1
   	  ORDER BY P.RN ASC
 	</select>
 	
@@ -464,7 +464,7 @@
          ORDER BY STAR ASC;    
       </select>
       
-      <select id="starAve" resultType="int">
+      <select id="starAve" resultType="double">
         SELECT AVG(STAR) AS AVERAGE_RATING
           FROM REVIEW_T
          WHERE PACKAGE_NO = #{packageNo}      
