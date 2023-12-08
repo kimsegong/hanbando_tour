@@ -19,5 +19,7 @@ public interface NoticeMapper {
   public int deleteNotice(int NoticeNo);
   public int updateNotice(NoticeDto notice);
   public int insertNotices(NoticeDto noticeDto);
-  public int insertNoticeImage(ProductImageDto image);
+  public int insertImageList(ProductImageDto image);
+  
+  
 }

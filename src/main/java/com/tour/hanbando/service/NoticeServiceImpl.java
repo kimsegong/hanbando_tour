@@ -228,6 +228,8 @@ public class NoticeServiceImpl implements NoticeService {
       if (!dir.exists()) {
           dir.mkdirs();
       }
+      
+      
 
       // 이미지 파일 (CKEditor는 이미지를 upload라는 이름으로 보냄)
       MultipartFile upload = multipartRequest.getFile("upload");

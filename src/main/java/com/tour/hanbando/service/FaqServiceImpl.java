@@ -43,10 +43,12 @@ public Map<String, Object> loadFaqList(HttpServletRequest request) {
                                  , "caNo", caNo);
   
   List<FaqDto> faqList = faqMapper.getFaqList(map);
+  List<FaqCaDto> faqCaList = faqMapper.getFaqCaList();
   
   String paging = myPageUtils.getAjaxPaging();
   Map<String, Object> result = new HashMap<String, Object>();
   result.put("faqList", faqList);
+  result.put("faqCaList", faqCaList);
   result.put("paging", paging);
   return result;
   
