@@ -10,10 +10,10 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
-
 import com.tour.hanbando.dao.FaqMapper;
 import com.tour.hanbando.dto.FaqCaDto;
 import com.tour.hanbando.dto.FaqDto;
+import com.tour.hanbando.dto.NoticeDto;
 import com.tour.hanbando.util.MyPageUtils;
 
 import lombok.RequiredArgsConstructor;
@@ -34,13 +34,11 @@ public Map<String, Object> loadFaqList(HttpServletRequest request) {
   int page = Integer.parseInt(opt.orElse("1"));
   int total = faqMapper.getFaqCount();
   int display = 10;
-  int caNo = Integer.parseInt(request.getParameter("caNo"));
   
   myPageUtils.setPaging(page, total, display);
   
   Map<String, Object> map = Map.of("begin", myPageUtils.getBegin()
-                                 , "end", myPageUtils.getEnd()
-                                 , "caNo", caNo);
+                                 , "end", myPageUtils.getEnd());
   
   List<FaqDto> faqList = faqMapper.getFaqList(map);
   
@@ -188,9 +186,4 @@ public Map<String, Object> removeFaq(int FaqNo) {
    public FaqDto getFaq(int faqNo) {
      return faqMapper.getFaq(faqNo);
    }
-   
-   @Override
-  public FaqCaDto loadFaqCa(int faqCaNo) {
-    return faqMapper.getFaqCa(faqCaNo);
-  }
 }

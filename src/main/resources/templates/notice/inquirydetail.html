@@ -155,7 +155,7 @@
     <input type="hidden" name="title" th:value="${inquiry.title}">
     <input type="hidden" name="contents" th:value="${inquiry.contents}">
       <button type="button" id="btn_remove" class="btn btn-danger btn-sm"style="width: 60px; height: 35px;">삭제</button>
-      <button type="button" id="btn_answer" class="btn btn-danger btn-sm" style="width: 60px; height: 35px;"
+     <button type="button" id="btn_answer" class="btn btn-danger btn-sm" style="width: 60px; height: 35px;"
                 th:unless="${#objects.nullSafe(answer, null)}">답변</button>
   </form>
 </div>
@@ -234,7 +234,7 @@
         })
       }
       
-      const fnAnswer = () => {
+ 	 const fnAnswer = () => {
         $('#btn_answer').click(() => {
         event.preventDefault();
         if(confirm('1:1문의 답변클릭 하셨습니다. 맞습니까?')){
@@ -243,10 +243,11 @@
       }
       })
       }
-      
-     
-      fnRemoveInquiry();      
+
+
       fnAnswer();
+      fnRemoveInquiry();      
+
       
       </script>
       
