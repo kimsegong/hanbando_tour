@@ -7,6 +7,7 @@
   
   <resultMap type="RoomtypeDto" id="RoomtypeMap">
     <result column="HOTEL_NO" property="hotelNo"/>
+    <result column="ROOM_NO" property="roomNo"/>
     <result column="ROOM_DETAIL" property="roomDetail"/>
     <result column="ROOM_NAME" property="roomName"/>
     <result column="ROOM_MANY" property="roomMany"/>
@@ -17,15 +18,7 @@
     <result column="BED" property="bed"/>
     <result column="SHOWER" property="shower"/>
     <result column="R_SIZE" property="rSize"/>
-      <association javaType="RoomFeatureDto" property="roomFeatureDto">
-        <result column="ROOM_NO" property="roomNo"/>
-        <result column="TOWEL" property="towel"/>
-        <result column="WATER" property="water"/>
-        <result column="COFFEE" property="coffee"/>
-        <result column="DRIER" property="drier"/>
-        <result column="IRON" property="iron"/>
-        <result column="MINIBAR" property="minibar"/>
-     </association>
+      
   </resultMap>
   
   <resultMap type="PackageDto" id="PackageMap">
@@ -345,7 +338,7 @@
       , #{reservePrice}
       , #{userDto.userNo}
       , #{hotelDto.hotelNo}
-      , #{roomtypeDto.roomFeatureDto.roomNo}  
+      , #{roomtypeDto.roomNo}  
     )
   </insert>
   
