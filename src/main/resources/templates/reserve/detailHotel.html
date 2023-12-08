@@ -134,6 +134,7 @@
                 <button class="btn btn-success" type="button" th:onclick="|location.href='@{/hotel/list.do}'|">다른 호텔 예약하러가기</button>
                 <button type="button" th:onclick="|location.href='@{/reserve/reserveHotelList.do(userNo=${session.user.userNo})}'|" class="btn btn-success">나의 예약목록</button>
                 <button th:if="${reserveHo.reserveStatus != 2}" class="btn btn-outline-danger" type="button" id="btn_res_cancel">예약 취소하기</button>
+                <button class="btn btn-outline-danger" type="button" id="btn_cancel">환불하기</button>
               </form>
             </div>
             
@@ -228,6 +229,66 @@
       );
     }
     
+    function refundPayment1(){
+      $('#btn_cancel').click(function(){
+        $.ajax({
+          type: 'post',
+          url: '/payment/getPayLogByResNo',
+          data: 'reserveNo=' + reserveNo,
+          dataType: 'json',
+          success:(function(resP){
+            console.log(resP);
+            refundPayment2(resP);
+          })
+        })
+      })
+    }
+    
+    
+    function refundPayment2(resP) {
+      // resP.payLog : 예약번호로 조회된 결제내역
+      // result.payInfo : merchantUid로 조회된 결제내역 PaymentDto
+      $.ajax({
+        "url": "/payment/cancel", 
+        "type": "POST",
+        "contentType": "application/json",
+        "data": JSON.stringify({
+          "merchantUid": resP.payLog.merchantUid, // 예: ORD20180131-0000011
+          "cancelAmount": resP.payLog.paidAmount // 환불금액
+        }),
+        "dataType": "json"
+      }).done(function(result) { // 환불 성공시 로직 
+        alert("paymentDto 반환");
+        console.log(result);
+        
+        $.ajax({
+          url: "https://api.iamport.kr/payments/cancel",
+          method: "post",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": access_token // 포트원 서버로부터 발급받은 엑세스 토큰
+          },
+          data: {
+            impUid, // imp_uid를 환불 `unique key`로 입력
+            amount: cancel_request_amount, // 가맹점 클라이언트로부터 받은 환불금액
+            checksum: cancelableAmount // [권장] 환불 가능 금액 입력
+          }
+        }).done(function(data){
+          console.log(data);
+        })
+      }).fail(function(error) { // 환불 실패시 로직
+        alert("환불 실패");
+        console.log(resP);
+      });
+    }
+    
+    function fnGetToken(){
+      $.ajax({
+        url: ''
+      })
+    }
+    
+    refundPayment1();
     
   </script>
 
