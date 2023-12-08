@@ -100,8 +100,8 @@
 		margin-bottom: 20px;
 	}
 	
-	#complete {
-    height: 38px; 
+	.complete, .btn_address {
+    height: 35px; 
     width: 60px;
     color: #96B6C5;         /* 텍스트 색상 */
     background-color: #fff; /* 기본 배경 색상 */
@@ -110,7 +110,18 @@
     transition: all 0.3s;     /* 모든 속성에 대해 0.3초 동안 트랜지션 효과 적용 */
   }
   
-  #btn_search_inactiveUser:hover {
+  .btn_address {
+    height: 35px; 
+    width: 100px;
+    color: #96B6C5;         /* 텍스트 색상 */
+    background-color: #fff; /* 기본 배경 색상 */
+    border-color: #96B6C5;  /* 테두리 색상 */
+    border-radius: 10px;      /* 테두리를 둥글게 만듭니다. */
+    transition: all 0.3s;     /* 모든 속성에 대해 0.3초 동안 트랜지션 효과 적용 */
+  }
+  
+  
+  .complete:hover, .btn_address:hover {
     color: #fff;               /* 호버 시 텍스트 색상 */
     background-color: #96B6C5; /* 호버 시 배경 색상 */
   }
