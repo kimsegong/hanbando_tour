@@ -19,6 +19,7 @@ import com.tour.hanbando.dto.HotelDto;
 import com.tour.hanbando.dto.PackageDto;
 import com.tour.hanbando.dto.PaymentDto;
 import com.tour.hanbando.dto.ReserveDto;
+import com.tour.hanbando.dto.RoomtypeDto;
 import com.tour.hanbando.service.HotelService;
 import com.tour.hanbando.service.PackageService;
 import com.tour.hanbando.service.ReserveService;
@@ -133,10 +134,17 @@ public class ReserveController {
     Map<String, Object> map = reserveService.addReserveHotel(request);
     int addReserveHotelResult = (Integer) map.get("addResult");
     redirectAttributes.addFlashAttribute("addReserveHotelResult", addReserveHotelResult);
+    redirectAttributes.addFlashAttribute("hotelNo", request.getParameter("hotelNo"));
+    redirectAttributes.addFlashAttribute("roomNo", request.getParameter("roomNo"));
     return "redirect:/reserve/detailHotel.do?reserveNo=" + map.get("reserveNo");
   }
   
-  
+  @ResponseBody
+  @GetMapping("/getRoomInfo.do")
+  public Map<String, Object> getRoomInfo(HttpServletRequest request){
+    RoomtypeDto room = reserveService.loadRoomInfoWithWriteform(Integer.parseInt(request.getParameter("roomNo")));
+    return Map.of("room", room);
+  }
   
   
 }
