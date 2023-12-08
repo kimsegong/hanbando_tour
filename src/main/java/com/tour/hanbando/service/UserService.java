@@ -13,9 +13,7 @@ import com.tour.hanbando.dto.UserDto;
 
 public interface UserService {
   public void login(HttpServletRequest request, HttpServletResponse response) throws Exception;
-  public String getNaverLoginURL(HttpServletRequest request) throws Exception;
-  public String getNaverLoginAccessToken(HttpServletRequest request) throws Exception;
-  public UserDto getNaverProfile(String accessToken) throws Exception;
+
 
   
 //회원가입 시 본인 인증
@@ -30,6 +28,9 @@ public interface UserService {
 //비밀번호 찾기(인증후)
   public void doublemodifiyPw(HttpServletRequest request, HttpServletResponse response);
   //네이버
+  public String getNaverLoginURL(HttpServletRequest request) throws Exception;
+  public String getNaverLoginAccessToken(HttpServletRequest request) throws Exception;
+  public UserDto getNaverProfile(String accessToken) throws Exception;
   public void naverJoin(HttpServletRequest request, HttpServletResponse response);
   public void naverLogin(HttpServletRequest request, HttpServletResponse response, UserDto naverProfile) throws Exception;
   
@@ -40,6 +41,8 @@ public interface UserService {
   public String getKakaoLoginAccessToken(HttpServletRequest request) throws Exception; //토큰
   public UserDto getKakaoProfile(String accessToken) throws Exception; //카카오로그인 후속
   public void kakaoLogin(HttpServletRequest request, HttpServletResponse respone, UserDto kakaoProfile) throws Exception; //카카오 로그인
+  //카카오톡 간편로그인페이지에서 로그인하기
+  
   public void logout(HttpServletRequest request, HttpServletResponse response);
   public ResponseEntity<Map<String, Object>> checkEmail(String email);
   public ResponseEntity<Map<String, Object>> sendCode(String email);
