@@ -419,5 +419,19 @@
   </delete>
 
 
+  <select id="getDaysAfterPwModified" parameterType="Map" resultType="int">
+    SELECT EXTRACT(DAY FROM SYSTIMESTAMP - TO_TIMESTAMP(PW_MODIFIED_AT))
+      FROM USER_T
+     WHERE EMAIL = #{email}
+       AND PW = #{pw}
+  </select>
+
+
+
+
+
+
+
+
 </mapper>
 

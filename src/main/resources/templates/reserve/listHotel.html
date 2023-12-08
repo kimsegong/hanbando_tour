@@ -58,7 +58,11 @@
                   </tr>
                 </th:block>
               </tbody>
-             
+              <tfoot th:if="${not #lists.isEmpty(reserveHotelList)}">
+                <tr>
+                  <td colspan="6" th:utext="${paging}" class="paging"></td>
+                </tr>
+              </tfoot>
             </table>
           </div>
 		      	
