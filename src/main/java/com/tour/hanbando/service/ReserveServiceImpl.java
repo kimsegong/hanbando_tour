@@ -8,6 +8,7 @@ import java.net.URL;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -142,7 +143,7 @@ public class ReserveServiceImpl implements ReserveService {
     }
     
     int reserveStatus = Integer.parseInt(request.getParameter("resStatus"));
-    String reserveStart = request.getParameter("resStart").replace("-", "/");
+    String reserveStart = request.getParameter("resStart");
 //    String reserveFinish = "null";
     int reservePrice = Integer.parseInt(request.getParameter("totalReservePrice"));
     int userNo = Integer.parseInt(request.getParameter("userNo"));
@@ -425,7 +426,17 @@ public class ReserveServiceImpl implements ReserveService {
   }
   
   
-  
+  @Override
+  public int getUserExpiredPwModified(HttpServletRequest request) {
+    
+    Map<String, Object> map = new HashMap<>();
+    map.put("email", request.getParameter("email"));
+    map.put("pw", request.getParameter("pw"));
+    int days = reserveMapper.getDaysAfterPwModified(map);
+    System.out.println("==============================================================" + days);
+    
+    return 0;
+  }
   
   
   

@@ -1,5 +1,6 @@
 package com.tour.hanbando.controller;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -16,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.tour.hanbando.dto.ReserveDto;
 import com.tour.hanbando.service.HotelService;
 
 import lombok.RequiredArgsConstructor;
@@ -55,11 +57,48 @@ public class HotelController {
   @GetMapping("detail.do")
   public String hotelDetail(@RequestParam(value = "hotelNo", required = false, defaultValue = "0") int hotelNo, 
                                 HttpServletRequest request, Model model) {
-    
+   List<ReserveDto> reserve = hotelService.getReserveUser(hotelNo);
+   System.out.println(reserve);
+   model.addAttribute("reserve", reserve); 
    hotelService.hoteDetail(request, hotelNo, model); 
     
    return "hotel/detail";
   } 
+  
+  @ResponseBody
+  @PostMapping(value="/addReview.do", produces="application/json")
+  public Map<String, Object> addReview(HttpServletRequest request) {
+    return hotelService.addReview(request);
+  }
+  
+  @ResponseBody
+  @GetMapping(value="/reviewList.do", produces="application/json")
+  public Map<String, Object> reviewList(HttpServletRequest request){
+    return hotelService.loadReviewList(request);
+  }
+  
+  @ResponseBody
+  @PostMapping(value="/getAverageRating.do", produces="application/json")
+  public Map<String, Object> starAverage(@RequestParam(value="hotelNo", required=false, defaultValue="0") int hotelNo) {
+      Map<String, Object> response = new HashMap<>();
+
+      try {
+        double averageRating = hotelService.getAverageRating(hotelNo);
+          response.put("success", true);
+          response.put("averageRating", averageRating);
+      } catch (Exception e) {
+          response.put("success", false);
+          response.put("error", "Failed to get average rating.");
+          e.printStackTrace();
+      }
+      return response;
+  }
+  
+  @ResponseBody
+  @PostMapping(value="/removeReview.do", produces="application/json")
+  public Map<String, Object> removeReview(@RequestParam(value="reviewNo", required=false, defaultValue="0") int reviewNo) {
+    return hotelService.removeReview(reviewNo);
+  }
   
   /*************************** 작성 ***************************************************/  
   @GetMapping("write.form")

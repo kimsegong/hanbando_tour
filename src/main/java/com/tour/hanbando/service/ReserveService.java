@@ -41,4 +41,7 @@ public interface ReserveService {
   // 아임포트 accessToken 발급
   public String getAccessToken(String apiKey, String apiSecret);
   
+  
+ 
+  
 }

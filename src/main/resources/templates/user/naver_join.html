@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:form="http://www.w3.org/1999/xhtml">
+
+<head th:replace="~{/layout/header::head('네이버간편가입')}"></head>
+
+<body>
+
+  <div th:replace="~{/layout/header::header}"></div>
+
+  <div class="main_wrap">
+
+    <div class="wrap wrap_6">
+
+      <h1 class="title">네이버 내정보 확인하기</h1>
+
+      <form id="frm_naver_join" method="post" th:action="@{/user/naver/join.do}" th:object="${naverProfile}">
+
+        <div class="row mb-2">
+          <label for="email" class="col-sm-3 col-form-label">이메일</label>
+          <div class="col-sm-9"><input type="text" id="email" class="form-control"th:value="${naverProfile.email}" readonly></div>
+        </div>
+
+        <div class="row mb-2">
+          <label for="name" class="col-sm-3 col-form-label">이름</label>
+          <div class="col-sm-9"><input type="text" id="name" class="form-control" th:value="${naverProfile.name}" readonly></div>
+        </div>
+
+        <div class="row mb-2">
+          <label for="mobile" class="col-sm-3 col-form-label">휴대전화번호</label>
+          <div class="col-sm-9"><input type="text" id="mobile" class="form-control" th:value="${naverProfile.mobile}"readonly></div>
+        </div>
+
+       
+
+        <hr class="my-3">
+
+        
+
+
+        <div class="text-center">
+          <button type="submit" class="btn btn-primary">회원가입하기</button>
+        </div>
+
+      </form>
+
+    </div>
+
+  </div>
+
+  <div th:replace="~{/layout/footer::footer}"></div>
+
+</body>
+</html>
