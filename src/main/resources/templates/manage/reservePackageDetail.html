@@ -57,7 +57,28 @@
     transition: all 0.3s;     /* 모든 속성에 대해 0.3초 동안 트랜지션 효과 적용 */
   }
   
+  #move_to_packageDetail #packageTitle {
+    font-weight: bolder;
+    cursor: pointer;
+  }
+  
+  #move_to_packageDetail #packageTitle:hover {
+    text-decoration: underline;
+  }
+  
 </style>
+<script>
+    $(() => {
+    fnMovePackageDetail();
+  })
+  
+  const fnMovePackageDetail = () => {
+    $('#move_to_packageDetail').click(() => {
+      let packageNo = $('#packageNo').val();
+      location.href = '/package/detail.do?packageNo=' + packageNo;
+    })
+  }
+</script>
 
 <body>
 	<div th:replace="~{/layout/header::header}"></div>
@@ -146,8 +167,9 @@
                 <div class="col-2">
                   <label for="packageTitle" class="col-form-label">상품명</label>
                 </div>
-                <div class="col-5">
+                <div class="col-5" id="move_to_packageDetail">
                   <input type="text" id="packageTitle" th:value="${reserve.packageDto.packageTitle}" readonly class="form-control-plaintext m_email">
+                  <input type="hidden" id="packageNo" th:value="${reserve.packageDto.packageNo}">
                 </div>
               </div>
               <div class="mb-3 row">
