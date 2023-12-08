@@ -37,8 +37,12 @@ public interface ReserveService {
   
   public Map<String, Object> modifyReserveStatusByPayStatus(Map<String, String> payload, HttpServletRequest request, RedirectAttributes redirectAttributes);
   
+  public Map<String, Object> modifyReserveStatusCancel(HttpServletRequest request, RedirectAttributes redirectAttributes);
   
   // 아임포트 accessToken 발급
   public String getAccessToken(String apiKey, String apiSecret);
+  
+  
+ 
   
 }

@@ -9,6 +9,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
+import com.tour.hanbando.dto.ReserveDto;
+
 public interface HotelService {
   /********************리스트**************************/
   public Map<String, Object> getHotelList(HttpServletRequest request);
@@ -19,4 +21,10 @@ public interface HotelService {
   public boolean writeRoom(MultipartHttpServletRequest multipartRequest, List<MultipartFile> files) throws Exception;
   public boolean writeHotel(MultipartHttpServletRequest multipartRequest) throws Exception;
   public void hoteDetail(HttpServletRequest request, int hotelNo, Model model);
+  public Map<String, Object> loadReviewList(HttpServletRequest request);
+  public Map<String, Object> addReview(HttpServletRequest request);
+  public double getAverageRating(int hotelNo);
+  public List<ReserveDto> getReserveUser(int hotelNo); 
+  public Map<String, Object> removeReview(int reviewNo);
+  public int getHeart (HttpServletRequest request);
 }

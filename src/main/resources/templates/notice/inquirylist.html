@@ -47,7 +47,7 @@
       <div class="box1"></div>
     </div>
     
-    <div class="col-3" style="font-weight:bold">조회된 문의 1건</div>
+    <div class="col-3" style="font-weight:bold"></div>
     <div class="col-5"></div>
     <div class="col-2">
       <a th:href="@{/notice/inquirywrite.form}">
@@ -79,6 +79,7 @@
       </thead>
     <tbody>
       <th:block th:each="i,vs:${inquiryList}">
+        <th:block th:if="${i.userNo==session.user.userNo || session.user.auth == 0}">
         <tr class="align-bottom">
             <td th:text="${i.inquiryNo}"></td>
             <td th:text="${i.separate}"></td>
@@ -87,6 +88,7 @@
             </td>
             <td th:text="${i.createdAt}"></td>
         </tr>
+        </th:block>
       </th:block>
     </tbody>
   </table>

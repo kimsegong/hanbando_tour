@@ -19,6 +19,7 @@ import com.tour.hanbando.dto.HotelDto;
 import com.tour.hanbando.dto.PackageDto;
 import com.tour.hanbando.dto.PaymentDto;
 import com.tour.hanbando.dto.ReserveDto;
+import com.tour.hanbando.dto.RoomtypeDto;
 import com.tour.hanbando.service.HotelService;
 import com.tour.hanbando.service.PackageService;
 import com.tour.hanbando.service.ReserveService;
@@ -104,6 +105,13 @@ public class ReserveController {
     return "redirect:/reserve/reserveList.do?userNo=" + request.getParameter("userNo");
   }
   
+  @PostMapping("/cancel.do")
+  public String cancelReserve(HttpServletRequest request, RedirectAttributes redirectAttributes) {
+    Map<String, Object> map = reserveService.modifyReserveStatusCancel(request, redirectAttributes);
+    redirectAttributes.addFlashAttribute("cancelResult", map.get("modifyResCancelResult"));
+    System.out.println(redirectAttributes.getAttribute("cancelResult"));
+    return "redirect:/reserve/reserveList.do?userNo=" + request.getParameter("userNo");
+  }
 
   // 호텔 예약관련 요청을 처리
   @GetMapping("/reserveHotelList.do")
@@ -133,10 +141,18 @@ public class ReserveController {
     Map<String, Object> map = reserveService.addReserveHotel(request);
     int addReserveHotelResult = (Integer) map.get("addResult");
     redirectAttributes.addFlashAttribute("addReserveHotelResult", addReserveHotelResult);
+    redirectAttributes.addFlashAttribute("hotelNo", request.getParameter("hotelNo"));
+    redirectAttributes.addFlashAttribute("roomNo", request.getParameter("roomNo"));
     return "redirect:/reserve/detailHotel.do?reserveNo=" + map.get("reserveNo");
   }
   
+  @ResponseBody
+  @GetMapping("/getRoomInfo.do")
+  public Map<String, Object> getRoomInfo(HttpServletRequest request){
+    RoomtypeDto room = reserveService.loadRoomInfoWithWriteform(Integer.parseInt(request.getParameter("roomNo")));
+    return Map.of("room", room);
+  }
   
-  
+
   
 }

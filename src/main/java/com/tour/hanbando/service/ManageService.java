@@ -63,10 +63,10 @@ public interface ManageService {
     /* 호텔 객실 가격 변경 */
     public ResponseEntity<Map<String, Object>> modifyRoomPrice(HttpServletRequest request);    
     
-    /* 패키지 추천 변경 */
+    /* 패키지 예약/추천 변경 */
     public ResponseEntity<Map<String, Object>> modifyPackageRecommend(HttpServletRequest request);
     
-    /* 호텔 추천 변경 */
+    /* 호텔 판매/추천 변경 */
     public ResponseEntity<Map<String, Object>> modifyHotelRecommend(HttpServletRequest request);
     
     /* 예약 목록 */
