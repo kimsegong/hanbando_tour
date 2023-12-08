@@ -8,6 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -37,6 +38,15 @@ public class PayController {
     return reserveService.modifyReserveStatusByPayStatus(payload, request, redirectAttributes); 
   }
  
+ 
+  @ResponseBody
+  @PostMapping(value="/getPayLogByResNo", produces="application/json")
+  public Map<String, Object> getMerUidByReserveNo(@RequestParam(value="reserveNo", defaultValue = "0", required = false) int reserveNo){
+    PaymentDto payLog = reserveService.loadPaymentByReserveNo(reserveNo);
+    System.out.println("=========================================" + payLog.toString());
+    return Map.of("payLog", payLog);
+  }
+  
   
   @ResponseBody
   @PostMapping("/cancel")
@@ -44,6 +54,11 @@ public class PayController {
     return reserveService.loadPaymentByMerchantUid(request, payment);
   }
   
+  @ResponseBody
+  @PostMapping("/getToken")
+  public Map<String, Object> getToken(HttpServletRequest request){
+    return Map.of("accessToken", reserveService.getAccessToken(null, null));
+  }
   
   
 }
