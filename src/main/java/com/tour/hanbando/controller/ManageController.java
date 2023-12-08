@@ -164,7 +164,7 @@ public class ManageController {
     return manageService.modifyPackageRecommend(request);
   }
   
-  /* 호텔 예약/추천 여부 변경 */
+  /* 호텔 판매/추천 여부 변경 */
   @PostMapping(value="/modifyHotelRecommend.do", produces=MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<Map<String, Object>> modifyHotelRecommend(HttpServletRequest request){
     return manageService.modifyHotelRecommend(request);
