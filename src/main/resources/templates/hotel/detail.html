@@ -11,12 +11,9 @@
   border: 1px lightgray solid;
   margin: 22px 0 20px 0;
  } 
- hr {
-   color: gray;
- }
 .bigPicture {
-  border: 1px gray solid;
   width: 100%;
+  margin-bottom: 10px;
 }
 .bigPicture > img{
   width: 100%;
@@ -36,12 +33,11 @@
   margin: 15px auto 15px auto;
   height: 100px;
 }
- 
+.hit {
+	text-align: left;
+	margin-bottom: 10px;
+} 
 </style>
-
-
-
-
 
 <body>
 	<div th:replace="~{/layout/header::header}"></div>
@@ -64,8 +60,8 @@
             </th:block>   
             <div class="row">
               <div class="col-8 temp">
-                <div th:text="|조회수 : ${hotel.hit}|"></div>
-                <div class="mainPicture" style="border: 1px black solid;">
+                <div class="hit" th:text="|조회수 : ${hotel.hit}|"></div>
+                <div class="mainPicture" >
                   <div class="bigPicture">
 										<th:block th:each="hotelImage : ${hotelImage}">
 											<img th:if="${hotelImage.thumbnail == 1}" th:src="@{|${hotelImage.imagePath}/${hotelImage.filesystemName}|}">
@@ -77,17 +73,15 @@
                     </th:block>
                   </div>
                 </div>
-								<hr>
                 <div>
 									<div th:text="${hotel.hotelName}"></div>
 									<div th:text="${hotel.hotelAddress}" ></div>
 									<div th:text="${hotel.phoneNumber}" ></div>
 									<div th:text="${hotel.hEmail}" ></div>
-									<div th:text="|최저 ${price[0]}원 부터|"></div>
+									<div th:text="|최저 ${lowPrice[0]}원 부터|"></div>
 									<hr>
 									<div th:text="${hotel.hotelDetail}"></div>
 								</div>
-								<hr>
                 <div>
 									<div>편의 시설</div>
 									<i th:if="${fac.pool == 0}" class="fa-solid fa-person-swimming fa-2xl" style="color: #9399a5;"></i>
@@ -106,15 +100,13 @@
               <div class="right">
                 <form th:action="@{/reserve/writeHotel.form}" method="get">
                   <div class="title" id="sideTitle" th:text="${hotel.hotelName}"></div>
-                  <input type="hidden" name="hotelNo" th:value="${hotel.hotelNo}">
-                  <hr>
+                  <input type="hidden" id="hotelNo" name="hotelNo" th:value="${hotel.hotelNo}">
                   <input type="hidden" id="reserveRoomNo" name="roomNo">
                   <div class="roomType">방타입</div>
                   <div class="price">금액</div>
-                  <div class="checkIn">체크인</div>
-                  <div class="checkout">체크아웃</div>
+                  <div class="checkIn">체크인 : <span th:text="${#dates.format(#dates.createToday(),'yyyy/MM/dd')}"></span></div>
+                  <div class="checkout">체크아웃 : <span th:text="${#temporals.format(#temporals.createNow().plusDays(+1), 'yyyy/MM/dd')}"></span></div>
                   <button type="button">날짜 선택</button>
-                  <hr>
                   <button type="submit">예약하기</button>
                   <button type="button">찜하기</button>
                 </form> 
@@ -134,10 +126,9 @@
 									<div class="col-3 temp">
 										<div th:id="${'roomCarousel' + roomTypeStat.count}" class="carousel slide">
 										  <div class="carousel-inner">
-                        <th:block th:each="roomImage, iterStat : ${hotelImage}">
-                            <div th:if="${roomImage.roomNo == roomType.roomFeatureDto.roomNo}" 
-                                 th:classappend="${iterStat.index == 0} ? 'carousel-item active' : 'carousel-item'">
-                                <img th:src="@{|${roomImage.imagePath}/${roomImage.filesystemName}|}" class="d-block w-100" >
+                        <th:block th:each="roomImage : ${hotelImage}">
+                            <div th:if="${roomImage.roomNo == roomType.roomFeatureDto.roomNo}" class="carousel-item">
+                               <img th:src="@{|${roomImage.imagePath}/${roomImage.filesystemName}|}" class="d-block w-100" >
                             </div>
                         </th:block>
 										    
@@ -198,13 +189,69 @@
                       </th:block>
 										</th:block>
 										<div><button type="button" class="btn-choice" th:attr="data-roomno=${'roomNo' + roomTypeStat.count}" onclick="selectRoom(this.getAttribute('data-roomno'))">선택</button></div>
-										<div th:text="|남은방 : ${roomType.roomMany}개| "></div>
+										<div th:text="|남은방 : ${roomType.roomMany - countReserveRoom[roomTypeStat.index]} 개| "></div>
 									</div>
 								</div>
 							</div>
               </th:block>  
             </div>
-		    </div>
+            
+            
+            	<th:block th:if="${session.user != null}">
+        <input type="hidden" name="userNo" id="userNo" th:value="${session.user.userNo}">
+        </th:block>
+        <!--
+        <div th:each="reservation : ${reserve}">
+            <div class="reserveNo" th:text="${reservation.reserveNo}|"th:value="${reservation.reserveNo}"></div>
+            <div class="reserveUserNo" th:text="${reservation.userDto.userNo}" th:value="${reservation.userDto.userNo}"></div>
+        </div>    -->
+        
+        <div class="choice">여행 후기</div>
+        
+          <form class="mb-3 frm_review_add" method="post">
+          <div id="myform">
+          <fieldset>
+            <span class="text-bold"> ❤️ 별점을 선택해주세요</span>
+            <input type="radio" name="star" th:value="5" id="rate1"><label
+              for="rate1">★</label>
+            <input type="radio" name="star" th:value="4" id="rate2"><label
+              for="rate2">★</label>
+            <input type="radio" name="star" th:value="3" id="rate3"><label
+              for="rate3">★</label>
+            <input type="radio" name="star" th:value="2" id="rate4"><label
+              for="rate4">★</label>
+            <input type="radio" name="star" th:value="1" id="rate5"><label
+              for="rate5">★</label>
+          </fieldset>
+              <input type="hidden" name="packageNo" th:value="${hotel.hotelNo}">
+            <div>                          
+              <textarea class="col-auto form-control" name="reviewContents" placeholder="행복했던 여행후기를 남겨보세요🙂"></textarea>   <!-- 예약한사람만 보이게 -->
+              <button type="button" class="btn btn-kong" id="btn_review_add" style="margin-top: 20px; margin-left: 750px">작성완료</button>
+            </div>
+            </div>
+           </form>
+           
+            
+          <div style="overflow: hidden;">
+           <div id="starAve" style="text-align: left;">리뷰평점</div>
+            <div style="height: 100px; float: right;">
+                <select id="sortReview" class="form-select form-select-sm mb-3 h-50 d-inline-block" style="width: 120px;" aria-label=".form-select-sm example">
+                    <option value="1" selected>최신순</option>
+                    <option value="2">별점순</option>
+                </select>
+            </div>
+        </div>
+        <div id="reviewAccordion">
+             <input type="hidden" id="packageNo" name="packageNo" th:value="${hotel.hotelNo}">     
+             
+        </div>  
+    </div>    
+
+            
+            
+            
+            
+		    	</div>
 		    <div class="col-1">	      
 		    </div>
 		  </div>
@@ -212,6 +259,18 @@
 	
 	</div>
 <script th:inline="javascript">
+  var carouselInnerDivs = document.getElementsByClassName('carousel-inner');
+
+		// 각 div에 대해 반복
+		for (var i = 0; i < carouselInnerDivs.length; i++) {
+    // 현재 div의 첫 번째 자식에 클래스 추가
+	    var firstChild = carouselInnerDivs[i].firstElementChild;
+	    
+	    // 만약 첫 번째 자식이 존재한다면 클래스 추가
+	    if (firstChild) {
+	        firstChild.classList.add('active'); 
+		  }
+		}
   
   function kakaoMap(){
     var latitude = $('#latitude').val();
@@ -282,12 +341,226 @@
   
   function selectRoom(roomNo){
    console.log(roomNo);
-  roomNumber = document.getElementById(roomNo).value;
-  document.getElementById('reserveRoomNo').value = roomNumber;
-  console.log(document.getElementById('reserveRoomNo').value);
+   roomNumber = document.getElementById(roomNo).value;
+   document.getElementById('reserveRoomNo').value = roomNumber;
+   console.log(document.getElementById('reserveRoomNo').value);
+   console.log(document.getElementById('hotelNo').value);
  }
   
+  const fnReviewAdd = () => {
+    $('#btn_review_add').click(() => {         
+        // 데이터 확인용
+        console.log('Review Contents:', $('textarea[name="reviewContents"]').val());
+        console.log('User No:', $('#userNo').val());
+        console.log('Package No:', $('input[name="packageNo"]').val());
+        console.log('Reserve No:', $('input[name="reserveNo"]').val());
+        console.log('Star:', $('input[name="star"]:checked').val());
+        
+        $.ajax({
+            type: 'post',
+            url: '/package/addReview.do',
+            data: {
+                // 리뷰 번호를 보내지 않음
+                reviewContents: $('textarea[name="reviewContents"]').val(),
+                userNo: $('#userNo').val(),
+                packageNo: $('input[name="packageNo"]').val(),
+                reserveNo: $('input[name="reserveNo"]').val(),
+                star: $('input[name="star"]:checked').val()                
+            },
+            dataType: 'json',
+            success: (resData) => {             
+                console.log('Response Data:', resData); // 콘솔에 응답 데이터 출력
+                if (resData.addReviewResult === 1) {
+                    alert('리뷰가 등록되었습니다.');
+                    $('#reviewContents').val('');
+                    fnReviewList();
+                } else {
+                    alert('리뷰 등록에 실패했습니다.');
+                }
+            },
+            error: (xhr, status, error) => {
+                console.error('AJAX Error:', error);
+                alert('AJAX 요청 중 오류가 발생했습니다.');
+            }
+        });
+    });
+}
+
+
+    var page = 1;
+    var totalPage = 0;
   
+    const packageNo = $('#packageNo').val();
+  
+    const fnReviewList = () => { 
+      $.ajax({
+        type: 'get',
+        url: '/package/reviewList.do',
+        data: { page: page, packageNo: packageNo},
+        dataType: 'json',
+        success: (resData) => {
+          totalPage = resData.totalPage;
+          $('#reviewAccordion').empty();
+          const sessionUserNo = $('#userNo').val();
+          if (resData.reviewList != null && resData.reviewList.length > 0) {
+            $.each(resData.reviewList, (i, review)=> {
+              let str = '<div class="accordion accordion-flush">';
+              str += '<div class="accordion-item">';
+              str += '<h2 class="accordion-header">';
+              str += '<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapse' + i + '" aria-expanded="false" aria-controls="flush-collapse' + i + '">' + review.userDto.name + '님의 리뷰  ' + generateStarRating(review.star) + '</button>';
+              str += '</h2>';
+              str += '<div id="flush-collapse' + i + '" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">';
+              str += '<div class="accordion-body">' + review.reviewContents + '</div>';
+              str += '  <div>';
+              if(sessionUserNo == review.userDto.userNo){                
+                    str += '  <input type="hidden" value="' + review.reviewNo + '">';
+                    str += '  <button type="button" class="btn remove_Review" style="margin-left: 550px;">삭제하기</button>';
+                  }
+                    str += '  </div>';
+              str += '</div>';
+              str += '</div>';
+              str += '</div>';
+                $('#reviewAccordion').append(str);         
+            });
+          } else {
+            $('#reviewAccordion').append('<div class="text-center">등록된 리뷰가 없습니다.</div>');
+          }
+        },
+        error: (error) => {
+          console.error('Ajax 요청 에러:', error);
+        }
+      });
+    };
+    
+	   $('#sortReview').change(function () {
+      const selectedOption = $(this).val();
+    
+      if (selectedOption === '2') {
+         fnReviewStarList();
+      } else {
+         fnReviewList();
+      }
+      });	
+  
+   const fnReviewStarList = () => { 
+      $.ajax({
+        type: 'get',
+        url: '/package/reviewStarList.do',
+        data: { page: page, packageNo: packageNo},
+        dataType: 'json',
+        success: (resData) => {
+          totalPage = resData.totalPage;
+          $('#reviewAccordion').empty();
+          const sessionUserNo = $('#userNo').val();
+          if (resData.reviewList != null && resData.reviewList.length > 0) {
+            $.each(resData.reviewList, (i, review)=> {
+              let str = '<div class="accordion accordion-flush">';
+              str += '<div class="accordion-item">';
+              str += '<h2 class="accordion-header">';
+              str += '<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapse' + i + '" aria-expanded="false" aria-controls="flush-collapse' + i + '">' + review.userDto.name + '님의 리뷰  ' + generateStarRating(review.star) + '</button>';
+              str += '</h2>';
+              str += '<div id="flush-collapse' + i + '" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">';
+              str += '<div class="accordion-body">' + review.reviewContents + '</div>';
+              str += '  <div>';
+              if(sessionUserNo == review.userDto.userNo){                
+                    str += '  <input type="hidden" value="' + review.reviewNo + '">';
+                    str += '  <button type="button" class="btn remove_Review" style="margin-left: 550px;">삭제하기</button>';
+                  }
+                    str += '  </div>';
+              str += '</div>';
+              str += '</div>';
+              str += '</div>';
+                $('#reviewAccordion').append(str);         
+            });
+          } else {
+            $('#reviewAccordion').append('<div class="text-center">등록된 리뷰가 없습니다.</div>');
+          }
+        },
+        error: (error) => {
+          console.error('Ajax 요청 에러:', error);
+        }
+      });
+    };
+  
+  
+  $(document).ready(function() {
+        var sessionUserNo = $('#userNo').val();
+        var reserveUserNos = [];
+  
+        $('.reserveNo').each(function() {
+            var reservationUserNo = $(this).next('.reserveUserNo').text();
+            reserveUserNos.push(reservationUserNo);
+        });    
+        var matchingUserNo = reserveUserNos.filter(function(userNo) {
+            return userNo === sessionUserNo;
+        })[0];
+        if (matchingUserNo) {
+            $('#myform').show();
+        } else {
+            $('#myform').hide();
+        }
+    });
+     
+      $(document).ready(function() {
+          $.ajax({
+              type: 'post',
+              url: '/package/getAverageRating.do',
+              data: {
+                  packageNo: $('input[name="packageNo"]').val()
+              },
+              dataType: 'json',
+              success: function(resData) {
+                  updateAverageRating(resData.averageRating);
+              },
+              error: function(xhr, status, error) {
+                  console.error('AJAX Error:', error);
+                  alert('평균 별점 업데이트 중 오류가 발생했습니다.');
+              }
+          });
+      });
+      
+      function updateAverageRating(averageRating) {
+          var displayText = averageRating ? '평균 별점: ' + averageRating.toFixed(0) : '평점 : 0';
+          $('#starAve').text(displayText);
+      }
+
+
+    const fnReviewRemove = () => {
+      $(document).on('click', '.remove_Review', (ev) => {
+        if(!confirm('리뷰를 삭제할까요?')){
+          return;
+        }
+        $.ajax({
+          // 요청
+          type: 'post',
+          url: '/package/removeReview.do',
+          data: 'reviewNo=' + $(ev.target).prev().val(),
+          // 응답
+          dataType: 'json',
+          success: (resData) => { 
+            if(resData.removeResult === 1){
+              alert('해당 리뷰가 삭제되었습니다.');
+              fnReviewList();
+            } else {
+              alert('리뷰가 삭제되지 않았습니다.');
+            }
+          }
+        })
+      })
+    }
+    
+    
+    function generateStarRating(star) {
+    let stars = '';
+    for (let i = 1; i <= 5; i++) {
+        if (i <= star) {
+            stars += '<i class="fa-solid fa-star" style="color: #ede502;"></i>'; 
+        } else {
+            stars += '<i class="fa-regular fa-star" style="color: #f0c424;"></i>'; 
+        }
+    }
+    return stars;
+} 
   
   
   

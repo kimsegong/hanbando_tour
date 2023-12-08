@@ -8,27 +8,10 @@
   <select id="getFaqList" parameterType="Map" resultType="FaqDto">
     SELECT FAQ_NO, CA_NO, TITLE, CONTENTS, CREATED_AT, MODIFIED_AT 
       FROM FAQ_T
+     WHERE CA_NO = #{caNo}
    </select>
    
-     <select id="getFaqKoreaList" parameterType="Map" resultType="FaqDto">
-    SELECT FAQ_NO, CA_NO, TITLE, CONTENTS, CREATED_AT, MODIFIED_AT
-      FROM FAQ_T
-
-   </select>
-   
-     <select id="getFaqCashList" parameterType="Map" resultType="FaqDto">
-    SELECT FAQ_NO, CA_NO, TITLE, CONTENTS, CREATED_AT, MODIFIED_AT
-      FROM FAQ_T
-
-   </select>
-   
-     <select id="getFaqMemberList" parameterType="Map" resultType="FaqDto">
-    SELECT FAQ_NO, CA_NO, TITLE, CONTENTS, CREATED_AT, MODIFIED_AT
-      FROM FAQ_T
-
-   </select>
-   
-     <select id="getFaq" parameterType="int" resultType="FaqDto">
+   <select id="getFaq" parameterType="int" resultType="FaqDto">
     SELECT FAQ_NO, CA_NO, TITLE, CONTENTS
       FROM FAQ_T
      WHERE FAQ_NO = #{faqNo}
@@ -91,5 +74,11 @@
        , CONTENTS = #{contents} 
       WHERE FAQ_NO = #{faqNo} 
   </update>
+  
+    <select id="getFaqCa" parameterType="int" resultType="FaqCaDto">
+     SELECT CA_NO, CA_TITLE
+       FROM FAQ_CA_T
+      WHERE CA_NO= #{caNo} 
+     </select>
   
 </mapper>
