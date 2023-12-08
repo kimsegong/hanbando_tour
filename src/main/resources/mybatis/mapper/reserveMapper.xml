@@ -226,6 +226,7 @@
      <where>
        <if test="reserveNo != null">RESERVE_NO = #{reserveNo}</if>
        <if test="merchantUid != null">AND MERCHANT_UID = #{merchantUid}</if>
+       <if test="cancelAmount != null">AND PAID_AMOUNT = #{cancelAmount}</if>
      </where> 
   </select>
   
@@ -403,34 +404,20 @@
   </update>
   
   
-  <update id="updateReserveCancel">
+  <update id="updateReserveCancel" parameterType="Map">
     UPDATE RESERVE_T
        SET RESERVE_STATUS = 2
-     WHERE RESERVE_NO = (SELECT RESERVE_NO
-                           FROM RESERVE_T
-                          WHERE RESERVE_STATUS = 1
-                            AND RESERVE_NO = #{reserveNo})
+     WHERE RESERVE_NO =  #{reserveNo}
   </update>
   
+  
+  
+    
   <delete id="deleteReserve" parameterType="int">
     DELETE 
       FROM RESERVE_T
      WHERE RESERVE_NO = #{reserveNo}
   </delete>
-
-
-  <select id="getDaysAfterPwModified" parameterType="Map" resultType="int">
-    SELECT EXTRACT(DAY FROM SYSTIMESTAMP - TO_TIMESTAMP(PW_MODIFIED_AT))
-      FROM USER_T
-     WHERE EMAIL = #{email}
-       AND PW = #{pw}
-  </select>
-
-
-
-
-
-
 
 
 </mapper>
