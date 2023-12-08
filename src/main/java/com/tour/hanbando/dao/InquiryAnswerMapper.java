@@ -7,6 +7,8 @@ import com.tour.hanbando.dto.InquiryAnswerDto;
 @Mapper
 public interface InquiryAnswerMapper {
 
-  public int insertInquiryAnswer(InquiryAnswerDto answer);
-  public InquiryAnswerDto getInquiryAnswer(int inquiryNo);
+  
+   public int insertInquiryAnswer(InquiryAnswerDto answer); public
+   InquiryAnswerDto getInquiryAnswer(int inquiryNo);
+   
 }
