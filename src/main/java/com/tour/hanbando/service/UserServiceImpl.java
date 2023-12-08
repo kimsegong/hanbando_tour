@@ -44,7 +44,6 @@ public class UserServiceImpl implements UserService {
   private final UserMapper userMapper;
   private final MySecurityUtils mySecurityUtils;
   private final MyJavaMailUtils myJavaMailUtils;
-  private final MyPageUtils myPageUtils;
 
   
   private final String client_id = "dteUoZxabIKjJ8XhKGY0";
@@ -83,12 +82,7 @@ public class UserServiceImpl implements UserService {
   }
     
   //인증번호(비밀번호변경)
-  
-  @Override
-  public void findpw(HttpServletRequest request, HttpServletResponse response) {
-    // TODO Auto-generated method stub
-    
-  }
+
   
   @Override
   public int findpw_id(String email, String mobile) {
@@ -109,6 +103,52 @@ public class UserServiceImpl implements UserService {
 }
   
   
+ //비밀번호찾기(인증후)
+  @Override
+  public void doublemodifiyPw(HttpServletRequest request, HttpServletResponse response) {
+   
+    String pw = mySecurityUtils.getSHA256(request.getParameter("pw"));
+    String email = request.getParameter("email");
+    
+    UserDto user = UserDto.builder()
+                    .pw(pw)
+                    .email(email)
+                    .build();
+    
+    int modifyPwResult = userMapper.modifiedUserPw(user);
+    
+    try {
+      
+      response.setContentType("text/html; charset=UTF-8");
+      PrintWriter out = response.getWriter();
+      out.println("<script>");
+      if(modifyPwResult == 1) {
+        out.println("alert('비밀번호가 수정되었습니다.')");
+        out.println("location.href='" + request.getContextPath() + "/user/login.form'");
+      } else {
+        out.println("alert('비밀번호가 수정되지 않았습니다.')");
+        out.println("history.back()");
+      }
+      out.println("</script>");
+      out.flush();
+      out.close();
+      
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+    
+  }
+  
+    
+   //1.비밀번호 90일 변경(1.최근변경날짜를 꺼낸다)
+   
+    
+    
+    
+    
+    
+  
+  
   @Override
   public void login(HttpServletRequest request, HttpServletResponse response) throws Exception {
     
@@ -124,11 +164,14 @@ public class UserServiceImpl implements UserService {
     
     // 정상적인 로그인 처리하기
     UserDto user = userMapper.getUser(map);
+    //int checkDayOfPwModifiedAt = userMapper.recentpWChange(map); // 여기에 경과일수 int 타입으로 반환
     
     if(user != null) {
       session.setAttribute("user", user);
       userMapper.insertAccess(email);
       response.sendRedirect(request.getParameter("referer"));
+    
+      
     } else {
       response.setContentType("text/html; charset=UTF-8");
       PrintWriter out = response.getWriter();
@@ -139,7 +182,7 @@ public class UserServiceImpl implements UserService {
       out.flush();
       out.close();
     }
-    
+  
   }
   
   ////////////////네이버/////////////////////////
