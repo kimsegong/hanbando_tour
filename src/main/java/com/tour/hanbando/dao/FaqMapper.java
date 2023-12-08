@@ -25,4 +25,5 @@ public interface FaqMapper {
   public int deleteFaq(int FaqNo);
   public int updateFaq(FaqDto faq);
   public FaqCaDto getFaqCa(int faqCaNo);
+  public List<FaqCaDto> getFaqCaList();
 }

@@ -29,6 +29,7 @@ public class InquiryServiceImpl implements InquiryService {
   
   model.addAttribute("inquiryList", inquiryList);
   
+  
   }
   
   @Override
