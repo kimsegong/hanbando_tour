@@ -79,7 +79,7 @@
       </thead>
     <tbody>
       <th:block th:each="i,vs:${inquiryList}">
-        <th:block th:if="${i.userNo==session.user.userNo}">
+        <th:block th:if="${i.userNo==session.user.userNo || session.user.auth == 0}">
         <tr class="align-bottom">
             <td th:text="${i.inquiryNo}"></td>
             <td th:text="${i.separate}"></td>

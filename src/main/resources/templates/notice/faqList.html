@@ -46,13 +46,9 @@
   <div class="btn-toolbar mb-3 justify-content-center" role="toolbar" aria-label="Toolbar with button groups">
   <div class="btn-group me-2" role="group" aria-label="First group">
 
-   <!-- ... 중략 ... -->
-   <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-     <a th:each="faqCa : ${faqCaList}" class="dropdown-item" th:href="@{/notice/faqList.do(caNo=${faqCa.caNo})}" th:text="${faqCa.caTitle}"></a>
-   </div>
-
-   <!-- ... 중략 ... -->
-
+     <div class="btn-group" role="group" aria-label="Faq Category Buttons">
+       <a th:each="faqCa : ${faqCaList}" th:href="@{/notice/faqList.do(caNo=${faqCa.caNo})}" class="btn btn-warning my-btn" th:text="${faqCa.caTitle}"></a>
+     </div>
 
     
   </div>
@@ -130,7 +126,6 @@
      
      
       const fnFaqList = (ca) => { 
-        console.log(ca);
         $.ajax({
           type: 'get',
           url: '/notice/loadFaqList.do',
