@@ -9,6 +9,8 @@ import com.tour.hanbando.dto.FacilitiesDto;
 import com.tour.hanbando.dto.HotelDto;
 import com.tour.hanbando.dto.HotelImageDto;
 import com.tour.hanbando.dto.RegionDto;
+import com.tour.hanbando.dto.ReserveDto;
+import com.tour.hanbando.dto.ReviewDto;
 import com.tour.hanbando.dto.RoomFeatureDto;
 import com.tour.hanbando.dto.RoompriceDto;
 import com.tour.hanbando.dto.RoomtypeDto;
@@ -46,4 +48,11 @@ public interface HotelMapper {
   
   public RoomtypeDto roomtype(int roomNo);
   public int countReserveRoom(Map<String, Object> map);
+  
+  public int insertReview(ReviewDto reviewDto);
+  public int getReviewCount(int hotelNo);
+  public List<ReviewDto> getReviewList(Map<String, Object> map);
+  public double starAve(int hotelNo);
+  public List<ReserveDto> getReserve(int hotelNo);
+  public int deleteReview(int reviewNo);
 }
