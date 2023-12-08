@@ -6,6 +6,7 @@ import java.util.Map;
 import org.apache.ibatis.annotations.Mapper;
 
 import com.tour.hanbando.dto.FacilitiesDto;
+import com.tour.hanbando.dto.HeartDto;
 import com.tour.hanbando.dto.HotelDto;
 import com.tour.hanbando.dto.HotelImageDto;
 import com.tour.hanbando.dto.RegionDto;
@@ -55,4 +56,8 @@ public interface HotelMapper {
   public double starAve(int hotelNo);
   public List<ReserveDto> getReserve(int hotelNo);
   public int deleteReview(int reviewNo);
+  
+  public int deleteHeart(HeartDto heartDto);
+  public int insertHeart(HeartDto heartDto);
+  public int getCountHeart(HeartDto heartDto);
 }

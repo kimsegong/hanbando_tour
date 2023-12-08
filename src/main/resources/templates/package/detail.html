@@ -503,7 +503,7 @@
       });
       
       function updateAverageRating(averageRating) {
-          var displayText = averageRating ? '평균 별점: ' + averageRating.toFixed(0) : '평점 : 0';
+          var displayText = averageRating ? '평균 별점: ' + averageRating.toFixed(2) : '평점 : 0';
           $('#starAve').text(displayText);
       }
 
@@ -687,9 +687,6 @@
         }
     });
 }
-
-
-
 
 
    fnEditPackage();

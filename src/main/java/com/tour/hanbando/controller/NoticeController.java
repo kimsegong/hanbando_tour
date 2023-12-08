@@ -81,10 +81,23 @@ public class NoticeController {
   
  }
   
+  /* 여기부터 내가 막 만진거 */
   @ResponseBody
   @PostMapping(value="/imageUpload.do", produces="application/json")
   public Map<String, Object> imageUpload(MultipartHttpServletRequest multipartRequest) {
     return noticeService.imageUpload(multipartRequest);
+  }
+  
+  @ResponseBody
+  @GetMapping(value="/getAttachList.do", produces="application/json")
+  public Map<String, Object> getAttachList(HttpServletRequest request) {
+    return noticeService.getAttachList(request);
+  }
+  
+  @ResponseBody
+  @PostMapping(value="/addAttach.do", produces="application/json")
+  public Map<String, Object> addAttach(MultipartHttpServletRequest multipartRequest) throws Exception {
+    return noticeService.addAttach(multipartRequest);
   }
   
 }
