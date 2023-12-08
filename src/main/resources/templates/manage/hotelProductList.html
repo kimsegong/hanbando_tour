@@ -198,17 +198,17 @@
 
   const fnModifyRecommend = () => {
     $('.btn_select').click((ev) => {
-     const formRecommend = $(ev.target).closest('form');
+     const formStatus = $(ev.target).closest('tr').find('.frm_modifyRecommend');
       $.ajax({
         type: 'post',
         url: '/manage/modifyHotelRecommend.do',
-        data: formRecommend.serialize(),
+        data: formStatus.serialize(),
         dataType: 'json',
         success: (resData) => {
           if(resData.modifyRecommendResult === 1){
-            alert('추천 여부가 변경되었습니다.');
+            alert('예약/추천 여부가 변경되었습니다.');
           } else {
-            alert('추천 여부가 변경되지 않았습니다.');
+            alert('예약/추천 여부가 변경되지 않았습니다.');
           }
         }
       })
@@ -363,8 +363,12 @@
                             <a th:href="@{/hotel/detail.do(hotelNo=${h.hotelNo})}" th:text="${h.hotelName}"></a>
                           </td>
                           <td>
-                            <a th:href="@{/hotel/detail.do(hotelNo=${h.hotelNo})}" th:if="${h.status == 1}">판매중</a>
-                            <a th:href="@{/hotel/detail.do(hotelNo=${h.hotelNo})}" th:if="${h.status == 0}">판매안함</a>
+                            <form class="frm_modifyRecommend">
+                              <select name="status" class="status" >
+                                <option value="1" th:selected="${h.status == 1}">판매중</option>
+                                <option value="0" th:selected="${h.status == 0}">판매안함</option>
+                              </select>
+                            </form>
                           </td>
                           <td class="open_contents">
                             가격보기

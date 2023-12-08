@@ -80,6 +80,70 @@
        </association>
     </resultMap>     
      
+  <resultMap type="ReserveDto" id="ReserveMap">
+    <id column="RESERVE_NO" property="reserveNo"/>
+    <result column="RESERVED_AT" property="reservedAt"/>
+    <result column="REQUESTED_TERM" property="requestedTerm"/>
+    <result column="AGREE" property="agree"/>
+    <result column="DEPARTURE_LOC" property="departureLoc"/>
+    <result column="RESERVE_STATUS" property="reserveStatus"/>
+    <result column="RESERVE_START" property="reserveStart"/>
+    <result column="RESERVE_FINISH" property="reserveFinish"/>
+    <result column="RESERVE_PERSON" property="reservePerson"/>
+    <result column="RESERVE_PRICE" property="reservePrice"/>
+    <association javaType="UserDto" property="userDto">
+        <id column="USER_NO" property="userNo"/>
+        <result column="EMAIL" property="email" />
+        <result column="PW" property="pw" />
+        <result column="NAME" property="name" />
+        <result column="GENDER" property="gender" />
+        <result column="MOBILE" property="mobile" />
+        <result column="POSTCODE" property="postcode" />
+        <result column="ROAD_ADDRESS" property="roadAddress" />
+        <result column="JIBUN_ADDRESS" property="jibunAddress" />
+        <result column="DETAIL_ADDRESS" property="detailAddress" />
+        <result column="AGREE" property="agree" />
+        <result column="STATE" property="state" />
+        <result column="AUTH" property="auth" />
+        <result column="PW_MODIFIED_AT" property="pwModifiedAt" />
+        <result column="JOINED_AT" property="joinedAt" />  
+    </association>
+    <association javaType="PackageDto" property="packageDto">
+        <id column="PACKAGE_NO" property="packageNo"/>
+        <result column="PRICE" property="price" />
+    </association>
+    <association javaType="HotelDto" property="hotelDto">
+        <id column="HOTEL_NO" property="hotelNo"/>
+        <result column="REGION_NO" property="regionNo"/>
+        <result column="HOTEL_NAME" property="hotelName"/>
+        <result column="HOTEL_ADDRESS" property="hotelAddress"/>
+        <result column="LATITUDE" property="latitude"/>
+        <result column="LONGITUDE" property="longitude"/>
+        <result column="HOTEL_DETAIL" property="hotelDetail"/>
+        <result column="PHONE_NUMBER" property="phoneNumber"/>
+        <result column="H_EMAIL" property="HEmail"/>
+        <result column="CREATED_AT" property="createdAt"/>
+        <result column="MODIFIED_AT" property="modifiedAt"/>
+        <result column="HIT" property="hit"/>
+        <result column="STATUS" property="status"/>
+        <result column="RECOMMEND_STATUS" property="recommendStatus"/>
+    </association>
+    <association javaType="RoomtypeDto" property="roomtypeDto">
+        <id column="ROOM_NO" property="roomNo"/>
+        <result column="HOTEL_NO" property="hotelNo"/>
+        <result column="ROOM_DETAIL" property="roomDetail"/>
+        <result column="ROOM_NAME" property="roomName"/>
+        <result column="ROOM_MANY" property="roomMany"/>
+        <result column="VIEW" property="view"/>
+        <result column="BREAKFAST" property="breakfast"/>
+        <result column="SMOKE" property="smoke"/>
+        <result column="PEOPLE" property="people"/>
+        <result column="BED" property="bed"/>
+        <result column="SHOWER" property="shower"/>
+        <result column="SIZE" property="size"/>
+    </association>
+</resultMap>
+     
   <select id="selectHotelList" parameterType="Map" resultMap="HotelMap">
         SELECT  H.HOTEL_NO,
             H.REGION_NO,
@@ -552,6 +616,62 @@
 				     )
 		]]>		     
   </select>
+  
+  <insert id="insertReview" parameterType="ReviewDto">
+    INSERT INTO REVIEW_T (
+        REVIEW_NO
+      , HOTEL_NO
+      , USER_NO
+      , REVIEW_CONTENTS
+      , REGIST_AT
+      , STAR
+    ) VALUES (
+        REVIEW_SEQ.NEXTVAL
+      , #{hotelNo}
+      , #{userDto.userNo}
+      , #{reviewContents}
+      , TO_CHAR(SYSDATE,'YYYY/MM/DD')
+      , #{star}
+    )
+  </insert>
+  
+  
+ <select id="getReviewCount" parameterType="int" resultType="int">
+        SELECT COUNT(*)
+          FROM REVIEW_T
+         WHERE HOTEL_NO = #{hotelNo}
+ </select>
+ <select id="getReviewList" parameterType="Map" resultMap="ReviewMap">
+    SELECT A.REVIEW_NO, A.HOTEL_NO, A.STAR, A.USER_NO, A.REVIEW_CONTENTS, A.REGIST_AT, A.NAME
+      FROM (SELECT
+              <if test="sort == 1">  
+              ROW_NUMBER() OVER(ORDER BY REVIEW_NO DESC) AS RN, 
+              </if> 
+              <if test="sort == 2">  
+              ROW_NUMBER() OVER(ORDER BY STAR DESC) AS RN, 
+              </if>
+              C.REVIEW_NO, C.REVIEW_CONTENTS, C.STAR, C.HOTEL_NO, C.REGIST_AT, U.USER_NO, U.NAME
+              FROM USER_T U INNER JOIN REVIEW_T C
+                ON U.USER_NO = C.USER_NO
+             WHERE C.HOTEL_NO = #{hotelNo}) A
+     WHERE A.RN BETWEEN #{begin} AND #{end}
+  </select>
+  <select id="starAve" resultType="double">
+    SELECT AVG(STAR) AS AVERAGE_RATING
+      FROM REVIEW_T
+     WHERE HOTEL_NO = #{hotelNo}      
+  </select>
+  <delete id="deleteReview" parameterType="int">
+     DELETE 
+       FROM REVIEW_T
+      WHERE REVIEW_NO = #{reviewNo}
+  </delete>
+ <select id="getReserve" parameterType="int" resultMap="ReserveMap">
+    SELECT RESERVE_NO, USER_NO
+      FROM RESERVE_T
+     WHERE HOTEL_NO = #{hotelNo} 
+ </select>
+ 
  
  </mapper>
  

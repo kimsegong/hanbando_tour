@@ -4,7 +4,29 @@
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.tour.hanbando.dao.ReserveMapper">
-
+  
+  <resultMap type="RoomtypeDto" id="RoomtypeMap">
+    <result column="HOTEL_NO" property="hotelNo"/>
+    <result column="ROOM_DETAIL" property="roomDetail"/>
+    <result column="ROOM_NAME" property="roomName"/>
+    <result column="ROOM_MANY" property="roomMany"/>
+    <result column="R_VIEW" property="rView"/>
+    <result column="BLEAKFAST" property="bleakfast"/>
+    <result column="SMOKE" property="smoke"/>
+    <result column="PEOPLE" property="people"/>
+    <result column="BED" property="bed"/>
+    <result column="SHOWER" property="shower"/>
+    <result column="R_SIZE" property="rSize"/>
+      <association javaType="RoomFeatureDto" property="roomFeatureDto">
+        <result column="ROOM_NO" property="roomNo"/>
+        <result column="TOWEL" property="towel"/>
+        <result column="WATER" property="water"/>
+        <result column="COFFEE" property="coffee"/>
+        <result column="DRIER" property="drier"/>
+        <result column="IRON" property="iron"/>
+        <result column="MINIBAR" property="minibar"/>
+     </association>
+  </resultMap>
   
   <resultMap type="PackageDto" id="PackageMap">
     <id column="PACKAGE_NO" property="packageNo"/>
@@ -84,19 +106,7 @@
       <result column="STATUS" property="status"/>
       <result column="RECOMMEND_STATUS" property="recommendStatus"/>
     </association>
-    <association javaType="RoomtypeDto" property="roomtypeDto">
-      <result column="HOTEL_NO" property="hotelNo"/>
-      <result column="ROOM_DETAIL" property="roomDetail"/>
-      <result column="ROOM_NAME" property="roomName"/>
-      <result column="ROOM_MANY" property="roomMany"/>
-      <result column="VIEW" property="view"/>
-      <result column="BREAKFAST" property="breakfast"/>
-      <result column="SMOKE" property="smoke"/>
-      <result column="PEOPLE" property="people"/>
-      <result column="BED" property="bed"/>
-      <result column="SHOWER" property="shower"/>
-      <result column="SIZE" property="size"/>
-    </association>
+    <association property="roomtypeDto" resultMap="RoomtypeMap"/>
   </resultMap> 
   
   <resultMap type="TouristDto" id="TouristMap">
@@ -193,7 +203,7 @@
     SELECT RES.RESERVE_NO, RES.RESERVED_AT, RES.REQUESTED_TERM, RES.AGREE, RES.RESERVE_STATUS, RES.RESERVE_START, RES.RESERVE_FINISH, RES.RESERVE_PERSON, RES.RESERVE_PRICE
          , U.USER_NO, U.NAME, U.EMAIL, U.GENDER, U.MOBILE, U.AUTH
          , H.HOTEL_NO, H.HOTEL_NAME, H.HOTEL_ADDRESS, H.HOTEL_DETAIL
-         , RT.ROOM_NAME
+         , RT.ROOM_NAME, RT.ROOM_NO
       FROM USER_T U INNER JOIN RESERVE_T RES
         ON U.USER_NO = RES.USER_NO INNER JOIN HOTEL_T H
         ON H.HOTEL_NO = RES.HOTEL_NO INNER JOIN ROOMTYPE_T RT
@@ -407,6 +417,20 @@
       FROM RESERVE_T
      WHERE RESERVE_NO = #{reserveNo}
   </delete>
+
+
+  <select id="getDaysAfterPwModified" parameterType="Map" resultType="int">
+    SELECT EXTRACT(DAY FROM SYSTIMESTAMP - TO_TIMESTAMP(PW_MODIFIED_AT))
+      FROM USER_T
+     WHERE EMAIL = #{email}
+       AND PW = #{pw}
+  </select>
+
+
+
+
+
+
 
 
 </mapper>
