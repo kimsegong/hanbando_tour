@@ -123,12 +123,24 @@
       
       <div class="contents" th:text="${inquiry.contents}"></div>
       
+      <div class="wrap1">
+        <div class="box4"></div>
+      </div>  
       
       <details>
     <summary style="text-align: center;">열어버리기</summary>
+    
+      <div class="row">
+        <h4 class="notice-text" style="font-size: 16px; font-weight: bold;" th:text="|관리자 답변입니다.|"></h4>
+      </div>
       <th:block th:if="${#objects.nullSafe(answer, null)}">
       <div th:text="${answer.contents}"></div>
       </th:block> 
+      <hr style="border: 1px solid black; margin-bottom: 0; margin-top: 10px;">    
+      </div>
+
+    
+   
       
       
       </details>
@@ -148,18 +160,20 @@
       <div class="col-9"  style="padding-left:10px; padding-right: 40px;">
       
       
-      
-<div style="text-align: center;">
-  <form id="frm_detail" method="post">
-    <input type="hidden" name="inquiryNo" th:value="${inquiry.inquiryNo}">
-    <input type="hidden" name="title" th:value="${inquiry.title}">
-    <input type="hidden" name="contents" th:value="${inquiry.contents}">
-      <button type="button" id="btn_remove" class="btn btn-danger btn-sm"style="width: 60px; height: 35px;">삭제</button>
-     <button type="button" id="btn_answer" class="btn btn-danger btn-sm" style="width: 60px; height: 35px;"
-                th:unless="${#objects.nullSafe(answer, null)}">답변</button>
-  </form>
-</div>
-      
+
+
+      <div style="display: flex; justify-content: center; padding-left:580px">
+        <form id="frm_detail" method="post">
+          <input type="hidden" name="inquiryNo" th:value="${inquiry.inquiryNo}">
+          <input type="hidden" name="title" th:value="${inquiry.title}">
+          <input type="hidden" name="contents" th:value="${inquiry.contents}">
+            <button type="button" id="btn_remove" class="btn btn-danger btn-sm"style="width: 60px; height: 35px;">삭제</button>
+            <button type="button" id="btn_answer" class="btn btn-danger btn-sm" style="width: 60px; height: 35px;"
+                      th:unless="${#objects.nullSafe(answer, null)}">답변</button>
+        </form>
+      </div>
+    
+
       
       
       </div>
