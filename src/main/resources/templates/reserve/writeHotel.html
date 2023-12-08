@@ -155,12 +155,40 @@
     
     function fnAddReserveHotel(){
       $('#btn_reserve').click(function(){
+        fnRegAgree();
         $('#frm_reserve').attr('action', '/reserve/addReserveHotel.do');
         $('#frm_reserve').submit();
       })
     }
     
+    function fnRegAgree(){
+      if(!$('#chkAgree').is(':checked')){
+        alert('필수 약관에 동의하세요.');
+        ev.preventDefault();
+        return;
+      }
+    }
     
+    function fnChkAll(){
+      $('#chkAll').click(function(){
+        $('#chkAgree').prop('checked', $(this).prop('checked'));
+        $('#chkMarketing').prop('checked', $(this).prop('checked'));
+      })
+    }
+    
+    function fnChkEach(){
+      $('.chk_each').click(function(){
+        var total = 0;
+        total += $('#chkAgree').prop('checked');
+        total += $('#chkMarketing').prop('checked');
+        $('#chkAll').prop('checked', total === $('.chk_each').length);
+      })
+    } 
+    
+    
+  
+    fnChkEach();
+    fnChkAll();
     fnAddReserveHotel();
   </script>
 	

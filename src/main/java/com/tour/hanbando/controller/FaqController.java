@@ -38,6 +38,8 @@ public class FaqController {
   @ResponseBody
   @GetMapping(value="/loadFaqList.do", produces="application/json")
   public Map<String, Object> fapList(HttpServletRequest request){
+     System.out.println("############3" + request.getParameter("page"));
+     System.out.println("############3" + request.getParameter("caNo"));
     return faqService.loadFaqList(request);
   }
   

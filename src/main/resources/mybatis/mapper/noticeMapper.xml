@@ -68,4 +68,20 @@
              WHERE ${column} LIKE '%' || #{query} || '%') 
      WHERE RN BETWEEN #{begin} AND #{end} 
    </select>
+   
+        <insert id="insertImageList" parameterType="productImageDto">
+        INSERT INTO PRODUCT_IMAGE_T (
+            IMAGE_NO
+          , PACKAGE_NO
+          , FILESYSTEM_NAME
+          , THUMBNAIL
+          , IMAGE_PATH
+        ) VALUES (
+            PRODUCT_IMAGE_SEQ.NEXTVAL
+          , #{packageNo}
+          , #{filesystemName}
+          , #{thumbnail}
+          , #{imagePath}
+        )
+      </insert>
 </mapper>

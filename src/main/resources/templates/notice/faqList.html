@@ -46,25 +46,13 @@
   <div class="btn-toolbar mb-3 justify-content-center" role="toolbar" aria-label="Toolbar with button groups">
   <div class="btn-group me-2" role="group" aria-label="First group">
 
-    <a th:href = "@{/notice/faqWrite.form}">
-    <button type="button" class="btn btn-outline-secondary">자주묻는질문 작성</button>      
-    </a>
-    
-    <a th:href = "@{/notice/faqKorea.do}">
-    <button type="button" class="btn btn-outline-secondary">국내패키지</button>
-    </a>
-    
-    <a th:href = "@{/notice/faqCash.do}">
-    <button type="button" class="btn btn-outline-secondary">예약/결제</button>
-    </a>
-    
-    <a th:href = "@{/notice/faqMember.do}">
-    <button type="button" class="btn btn-outline-secondary">회원안내</button>
-    </a>
-    
-    <a th:href = "@{/notice/faqList.do}">
-    <button type="button" class="btn btn-secondary">기타</button>
-    </a>
+   <!-- ... 중략 ... -->
+   <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+     <a th:each="faqCa : ${faqCaList}" class="dropdown-item" th:href="@{/notice/faqList.do(caNo=${faqCa.caNo})}" th:text="${faqCa.caTitle}"></a>
+   </div>
+
+   <!-- ... 중략 ... -->
+
 
     
   </div>
@@ -133,11 +121,20 @@
      var page = 1;
      var totalPage = 0;
      
-      const fnFaqList = () => { 
+     const url = new URL(window.location.href);
+     
+     var ca = url.searchParams.get("caNo");   
+       if(url.searchParams.get("caNo") == null){
+         ca = 0;
+       } 
+     
+     
+      const fnFaqList = (ca) => { 
+        console.log(ca);
         $.ajax({
           type: 'get',
           url: '/notice/loadFaqList.do',
-          data: { page: page},
+          data: { page: page, caNo: ca || 0 },
           dataType: 'json',
           success: (resData) => {
             totalPage = resData.totalPage;
@@ -247,7 +244,7 @@ $(document).on('click', '#edit_btn', (ev) => {
 
 
 
-      fnFaqList();
+      fnFaqList(ca);
       fnFaqRemove();
           
   </script>
