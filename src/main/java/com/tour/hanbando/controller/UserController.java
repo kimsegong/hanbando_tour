@@ -135,36 +135,30 @@ public class UserController {
   }
   
   ///////////////////카카오 로그인////////////////////////
-  
-  @PostMapping("/kakao/join.do")
-  public void kakaoJoin(HttpServletRequest request, HttpServletResponse response) throws Exception {
-    userService.kakaoJoin(request, response);
-  }
-  
   @GetMapping("/kakao/getAccessToken.do")
-  public String getKakaoAccessToken(HttpServletRequest request) throws Exception {
-    String accessToken = userService.getKakaoLoginAccessToken(request);
-    return "redirect:/user/kakao/getProfile.do?accessToken=" + accessToken;
+  public String KakaotAccessToken( HttpServletRequest request ) throws Exception {
+      String accessToken = userService.getKakaoLoginAccessToken(request);
+      return "redirect:/user/kakao/getProfile.do?accessToken=" + accessToken;
   }
-  
-  //카카오 토큰 발급
+
   @GetMapping("/kakao/getProfile.do")
-  public String getKakaoProfile(HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
-    UserDto kakaoProfile = userService.getKakaoProfile(request.getParameter("accessToken"));
+  public  String getKakaoProfile(HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
+    UserDto kakaoProfile = userService.getKakaoProfile(request.getParameter("accessToken")); 
     UserDto user = userService.getUser(kakaoProfile.getEmail());
-    
+
     if(user == null) {
-      // 카카오 간편가입 페이지로 이동
       model.addAttribute("kakaoProfile", kakaoProfile);
       return "user/kakao_join";
     } else {
-      // kakaoProfile로 로그인 처리하기
       userService.kakaoLogin(request, response, kakaoProfile);
       return "redirect:/main.do";
     }
   }
-    
-
+  
+  @PostMapping("/kakao/join.do")
+  public void kakaoJoin(HttpServletRequest request, HttpServletResponse response) {
+    userService.naverJoin(request, response);
+  }
   
   @PostMapping("/login.do")
   public void login(HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -298,6 +292,13 @@ public class UserController {
         return "user/pwCorrect";
       }
       
-      
+      // 90일 경과 후 비밀번호 업데이트 
+      @GetMapping("/autoUpdatePw.do")
+      public String autoUpdatePw(HttpServletRequest request, RedirectAttributes redirectAttributes) {
+        int autoUpdatePw90Result = userService.autoUpdatePw90(request); 
+        redirectAttributes.addFlashAttribute("autoUpdatePw90Result", autoUpdatePw90Result);
+        return "redirect:/main.do";
+        
+      }
 
 }
