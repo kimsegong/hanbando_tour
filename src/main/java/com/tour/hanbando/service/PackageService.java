@@ -30,7 +30,7 @@ public interface PackageService {
   public Map<String, Object> addReview(HttpServletRequest request);
   public Map<String, Object> loadReviewList(HttpServletRequest request);
   public Map<String, Object> loadReviewStarList(HttpServletRequest request);
-  public int getAverageRating(int packageNo);
+  public double getAverageRating(int packageNo);
   public int addHeart(HttpServletRequest request);
   public Map<String, Object> removeReview(int reviewNo);
   public List<ReserveDto> getReserveUser(int packageNo);

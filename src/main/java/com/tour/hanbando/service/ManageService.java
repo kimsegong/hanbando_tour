@@ -66,7 +66,7 @@ public interface ManageService {
     /* 패키지 예약/추천 변경 */
     public ResponseEntity<Map<String, Object>> modifyPackageRecommend(HttpServletRequest request);
     
-    /* 호텔 예약/추천 변경 */
+    /* 호텔 판매/추천 변경 */
     public ResponseEntity<Map<String, Object>> modifyHotelRecommend(HttpServletRequest request);
     
     /* 예약 목록 */
