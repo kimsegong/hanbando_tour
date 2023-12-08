@@ -25,3 +25,8 @@ INSERT INTO INACTIVE_USER_T VALUES(USER_SEQ.NEXTVAL, 'user24@gmail.com', STANDAR
 COMMIT;
 
 
+-- 관리자용 긴 리뷰 추가
+INSERT INTO REVIEW_T VALUES(REVIEW_SEQ.NEXTVAL, 5, 10, NULL, '이거는 긴 리뷰인데요 얼마나 기냐면 진짜 김 얼마나 진짜 기냐면 진짜진짜 김 얼마나 진짜진짜 기냐면 진짜 엄청 김 진짜 엄청나게 길게 작성하고싶은데요 귀찮네요', 5, TO_CHAR(SYSDATE,'YYYY/MM/DD'));
+INSERT INTO REVIEW_T VALUES(REVIEW_SEQ.NEXTVAL, 5, 10, NULL, '적당히 긴 리뷰인데요 얼마나 적당하냐면 딱 적당함 다른 리뷰보단 길지만 진짜 긴 리뷰보단 짧음', 5, TO_CHAR(SYSDATE,'YYYY/MM/DD'));
+COMMIT;
+

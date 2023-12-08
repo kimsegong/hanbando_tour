@@ -164,17 +164,18 @@
   })
   const fnModifyRecommend = () => {
     $('.btn_select').click((ev) => {
-     const formRecommend = $(ev.target).closest('form');
+     const formStatus = $(ev.target).closest('tr').find('.frm_modifyRecommend');
+
       $.ajax({
         type: 'post',
         url: '/manage/modifyPackageRecommend.do',
-        data: formRecommend.serialize(),
+        data: formStatus.serialize(),
         dataType: 'json',
         success: (resData) => {
           if(resData.modifyRecommendResult === 1){
-            alert('추천 여부가 변경되었습니다.');
+            alert('예약/추천 여부가 변경되었습니다.');
           } else {
-            alert('추천 여부가 변경되지 않았습니다.');
+            alert('예약/추천 여부가 변경되지 않았습니다.');
           }
         }
       })
@@ -265,10 +266,10 @@
               </div>
                 
         
-              <!--/* 관리 회원목록이 표시될 div */-->
+              <!--/* 관리 패키지목록이 표시될 div */-->
               <div class="listMainWrap">
                   
-                <!--/* 총 회원 수를 표시 */-->
+                <!--/* 총 패키지 수를 표시 */-->
                 <div style="text-align: left;" th:text="|총 ${total}개|"></div>
                   
                 <!--/* 전체 목록을 나타내는 테이블 */-->
@@ -300,8 +301,12 @@
                             <a th:href="@{/package/detail.do(packageNo=${p.packageNo})}" th:text="${p.price}"></a>
                           </td>
                           <td>
-                            <a th:href="@{/package/detail.do(packageNo=${p.packageNo})}" th:if="${p.status == 0}">마감</a>
-                            <a th:href="@{/package/detail.do(packageNo=${p.packageNo})}" th:if="${p.status == 1}">예약가능</a>
+                            <form class="frm_modifyRecommend">
+                              <select name="status" class="status" >
+                                <option value="1" class="status_one" th:selected="${p.status == 1}">예약가능</option>
+                                <option value="0" class="status_zero" th:selected="${p.status == 0}">마감</option>
+                              </select>
+                            </form>
                           </td>
                           <td>
                             <a th:href="@{/package/detail.do(packageNo=${p.packageNo})}" th:text="${p.maxPeople}"></a>
