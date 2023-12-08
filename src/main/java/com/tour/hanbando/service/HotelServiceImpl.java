@@ -24,6 +24,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.tour.hanbando.dao.HotelMapper;
 import com.tour.hanbando.dto.FacilitiesDto;
+import com.tour.hanbando.dto.HeartDto;
 import com.tour.hanbando.dto.HotelDto;
 import com.tour.hanbando.dto.HotelImageDto;
 import com.tour.hanbando.dto.RegionDto;
@@ -456,7 +457,6 @@ public class HotelServiceImpl implements HotelService {
     
     int sample = hotelMapper.countReserveRoom(map);
     
-    
     return sample;
   }
 
@@ -489,7 +489,6 @@ public class HotelServiceImpl implements HotelService {
       List<ReserveDto> reserve = hotelMapper.getReserve(hotelNo);
       return reserve ;
   }
-  
   
   @Transactional(readOnly=true)
   @Override
@@ -536,5 +535,27 @@ public class HotelServiceImpl implements HotelService {
       int removeResult = hotelMapper.deleteReview(reviewNo);
       return Map.of("removeResult", removeResult);
     }
-
+  @Override
+  public int getHeart(HttpServletRequest request) {
+    
+    int userNo =Integer.parseInt(request.getParameter("userNo"));
+    int hotelNo = Integer.parseInt(request.getParameter("hotelNo"));
+    
+    HeartDto heartDto = HeartDto.builder()
+                            .userDto(UserDto.builder().userNo(userNo).build())
+                            .hotelDto(HotelDto.builder().hotelNo(hotelNo).build())
+                            .build();
+    
+    int heartStatus = hotelMapper.getCountHeart(heartDto);
+    
+    if(heartStatus == 1) {
+      hotelMapper.deleteHeart(heartDto);
+    } else if(heartStatus == 0) {
+      hotelMapper.insertHeart(heartDto);
+    }
+    
+    
+    return hotelMapper.getCountHeart(heartDto);
+  }
+  
 }

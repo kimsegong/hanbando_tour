@@ -22,6 +22,7 @@ import com.tour.hanbando.service.HotelService;
 
 import lombok.RequiredArgsConstructor;
 import retrofit2.http.GET;
+import retrofit2.http.POST;
 
 @RequestMapping("/hotel")
 @RequiredArgsConstructor
@@ -98,6 +99,14 @@ public class HotelController {
   @PostMapping(value="/removeReview.do", produces="application/json")
   public Map<String, Object> removeReview(@RequestParam(value="reviewNo", required=false, defaultValue="0") int reviewNo) {
     return hotelService.removeReview(reviewNo);
+  }
+  
+  @ResponseBody
+  @PostMapping("/heart.do")
+  public void getHeart (HttpServletRequest request, Model model) {
+    int heartStatus = hotelService.getHeart(request);
+    model.addAttribute("heart", heartStatus);
+    
   }
   
   /*************************** 작성 ***************************************************/  
