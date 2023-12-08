@@ -115,6 +115,7 @@ public class UserController {
   public String getProfile(HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
     // 네이버로그인-3
     UserDto naverProfile = userService.getNaverProfile(request.getParameter("accessToken"));
+    System.out.println(naverProfile);
     // 네이버로그인 후속 작업(처음 시도 : 간편가입, 이미 가입 : 로그인)
     UserDto user = userService.getUser(naverProfile.getEmail());
     if(user == null) {
@@ -163,9 +164,7 @@ public class UserController {
     }
   }
     
-  
-  
-  
+
   
   @PostMapping("/login.do")
   public void login(HttpServletRequest request, HttpServletResponse response) throws Exception {
