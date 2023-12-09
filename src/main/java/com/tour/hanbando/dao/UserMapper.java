@@ -38,7 +38,7 @@ public interface UserMapper {
   public int recentpWChange(Map<String, Object> map);
   
   //
-  public UserDto changePw90(String email);
+  public int changePw90(Map<String, Object> map);
   public int updatePw90(UserDto user);
   public int autoupdatetmpPw(UserDto user);
 }
