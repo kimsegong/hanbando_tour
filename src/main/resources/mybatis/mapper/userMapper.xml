@@ -158,6 +158,7 @@
       , MOBILE
       , AGREE
       , STATE
+      , AUTH
       , PW_MODIFIED_AT
       , JOINED_AT
     ) VALUES (
@@ -168,6 +169,7 @@
       , #{mobile}
       , #{agree}
       , 1
+      , 1
       , SYSDATE
       , SYSDATE
     )
@@ -175,30 +177,25 @@
   
   
   <insert id="kakaoJoin" parameterType="UserDto" >
-     INSERT INTO USER_T (
+     INSERT INTO USER_T(
         USER_NO
       , EMAIL
       , NAME
-      , MOBILE
-      , GENDER
       , AGREE
       , STATE
       , AUTH
-      , PW_MODIFIED_DATE
-      , JOINED_DATE
+      , PW_MODIFIED_AT
+      , JOINED_AT
       
       ) VALUES (
-          USER_T_SEQ.NEXTVAL
+          USER_SEQ.NEXTVAL
         , #{email}
         , #{name}
-        , #{mobile}
-        , #{gender}
         , #{agree}
         , 2
-        , 0
+        , 1
         , SYSDATE
         , SYSDATE
-       
        )
   </insert>
   
@@ -226,23 +223,7 @@
      WHERE EMAIL = #{email}
   </update>
   
-  <!--비밀번호 90일 변경 : 1.최근변경날짜를 꺼낸다
-  <select id="recentpWChange" parameterType="Map" resultType="int">
-   SELECT EXTRACT(DAY FROM SYSTIMESTAMP - TO_TIMESTAMP(PW_MODIFIED_AT))
-      FROM USER_T
-      WHERE EMAIL = #{email} AND PW = #{pw}
-  </select>-->
-  
-  <!--비밀번호 90일 변경 : 2.비밀번호변경을 한다. 
-  <update id="ninepwChnage" parameterType="UserDto">
-    UPDATE USER_T
-       SET PW_MODIFIED_AT = SYSDATE
-         , PW = #{pw}
-     WHERE USER_NO = #{userNo}
-  </update>-->
-  
-  <!--비밀번호 90일 이후 변경창-->
-  
+
   
 <update id="autoupdatetmpPw" parameterType="UserDto">
     UPDATE USER_T
@@ -251,13 +232,10 @@
   </update>
   
   
-  <select id="changePw90" parameterType="String" resultType="UserDto">
-    SELECT USER_NO, EMAIL, PW, NAME, GENDER, MOBILE, POSTCODE, ROAD_ADDRESS, JIBUN_ADDRESS, DETAIL_ADDRESS, AGREE, STATE, AUTH, PW_MODIFIED_AT, JOINED_AT
-      FROM USER_T
-     WHERE SYSDATE - PW_MODIFIED_AT  >= 90
-       AND EMAIL = #{email}
-       AND STATE = 0
-       AND (AUTH = 1 OR AUTH = 0)
+  <select id="changePw90" parameterType="Map" resultType="int">
+    SELECT EXTRACT(DAY FROM SYSTIMESTAMP - TO_TIMESTAMP(PW_MODIFIED_AT))
+      FROM   USER_T
+      WHERE  EMAIL = #{email}
   </select>
   
   <update id="updatePw90" parameterType="UserDto">
