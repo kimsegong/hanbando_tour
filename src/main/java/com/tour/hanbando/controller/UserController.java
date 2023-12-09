@@ -156,8 +156,8 @@ public class UserController {
   }
   
   @PostMapping("/kakao/join.do")
-  public void kakaoJoin(HttpServletRequest request, HttpServletResponse response) {
-    userService.naverJoin(request, response);
+  public void kakaoJoin(HttpServletRequest request, HttpServletResponse response) throws Exception {
+    userService.kakaoJoin(request, response);
   }
   
   @PostMapping("/login.do")
