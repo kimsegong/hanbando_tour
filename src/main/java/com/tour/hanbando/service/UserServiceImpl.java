@@ -146,7 +146,6 @@ public class UserServiceImpl implements UserService {
     
     
   
-  
   @Override
   public void login(HttpServletRequest request, HttpServletResponse response) throws Exception {
     
@@ -155,10 +154,10 @@ public class UserServiceImpl implements UserService {
     
     Map<String, Object> map = Map.of("email", email
                                    , "pw", pw);
-
+  
     HttpSession session = request.getSession();
     
- // 휴면 계정인지 확인하기
+    // 휴면 계정인지 확인하기
     InactiveUserDto inactiveUser = userMapper.getInactiveUser(map);
     if(inactiveUser != null) {
       session.setAttribute("inactiveUser", inactiveUser);
@@ -169,31 +168,28 @@ public class UserServiceImpl implements UserService {
     
     // 정상적인 로그인 처리하기
     UserDto user = userMapper.getUser(map);
-    //int checkDayOfPwModifiedAt = userMapper.recentpWChange(map); // 여기에 경과일수 int 타입으로 반환
-    
-    if(user != null) {
-      session.setAttribute("user", user);
+  
+    if (user != null) {
+      // 로그인 성공 처리
+      request.getSession().setAttribute("user", user);
       userMapper.insertAccess(email);
-    
-      // 비밀번호 변경 90일 지나면 알림      
-      boolean userPW90 = userMapper.changePw90(email) == null;
 
-        if (!userPW90 ) {
+      // 비밀번호 변경 90일 지나면 알림      
+      int userPw90 = userMapper.changePw90(map);
+
+        if (userPw90 >= 90) {
         response.setContentType("text/html; charset=UTF-8");
           PrintWriter outt = response.getWriter();
           outt.println("<script>");
           outt.println("alert('마지막 비밀번호 변경일로부터 90일이 경과했습니다. 비밀번호를 변경해주세요.')");
-          outt.println("location.href='" +  "/mypage/modifyPw.form'");
+          outt.println("location.href='" + request.getContextPath() +  "/user/modifyPw.form'");
           outt.println("</script>");
           outt.flush();
           outt.close();
-      
-      
-      
-          response.sendRedirect(request.getParameter("referer"));
-    } else {
-   // 90일 이전인 경우에 실행할거 있으면 적기  
-    }
+      } 
+        
+  } else {
+      // 로그인 실패 처리
       response.setContentType("text/html; charset=UTF-8");
       PrintWriter out = response.getWriter();
       out.println("<script>");
@@ -202,9 +198,9 @@ public class UserServiceImpl implements UserService {
       out.println("</script>");
       out.flush();
       out.close();
-    }
-  
   }
+}
+
   
   @Override
   public int autoUpdatePw90(HttpServletRequest request) {
@@ -389,31 +385,19 @@ public class UserServiceImpl implements UserService {
   // 카카오 가입
   @Override
   public void kakaoJoin(HttpServletRequest request, HttpServletResponse response) throws Exception {
-    String mobile = request.getParameter("mobile");
     String email = request.getParameter("email");
-  //  String pw = request.getParameter("pw");
     String name = request.getParameter("name");
-    String gender = request.getParameter("gender");
+    String event = request.getParameter("event");
     
- // Check if mobile is null before invoking replace
-    if (mobile != null) {
-        // Perform the replace operation or handle it as needed
-        //mobile = mobile.replace(oldChar, newChar);
-    } else {
-        // Handle the case where mobile is null, log an error, or throw an exception
-        // For example:
-        throw new IllegalArgumentException("Mobile cannot be null");
-    }
+
     
     
     
     
     UserDto user = UserDto.builder()    
-                          .mobile(mobile)
                           .email(email)
-  //                       .pw(pw)
                           .name(name)
-                          .gender(gender)
+                          .agree(event != null ? 1 : 0)
                           .build();
     
     int kakaoJoinResult = userMapper.kakaoJoin(user);

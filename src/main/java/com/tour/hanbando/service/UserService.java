@@ -37,7 +37,7 @@ public interface UserService {
   
   //카카오톡
   public void kakaoLogin(HttpServletRequest request, HttpServletResponse response, UserDto kakaoProfile) throws Exception;
-  public void kakaoJoin(HttpServletRequest request, HttpServletResponse response) throws Exception;
+  public void kakaoJoin(HttpServletRequest request, HttpServletResponse response) throws Exception;;
   public String getKakaoLoginURL(HttpServletRequest request) throws Exception;
   public String getKakaoLoginAccessToken(HttpServletRequest request) throws Exception ;
   public UserDto getKakaoProfile(String accessToken) throws Exception;
