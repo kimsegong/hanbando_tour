@@ -237,17 +237,6 @@
   </script>
   
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
   <script th:inline="javascript">
     
     function fnShowTourist(){
@@ -310,8 +299,8 @@
   
     function fnChkCancel(){
       $('#btn_res_cancel').click(function(){
-        if(confirm('예약을 취소하면 여행자 정보도 함께 삭제됩니다. 취소할까요?')){
-          $('#frm_btn').attr('action', '/reserve/delete.do')
+        if(confirm('예약을 취소하시겠습니까?')){
+          $('#frm_btn').attr('action', '/reserve/cancel.do')
           $('#frm_btn').submit();
         } 
       })
