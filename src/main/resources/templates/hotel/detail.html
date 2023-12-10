@@ -153,7 +153,7 @@
                   <div class="checkout">체크아웃 : <span th:text="${#temporals.format(#temporals.createNow().plusDays(+1), 'yyyy/MM/dd')}"></span></div>
                   <button type="button">날짜 선택</button>
                   <button type="submit">예약하기</button>
-                  <button type="button">찜하기</button>
+                  <button id="btn_heart" type="button">찜하기</button>
                 </form> 
               </div>
               <div id="map" style="width:100%;height:350px;">
@@ -165,14 +165,14 @@
 								
 								
 							<th:block th:each="roomType, roomTypeStat : ${roomType}">
-              <input type="hidden" th:id="${'roomNo' + roomTypeStat.count}" th:value="${roomType.roomFeatureDto.roomNo}">
+              <input type="hidden" th:id="${'roomNo' + roomTypeStat.count}" th:value="${roomType.roomNo}">
               <div>
 								<div class="row">
 									<div class="col-3 temp">
 										<div th:id="${'roomCarousel' + roomTypeStat.count}" class="carousel slide">
 										  <div class="carousel-inner">
                         <th:block th:each="roomImage : ${hotelImage}">
-                            <div th:if="${roomImage.roomNo == roomType.roomFeatureDto.roomNo}" class="carousel-item">
+                            <div th:if="${roomImage.roomNo == roomType.roomNo}" class="carousel-item">
                                <img th:src="@{|${roomImage.imagePath}/${roomImage.filesystemName}|}" class="d-block w-100" >
                             </div>
                         </th:block>
@@ -200,25 +200,27 @@
 									<div class="col-6 temp">
 										<div th:text="${roomType.roomName}" th:class="${'roomName'+roomTypeStat.count}"></div>
 										<div th:text="${roomType.roomDetail}"></div>
-										<div>
-											<i th:if="${roomType.roomFeatureDto.water == 0}" class="fa-solid fa-bottle-water fa-2xl" style="color: #9399a5;"></i>
-											<i th:if="${roomType.roomFeatureDto.water == 1}" class="fa-solid fa-bottle-water fa-2xl" style="color: #2f7fa7;"></i>
-											<i th:if="${roomType.roomFeatureDto.coffee == 0}" class="fa-solid fa-mug-saucer fa-2xl" style="color: #9399a5;"></i>
-											<i th:if="${roomType.roomFeatureDto.coffee == 1}" class="fa-solid fa-mug-saucer fa-2xl" style="color: #2f7fa7;"></i>
-											<i th:if="${roomType.roomFeatureDto.drier == 0}" class="fa-solid fa-wind fa-2xl" style="color: #9399a5;"></i>
-											<i th:if="${roomType.roomFeatureDto.drier == 1}" class="fa-solid fa-wind fa-2xl" style="color: #2f7fa7;"></i>
-											<i th:if="${roomType.roomFeatureDto.towel == 0}" class="fa-solid fa-rug fa-2xl" style="color: #9399a5;"></i>
-											<i th:if="${roomType.roomFeatureDto.towel == 1}" class="fa-solid fa-rug fa-2xl" style="color: #2f7fa7;"></i>
-											<i th:if="${roomType.roomFeatureDto.minibar == 0}" class="fa-solid fa-martini-glass fa-2xl" style="color: #9399a5;"></i>
-											<i th:if="${roomType.roomFeatureDto.minibar == 1}" class="fa-solid fa-martini-glass fa-2xl" style="color: #2f7fa7;"></i>
-											<i th:if="${roomType.roomFeatureDto.iron == 0}" class="fa-solid fa-shirt fa-2xl" style="color: #9399a5;"></i>
-											<i th:if="${roomType.roomFeatureDto.iron == 1}" class="fa-solid fa-shirt fa-2xl" style="color: #2f7fa7;"></i>
+										
+                      <th:block th:each="feature : ${roomFeatureDto}"></th:block>
+										<div th:if="${feature.roomNo == roomType.roomNo}">
+											<i th:if="${feature.water == 0}" class="fa-solid fa-bottle-water fa-2xl" style="color: #9399a5;"></i>
+											<i th:if="${feature.water == 1}" class="fa-solid fa-bottle-water fa-2xl" style="color: #2f7fa7;"></i>
+											<i th:if="${feature.coffee == 0}" class="fa-solid fa-mug-saucer fa-2xl" style="color: #9399a5;"></i>
+											<i th:if="${feature.coffee == 1}" class="fa-solid fa-mug-saucer fa-2xl" style="color: #2f7fa7;"></i>
+											<i th:if="${feature.drier == 0}" class="fa-solid fa-wind fa-2xl" style="color: #9399a5;"></i>
+											<i th:if="${feature.drier == 1}" class="fa-solid fa-wind fa-2xl" style="color: #2f7fa7;"></i>
+											<i th:if="${feature.towel == 0}" class="fa-solid fa-rug fa-2xl" style="color: #9399a5;"></i>
+											<i th:if="${feature.towel == 1}" class="fa-solid fa-rug fa-2xl" style="color: #2f7fa7;"></i>
+											<i th:if="${feature.minibar == 0}" class="fa-solid fa-martini-glass fa-2xl" style="color: #9399a5;"></i>
+											<i th:if="${feature.minibar == 1}" class="fa-solid fa-martini-glass fa-2xl" style="color: #2f7fa7;"></i>
+											<i th:if="${feature.iron == 0}" class="fa-solid fa-shirt fa-2xl" style="color: #9399a5;"></i>
+											<i th:if="${feature.iron == 1}" class="fa-solid fa-shirt fa-2xl" style="color: #2f7fa7;"></i>
 										</div>
 										  
 									</div>
 									<div class="col-3 temp">
                     <th:block th:each="price : ${price}">
-                      <th:block th:if="${price.roomNo == roomType.roomFeatureDto.roomNo}">
+                      <th:block th:if="${price.roomNo == roomType.roomNo}">
                         <th:block th:if="${price.bsDate <= #calendars.format(#calendars.createNow(), 'yyyy/MM/dd') && price.beDate >= #calendars.format(#calendars.createNow(), 'yyyy/MM/dd')}">
                           <div th:text="|비수기 : ${price.bsDate} ~ ${price.beDate}|"></div>
                           <div th:text="|${price.biPrice}원|"> </div>
@@ -287,7 +289,6 @@
             </div>
         </div>
         <div id="reviewAccordion">
-             <input type="hidden" id="hotelNo" name="hotelNo" th:value="${hotel.hotelNo}">     
              
         </div>  
     </div>    
@@ -527,8 +528,8 @@
       }
 
 
-    const fnReviewRemove = (sort) => {
-      $(document).on('click', '.remove_Review', (ev,sort) => {
+    const fnReviewRemove = () => {
+      $(document).on('click', '.remove_Review', (ev) => {
         if(!confirm('리뷰를 삭제할까요?')){
           return;
         }
@@ -577,25 +578,27 @@
   }
   
     const fnHeart = () => {
-    $('.btn_like').click(() => {     
+    $('.btn_heart').click(() => {     
+      var userNo = $('#userNo').val(); 
       $.ajax({
         type: 'post',
-        url: '${contextPath}/magazine/like.do',
-        data: {userNo: $('.userNoLike').val(), magazineNo: $('.magazineNoLike').val()},
+        url: '/hotel/heart.do',
+        data: {userNo: userNo, hotelNo: $('#hotelNo').val()},
         dataType: 'json',
         success: (resData) => {  
-          console.log(resData.existMaUser+'qweqwe');
-          let str;
-          if(resData.existMaUser === 1){              
+          console.log(resData+'qweqwe');
+          var str;
+          if(resDate == null && resDate == ""){
+          if(resData === 1){              
             $('.btn_like').empty();
             str += '<i class="fa-solid fa-thumbs-up fa-2xl" style="color: #1f753d;"></i>';
             $('.btn_like').append(str);
-          } else if(resData.existMaUser === 0){ 
+          } else if(resData === 0){ 
             $('.btn_like').empty();
             str += '<i class="fa-regular fa-thumbs-up fa-bounce fa-2xl" style="color: #1f753d;"></i>';
             $('.btn_like').append(str);
           }                
-          $('.like_num').text(resData.countLike);
+          }
       },
       error : (error) => {
         console.log('못가져왔어');

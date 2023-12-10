@@ -164,9 +164,7 @@ public class ReserveServiceImpl implements ReserveService {
                                           .hotelNo(hotelNo)
                                           .build())
                             .roomtypeDto(RoomtypeDto.builder()
-                                          .roomFeatureDto(RoomFeatureDto.builder()
-                                                              .roomNo(roomNo)
-                                                              .build())
+                                          .roomNo(roomNo)
                                           .build())
                             .build();
     
@@ -335,15 +333,14 @@ public class ReserveServiceImpl implements ReserveService {
   
   @Override
   public Map<String, Object> loadPaymentByMerchantUid(HttpServletRequest request, PaymentDto payment) {
-    String accessToken = getAccessToken(null, null);
     String merchantUid = payment.getMerchantUid();
     int cancelAmount = payment.getCancelAmount();
-    PaymentDto payinfo = reserveMapper.getPaymentBy(Map.of("merchantUid", merchantUid));
-    int cancelableAmount = (payinfo.getPaidAmount() - cancelAmount); 
+    PaymentDto payInfo = reserveMapper.getPaymentBy(Map.of("merchantUid", merchantUid, "cancelAmount", cancelAmount));
+    int cancelableAmount = (payInfo.getPaidAmount() - cancelAmount); 
     if(cancelableAmount < 0) {
       return Map.of("payInfo", HttpStatus.BAD_REQUEST);
     }
-    return Map.of("payInfo", payinfo);
+    return Map.of("payInfo", payInfo);
   }
   
   
@@ -382,6 +379,12 @@ public class ReserveServiceImpl implements ReserveService {
     return Map.of("modifyResStatusResult", modifyResStatusResult);
   }
   
+  @Override
+  public Map<String, Object> modifyReserveStatusCancel(HttpServletRequest request, RedirectAttributes redirectAttributes) {
+    int reserveNo = Integer.parseInt(request.getParameter("reserveNo"));
+    int modifyResCancelResult = reserveMapper.updateReserveCancel(Map.of("reserveNo", reserveNo));
+    return Map.of("modifyResCancelResult", modifyResCancelResult);
+  }
   
   
   
@@ -426,17 +429,7 @@ public class ReserveServiceImpl implements ReserveService {
   }
   
   
-  @Override
-  public int getUserExpiredPwModified(HttpServletRequest request) {
-    
-    Map<String, Object> map = new HashMap<>();
-    map.put("email", request.getParameter("email"));
-    map.put("pw", request.getParameter("pw"));
-    int days = reserveMapper.getDaysAfterPwModified(map);
-    System.out.println("==============================================================" + days);
-    
-    return 0;
-  }
+
   
   
   

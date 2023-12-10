@@ -24,6 +24,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.tour.hanbando.dao.HotelMapper;
 import com.tour.hanbando.dto.FacilitiesDto;
+import com.tour.hanbando.dto.HeartDto;
 import com.tour.hanbando.dto.HotelDto;
 import com.tour.hanbando.dto.HotelImageDto;
 import com.tour.hanbando.dto.RegionDto;
@@ -425,7 +426,7 @@ public class HotelServiceImpl implements HotelService {
     
     List<HotelDto> hotel = new ArrayList<>();
     hotel.add(hotelDto); // 가격 가져올려고 
-    
+    List<RoomFeatureDto> roomFeatureDto = hotelMapper.getRoomFeature(roomtypeDto);
     List<Integer> price = getPrice(hotel);
     List<Integer> countReserveRoom = new ArrayList<>();
     for(int i = 0; i < roomtypeDto.size(); i++) {
@@ -441,6 +442,7 @@ public class HotelServiceImpl implements HotelService {
     model.addAttribute("price", roompriceDto);
     model.addAttribute("countReserveRoom", countReserveRoom);
     model.addAttribute("roomType", roomtypeDto);
+    model.addAttribute("roomFeature", roomFeatureDto);
   }
   
   public int getDate(RoomtypeDto roomtypeDto){
@@ -450,12 +452,11 @@ public class HotelServiceImpl implements HotelService {
     String today = sdf.format(calendar.getTime());
     calendar.add(Calendar.DATE, +1);
     String nextDay = sdf.format(calendar.getTime()); 
-    Map<String, Object> map = Map.of("roomNo", roomtypeDto.getRoomFeatureDto().getRoomNo() ,
+    Map<String, Object> map = Map.of("roomNo", roomtypeDto.getRoomNo() ,
                                       "checkin", today ,  
                                       "checkout", nextDay);
     
     int sample = hotelMapper.countReserveRoom(map);
-    
     
     return sample;
   }
@@ -489,7 +490,6 @@ public class HotelServiceImpl implements HotelService {
       List<ReserveDto> reserve = hotelMapper.getReserve(hotelNo);
       return reserve ;
   }
-  
   
   @Transactional(readOnly=true)
   @Override
@@ -536,5 +536,27 @@ public class HotelServiceImpl implements HotelService {
       int removeResult = hotelMapper.deleteReview(reviewNo);
       return Map.of("removeResult", removeResult);
     }
-
+  @Override
+  public int getHeart(HttpServletRequest request) {
+    
+    int userNo =Integer.parseInt(request.getParameter("userNo"));
+    int hotelNo = Integer.parseInt(request.getParameter("hotelNo"));
+    
+    HeartDto heartDto = HeartDto.builder()
+                            .userDto(UserDto.builder().userNo(userNo).build())
+                            .hotelDto(HotelDto.builder().hotelNo(hotelNo).build())
+                            .build();
+    
+    int heartStatus = hotelMapper.getCountHeart(heartDto);
+    
+    if(heartStatus == 1) {
+      hotelMapper.deleteHeart(heartDto);
+    } else if(heartStatus == 0) {
+      hotelMapper.insertHeart(heartDto);
+    }
+    
+    
+    return hotelMapper.getCountHeart(heartDto);
+  }
+  
 }
