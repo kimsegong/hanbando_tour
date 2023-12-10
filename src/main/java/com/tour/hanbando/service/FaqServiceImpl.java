@@ -160,13 +160,8 @@ public int addFaqDetail(HttpServletRequest request) {
 @Override
 public void getFaqDetail(HttpServletRequest request, Model model) {
   
-    String caNo = request.getParameter("caNo");
-    
-    Map<String, Object> map = new HashMap<>();
-    
-    map.put("caNo", caNo);
 
-    List<FaqCaDto> faqCaList = faqMapper.getFaqDetail(map);
+    List<FaqCaDto> faqCaList = faqMapper.getFaqDetail();
     
     model.addAttribute("faqCaList", faqCaList);
 }
