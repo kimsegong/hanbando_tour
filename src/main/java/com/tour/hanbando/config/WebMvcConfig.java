@@ -39,13 +39,22 @@ public class WebMvcConfig implements WebMvcConfigurer {
     // 로그인이 필요한 접근을 막는 인터셉터
     registry.addInterceptor(requiredLoginInterceptor)
       .addPathPatterns("/user/mypage.form", "/user/modifyPw.form")
+      .addPathPatterns("/user/findpwCheck.do")
+      .addPathPatterns("/user/changePw.form")
+      .addPathPatterns("/user/logout.do")
+      .addPathPatterns("/user/heart.do")
+      .addPathPatterns("/user/heartHotel.do")
       .addPathPatterns("/notice/list.do")
       .addPathPatterns("/reserve/reserveList.do", "/reserve/detail.do", "/reserve/write.form", "/reserve/edit.form")
       .addPathPatterns("/reserve/reserveHotelList.do", "/reserve/writeHotel.form", "/reserve/writeHotel.form", "/reserve/detailHotel.do");
     
     // 로그인이 되어있는 상태에서의 접근을 막는 인터셉터
     registry.addInterceptor(shouldNotLoginInterceptor)
-      .addPathPatterns("/user/agree.form", "/user/join.form");
+      .addPathPatterns("/user/agree.form", "/user/join.form")
+      .addPathPatterns("/user/login.form", "/user/naver/getAccessToken.do","/user/naver/getProfile.do","/user/kakao/getAccessToken.do","/user/kakao/getProfile.do")
+      .addPathPatterns("/user/checkEmail.do","/user/sendCode.do")
+      .addPathPatterns("/user/active.form","/user/active.do")
+      .addPathPatterns("/user/find.form","/user/findPwModified.form","/user/pwCorrect.form");
   }
 
   @Override
