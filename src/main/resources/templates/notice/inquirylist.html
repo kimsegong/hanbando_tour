@@ -20,6 +20,10 @@
   table {
     font-size: 1.2em;
   }
+  
+  .table-inquiry{
+    margin-left: 16px; 
+  }
   .sidebar a{
     font-size: 1.3em;
     font-weight: bolder;
@@ -33,9 +37,11 @@
   table a:hover{
     color: #96B6C5;
   }
+  
   table thead tr th{
     font-weight: bolder;
   }
+
   .title{
     font-size: 30px;
   }
@@ -146,7 +152,7 @@
    
      <div th:if="${inquiryCount != 0}">
        
-       <table class="table table-hover">
+       <table class="table table-hover table-inquiry">
         <thead>
           <tr>
             <th scope="co1">답변상태</th>
