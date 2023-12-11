@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.tour.hanbando.dto.UserDto;
+import com.tour.hanbando.service.HotelService;
 import com.tour.hanbando.service.PackageService;
 import com.tour.hanbando.service.UserService;
 
@@ -34,6 +35,7 @@ public class UserController {
   
   private final UserService userService;
   private final PackageService packageService; 
+  private final HotelService hotelService;
 
   
  //인증번호(회원가입)
@@ -247,10 +249,23 @@ public class UserController {
     return "user/heart";
   }
   
+//찜하기
+  @GetMapping("/heartHotel.do")
+  public String Hotelheart(HttpServletRequest request, Model model) {  
+    hotelService.getHeartHotel(request, model);
+    return "user/heartHotel";
+  }
+  
   @ResponseBody
   @PostMapping(value="/removeHeart.do", produces="application/json")
-  public Map<String, Object> removeReview(@RequestParam(value="packageNo", required=false, defaultValue="0") int packageNo) {
+  public Map<String, Object> removePackageHeart(@RequestParam(value="packageNo", required=false, defaultValue="0") int packageNo) {
     return packageService.removeHeart(packageNo);
+  }
+  
+  @ResponseBody
+  @PostMapping(value="/removeHotelHeart.do", produces="application/json")
+  public Map<String, Object> removeHotelheart(@RequestParam(value="hotelNo", required=false, defaultValue="0") int hotelNo) {
+    return hotelService.removeHotelHeart(hotelNo);
   }
   
   //아이디, 비밀번호 찾기
