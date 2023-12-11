@@ -127,7 +127,6 @@ public class HotelController {
   
   @PostMapping("addHotel.do")
   public String writeHotel(MultipartHttpServletRequest multipartRequest, RedirectAttributes redirectAttributes) throws Exception {
-    System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@" + multipartRequest.getParameter("hotelName"));
    int hotelResult = hotelService.writeHotel(multipartRequest) ? 1 : 0;
     
     redirectAttributes.addFlashAttribute("hotelResult", redirectAttributes); 
