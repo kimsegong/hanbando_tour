@@ -139,8 +139,10 @@
                 </div>
                 <button class="btn btn-success" type="button" th:onclick="|location.href='@{/package/list.do}'|">다른 상품 예약하러가기</button>
                 <button type="button" th:onclick="|location.href='@{/reserve/reserveList.do(userNo=${session.user.userNo})}'|" class="btn btn-success">나의 예약목록</button>
-                <button th:if="${reserve.reserveStatus != 1}" class="btn btn-outline-secondary" type="button" id="btn_res_modify">예약 수정하러가기</button>
-                <button th:if="${reserve.reserveStatus != 2}" class="btn btn-outline-danger" type="button" id="btn_res_cancel">예약 취소하기</button>
+                <th:block th:if="${reserve.reserveStatus != 2}">
+                  <button th:if="${reserve.reserveStatus != 1}" class="btn btn-outline-secondary" type="button" id="btn_res_modify">예약 수정하러가기</button>
+                  <button th:if="${reserve.reserveStatus == 0}" class="btn btn-outline-danger" type="button" id="btn_res_cancel">예약 취소하기</button>
+                </th:block>
               </form>
             </div>
             
