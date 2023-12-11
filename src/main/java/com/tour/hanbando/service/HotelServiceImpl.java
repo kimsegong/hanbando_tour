@@ -99,7 +99,7 @@ public class HotelServiceImpl implements HotelService {
       List<RoompriceDto> roompriceDto = hotelMapper.getListPrice(hotelDto);
       /* 요금 구하기 */
       Date date = new Date();
-      SimpleDateFormat sdf = new SimpleDateFormat("MMdd");
+      SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
       String sToday = sdf.format(date);
       int today = Integer.parseInt(sToday);
       int price = 0;
@@ -113,14 +113,6 @@ public class HotelServiceImpl implements HotelService {
         
         int ssStart = Integer.parseInt(roompriceDto.get(i).getSsDate().replace("/", ""));
         int ssEnd = Integer.parseInt(roompriceDto.get(i).getSeDate().replace("/", ""));
-        
-        if(biStart > biEnd ) {
-          biEnd += 1200;
-        }else if(jsStart > jsEnd){
-          jsEnd += 1200;
-        }else if(ssStart > ssEnd) {
-          ssEnd += 1200;
-        }
         
         if(biStart <= today && today <= biEnd) {
           price = roompriceDto.get(i).getBiPrice();
@@ -569,31 +561,37 @@ public class HotelServiceImpl implements HotelService {
    RoomtypeDto roomtypeDto = hotelMapper.roomtype(roomNo);
    
    String date = request.getParameter("date");
-   System.out.println(date);
-   int totalPrice = finalPrice(makeDateList(date), roomNo);
+   DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyy/MM/dd");
+   LocalDate checkin = getcheckin(date);
+   LocalDate checkout = getcheckout(date);
+   int totalPrice = finalPrice(makeDateList(checkin, checkout), roomNo);
    String roomName = roomtypeDto.getRoomName();
-   Map<String, Object> reserve = Map.of("totalPrice", totalPrice, "roomName", roomName);
-  // model.addAttribute("totalPrice", totalPrice);
+   Map<String, Object> reserve = Map.of("totalPrice", totalPrice, "roomName", roomName, 
+                                         "checkin",checkin.format(fmt),"checkout",checkout.format(fmt));
    return reserve;
   }
   
-  private List<LocalDate> makeDateList(String date) {
+  private LocalDate getcheckin(String date) {
     DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyy/MM/dd");
-   
-    LocalDate checkIn = LocalDate.parse(date.substring(0, 10), fmt);
-    LocalDate checkOut = LocalDate.parse(date.substring(13), fmt);
-    
-    List<LocalDate> allDate =  checkIn.datesUntil(checkOut).collect(Collectors.toList());
-    
-    return allDate;
-    
+    return LocalDate.parse(date.substring(0, 10), fmt);
   }
+  private LocalDate getcheckout(String date) {
+    DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+    return LocalDate.parse(date.substring(13), fmt);
+  }
+  
+  private List<LocalDate> makeDateList(LocalDate checkIn, LocalDate checkOut){
+    List<LocalDate> allDate =  checkIn.datesUntil(checkOut).collect(Collectors.toList());
+    return allDate;
+  }
+  
+  
   
   private int finalPrice(List<LocalDate> allDate, int roomNo) {
     List<RoompriceDto> roompriceDto = hotelMapper.getPrice(RoomtypeDto.builder().roomNo(roomNo).build());
     RoompriceDto price = roompriceDto.get(0);
     
-    DateTimeFormatter fmt = DateTimeFormatter.ofPattern("MMdd");
+    DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyyMMdd");
     
     
     int totalPrice = 0;
@@ -609,14 +607,6 @@ public class HotelServiceImpl implements HotelService {
         int ssStart = Integer.parseInt(price.getSsDate().replace("/", ""));
         int ssEnd = Integer.parseInt(price.getSeDate().replace("/", ""));
         
-        if(biStart > biEnd ) {
-          biEnd += 1200;
-        }else if(jsStart > jsEnd){
-          jsEnd += 1200;
-        }else if(ssStart > ssEnd) {
-          ssEnd += 1200;
-        }
-        
         if(biStart <= date && date <= biEnd) {
           totalPrice += price.getBiPrice();
         }else if(jsStart <= date && date <= jsEnd) {
@@ -624,7 +614,7 @@ public class HotelServiceImpl implements HotelService {
         }else if(ssStart <= date && date <= ssEnd) {
           totalPrice +=  price.getSungPrice();
         } else {
-          totalPrice +=  price.getBiPrice();
+          totalPrice =  0;
         }
       }
     
