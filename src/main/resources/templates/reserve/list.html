@@ -18,9 +18,14 @@
             <span style="font-size: xx-large;">예약내역목록</span>
           </div>
           <div style="margin: 20px auto;">
-            <a th:href="|@{/reserve/reserveList.do(userNo=${session.user.userNo})}|"><strong>패키지</strong></a>
-            <span> | </span>
-            <a th:href="|@{/reserve/reserveHotelList.do(userNo=${session.user.userNo})}|"><strong>호텔</strong></a>
+            <ul class="nav nav-underline justify-content-center">
+              <li class="nav-item">
+                <a class="nav-link active" th:href="|@{/reserve/reserveList.do(userNo=${session.user.userNo})}|"><strong>패키지</strong></a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" th:href="|@{/reserve/reserveHotelList.do(userNo=${session.user.userNo})}|"><strong>호텔</strong></a>
+              </li>
+            </ul>
           </div>
           <div>
             <table class="table">
