@@ -32,6 +32,10 @@
   table {
     font-size: 1.2em;
   }
+  
+  .table-move{
+    margin-left: 26px; 
+  }
   .sidebar a{
     font-size: 1.3em;
     font-weight: bolder;
@@ -65,6 +69,22 @@
   table thead tr th{
     font-weight: bolder;
   }
+  
+   #btn_list_write {
+    height: 38px; 
+    width: 120px;
+    font-size: 1.2em;
+    color: #96B6C5;         /* 텍스트 색상 */
+    background-color: #fff; /* 기본 배경 색상 */
+    border-color: #96B6C5;  /* 테두리 색상 */
+    border-radius: 10px;      /* 테두리를 둥글게 만듭니다. */
+    transition: all 0.3s;     /* 모든 속성에 대해 0.3초 동안 트랜지션 효과 적용 */
+  }
+  
+  #btn_list_write:hover {
+    color: #fff;               /* 호버 시 텍스트 색상 */
+    background-color: #96B6C5; /* 호버 시 배경 색상 */
+  }
 </style>
 
 
@@ -91,9 +111,19 @@
         
         <div class="main_list_wrap">    
         <p class="title">공지사항</p>
-            
+        
       <div class="row">
       <div class="col-7"></div>
+      
+          </div>
+      <div class="col-md-auto">       
+        <th:block th:if="${session.user != null}">
+          <a th:if="${session.user.auth == 0}" th:href="@{/notice/write.form}">
+            <button type="button" class="btn btn-outline-success" id="btn_list_write">새글작성</button>
+          </a>
+        </th:block>
+      </div>
+      
         <div class="home">
           <a th:href="@{/main.do}" class="home_a"><i class="fa-solid fa-house home_i" ></i></a>
            &nbsp;고객센터  &nbsp;  >   &nbsp; 공지사항
@@ -102,6 +132,7 @@
       <div class = "wrap1">
         <div class="box1"></div>
       </div>
+      
       
    <div class="container text-center">
     <div class="row">
@@ -125,7 +156,7 @@
     <div class="col">
     </div>
     <div class="col-9">
-     <table class="table table-hover">
+     <table class="table table-hover table-move">
       <thead>
         <tr class="table-secondary">
           <th scope="col">공지번호</th>
@@ -165,13 +196,6 @@
    <div class="container text-center">
     <div class="row">
       <div class="col col-lg-2">
-      </div>
-      <div class="col-md-auto">       
-        <th:block th:if="${session.user != null}">
-          <a th:if="${session.user.auth == 0}" th:href="@{/notice/write.form}">
-            <button type="button" class="btn btn-outline-success">새글작성</button>
-          </a>
-        </th:block>
       </div>
       <div class="col">
       </div>
