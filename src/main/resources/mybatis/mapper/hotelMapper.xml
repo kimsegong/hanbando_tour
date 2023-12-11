@@ -726,12 +726,6 @@
        WHERE A.RN BETWEEN #{begin} AND #{end}       
  </select>
  
- <select id="getCountHeart" resultType="int" parameterType="int">
-    SELECT COUNT(*)
-    FROM HEART_T
-   WHERE USER_NO = #{userNo}
- </select>
- 
  <delete id="deleteHotelHeart" parameterType="int">
     DELETE
       FROM HEART_T
