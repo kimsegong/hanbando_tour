@@ -479,8 +479,8 @@ CREATE TABLE FAQ_T(
 -- ******************************************************************************
 
 -- 관리자 등록 ******************************************************************
-INSERT INTO USER_T (USER_NO, EMAIL, PW, NAME, AGREE, AUTH) VALUES(USER_SEQ.NEXTVAL, 'admin', STANDARD_HASH('1', 'SHA256'), '관리자admin', 0, 0);
-INSERT INTO USER_T (USER_NO, EMAIL, PW, NAME, AGREE, AUTH) VALUES(USER_SEQ.NEXTVAL, 'master', STANDARD_HASH('1', 'SHA256'), '관리자master', 0, 0);
+INSERT INTO USER_T (USER_NO, EMAIL, PW, NAME, AGREE, AUTH, PW_MODIFIED_AT, JOINED_AT) VALUES(USER_SEQ.NEXTVAL, 'admin', STANDARD_HASH('1', 'SHA256'), '관리자admin', 0, 0, TO_CHAR(SYSDATE, 'YYYY/MM/DD'), TO_CHAR(SYSDATE, 'YYYY/MM/DD'));
+INSERT INTO USER_T (USER_NO, EMAIL, PW, NAME, AGREE, AUTH, PW_MODIFIED_AT, JOINED_AT) VALUES(USER_SEQ.NEXTVAL, 'master', STANDARD_HASH('1', 'SHA256'), '관리자master', 0, 0, TO_CHAR(SYSDATE, 'YYYY/MM/DD'), TO_CHAR(SYSDATE, 'YYYY/MM/DD'));
 COMMIT;
 
 -- 회원 등록 ********************************************************************
