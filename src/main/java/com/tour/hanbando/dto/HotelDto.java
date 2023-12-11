@@ -24,4 +24,5 @@ public class HotelDto {
   private int status;
   private int recommendStatus;
   private RegionDto regionDto;
+  private HotelImageDto hotelImageDto;
 }

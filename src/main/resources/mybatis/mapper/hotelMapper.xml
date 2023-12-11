@@ -23,6 +23,12 @@
           <id column="REGION_NO" property="regionNo"/>
           <result column="REGION_NAME" property="regionName"/>
       </association>
+      <association javaType="HotelImageDto" property="hotelImageDto">
+					<result column="ORIGINAL_NAME" property="originalName"/>
+					<result column="THUMBNAIL" property="thumbnail"/>
+					<result column="FILESYSTEM_NAME" property="filesystemName"/>
+					<result column="IMAGE_PATH" property="imagePath"/>
+      </association>
   </resultMap>
   
   
@@ -411,11 +417,16 @@
     </foreach>  
  </select>
  
- <select id="getPrice" parameterType="int" resultType="RoompriceDto">
+ <select id="getPrice" parameterType="RoomTypeDto" resultType="RoompriceDto">
    SELECT HOTEL_NO, ROOM_NO, BI_PRICE, BS_DATE, BE_DATE, JUN_PRICE, JS_DATE, JE_DATE, SUNG_PRICE, SS_DATE, SE_DATE
      FROM ROOMPRICE_T
-    WHERE HOTEL_NO = #{hotelNo} 
-    
+     WHERE
+     <if test="hotelNo != null and roomNo == 0">
+    	 HOTEL_NO = #{hotelNo} 
+		 </if>
+		 <if test="roomNo != null and hotelNo == 0">
+		 	 ROOM_NO = #{roomNo} 
+		 </if>
  </select>
  
  <insert id="insertRoomtype" parameterType="RoomtypeDto">
@@ -598,6 +609,20 @@
        ON R.ROOM_NO = RF.ROOM_NO
     WHERE R.HOTEL_NO = #{hotelNo}
  </select>
+ <select id="getRoomFeature" resultType="RoomFeatureDto">
+ SELECT ROOM_NO,
+        TOWEL, 
+        WATER, 
+        COFFEE, 
+        DRIER, 
+        IRON, 
+        MINIBAR
+  FROM ROOM_FEATURE_T 
+    WHERE ROOM_NO 
+    <foreach item="item" index="index" collection="list" open="in(" separator="," close=")">
+         #{item.roomNo}
+    </foreach>
+ </select>
  
  <select id="roomtype" parameterType="int" resultType="RoomtypeDto">
    SELECT ROOM_NO, HOTEL_NO, ROOM_DETAIL, ROOM_NAME, ROOM_MANY, R_VIEW, BLEAKFAST, SMOKE, PEOPLE, BED, SHOWER, R_SIZE
@@ -679,13 +704,16 @@
     DELETE FROM HEART_T WHERE USER_NO = #{userNo} AND HOTEL_NO=#{hotelNo}
 </delete>
 
-<insert id="insertHeart" parameterType="HeartDto">
+ <insert id="insertHeart" parameterType="HeartDto">
     INSERT INTO HEART_T(HOTEL_NO, USER_NO) VALUES (#{hotelNo}, #{userNo})
-</insert>
+ </insert>
 
-<select id="getCountHeart" parameterType="HeartDto" resultType="int">
+ <select id="getCountHeart" parameterType="HeartDto" resultType="int">
     SELECT COUNT(*) FROM HEART_T WHERE HOTEL_NO = #{hotelNo} AND USER_NO = #{userNo}
-</select>
+ </select>
+ <delete id="deleteHotel" parameterType="int">
+	 DELETE FROM HOTEL_T WHERE HOTEL_NO = #{hotelNo}
+ </delete>
  
  
  
