@@ -126,7 +126,12 @@
 .form-floating>label {
 	padding: 0.2rem 0.75rem;
 }
-
+#finalprice, #roomtype {
+  border: 0px;
+}
+#finalprice:focus, #roomtype:focus {
+  outline:none;  
+}
 
 </style>
 
@@ -205,8 +210,8 @@
                   <div class="sideTitle" id="sideTitle" th:text="${hotel.hotelName}"></div>
                   <input type="hidden" id="hotelNo" name="hotelNo" th:value="${hotel.hotelNo}">
                   <input type="hidden" id="reserveRoomNo" name="roomNo">
-                  <div id="roomType">방타입: </div>
-                  <div id="finalprice">금액</div>
+                  <input id="roomtype" name="roomtype" value="방타입" readonly > </input>
+                  <input id="finalprice" name="finalprice" value="금액" readonly></input>
                   <div class="form-floating mb-3"> 
 										<label for="daterange">체크인/체크아웃</label>
 					          <input type="text" id="daterange" class="daterange form-control" name="daterange" value ="" readonly />
@@ -460,8 +465,8 @@
       success: (resData) => {
 				$('#roomType').empty();
 				$('#finalprice').empty();
-				$('#roomType').append('방타입: '+resData.roomName);
-				$('#finalprice').append('금액: '+resData.totalPrice);
+				$('#roomtype').val(resData.roomName);
+				$('#finalprice').val(resData.totalPrice);
 				$('#checkin').val(resData.checkin);
 				$('#checkout').val(resData.checkout);
 				
