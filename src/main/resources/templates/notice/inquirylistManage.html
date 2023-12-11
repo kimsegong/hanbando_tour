@@ -202,13 +202,13 @@
     
   
     <div class="manage_inq_search">
+     
       <form id="frm_search" method="get" th:action="@{/notice/searchInquiryList.do}" >
         <select name="column" id="column">
           <option value="INQUIRY_NO">문의번호</option>
-          <option value="USER_NO">사용자번호</option>
+          <option value="USER_NO">작성자</option>
+          <option value="SEPARATE">문의유형</option>
           <option value="TITLE">제목</option>
-          <option value="CONTENTS">내용</option>
-          <option value="SEPARATE">분류</option>
         </select>
         <input type="text" name="query" id="query" placeholder="검색어 입력" >
         <button type="submit" id="btn_search_inquiry" >검색</button>
