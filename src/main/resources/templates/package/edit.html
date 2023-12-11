@@ -18,6 +18,7 @@
 .image_resized img {
   width: 80%;
 } 
+
 </style>
  <body>
   <div th:replace="~{/layout/header::header}"></div>
@@ -109,9 +110,9 @@
             <div id="ckeditor" th:utext="*{packageDto.packageContents}"></div>
         </div>           
         
-        <div>
+        <div class="mb-3">  
           <label for="hotelContents" class="form-label"></label>
-          <input type="text" name="hotelContents" id="hotelContents" th:value="${packageDto.hotelContents}" class="form-control">
+          <textarea class="form-control"  name="hotelContents" id="hotelContents" th:text="${packageDto.hotelContents}" rows="10"></textarea>
         </div>
         
         <div class="mb-3">
@@ -193,7 +194,7 @@
         return true;
      }
 
-
+  
 
     
     fnCkeditor();
