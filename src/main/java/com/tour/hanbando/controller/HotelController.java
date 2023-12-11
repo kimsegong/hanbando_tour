@@ -120,9 +120,8 @@ public class HotelController {
   }
   @ResponseBody
   @GetMapping("roomList.do")
-  public void roomList(HttpServletRequest request, Model model){
-    
-    return ;
+  public  Map<String, Object> roomList(HttpServletRequest request, Model model){
+    return hotelService.getRoomList(request,model);
   }
   
   @PostMapping("addHotel.do")
@@ -142,13 +141,13 @@ public class HotelController {
   @ResponseBody
   @PostMapping("addHotelRoom.do")
   public int writeRoom(MultipartHttpServletRequest multipartRequest, 
-                        @RequestParam("files") List<MultipartFile> files , Model model) throws Exception {
+                        @RequestParam("files") List<MultipartFile> files) throws Exception {
     
     int addResult = hotelService.writeRoom(multipartRequest, files) ? 1 : 0;
     
     return addResult;
-    
   }
+  
   
   /*************************** 삭제 ***************************************************/  
 
