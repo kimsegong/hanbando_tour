@@ -56,8 +56,6 @@
 		         <span th:text="${count}"></span>개의 상품
 		        </div>
 		        <div class="btn-group btn-group-sm" role="group" aria-label="Small button group" style="display: inline-block;">
-		          <button type="button" class="btn btn-outline-kong" id="recommend">추천순</button>
-		          <button type="button" class="btn btn-outline-kong" id="reviewPackage">리뷰순</button>
 		          <button type="button" class="btn btn-outline-kong" id="reviewPackage">가격낮은순</button>
 		          <button type="button" class="btn btn-outline-kong" id="reviewPackage">가격높은순</button>
 		        </div>
@@ -76,8 +74,6 @@
 		         <span th:text="${count}"></span>개의 상품
 		        </div>
 		        <div class="btn-group btn-group-sm" role="group" aria-label="Small button group" style="display: inline-block;">
-		          <button type="button" class="btn btn-outline-kong" id="recommend">추천순</button>
-		          <button type="button" class="btn btn-outline-kong" id="reviewPackage">리뷰순</button>
 		          <button type="button" class="btn btn-outline-kong" id="reviewPackage">가격낮은순</button>
 		          <button type="button" class="btn btn-outline-kong" id="reviewPackage">가격높은순</button>
 		        </div>
@@ -125,10 +121,6 @@
         
      }); 
      $('#hotel-tab').click(() => {
-       console.log($('#hotel_list').text());
-       
-        
-        
      }); 
        
     
@@ -146,7 +138,7 @@
             $.each(resData.searchPackageList, (i, package) => {           
               let str = '<div class="col-md-4">';
               str += '<div class="card w-100 p-3">';
-              str += '<img src="https://github.com/skal48/portfolio/blob/main/hanla.jpg?raw=true" style="height: 250px;" class="card-img-top" alt="Package Image">';
+              str += '<img src="' + package.productImageDto.imagePath + '/' + package.productImageDto.filesystemName + '" style="height: 250px;" class="card-img-top" alt="Package Image">';
               str += '<div class="card-body">';
               str += '<h5 class="card-title card-font">' + package.packageTitle + '</h5>';
               str += '<p class="card-text">'+ package.price +'원</p>';
@@ -184,7 +176,7 @@
             $.each(resData.searchHotelList, (i, hotel) => {           
               let str = '<div class="col-md-4">';
               str += '<div class="card w-100 p-3">';
-              str += '<img src="https://github.com/skal48/portfolio/blob/main/hanla.jpg?raw=true" style="height: 250px;" class="card-img-top" alt="Package Image">';
+              str += '<img src="'+ hotel.hotelImageDto.imagePath +'/'+ hotel.hotelImageDto.filesystemName +'" style="height: 250px;" class="card-img-top" alt="Package Image">';
               str += '<div class="card-body">';
               str += '<h5 class="card-title card-font">' + hotel.hotelName + '</h5>';
               str += '<p class="card-text"></p>';

@@ -24,7 +24,7 @@
           <input type="hidden" id="hotelNo" name="hotelNo" th:value="${hotelNo}">
 		      <div style="text-align: left;">
             <label for="files" class="form-label" style="font-weight: 500;">객실사진첨부</label>
-            <input type="file" name="files" id="files" class="form-control" accept="image/*" multiple>
+            <input type="file" name="files" id="roomFiles" class="form-control" accept="image/*" multiple>
           </div>
           <div style="text-align: left;">
   		      <label for="roomName" class="form-label" style="font-weight: 500;">객실이름</label>
@@ -132,7 +132,7 @@
   var seDate = $('#ssDate').val();
   const fnDateCheck = () => {
     if(bsDate > beDate || jsDate > jeDate || ssDate > seDate){
-    alert('날자를 다시 선택해 주세요 ');
+    alert('날짜를 다시 선택해 주세요 ');
     }
   }
   
