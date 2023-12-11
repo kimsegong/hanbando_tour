@@ -28,6 +28,9 @@
     font-size: 30px;
   }
   
+  .faq-table{
+    margin-left: 25px; 
+  }
   .faq{
     background-color: #ADC4CE; 
   }
@@ -140,7 +143,7 @@
        
         <div class="row accordion">
           <div class="col-1"></div>
-            <div class="col-9">
+            <div class="col-9 faq-table">
               <th:block th:if="${session.user != null}">
                 <input type="hidden" name="userNo" id="userNo" th:value="${session.user.userNo}">   
               </th:block>
