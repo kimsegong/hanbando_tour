@@ -550,6 +550,41 @@ public class HotelServiceImpl implements HotelService {
   }
   
   @Override
+  public void getHeartHotel(HttpServletRequest request, Model model) {
+    
+    
+    Optional<String> opt = Optional.ofNullable(request.getParameter("page"));
+    int page = Integer.parseInt(opt.orElse("1"));
+    int display = 10;
+    int userNo = Integer.parseInt(request.getParameter("userNo"));
+    int total = hotelMapper.getCountHeart(userNo);
+    
+    myPageUtils.setPaging(page, total, display);
+    
+    Map<String, Object> map = Map.of("begin", myPageUtils.getBegin()
+                                   , "end", myPageUtils.getEnd()
+                                   , "userNo", userNo);
+    
+    List<HeartDto> heartHotelList = hotelMapper.selectHotelHeartList(map);
+
+    model.addAttribute("heartHotelList", heartHotelList);
+    String params = "userNo=" + request.getParameter("userNo");
+    model.addAttribute("paging", myPageUtils.getMvcPaging(request.getContextPath() + "/user/heart.do", params));
+    model.addAttribute("beginNo", total - (page - 1) * display); 
+
+  }
+  
+  @Override
+  public Map<String, Object> removeHotelHeart(int hotelNo) {
+      int removeHotelHeartResult = hotelMapper.deleteHotelHeart(hotelNo);
+      return Map.of("removeHotelHeartResult", removeHotelHeartResult);
+    }
+
+
+
+  
+  
+  @Override
   public int removehotel(int hotelNo) {
     int deleteResult = hotelMapper.deleteHotel(hotelNo);
     return deleteResult;
