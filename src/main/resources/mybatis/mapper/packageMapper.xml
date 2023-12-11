@@ -502,24 +502,7 @@
         DELETE
           FROM PRODUCT_IMAGE_T
          WHERE FILESYSTEM_NAME = #{filesystemName}
-      </delete>
-      
-      <select id="getPackageInfoByReservationStart" parameterType="map" resultType="PackageDto">
-        SELECT
-            PACKAGE_NO,
-            PACKAGE_TITLE,
-            MAX_PEOPLE
-        FROM
-            PACKAGE_T
-        WHERE
-            PACKAGE_NO = #{packageNo}
-            AND MAX_PEOPLE = (
-                SELECT COALESCE(SUM(RESERVE_PERSON), 0)
-                FROM RESERVE_T
-                WHERE RESERVE_START = #{reserveStart}
-                AND PACKAGE_NO = #{packageNo}
-            )
-      </select>
+      </delete>     
       
      <select id="selectHeartList" parameterType="Map" resultMap="HeartMap">
       SELECT  A.PACKAGE_NO, A.PACKAGE_TITLE, A.PRICE, A.USER_NO

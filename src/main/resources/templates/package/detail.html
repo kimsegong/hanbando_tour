@@ -73,7 +73,7 @@
         <th:block th:if="${session.user != null}">
          <th:block th:if="${session.user.auth == 0}">
          <form id="frm_btn" method="post">
-            <input type="text" name="packageNo" class="heart" th:value="${packageDto.packageNo}">  
+            <input type="hidden" name="packageNo" class="heart" th:value="${packageDto.packageNo}">  
             <input type="hidden" name="regionNo" th:value="${packageDto.regionDto.regionNo}">
             <input type="hidden" name="themeNo" th:value="${packageDto.themeDto.themeNo}">
             <input type="hidden" name="packageTitle" th:value="${packageDto.packageTitle}">
@@ -105,7 +105,8 @@
 	  <div style="text-align: left;" th:text="|조회수 : ${#numbers.formatInteger(packageDto.hit, 1, 'COMMA')}|"></div>
       <div>
        <div class="choice">여행 주요일정</div>
-       <div style="text-align: left;" th:text="${packageDto.packagePlan}"></div>
+       <div style="text-align: left; white-space: pre;" th:text="${packageDto.packagePlan}"></div>
+       <div class="choice">최대 인원수/ 유의사항</div>
        <div style="text-align: left;" th:text="|${packageDto.maxPeople} 명|"></div>
       <!-- 모달 버튼 -->
       <div class="col-12 text-end">
@@ -121,7 +122,7 @@
               <h1 class="modal-title fs-5" id="exampleModalLabel">여행시 유의사항</h1>
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body" th:text="${packageDto.danger}">
+            <div class="modal-body" style="white-space: pre;" th:text="${packageDto.danger}">
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
@@ -158,6 +159,7 @@
               role="tab"
               aria-controls="profile-tab-pane"
               aria-selected="false"
+              style="white-space: pre;"
           >호텔정보
           </button>
         </li>
@@ -173,6 +175,7 @@
             class="tab-pane fade"
             id="profile-tab-pane"
             role="tabpanel"
+            style="white-space: pre;"
             aria-labelledby="profile-tab" th:text="${packageDto.hotelContents}"></div>
         </div>        
         <th:block th:if="${session.user != null}">
@@ -218,16 +221,16 @@
                 </select>
             </div>
         </div>
-        <div id="reviewAccordion">
-             <input type="hidden" id="packageNo" name="packageNo" th:value="${packageDto.packageNo}">     
-             
+        <div class="row" id="reviewAccordion">
+             <input type="hidden" id="packageNo" name="packageNo" th:value="${packageDto.packageNo}">                 
         </div>  
+        <div style="height: 200px;"></div>
     </div>    
 
     
     
     <div class="col-4">
-      <div class="w3-sidebar w3-bar-block" style="width:100%; height: 500px;"> <!-- 사이드바 -->
+      <div class="w3-sidebar w3-bar-block" style="width:20%; height: 500px;"> <!-- 사이드바 -->
        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 30px;">
 	    <div style="font-size: large; font-weight: bolder; text-align: left;" class="blink">선택중인 행사</div>
 		    <button class="btn btn-zero position-absolute top-0 end-0" id="heartButton">
@@ -283,8 +286,6 @@
           
         }
       })
-
-    
     $.fn.datepicker.dates['ko'] = {
 	    days: ["일요일", "월요일", "화요일", "수요일", "목요일", "금요일", "토요일"],
 	    daysShort: ["일", "월", "화", "수", "목", "금", "토"],
@@ -332,14 +333,23 @@
     }
    
    const fnReviewAdd = () => {
-    $('#btn_review_add').click(() => {         
-        // 데이터 확인용
-        console.log('Review Contents:', $('textarea[name="reviewContents"]').val());
-        console.log('User No:', $('#userNo').val());
-        console.log('Package No:', $('input[name="packageNo"]').val());
-        console.log('Reserve No:', $('input[name="reserveNo"]').val());
-        console.log('Star:', $('input[name="star"]:checked').val());
-        
+    $('#btn_review_add').click(() => {       
+      const reviewContents = $('textarea[name="reviewContents"]').val().trim();
+
+        // 리뷰 내용이 비어있는지 검사
+        if (!reviewContents) {
+            // 리뷰 내용이 비어있을 때, 알림 창 표시
+            alert('리뷰 내용을 입력해주세요.');
+            return;
+        }
+
+        // 별점 선택 확인
+        const selectedStar = $('input[name="star"]:checked').val();
+        if (!selectedStar) {
+            // 별점을 선택하지 않았을 때, 알림 창 표시
+            alert('별점을 선택해주세요.');
+            return;
+        }  
         $.ajax({
             type: 'post',
             url: '/package/addReview.do',
@@ -364,12 +374,19 @@
             },
             error: (xhr, status, error) => {
                 console.error('AJAX Error:', error);
-                alert('AJAX 요청 중 오류가 발생했습니다.');
             }
         });
     });
 }
-
+    function maskName(name) {
+    if (name.length < 2) {
+      return name; // 이름이 1글자 이하인 경우 그대로 반환
+    }
+  
+    const midIndex = Math.floor(name.length / 2); 
+    const maskedName = name.substring(0, midIndex) + '*' + name.substring(midIndex + 1);
+    return maskedName;
+  }
 
     var page = 1;
     var totalPage = 0;
@@ -391,7 +408,7 @@
               let str = '<div class="accordion accordion-flush">';
               str += '<div class="accordion-item">';
               str += '<h2 class="accordion-header">';
-              str += '<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapse' + i + '" aria-expanded="false" aria-controls="flush-collapse' + i + '">' + review.userDto.name + '님의 리뷰  ' + generateStarRating(review.star) + '</button>';
+              str += '<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapse' + i + '" aria-expanded="false" aria-controls="flush-collapse' + i + '">' + maskName(review.userDto.name) + '님의 리뷰  ' + generateStarRating(review.star) + '</button>';
               str += '</h2>';
               str += '<div id="flush-collapse' + i + '" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">';
               str += '<div class="accordion-body">' + review.reviewContents + '</div>';
@@ -465,6 +482,7 @@
         }
       });
     };
+    
 	
     	 $(document).ready(function() {
         var sessionUserNo = $('#userNo').val();
