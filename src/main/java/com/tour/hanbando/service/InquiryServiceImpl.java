@@ -117,7 +117,9 @@ public class InquiryServiceImpl implements InquiryService {
                              .build();
     
     int addResult = inquiryMapper.insertInquiryAnswer(answer);
-    
+    if(addResult != 0) {
+    inquiryMapper.updateAnswerStatus(inquiryNo);
+    }
     return addResult;
   }
   @Override
@@ -153,7 +155,7 @@ public class InquiryServiceImpl implements InquiryService {
     model.addAttribute("inquiryManageList", inquiryManageList);
     model.addAttribute("paging", myPageUtils.getMvcPaging(request.getContextPath() + "/notice/searchInquiryList.do", "column=" + column + "&query=" + query));
     model.addAttribute("beginNo", total - (page - 1) * display);
-    
+    model.addAttribute("total", total);
     
   }
 }

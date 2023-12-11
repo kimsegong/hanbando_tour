@@ -161,6 +161,7 @@
        <table class="table table-hover">
         <thead>
           <tr>
+            <th scope="co1">답변상태</th>
             <th scope="col">문의번호</th>
             <th scope="col">작성자</th>
             <th scope="col">문의유형</th>
@@ -169,8 +170,13 @@
           </tr>
         </thead>
         <tbody class="table-group-divider m_pointer">
+        <th:block th:if="${not #lists.isEmpty(inquiryList)}">  
           <th:block th:each="i,vs:${inquiryList}">
             <tr class="align-bottom">
+              <td>
+                <span class="badge text-bg-secondary" th:if ="${i.answerStatus == 0}" th:text="답변대기"></span>
+                <span class="badge text-bg-info"      th:if ="${i.answerStatus == 1}" th:text="답변완료"></span>
+              </td>
               <td>
                 <a th:href="@{/notice/inquirydetail.do(inquiryNo=${i.inquiryNo})}" th:text="${i.inquiryNo}"></a>
               </td>
@@ -189,6 +195,30 @@
               </td>
             </tr>
           </th:block>
+        </th:block> 
+        
+          <th:block th:if="${not #lists.isEmpty(inquiryManageList)}">
+          <th:block th:each="in,vs:${inquiryManageList}">
+            <tr class="align-bottom">
+              <td>
+                <a th:href="@{/notice/inquirydetail.do(inquiryNo=${in.inquiryNo})}" th:text="${in.inquiryNo}"></a>
+              </td>
+              <td>
+                <a th:href="@{/notice/inquirydetail.do(inquiryNo=${in.inquiryNo})}" th:text="${in.userDto.name}"></a>
+              </td>
+              <td>
+                <a th:if="${in.separate != null}" th:href="@{/notice/inquirydetail.do(inquiryNo=${in.inquiryNo})}" th:text="${in.separate}"></a>
+                <a th:if="${in.separate == null}" th:href="@{/notice/inquirydetail.do(inquiryNo=${in.inquiryNo})}">선택안함</a>
+              </td>
+              <td>
+                <a th:href="@{/notice/inquirydetail.do(inquiryNo=${in.inquiryNo})}" th:text="${in.title}"></a>
+              </td>
+              <td>
+                <a th:href="@{/notice/inquirydetail.do(inquiryNo=${in.inquiryNo})}" th:text="${in.createdAt}"></a>
+              </td>
+            </tr>
+          </th:block>
+         </th:block> 
         </tbody>
       </table>
     
@@ -206,7 +236,6 @@
       <form id="frm_search" method="get" th:action="@{/notice/searchInquiryList.do}" >
         <select name="column" id="column">
           <option value="INQUIRY_NO">문의번호</option>
-          <option value="USER_NO">작성자</option>
           <option value="SEPARATE">문의유형</option>
           <option value="TITLE">제목</option>
         </select>
