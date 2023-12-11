@@ -63,7 +63,6 @@ public interface HotelMapper {
   public int insertHeart(HeartDto heartDto);
   public int getCountHeart(HeartDto heartDto);
   public List<HeartDto> selectHotelHeartList(Map<String, Object> map);
-  public int getCountHeart(int userNo);
   public int deleteHotelHeart(int hotelNo);
   
   
