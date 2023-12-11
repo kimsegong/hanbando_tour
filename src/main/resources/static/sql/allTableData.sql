@@ -432,9 +432,11 @@ CREATE TABLE INQUIRY_T(
   CONTENTS      CLOB                NULL,      -- 내용
   CREATED_AT    VARCHAR2(50 BYTE)   NULL,      -- 작성일
   SEPARATE      VARCHAR2(50 BYTE)   NULL,      -- 분류 (기타/패키지/호텔)
+  ANSWER_STATUS NUMBER              NULL,      -- 0: 답변대기, 1: 답변완료
   CONSTRAINT PK_INQUIRY      PRIMARY KEY(INQUIRY_NO),
   CONSTRAINT FK_USER_INQUIRY FOREIGN KEY(USER_NO) REFERENCES USER_T(USER_NO) ON DELETE CASCADE
 );
+
 
 -- 1:1문의 답변 테이블
 CREATE TABLE INQUIRY_ANSWER_T(
@@ -1378,12 +1380,12 @@ INSERT INTO FAQ_T VALUES(FAQ_SEQ.NEXTVAL, 4, '개명했는데 회원정보에 �
 COMMIT;
 
 -- 1:1 문의 등록(회원)
-INSERT INTO INQUIRY_T VALUES(INQUIRY_SEQ.NEXTVAL, 3, '쩌기요', '저 패키지 여행 안 갔으니까 환불해달라고요', TO_CHAR(SYSDATE,'YYYY/MM/DD'), '패키지');
-INSERT INTO INQUIRY_T VALUES(INQUIRY_SEQ.NEXTVAL, 4, '다른 호텔은 예약이 안 되나요?', '호텔 상품 좀 추가해주세요', TO_CHAR(SYSDATE,'YYYY/MM/DD'), '호텔');
-INSERT INTO INQUIRY_T VALUES(INQUIRY_SEQ.NEXTVAL, 6, '아니 가이드가', '가이드가 말을 왜 그런식으로 해요? 진자 어이없네', TO_CHAR(SYSDATE,'YYYY/MM/DD'), '패키지');
-INSERT INTO INQUIRY_T VALUES(INQUIRY_SEQ.NEXTVAL, 9, '호텔 인원이 추가됐는데요', '추가금 꼭 내야하나요? 카드결제 되나요?', TO_CHAR(SYSDATE,'YYYY/MM/DD'), '호텔');
-INSERT INTO INQUIRY_T VALUES(INQUIRY_SEQ.NEXTVAL, 4, '아니 호텔 상태가 왜이래요', '진심 더러움,, 이거는 환불 해줘야 하는거 아닌가요?', TO_CHAR(SYSDATE,'YYYY/MM/DD'), '호텔');
-INSERT INTO INQUIRY_T VALUES(INQUIRY_SEQ.NEXTVAL, 10, '저 개명했는데요', '이름 변경 해주세요', TO_CHAR(SYSDATE,'YYYY/MM/DD'), '기타');
+INSERT INTO INQUIRY_T VALUES(INQUIRY_SEQ.NEXTVAL, 3, '쩌기요', '저 패키지 여행 안 갔으니까 환불해달라고요', TO_CHAR(SYSDATE,'YYYY/MM/DD'), '패키지', 1);
+INSERT INTO INQUIRY_T VALUES(INQUIRY_SEQ.NEXTVAL, 4, '다른 호텔은 예약이 안 되나요?', '호텔 상품 좀 추가해주세요', TO_CHAR(SYSDATE,'YYYY/MM/DD'), '호텔', 1);
+INSERT INTO INQUIRY_T VALUES(INQUIRY_SEQ.NEXTVAL, 6, '아니 가이드가', '가이드가 말을 왜 그런식으로 해요? 진자 어이없네', TO_CHAR(SYSDATE,'YYYY/MM/DD'), '패키지', 1);
+INSERT INTO INQUIRY_T VALUES(INQUIRY_SEQ.NEXTVAL, 9, '호텔 인원이 추가됐는데요', '추가금 꼭 내야하나요? 카드결제 되나요?', TO_CHAR(SYSDATE,'YYYY/MM/DD'), '호텔', 1);
+INSERT INTO INQUIRY_T VALUES(INQUIRY_SEQ.NEXTVAL, 4, '아니 호텔 상태가 왜이래요', '진심 더러움,, 이거는 환불 해줘야 하는거 아닌가요?', TO_CHAR(SYSDATE,'YYYY/MM/DD'), '호텔', 1);
+INSERT INTO INQUIRY_T VALUES(INQUIRY_SEQ.NEXTVAL, 10, '저 개명했는데요', '이름 변경 해주세요', TO_CHAR(SYSDATE,'YYYY/MM/DD'), '기타', 0);
 COMMIT;
 
 -- 1:1 문의-답변 등록(관리자)

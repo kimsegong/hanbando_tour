@@ -144,8 +144,8 @@ public class ReserveServiceImpl implements ReserveService {
     
     int reserveStatus = Integer.parseInt(request.getParameter("resStatus"));
     String reserveStart = request.getParameter("resStart");
-//    String reserveFinish = "null";
-    int reservePrice = Integer.parseInt(request.getParameter("totalReservePrice"));
+    String reserveFinish = request.getParameter("resFinish");
+    int reservePrice = Integer.parseInt(request.getParameter("reservePrice"));
     int userNo = Integer.parseInt(request.getParameter("userNo"));
     int hotelNo = Integer.parseInt(request.getParameter("hotelNo"));
     int roomNo = Integer.parseInt(request.getParameter("roomNo"));
@@ -155,7 +155,7 @@ public class ReserveServiceImpl implements ReserveService {
                             .agree(agree)
                             .reserveStatus(reserveStatus)
                             .reserveStart(reserveStart)
-//                            .reserveFinish(reserveFinish)
+                            .reserveFinish(reserveFinish)
                             .reservePrice(reservePrice)
                             .userDto(UserDto.builder()
                                           .userNo(userNo)
@@ -289,7 +289,7 @@ public class ReserveServiceImpl implements ReserveService {
     
     model.addAttribute("reserveHotelList", reserveHotelList);
     String params = "userNo=" + request.getParameter("userNo");
-    model.addAttribute("paging", myPageUtils.getMvcPaging(request.getContextPath() + "/reserve/reserveList.do", params));
+    model.addAttribute("paging", myPageUtils.getMvcPaging(request.getContextPath() + "/reserve/reserveHotelList.do", params));
     model.addAttribute("beginNo", total - (page - 1) * display);
   }
   
