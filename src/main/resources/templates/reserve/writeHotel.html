@@ -127,7 +127,7 @@
                   <tr>
                     <th>결제가격</th>
                     <td>
-                      <span id="totalPrice">??</span>
+                      <span id="totalPrice" th:text="|${finalprice}|"></span>
                       원
                     </td>
                   </tr>
@@ -139,7 +139,7 @@
             <input type="hidden" name="hotelNo" th:value="${hotel.hotelNo}">
             <input type="hidden" name="roomNo" th:value="${roomNo}">
             <input type="hidden" name="resStatus" th:value="0">
-            <input type="hidden" name="totalReservePrice" th:value="100">
+            <input type="hidden" name="reservePrice" th:value="${finalprice}">
             <input type="hidden" name="resStart" th:value="${checkin}">
             <input type="hidden" name="resFinish" th:value="${checkout}">
         
