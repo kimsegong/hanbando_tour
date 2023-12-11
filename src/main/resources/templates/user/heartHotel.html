@@ -3,7 +3,15 @@
 
 <head th:replace="~{/layout/header::head('찜페이지')}"></head>
 
-
+<style>
+  .btn-green{
+    background-color: #B6C4B6;
+  }
+  .btn-whitegreen{
+    background-color: #EEF0E5;
+  }
+  
+</style>
 <body>
   
   <div th:replace="~{/layout/header::header}"></div>
@@ -18,60 +26,60 @@
     </div>    
       </div>
       <div class="col-10">
+       <p style="font-size: 30px; font-weight: 400;">💚나의 찜목록💚</p>
         <div>
-            <a th:href="|@{/user/heart.do(userNo=${session.user.userNo})}|">패키지</a>
-            <span> | </span>
-            <a th:href="|@{/user/heartHotel.do(userNo=${session.user.userNo})}|">호텔</a>
+          <div class="btn-group" role="group" aria-label="Faq Category Buttons" style="margin-bottom: 20px;">
+            <a th:href="|@{/user/heart.do(userNo=${session.user.userNo})}|" class="btn btn-whitegreen my-btn">패키지</a>
+            <a th:href="|@{/user/heartHotel.do(userNo=${session.user.userNo})}|" class="btn btn-green my-btn">호텔</a>
+          </div>
        </div>
-       <p style="font-size: 30px;">💙나의 찜목록💙</p>
-       <table class="table w-75 p-3" style="margin: auto;">
-          <thead>
-            <tr class="table-success">
-              <th scope="col">❤️
-                 <input type="checkbox" class="form-check-input" id="chk_all">
-                 <label class="form-check-label" for="chk_all">
-                </label>
-              </th>
-              <th scope="col">상품명</th>
-              <th scope="col">가격</th>
-            </tr>
-          </thead>
-          <tbody>
-           <input type="hidden" id="userNo" th:value="${session.user.userNo}">
-           <th:block th:if="${#lists.isEmpty(heartHotelList)}">
-             <tr style="text-align: center;"> 
+     <table class="table w-75 p-3" style="margin: auto; table-layout: fixed;">
+    <thead>
+        <tr class="table-success">
+            <th scope="col">❤️
+                <input type="checkbox" class="form-check-input" id="chk_all">
+                <label class="form-check-label" for="chk_all"></label>
+            </th>
+            <th scope="col">상품명</th>
+            <th scope="col">가격</th>
+        </tr>
+    </thead>
+    <tbody>
+        <input type="hidden" id="userNo" th:value="${session.user.userNo}">
+        <th:block th:if="${#lists.isEmpty(heartHotelList)}">
+            <tr style="text-align: center;">
                 <td></td>
                 <td>찜한 상품이 없습니다.</td>
                 <td></td>
-             </tr>
-            </th:block>
-           <th:block  th:each=" heart :${heartHotelList}">
-            <tr>             
-              <td scope="row">💙
-                  <input type="checkbox" class="form-check-input chk_each" th:value="${heart.hotelDto.hotelNo}">
-                  <label class="form-check-label">
-                  </label>
-              </td>
-              <td>
-                <input type="hidden" id="hotelNo" th:value="${heart.hotelDto.hotelNo}">
-                <a th:href="@{/hotel/detail.do(hotelNo=${heart.hotelDto.hotelNo})}" th:text="${heart.hotelDto.hotelName}"></a>
-              </td>
-              <td>가격</td>
             </tr>
-           </th:block>
-          </tbody>
-          <tfoot>
-           <th:block th:unless="${#lists.isEmpty(heartHotelList)}">
-                <tr>
-                    <td>
-                        <button type="button" class="btn btn-danger remove_heart" onclick="deleteSelected()">삭제</button>
-                    </td>
-                    <td th:utext="${paging}" class="paging"></td>
-                    <td></td>
-                </tr>
-            </th:block>
-          </tfoot>
-          </table>           
+        </th:block>
+        <th:block th:each="heart : ${heartHotelList}">
+            <tr style="height: 70px;">
+                <td scope="row" style="height: 100%;">💙
+                    <input type="checkbox" class="form-check-input chk_each" th:value="${heart.hotelDto.hotelNo}">
+                    <label class="form-check-label"></label>
+                </td>
+                <td style="height: 100%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;">
+                    <input type="hidden" id="hotelNo" th:value="${heart.hotelDto.hotelNo}">
+                    <a th:href="@{/hotel/detail.do(hotelNo=${heart.hotelDto.hotelNo})}" th:text="${heart.hotelDto.hotelName}"></a>
+                </td>
+                <td style="height: 100%;">가격</td>
+            </tr>
+        </th:block>
+    </tbody>
+    <tfoot>
+        <th:block th:unless="${#lists.isEmpty(heartHotelList)}">
+            <tr>
+                <td>
+                    <button type="button" class="btn btn-danger remove_heart" onclick="deleteSelected()">삭제</button>
+                </td>
+                <td th:utext="${paging}" class="paging"></td>
+                <td></td>
+            </tr>
+        </th:block>
+    </tfoot>
+</table>
+
       </div>
     <div class="col-1">      
     </div>
