@@ -20,6 +20,10 @@
   table {
     font-size: 1.2em;
   }
+  
+  .table-inquiry{
+    margin-left: 16px; 
+  }
   .sidebar a{
     font-size: 1.3em;
     font-weight: bolder;
@@ -33,9 +37,11 @@
   table a:hover{
     color: #96B6C5;
   }
+  
   table thead tr th{
     font-weight: bolder;
   }
+
   .title{
     font-size: 30px;
   }
@@ -146,9 +152,10 @@
    
      <div th:if="${inquiryCount != 0}">
        
-       <table class="table table-hover">
+       <table class="table table-hover table-inquiry">
         <thead>
           <tr>
+            <th scope="co1">답변상태</th>
             <th scope="col">문의번호</th>
             <th scope="col">문의유형</th>
             <th scope="col">제목</th>
@@ -158,6 +165,10 @@
         <tbody class="table-group-divider m_pointer">
           <th:block th:each="i,vs:${inquiryList}">
             <tr class="align-bottom">
+              <td>
+                <span class="badge text-bg-secondary" th:if ="${i.answerStatus == 0}" th:text="답변대기"></span>
+                <span class="badge text-bg-info"      th:if ="${i.answerStatus == 1}" th:text="답변완료"></span>
+              </td>
               <td>
                 <a th:href="@{/notice/inquirydetail.do(inquiryNo=${i.inquiryNo})}" th:text="${i.inquiryNo}"></a>
               </td>

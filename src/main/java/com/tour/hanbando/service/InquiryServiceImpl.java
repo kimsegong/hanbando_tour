@@ -117,7 +117,9 @@ public class InquiryServiceImpl implements InquiryService {
                              .build();
     
     int addResult = inquiryMapper.insertInquiryAnswer(answer);
-    
+    if(addResult != 0) {
+    inquiryMapper.updateAnswerStatus(inquiryNo);
+    }
     return addResult;
   }
   @Override
@@ -140,6 +142,7 @@ public class InquiryServiceImpl implements InquiryService {
     Optional<String> opt = Optional.ofNullable(request.getParameter("page"));
     String strPage = opt.orElse("1");
     int page = Integer.parseInt(strPage);
+    
     int display = 20;
     
     myPageUtils.setPaging(page, total, display);
@@ -150,10 +153,9 @@ public class InquiryServiceImpl implements InquiryService {
     List<InquiryDto> inquiryManageList = inquiryMapper.getSearchInquiyList(map);
     
     model.addAttribute("inquiryManageList", inquiryManageList);
-    model.addAttribute("paging", myPageUtils.getMvcPaging(request.getContextPath() + "/notice/inquirySearchList.do", "column=" + column + "&query=" + query));
+    model.addAttribute("paging", myPageUtils.getMvcPaging(request.getContextPath() + "/notice/searchInquiryList.do", "column=" + column + "&query=" + query));
     model.addAttribute("beginNo", total - (page - 1) * display);
     model.addAttribute("total", total);
-    
     
   }
 }
