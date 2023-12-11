@@ -12,15 +12,15 @@
 		  <div class="row">
 		    <div class="col-1">	      
 		    </div>
-		    <div class="col-10" style="border:1px gray dotted">
+		    <div class="col-10">
 		      	<!--/*여기에 작성/ 다 만들고 style 지워주세요  */-->
-		      <div>
+		      <div style="padding-bottom: 10px;">
             <h2>예약내역목록</h2>
           </div>
-          <div>
-            <a th:href="|@{/reserve/reserveList.do(userNo=${session.user.userNo})}|">패키지</a>
+          <div style="margin: 20px auto;">
+            <a th:href="|@{/reserve/reserveList.do(userNo=${session.user.userNo})}|"><strong>패키지</strong></a>
             <span> | </span>
-            <a th:href="|@{/reserve/reserveHotelList.do(userNo=${session.user.userNo})}|">호텔</a>
+            <a th:href="|@{/reserve/reserveHotelList.do(userNo=${session.user.userNo})}|"><strong>호텔</strong></a>
           </div>
           <div>
             <table class="table">
