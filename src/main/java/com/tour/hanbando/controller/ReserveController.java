@@ -112,6 +112,14 @@ public class ReserveController {
     System.out.println(redirectAttributes.getAttribute("cancelResult"));
     return "redirect:/reserve/reserveList.do?userNo=" + request.getParameter("userNo");
   }
+  
+  @PostMapping("/cancelHotel.do")
+  public String cancelHotelReserve(HttpServletRequest request, RedirectAttributes redirectAttributes) {
+    Map<String, Object> map = reserveService.modifyReserveStatusCancel(request, redirectAttributes);
+    redirectAttributes.addFlashAttribute("cancelResult", map.get("modifyResCancelResult"));
+    System.out.println(redirectAttributes.getAttribute("cancelResult"));
+    return "redirect:/reserve/reserveHotelList.do?userNo=" + request.getParameter("userNo");
+  }
 
   // 호텔 예약관련 요청을 처리
   @GetMapping("/reserveHotelList.do")

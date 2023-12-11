@@ -141,7 +141,7 @@
                 <button type="button" th:onclick="|location.href='@{/reserve/reserveList.do(userNo=${session.user.userNo})}'|" class="btn btn-success">나의 예약목록</button>
                 <th:block th:if="${reserve.reserveStatus != 2}">
                   <button th:if="${reserve.reserveStatus != 1}" class="btn btn-outline-secondary" type="button" id="btn_res_modify">예약 수정하러가기</button>
-                  <button th:if="${reserve.reserveStatus == 0}" class="btn btn-outline-danger" type="button" id="btn_res_cancel">예약 취소하기</button>
+                  <button class="btn btn-outline-danger" type="button" id="btn_res_cancel">예약 취소하기</button>
                 </th:block>
               </form>
             </div>
@@ -158,7 +158,7 @@
   <script>
     
     var IMP = window.IMP;
-    IMP.init("imp06054417");
+    IMP.init("imp14397622");
  
     var today = new Date();   
     var hours = today.getHours(); // 시

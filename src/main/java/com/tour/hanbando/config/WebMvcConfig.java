@@ -27,13 +27,14 @@ public class WebMvcConfig implements WebMvcConfigurer {
     registry.addInterceptor(administratorInterceptor)
       .addPathPatterns("/manage/userList.do", "/manage/inactiveUserList.do", "/manage/leaveUserList.do")
       .addPathPatterns("/manage/userSearchList.do", "/manage/leaveUserSearchList.do", "/manage/inactiveUserSearchList.do")
-      .addPathPatterns("/manage/userDetail.do", "/manage/inactiveDetail.do", "/manage/modifyPw.form", "/manage/heartList.do")
+      .addPathPatterns("/manage/userDetail.do", "/manage/inactiveDetail.do", "/manage/modifyPw.form", "/manage/heartList.do", "/manage/searchHeartList.do")
       .addPathPatterns("/manage/productList.do", "/manage/hotelProductList.do")
       .addPathPatterns("/manage/packageProductSearch.do", "/manage/hotelProductSearch.do")
       .addPathPatterns("/manage/reserveList.do", "/manage/searchReserve.do")
       .addPathPatterns("/manage/reservePackageDetail.do", "/manage/reserveHotelDetail.do")
       .addPathPatterns("/manage/reviewList.do", "/manage/searchReview.do")
-      .addPathPatterns("/notice/write.form");
+      .addPathPatterns("/notice/write.form")
+      .addPathPatterns("/package/write.form", "/package/edit.do");
     
     // 로그인이 필요한 접근을 막는 인터셉터
     registry.addInterceptor(requiredLoginInterceptor)
