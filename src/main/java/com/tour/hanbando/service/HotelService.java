@@ -32,4 +32,5 @@ public interface HotelService {
   public Map<String, Object> removeHotelHeart(int hotelNo);
   public int removehotel(int hotelNo);
   public int modifyHotel(int hotelNo);
+  public Map<String, Object> getRoomList(HttpServletRequest request, Model model);
 }
