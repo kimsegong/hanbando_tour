@@ -43,7 +43,6 @@ public class PayController {
   @PostMapping(value="/getPayLogByResNo", produces="application/json")
   public Map<String, Object> getMerUidByReserveNo(@RequestParam(value="reserveNo", defaultValue = "0", required = false) int reserveNo){
     PaymentDto payLog = reserveService.loadPaymentByReserveNo(reserveNo);
-    System.out.println("=========================================" + payLog.toString());
     return Map.of("payLog", payLog);
   }
   
@@ -51,14 +50,10 @@ public class PayController {
   @ResponseBody
   @PostMapping("/cancel")
   public Map<String, Object> refundPayment(HttpServletRequest request, @RequestBody PaymentDto payment) {
+    
     return reserveService.loadPaymentByMerchantUid(request, payment);
   }
   
-  @ResponseBody
-  @PostMapping("/getToken")
-  public Map<String, Object> getToken(HttpServletRequest request){
-    return Map.of("accessToken", reserveService.getAccessToken(null, null));
-  }
   
   
 }
