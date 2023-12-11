@@ -559,6 +559,19 @@ public class PackageServiceImpl implements PackageService {
       return packageMapper.starAve(packageNo);
     }
     
+    @Transactional(readOnly=true)
+    @Override
+    public List<ReserveDto> getReserveUser(int packageNo) {
+        List<ReserveDto> reserve = packageMapper.getReserve(packageNo);
+        return reserve ;
+    }
+    
+    @Override
+    public Map<String, Object> removeReview(int reviewNo) {
+        int removeResult = packageMapper.deleteReview(reviewNo);
+        return Map.of("removeResult", removeResult);
+      }
+    
     @Override
     public int addHeart(HttpServletRequest request) {
     
@@ -574,18 +587,6 @@ public class PackageServiceImpl implements PackageService {
     return packageMapper.heartProduct(heart);
     }
     
-    @Transactional(readOnly=true)
-    @Override
-    public List<ReserveDto> getReserveUser(int packageNo) {
-        List<ReserveDto> reserve = packageMapper.getReserve(packageNo);
-        return reserve ;
-    }
-    
-    @Override
-    public Map<String, Object> removeReview(int reviewNo) {
-        int removeResult = packageMapper.deleteReview(reviewNo);
-        return Map.of("removeResult", removeResult);
-      }
     
     @Override
     public void getHeartPackage(HttpServletRequest request, Model model) {
