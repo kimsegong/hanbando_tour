@@ -28,6 +28,8 @@ public interface HotelService {
   public List<ReserveDto> getReserveUser(int hotelNo); 
   public Map<String, Object> removeReview(int reviewNo);
   public int getHeart (HttpServletRequest request);
+  public void getHeartHotel(HttpServletRequest request, Model model);
+  public Map<String, Object> removeHotelHeart(int hotelNo);
   public int removehotel(int hotelNo);
   public int modifyHotel(int hotelNo);
 }

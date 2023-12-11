@@ -121,9 +121,6 @@
                         let str = '<div class="col-md-4">';
                         str += '<div class="card w-100 p-3">';
                         if (package.productImageDto && package.productImageDto.thumbnail === 1) {
-						console.log('Thumbnail:', package.productImageDto.thumbnail);
-					    console.log('Image Path:', package.productImageDto.imagePath);
-					    console.log('Filesystem Name:', package.productImageDto.filesystemName);
                             str += '<img src="' + package.productImageDto.imagePath + '/' + package.productImageDto.filesystemName + '" style="height: 250px; " class="card-img-top" alt="Package Image">';
                         } else {
                             str += '<img src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2Fdc4Q17%2FbtsBykVk229%2FPtJu2VtYGEdKF5YDcZm7xK%2Fimg.jpg" style="height: 250px;" class="card-img-top" alt="Package Image">';
