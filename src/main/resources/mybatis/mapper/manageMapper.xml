@@ -138,6 +138,24 @@
       <result    column="JOINED_AT"      property="joinedAt"/>
     </association>
   </resultMap>
+  
+  <!-- 찜 DTO -->
+  <resultMap type="HeartDto" id="HeartMap" >
+    <association javaType="UserDto" property="userDto">
+      <id        column="USER_NO"   property="userNo" />
+      <result    column="EMAIL"     property="email" />
+      <result    column="NAME"      property="name" />
+    </association>
+    <association javaType="PackageDto"  property="packageDto">
+      <id        column="PACKAGE_NO"    property="packageNo" />
+      <result    column="PACKAGE_TITLE" property="packageTitle" />
+      <result    column="PRICE"         property="price" />
+    </association>
+    <association javaType="HotelDto" property="hotelDto">
+      <id        column="HOTEL_NO"   property="hotelNo" />
+      <result    column="HOTEL_NAME" property="hotelName" />
+    </association>
+  </resultMap>
 	
   <!-- 회원 관리 목록 -->
   <select id="getUserCount" resultType="int">
@@ -166,7 +184,62 @@
      WHERE RN BETWEEN #{begin} AND #{end}
   </select>
   
-  <!-- 찜목록 가져오기 -->
+  <!-- 찜 목록 가져오기 -->
+  <select id="getHeartCount" parameterType="Map" resultType="int">
+    SELECT COUNT(*)
+      FROM HEART_T
+     WHERE USER_NO = #{userNo}
+  </select>
+  <select id="getHeartList" parameterType="Map" resultMap="HeartMap">
+    SELECT A.USER_NO, A.EMAIL, A.NAME, A.PACKAGE_NO, A.PACKAGE_TITLE, A.PRICE, A.HOTEL_NO, A.HOTEL_NAME
+      FROM (SELECT ROW_NUMBER() OVER(ORDER BY HT.USER_NO) AS RN
+                 , HT.USER_NO, U.EMAIL, U.NAME
+                 , HT.PACKAGE_NO, P.PACKAGE_TITLE, P.PRICE
+                 , HT.HOTEL_NO, HO.HOTEL_NAME
+              FROM USER_T U LEFT OUTER JOIN HEART_T HT 
+                ON U.USER_NO = HT.USER_NO LEFT OUTER JOIN PACKAGE_T P
+                ON P.PACKAGE_NO = HT.PACKAGE_NO LEFT OUTER JOIN HOTEL_T HO
+                ON HO.HOTEL_NO = HT.HOTEL_NO
+             WHERE HT.USER_NO = #{userNo}) A
+     WHERE RN BETWEEN #{begin} AND #{end}
+  </select>
+  
+  
+  <!-- 찜 검색 가져오기 -->
+  <select id="getHeartSearchCount" parameterType="Map" resultType="int">
+    SELECT COUNT(*)
+      FROM HEART_T HT LEFT OUTER JOIN PACKAGE_T P
+        ON P.PACKAGE_NO = HT.PACKAGE_NO LEFT OUTER JOIN HOTEL_T HO
+        ON HO.HOTEL_NO = HT.HOTEL_NO
+       <where>
+         <if test="userNo != null">
+           HT.USER_NO = #{userNo}
+         </if>
+         <if test="column != null and query != null">
+           AND ${column} LIKE '%' || #{query} || '%'
+         </if>
+       </where>
+  </select>
+  <select id="getHeartSearchList" parameterType="Map" resultMap="HeartMap">
+    SELECT A.USER_NO, A.EMAIL, A.NAME, A.PACKAGE_NO, A.PACKAGE_TITLE, A.PRICE, A.HOTEL_NO, A.HOTEL_NAME
+      FROM (SELECT ROW_NUMBER() OVER(ORDER BY HT.USER_NO) AS RN
+                 , HT.USER_NO, U.EMAIL, U.NAME
+                 , HT.PACKAGE_NO, P.PACKAGE_TITLE, P.PRICE
+                 , HT.HOTEL_NO, HO.HOTEL_NAME
+              FROM USER_T U LEFT OUTER JOIN HEART_T HT 
+                ON U.USER_NO = HT.USER_NO LEFT OUTER JOIN PACKAGE_T P
+                ON P.PACKAGE_NO = HT.PACKAGE_NO LEFT OUTER JOIN HOTEL_T HO
+                ON HO.HOTEL_NO = HT.HOTEL_NO
+               <where>
+                 <if test="userNo != null">
+                   HT.USER_NO = #{userNo}
+                 </if>
+                 <if test="column != null and query != null">
+                   AND ${column} LIKE '%' || #{query} || '%'
+                 </if>
+               </where>) A
+     WHERE RN BETWEEN #{begin} AND #{end}
+  </select>
 
   
   
