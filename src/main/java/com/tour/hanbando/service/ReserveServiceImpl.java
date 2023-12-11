@@ -145,7 +145,7 @@ public class ReserveServiceImpl implements ReserveService {
     int reserveStatus = Integer.parseInt(request.getParameter("resStatus"));
     String reserveStart = request.getParameter("resStart");
     String reserveFinish = request.getParameter("resFinish");
-    int reservePrice = Integer.parseInt(request.getParameter("totalReservePrice"));
+    int reservePrice = Integer.parseInt(request.getParameter("reservePrice"));
     int userNo = Integer.parseInt(request.getParameter("userNo"));
     int hotelNo = Integer.parseInt(request.getParameter("hotelNo"));
     int roomNo = Integer.parseInt(request.getParameter("roomNo"));
