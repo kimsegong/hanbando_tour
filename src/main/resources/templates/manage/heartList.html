@@ -84,7 +84,9 @@
   }
 
 </style>
-
+<script>
+  
+</script>
 
 
 <body>
@@ -161,7 +163,7 @@
                     <option value="HO.HOTEL_NAME">호텔명</option>
                   </select>
                   <input type="text" name="query" id="query" placeholder="검색어 입력" >
-                  <input type="hidden" name="userNo" th:value="${userNo}">
+                  <input type="hidden" name="userNo" th:value="${user.userNo}">
                   <button type="submit" id="btn_search_heart" >검색</button>
                 </form>
               </div>
