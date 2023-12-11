@@ -41,7 +41,7 @@ public class InquiryController {
   public String addInquiry(HttpServletRequest request, RedirectAttributes redirectAttributes) {
     int addResult = inquiryService.addInquiry(request);
     redirectAttributes.addFlashAttribute("addResult", addResult);
-    return "redirect:/notice/inquirylist.do";
+    return "redirect:/notice/inquirylist.do?userNo=" +request.getParameter("userNo");
   }
   
   @GetMapping("/inquirywrite.form")
@@ -95,6 +95,6 @@ public class InquiryController {
   @GetMapping("/searchInquiryList.do")
   public String searchInquiryList(HttpServletRequest request, Model model) {
     inquiryService.loadSearchInquiryList(request, model);
-    return "notice.inquiryManage";
+    return "notice/inquirylistManage";
   }
 }

@@ -22,7 +22,21 @@
       .wrap1 > .box4{
         height: 50px;
       }
-            
+   #btn_faq_write {
+    height: 38px; 
+    width: 120px;
+    font-size: 1.2em;
+    color: #96B6C5;         /* 텍스트 색상 */
+    background-color: #fff; /* 기본 배경 색상 */
+    border-color: #96B6C5;  /* 테두리 색상 */
+    border-radius: 10px;      /* 테두리를 둥글게 만듭니다. */
+    transition: all 0.3s;     /* 모든 속성에 대해 0.3초 동안 트랜지션 효과 적용 */
+  }
+  
+  #btn_faq_write:hover {
+    color: #fff;               /* 호버 시 텍스트 색상 */
+    background-color: #96B6C5; /* 호버 시 배경 색상 */
+  }            
     </style>
 
 <body>
@@ -30,15 +44,13 @@
   
   <div class="main_wrap">
     
+    <div>  
+      <a th:href="@{/notice/faqDetailWrite.form}" class="btn btn-outline-success" id="btn_faq_write" style="width:180px; margin-left:170px; margin-top:50px;">카테고리 생성</a>
+    </div>
     <div class="wrap wrap_9">
   
      <div class="container text-center">
       <div class="row">
-        <div class="col-1">  
-          <div class="w3-sidebar w3-bar-block" style="width:10%; height:200px;"> <!-- 사이드바 -->
-            <a th:href="@{/notice/faqDetailWrite.form}" class="w3-bar-item w3-button">카테고리 생성</a>        
-          </div>   
-        </div>
         <div class="col-10">
             <!--/*여기에 작성/ 다 만들고 style 지워주세요  */-->
         
@@ -60,7 +72,7 @@
           <input type="text" name="title" id="title" class="form-control">
         </div>
         <div class="w-25 p-3">
-         <select id="faqDetailSelect" class="form-select" aria-label="Default select example" name="caNo">
+         <select id="faqDetailSelect" class="form-select" aria-label="Default select example" name="caNo" style="margin-left:-15px;">
              <option value="0" selected>-분류-</option>
              <option th:each="faqCa : ${faqCaList}" name="caNo" th:value="${faqCa.caNo}" th:text="${faqCa.caTitle}"></option>
          </select>
