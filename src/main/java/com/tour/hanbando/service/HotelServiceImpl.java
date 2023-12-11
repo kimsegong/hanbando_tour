@@ -3,6 +3,8 @@ package com.tour.hanbando.service;
 import java.io.File;
 import java.nio.file.Files;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -10,19 +12,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.tour.hanbando.dao.HotelMapper;
+import com.tour.hanbando.dao.PackageMapper;
 import com.tour.hanbando.dto.FacilitiesDto;
 import com.tour.hanbando.dto.HeartDto;
 import com.tour.hanbando.dto.HotelDto;
@@ -44,6 +45,7 @@ import lombok.RequiredArgsConstructor;
 @Service
 public class HotelServiceImpl implements HotelService {
   private final HotelMapper hotelMapper;
+  private final PackageMapper packageMapper;
   private final MyPageUtils myPageUtils;
   private final HotelFileUtils hotelFileUtils;
   
@@ -76,16 +78,17 @@ public class HotelServiceImpl implements HotelService {
       break;
     case 3 : hotelDto = hotelMapper.getPriceHotelList(map);
       break;
-    case 4 :hotelDto = hotelMapper.getPriceHotelList(map);
+    case 4 : hotelDto = hotelMapper.getPriceHotelList(map);
       break;
     }
     
-   List<Integer> hPrice = getPrice(hotelDto);
+    List<Integer> hPrice = getPrice(hotelDto);
     
     Map<String, Object> hotel = Map.of("hotelList", hotelDto
                                       ,"price", hPrice
                                       ,"count", hotelMapper.countHotel()
-                                      ,"totalPage", myPageUtils.getTotalPage());
+                                      ,"totalPage", myPageUtils.getTotalPage()
+                                      );
     
     return hotel;
   }
@@ -98,7 +101,7 @@ public class HotelServiceImpl implements HotelService {
       List<RoompriceDto> roompriceDto = hotelMapper.getListPrice(hotelDto);
       /* 요금 구하기 */
       Date date = new Date();
-      SimpleDateFormat sdf = new SimpleDateFormat("MMdd");
+      SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
       String sToday = sdf.format(date);
       int today = Integer.parseInt(sToday);
       int price = 0;
@@ -112,14 +115,6 @@ public class HotelServiceImpl implements HotelService {
         
         int ssStart = Integer.parseInt(roompriceDto.get(i).getSsDate().replace("/", ""));
         int ssEnd = Integer.parseInt(roompriceDto.get(i).getSeDate().replace("/", ""));
-        
-        if(biStart > biEnd ) {
-          biEnd += 1200;
-        }else if(jsStart > jsEnd){
-          jsEnd += 1200;
-        }else if(ssStart > ssEnd) {
-          ssEnd += 1200;
-        }
         
         if(biStart <= today && today <= biEnd) {
           price = roompriceDto.get(i).getBiPrice();
@@ -162,7 +157,7 @@ public class HotelServiceImpl implements HotelService {
     List<RoomtypeDto> roomtypeDto = hotelMapper.getRoomtype(hotelNo);
     hotelMapper.getRoomFeature(roomtypeDto);
     hotelMapper.getRoomImage(roomtypeDto);
-    hotelMapper.getPrice(hotelNo);
+    hotelMapper.getPrice(RoomtypeDto.builder().hotelNo(hotelNo).build());
     
   }
   
@@ -422,7 +417,7 @@ public class HotelServiceImpl implements HotelService {
     List<HotelImageDto> hotelImageDto = hotelMapper.getHotelImage(hotelNo);
     
     List<RoomtypeDto> roomtypeDto = hotelMapper.getRoomtype(hotelNo);
-    List<RoompriceDto> roompriceDto = hotelMapper.getPrice(hotelNo);
+    List<RoompriceDto> roompriceDto = hotelMapper.getPrice(RoomtypeDto.builder().hotelNo(hotelNo).build());
     
     List<HotelDto> hotel = new ArrayList<>();
     hotel.add(hotelDto); // 가격 가져올려고 
@@ -431,9 +426,7 @@ public class HotelServiceImpl implements HotelService {
     List<Integer> countReserveRoom = new ArrayList<>();
     for(int i = 0; i < roomtypeDto.size(); i++) {
       countReserveRoom.add(i, getDate(roomtypeDto.get(i)));
-      
     }
-    System.out.println("############"+countReserveRoom); 
     
     model.addAttribute("hotel", hotelDto);
     model.addAttribute("hotelImage", hotelImageDto);
@@ -535,7 +528,8 @@ public class HotelServiceImpl implements HotelService {
   public Map<String, Object> removeReview(int reviewNo) {
       int removeResult = hotelMapper.deleteReview(reviewNo);
       return Map.of("removeResult", removeResult);
-    }
+   }
+  
   @Override
   public int getHeart(HttpServletRequest request) {
     
@@ -554,9 +548,122 @@ public class HotelServiceImpl implements HotelService {
     } else if(heartStatus == 0) {
       hotelMapper.insertHeart(heartDto);
     }
-    
-    
     return hotelMapper.getCountHeart(heartDto);
   }
+  
+  @Override
+  public void getHeartHotel(HttpServletRequest request, Model model) {
+    
+    
+    Optional<String> opt = Optional.ofNullable(request.getParameter("page"));
+    int page = Integer.parseInt(opt.orElse("1"));
+    int display = 10;
+    int userNo = Integer.parseInt(request.getParameter("userNo"));
+    int total = packageMapper.getHeartCount(userNo);
+    
+    myPageUtils.setPaging(page, total, display);
+    
+    Map<String, Object> map = Map.of("begin", myPageUtils.getBegin()
+                                   , "end", myPageUtils.getEnd()
+                                   , "userNo", userNo);
+    
+    List<HeartDto> heartHotelList = hotelMapper.selectHotelHeartList(map);
+
+    model.addAttribute("heartHotelList", heartHotelList);
+    String params = "userNo=" + request.getParameter("userNo");
+    model.addAttribute("paging", myPageUtils.getMvcPaging(request.getContextPath() + "/user/heart.do", params));
+    model.addAttribute("beginNo", total - (page - 1) * display); 
+
+  }
+  
+  @Override
+  public Map<String, Object> removeHotelHeart(int hotelNo) {
+      int removeHotelHeartResult = hotelMapper.deleteHotelHeart(hotelNo);
+      return Map.of("removeHotelHeartResult", removeHotelHeartResult);
+    }
+
+
+
+  
+  
+  @Override
+  public int removehotel(int hotelNo) {
+    int deleteResult = hotelMapper.deleteHotel(hotelNo);
+    return deleteResult;
+  }
+  
+  @Override
+  public Map<String, Object> getFinalPrice(HttpServletRequest request) {
+   int roomNo = Integer.parseInt(request.getParameter("roomNo"));
+   RoomtypeDto roomtypeDto = hotelMapper.roomtype(roomNo);
+   
+   String date = request.getParameter("date");
+   DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyy/MM/dd");
+   LocalDate checkin = getcheckin(date);
+   LocalDate checkout = getcheckout(date);
+   int totalPrice = finalPrice(makeDateList(checkin, checkout), roomNo);
+   String roomName = roomtypeDto.getRoomName();
+   Map<String, Object> reserve = Map.of("totalPrice", totalPrice, "roomName", roomName, 
+                                         "checkin",checkin.format(fmt),"checkout",checkout.format(fmt));
+   return reserve;
+  }
+  
+  private LocalDate getcheckin(String date) {
+    DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+    return LocalDate.parse(date.substring(0, 10), fmt);
+  }
+  private LocalDate getcheckout(String date) {
+    DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+    return LocalDate.parse(date.substring(13), fmt);
+  }
+  
+  private List<LocalDate> makeDateList(LocalDate checkIn, LocalDate checkOut){
+    List<LocalDate> allDate =  checkIn.datesUntil(checkOut).collect(Collectors.toList());
+    return allDate;
+  }
+  
+  
+  
+  private int finalPrice(List<LocalDate> allDate, int roomNo) {
+    List<RoompriceDto> roompriceDto = packageMapper.getPrice(RoomtypeDto.builder().roomNo(roomNo).build());
+    RoompriceDto price = roompriceDto.get(0);
+    
+    DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyyMMdd");
+    
+    
+    int totalPrice = 0;
+    for(LocalDate eachDate: allDate) {
+        int date = Integer.parseInt(eachDate.format(fmt));
+      
+        int biStart = Integer.parseInt(price.getBsDate().replace("/", ""));
+        int biEnd = Integer.parseInt(price.getBeDate().replace("/", ""));
+        
+        int jsStart = Integer.parseInt(price.getJsDate().replace("/", ""));
+        int jsEnd = Integer.parseInt(price.getJeDate().replace("/", ""));
+        
+        int ssStart = Integer.parseInt(price.getSsDate().replace("/", ""));
+        int ssEnd = Integer.parseInt(price.getSeDate().replace("/", ""));
+        
+        if(biStart <= date && date <= biEnd) {
+          totalPrice += price.getBiPrice();
+        }else if(jsStart <= date && date <= jsEnd) {
+          totalPrice +=  price.getJunPrice();
+        }else if(ssStart <= date && date <= ssEnd) {
+          totalPrice +=  price.getSungPrice();
+        } else {
+          totalPrice =  0;
+        }
+      }
+    
+    return totalPrice;
+  }
+  
+  
+  @Override
+  public int modifyHotel(int hotelNo) {
+    return 0;
+  }
+  
+  
   
 }

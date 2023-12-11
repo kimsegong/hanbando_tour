@@ -3,6 +3,8 @@ package com.tour.hanbando.dao;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.ibatis.annotations.Mapper;
 
 import com.tour.hanbando.dto.FacilitiesDto;
@@ -45,7 +47,7 @@ public interface HotelMapper {
   public List<RoomtypeDto> getRoomtype(int hotelNo);
   public List<HotelImageDto> getRoomImage(List<RoomtypeDto> roomtypeDto);
   public List<RoomFeatureDto> getRoomFeature(List<RoomtypeDto> roomtypeDto);
-  public List<RoompriceDto> getPrice(int hotelNo);
+  public List<RoompriceDto> getPrice(RoomtypeDto roomtypeDto);
   
   public RoomtypeDto roomtype(int roomNo);
   public int countReserveRoom(Map<String, Object> map);
@@ -60,4 +62,9 @@ public interface HotelMapper {
   public int deleteHeart(HeartDto heartDto);
   public int insertHeart(HeartDto heartDto);
   public int getCountHeart(HeartDto heartDto);
+  public List<HeartDto> selectHotelHeartList(Map<String, Object> map);
+  public int deleteHotelHeart(int hotelNo);
+  
+  
+  public int deleteHotel(int hotelNo);
 }
