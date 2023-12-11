@@ -214,7 +214,7 @@
                   <input id="finalprice" name="finalprice" value="금액" readonly></input>
                   <div class="form-floating mb-3"> 
 										<label for="daterange">체크인/체크아웃</label>
-					          <input type="text" id="daterange" class="daterange form-control" name="daterange" value ="" readonly />
+					          <input type="text" id="daterange" class="daterange form-control" name="daterange" readonly />
 					          <input type="hidden" id="checkin" name="checkin" value="">
 					          <input type="hidden" id="checkout" name="checkout" value="">
 					        </div>
@@ -456,7 +456,7 @@
     roomNumber = document.getElementById(roomNo).value;
     document.getElementById('reserveRoomNo').value = roomNumber;
    	var date = document.getElementById('daterange').value;
-   
+   	console.log(date);
    $.ajax({
 		  type: 'post',
       url: '/hotel/finalPrice.do',
