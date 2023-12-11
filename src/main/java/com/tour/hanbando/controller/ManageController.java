@@ -74,12 +74,19 @@ public class ManageController {
     return "redirect:/manage/modifyPw.form?userNo=" + userNo;
   }
   
-  /* 기존 회원 찜목록 */
+  /* 기존 회원 찜 목록 */
   @GetMapping("/heartList.do")
-  public String heartList() {
+  public String heartList(HttpServletRequest request, Model model) {
+    manageService.loadHeartList(request, model);
     return "manage/heartList";
   }
-
+  
+  /* 기존 회원 찜 검색 */
+  @GetMapping("/searchHeartList.do")
+  public String searchHeartList(HttpServletRequest request, Model model) {
+    manageService.loadSearchHeartList(request, model);
+    return "manage/heartList";
+  }
   
   /* 기존 회원 탈퇴 */
   @PostMapping("/leaveUser.do")
