@@ -16,7 +16,7 @@ public interface HotelService {
   public Map<String, Object> getHotelList(HttpServletRequest request);
   public int increseHit(int hotelNo);
   public void regionList(Model model);
-  public void hotelRoomList(HttpServletRequest request, Model model);
+  public Map<String, Object> hotelRoomList(HttpServletRequest request, Model model);
   public void makeHotelNo(Model model);
   public boolean writeRoom(MultipartHttpServletRequest multipartRequest, List<MultipartFile> files) throws Exception;
   public boolean writeHotel(MultipartHttpServletRequest multipartRequest) throws Exception;
@@ -32,5 +32,4 @@ public interface HotelService {
   public Map<String, Object> removeHotelHeart(int hotelNo);
   public int removehotel(int hotelNo);
   public int modifyHotel(int hotelNo);
-  public Map<String, Object> getRoomList(HttpServletRequest request, Model model);
 }
