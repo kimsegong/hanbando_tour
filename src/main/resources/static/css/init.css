@@ -24,10 +24,10 @@ i {
   color: #333333;
 }
 a:hover {
-  color: crimson;
+  color: #96B6C5;
 }
 a:hover i {
-  color: crimson;
+  color: #96B6C5;
 }
 ul, ol {
   list-style-type: none;
