@@ -15,7 +15,7 @@
       
       <div class="mt-5" th:text="|${session.inactiveUser.email}님은 1년 이상 로그인하지 않아 관계 법령에 의해서 휴면회원으로 전환되었습니다.|"></div>
       
-      <div class="mt-5 text-center" th:text="|휴면전환일 : ${session.inactiveUser.inactiveDate}|"></div>
+      <div class="mt-5 text-center" th:text="|휴면전환일 : ${session.inactiveUser.inactivedAt}|"></div>
       
       <div class="mt-5 text-center">휴면해제를 위해서 휴면해제 버튼을 클릭하세요.</div>
       <div class="mt-3 text-center"><button type="button" id="btn_active" class="btn btn-primary">휴면해제</button></div>
