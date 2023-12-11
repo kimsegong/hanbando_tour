@@ -157,6 +157,8 @@ public class UserServiceImpl implements UserService {
   
     HttpSession session = request.getSession();
     
+
+    
     // 휴면 계정인지 확인하기
     InactiveUserDto inactiveUser = userMapper.getInactiveUser(map);
     if(inactiveUser != null) {
@@ -173,12 +175,11 @@ public class UserServiceImpl implements UserService {
       // 로그인 성공 처리
       request.getSession().setAttribute("user", user);
       userMapper.insertAccess(email);
-
-      // 비밀번호 변경 90일 지나면 알림      
-      int userPw90 = userMapper.changePw90(map);
-
+        // 비밀번호 변경 90일 지나면 알림      
+        int userPw90 = userMapper.changePw90(map);
+        
         if (userPw90 >= 90) {
-        response.setContentType("text/html; charset=UTF-8");
+          response.setContentType("text/html; charset=UTF-8");
           PrintWriter outt = response.getWriter();
           outt.println("<script>");
           outt.println("alert('마지막 비밀번호 변경일로부터 90일이 경과했습니다. 비밀번호를 변경해주세요.')");
@@ -186,7 +187,17 @@ public class UserServiceImpl implements UserService {
           outt.println("</script>");
           outt.flush();
           outt.close();
-      } 
+        } else {
+          response.setContentType("text/html; charset=UTF-8");
+          PrintWriter out = response.getWriter();
+          out.println("<script>");
+          out.println("location.href='" + request.getContextPath() + "/main.do'");
+          out.println("</script>");
+          out.flush();
+          out.close();
+        }
+        
+
         
   } else {
       // 로그인 실패 처리
