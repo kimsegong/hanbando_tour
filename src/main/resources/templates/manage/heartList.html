@@ -1,13 +1,14 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 
-<head th:replace="~{/layout/header::head(|번 회원 찜목록|)}"></head> 
+<head th:replace="~{/layout/header::head(|${user.userNo}번 회원 찜목록|)}"></head> 
 <style>
   .main_wrapper {
     display: flex;
   }
   .left_btn {
     flex: 0 0 20%;
+    margin-top: 3.5%;
   }
   .right_list {
     flex: 0 0 80%;
@@ -40,236 +41,151 @@
     background-color: #96B6C5;
   }
   
-  
-  
-      /* CSS 초기화 */
-    body, div, ul, li, h1, h2, h3, h4, h5, h6, p {
-      padding: 0;
-      margin: 0;
-      box-sizing: border-box;
-    }
-    ul {
-      list-style-type: none;
-    }
-
-    /* 탭 메뉴 */
-    .wrap {
-      width: 100%;
-      margin: 20px auto;  /* 화면의 가운데로 .wrap을 배치 */
-    }
-    .screen_out {
-      display: none;      /* 화면에서 없앰 */
-    }
-    .tab_menu {
-      width: 100%;
-      display: flex;
-    }
-    .tab_menu > label {
-      display: block;  /* width, height를 지정할 수 있는 블록 요소로 변경 */
-      width: 50%;
-      height: 50px;
-      text-align: center; /* 가로 가운데 정렬 */
-      line-height: 50px;  /* 세로 가운데 정렬 효과 */
-      border: 1px solid gray;
-      cursor: pointer;
-    }
-    .tab_menu > label:first-of-type {
-      border-right: 0;
-    }
-    .tab_menu > label:hover {
-      background-color: gray;
-      color: white;
-    }
-    #first_tab:checked ~ div:nth-of-type(1) > label:nth-of-type(1) {
-      background-color: silver;
-    }
-    #second_tab:checked ~ div:nth-of-type(1) > label:nth-of-type(2) {
-      background-color: silver;
-    }
-    .content_wrap {
-      width: 100%;
-      padding-top: 20px;
-      border: 1px solid gray;
-      border-top: 0;
-      display: none; /* 평소에 숨겨둠 */
-    }
-    #first_tab:checked ~ div:nth-of-type(2) {
-      display: block;
-    }
-    #second_tab:checked ~ div:nth-of-type(3) {
-      display: block;
-    }
-    .content_wrap .content {
-      width: 90%;
-      margin: 0 auto;
-      display: flex;
-      justify-content: space-between;
-    }
-    .content_wrap .content > .thumbnail {
-      width: 35%;
-      height: 60px;
-      background-size: cover;
-    }
-    .content_wrap .content > .description {
-      width: 62%;
-      height: 120px;
-    }
-  
-  
-
-</style>
-<script th:inline="javascript">
-  
-  $(() => {
-    fnGetHeartList();
-  })
-  
-  // 전역 변수
-  var page = 1;
-  var totalPage = 0;
-  
-  const fnGetHeartList = () => {
-    $.ajax({
-      // 요청
-      type: 'get',
-      url: '/manage/getHeartList.do',
-      data: 'page=' + page,
-      // 응답
-      dataType: 'json',
-      success: (resData) => {  // resData = {"heartList": [], "totalPage": 5}
-        totalPage = resData.totalPage;
-        $.each(resData.heartList, (i, heart) => {
-          let str = '<li class="heart" data-heart_no="' + heart.userNo + '">';
-          str += '<div>' + heart.packageDto.packageTitle + '</div>';
-          str += '</li>';
-          $('.heart_ul').append(str);
-        })
-      }
-    })
+  .table_list {
+    height: 100%;
+    width: 100%;
+    margin-top: 2%;
   }
   
-</script>
+  table thead tr td{
+    font-weight: bolder;
+  }
+  
+  #btn_search_heart {
+    height: 38px; 
+    width: 60px;
+    color: #96B6C5;         /* 텍스트 색상 */
+    background-color: #fff; /* 기본 배경 색상 */
+    border-color: #96B6C5;  /* 테두리 색상 */
+    border-radius: 10px;      /* 테두리를 둥글게 만듭니다. */
+    transition: all 0.3s;     /* 모든 속성에 대해 0.3초 동안 트랜지션 효과 적용 */
+  }
+  
+  #btn_search_heart:hover {
+    color: #fff;               /* 호버 시 텍스트 색상 */
+    background-color: #96B6C5; /* 호버 시 배경 색상 */
+  }
+  
+  #column,
+  #query {
+    height: 38px;
+  }
+  
+  #column {
+    flex: 1;           /* 셀렉트 박스가 나머지 영역을 모두 차지하도록 설정 */
+    margin-right: 5px; /* 셀렉트 박스와 인풋 사이의 간격을 조절 */
+  }
+  
+  .user_email {
+    font-size: 1.5em;
+    font-weight: bold;
+    margin-bottom: 4%;
+    color: #96B6C5;
+  }
+
+</style>
+
 
 
 <body>
-	<div th:replace="~{/layout/header::header}"></div>
-	
-	<div class="main_wrap">
-	
-	
-		 <div class="container text-center">
-		  <div class="row">
-		    <div class="col-1">	      
-		    </div>
-        <div class="col-10" style="border:1px gray dotted">
-            <!--/*여기에 작성/ 다 만들고 style 지워주세요  */-->
-		   
+  <div th:replace="~{/layout/header::header}"></div>
+  
+  <div class="main_wrap">
+  
+  
+     <div class="container text-center">
+      <div class="row">
+        <div class="col-1">       
+        </div>
+        <div class="col-10">
+       
           <div class="main_wrapper">
            
             <div class="left_btn">
-              <div><a th:href="@{/manage/userList.do}"><button type="button" id="btn_show_detail">회원상세보기</button></a></div>
+              <div><a th:href="@{/manage/userDetail.do(userNo=${user.userNo})}"><button type="button" id="btn_show_detail">회원상세보기</button></a></div>
               <div><a th:href="@{/manage/userList.do}"><button type="button" id="btn_show_list">회원목록보기</button></a></div>
 
             </div>
-           
-            <div class="right_list">
-               
-              <div class="wrap">
-
-                <!-- 상단 탭 -->
-                  <input type="radio" name="tab" id="first_tab" class="screen_out" checked>
-                  <input type="radio" name="tab" id="second_tab" class="screen_out">
-                <div class="tab_menu">
-                  <label for="first_tab">패키지 찜</label>
-                  <label for="second_tab">호텔 찜</label>
-                </div>
             
-                <!-- 1번째 탭 -->
-                <div class="content_wrap">
-                  <ul class="heart_ul">
-
-
-                  </ul>
-                </div>
             
-                <!-- 2번째 탭 -->
-                <div class="content_wrap">
-                  <ul>
-                    <!-- 각 메뉴 -->
-                    <li class="content">
-                      <!-- 썸네일 이미지 -->
-                      <div class="thumbnail"></div>
-                      <!-- 제목 및 내용 -->
-                      <div class="description">
-                        <h4>제목4</h4>
-                        <p>내용4</p>
-                      </div>
-                    </li>
-                    <!-- 각 메뉴 -->
-                    <li class="content">
-                      <!-- 썸네일 이미지 -->
-                      <div class="thumbnail"></div>
-                      <!-- 제목 및 내용 -->
-                      <div class="description">
-                        <h4>제목5</h4>
-                        <p>내용5</p>
-                      </div>
-                    </li>
-                    <!-- 각 메뉴 -->
-                    <li class="content">
-                      <!-- 썸네일 이미지 -->
-                      <div class="thumbnail"></div>
-                      <!-- 제목 및 내용 -->
-                      <div class="description">
-                        <h4>제목6</h4>
-                        <p>내용6</p>
-                      </div>
-                    </li>
-                  </ul>
-                </div>
             
+            
+            
+            <div class="table_list">
+              
+              <!--/* 해당 회원 표시 */-->
+              <div th:text="|${user.email}의 찜 목록|" class="user_email"></div>
+              
+              <!--/* 총 찜 개수를 표시 */-->
+              <div style="text-align: left;" th:text="|총 ${total}개|"></div>
+              
+              <table class="table table-hover">
+                <thead>
+                  <tr class="table-secondary">
+                    <td>상품번호</td>
+                    <td>상품명</td>
+                    <td>유형</td>
+                  </tr>
+                </thead>
+                <tbody class="table-group-divider">
+                  <th:block th:each="heart:${heartList}">
+                    <tr>
+                      <td>
+                        <a th:if="${heart.hotelDto != null}" th:text="${heart.hotelDto.hotelNo}" th:href="@{/hotel/detail.do(hotelNo=${heart.hotelDto.hotelNo})}"></a>
+                        <a th:if="${heart.packageDto != null}" th:text="${heart.packageDto.packageNo}" th:href="@{/package/detail.do(packageNo=${heart.packageDto.packageNo})}"></a>
+                      </td>
+                      <td>
+                        <a th:if="${heart.hotelDto != null}" th:text="${heart.hotelDto.hotelName}" th:href="@{/hotel/detail.do(hotelNo=${heart.hotelDto.hotelNo})}"></a>
+                        <a th:if="${heart.packageDto != null}" th:text="${heart.packageDto.packageTitle}" th:href="@{/package/detail.do(packageNo=${heart.packageDto.packageNo})}"></a>
+                      </td>
+                      <td>
+                        <a th:if="${heart.hotelDto != null}" th:href="@{/hotel/detail.do(hotelNo=${heart.hotelDto.hotelNo})}">호텔</a>
+                        <a th:if="${heart.packageDto != null}" th:href="@{/package/detail.do(packageNo=${heart.packageDto.packageNo})}">패키지</a>
+                      </td>
+                    </tr>
+                  </th:block>
+                </tbody>
+                <tfoot>
+                  <tr>
+                    <td colspan="3" th:utext="${paging}" ></td>
+                  </tr>
+                </tfoot>
+              </table>
+              
+              
+              <!--/* 검색기능 */-->
+              <div>
+                <form id="frm_search" method="get" th:action="@{/manage/searchHeartList.do}" >
+                  <select name="column" id="column" >
+                    <option value="P.PACKAGE_TITLE">패키지명</option>
+                    <option value="HO.HOTEL_NAME">호텔명</option>
+                  </select>
+                  <input type="text" name="query" id="query" placeholder="검색어 입력" >
+                  <input type="hidden" name="userNo" th:value="${userNo}">
+                  <button type="submit" id="btn_search_heart" >검색</button>
+                </form>
               </div>
-               
+              
+              
             </div>
             
+            
            
-          </div>
-          
-          
-          
-          
-          
-          
-          
-          
-          
-          
-          
+            
+            
+            
+        </div>
+        <div class="col-1">       
+        </div>
+      </div>
+    </div>
+  
+  </div>
 
-          
-          
-          
-          
-          
-          
-          
-          
-          
-        
-        
-		      	
-		    </div>
-		    <div class="col-1">	      
-		    </div>
-		  </div>
-	  </div>
-	
-	</div>
-
-	
-	
-	
-	<div th:replace="~{/layout/footer::footer}"></div>
+  
+  
+  
+  <div th:replace="~{/layout/footer::footer}"></div>
 </body>
 </html>
 
