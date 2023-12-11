@@ -32,12 +32,15 @@ public class WebMvcConfig implements WebMvcConfigurer {
       .addPathPatterns("/manage/packageProductSearch.do", "/manage/hotelProductSearch.do")
       .addPathPatterns("/manage/reserveList.do", "/manage/searchReserve.do")
       .addPathPatterns("/manage/reservePackageDetail.do", "/manage/reserveHotelDetail.do")
-      .addPathPatterns("/manage/reviewList.do", "/manage/searchReview.do");
+      .addPathPatterns("/manage/reviewList.do", "/manage/searchReview.do")
+      .addPathPatterns("/notice/write.form");
     
     // 로그인이 필요한 접근을 막는 인터셉터
     registry.addInterceptor(requiredLoginInterceptor)
       .addPathPatterns("/user/mypage.form", "/user/modifyPw.form")
-      .addPathPatterns("/reserve/reserveList.do", "/reserve/detail.do"); 
+      .addPathPatterns("/notice/list.do")
+      .addPathPatterns("/reserve/reserveList.do", "/reserve/detail.do", "/reserve/write.form", "/reserve/edit.form")
+      .addPathPatterns("/reserve/reserveHotelList.do", "/reserve/writeHotel.form", "/reserve/writeHotel.form", "/reserve/detailHotel.do");
     
     // 로그인이 되어있는 상태에서의 접근을 막는 인터셉터
     registry.addInterceptor(shouldNotLoginInterceptor)
