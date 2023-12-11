@@ -18,16 +18,6 @@
   </resultMap>
   
   
-     <select id ="getUserInquiryCount" parameterType="int" resultType="int">
-       SELECT COUNT(*)
-         FROM INQUIRY_T
-        WHERE USER_NO =#{userNo}
-     </select>
-     <select id="getUserInquiryList" parameterType="int" resultMap="InquiryMap">
-       SELECT ROW_NUMBER() OVER(ORDER BY INQUIRY_NO DESC) AS RN, INQUIRY_NO, USER_NO, TITLE, CONTENTS, CREATED_AT, SEPARATE
-         FROM INQUIRY_T
-        WHERE USER_NO = #{userNo}
-     </select>
    
      <select id="getInquiryList"  resultMap="InquiryMap">
        SELECT ROW_NUMBER() OVER(ORDER BY INQ.INQUIRY_NO DESC) AS RN, INQ.INQUIRY_NO, INQ.USER_NO, U.NAME, INQ.TITLE, INQ.CONTENTS, INQ.CREATED_AT, INQ.SEPARATE
@@ -100,7 +90,7 @@
     
    <select id="getSearchInquiyList" parameterType="Map" resultType="InquiryDto">
     SELECT INQUIRY_NO, USER_NO, TITLE, CONTENTS, CREATED_AT, SEPARATE
-      FROM (SELECT ROW_NUMBER() OVER(ORDER BY USER_NO DESC) AS RN, INQUIRY_NO, USER_NO, TITLE, CONTENTS, CREATED_AT, SEPARATE
+      FROM (SELECT ROW_NUMBER() OVER(ORDER BY INQUIRY_NO DESC) AS RN, INQUIRY_NO, USER_NO, TITLE, CONTENTS, CREATED_AT, SEPARATE
               FROM INQUIRY_T
              WHERE ${column} LIKE '%' || #{query} || '%')
      WHERE RN BETWEEN #{begin} AND #{end}
