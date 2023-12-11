@@ -239,11 +239,13 @@
   </select>
   
   <update id="updatePw90" parameterType="UserDto">
+		
     UPDATE USER_T
        SET PW_MODIFIED_AT = SYSDATE
      WHERE EMAIL = #{email}
-       AND AUTH = 0
+       AND AUTH = 1
        AND (SYSDATE - NVL(PW_MODIFIED_AT, JOINED_AT)) >= 90
+      
   </update>
   
   
