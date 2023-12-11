@@ -408,27 +408,28 @@
  
  <select id="getRoomImage" resultType="HotelImageDto">
    SELECT HOTEL_NO, ROOM_NO, THUMBNAIL, FILESYSTEM_NAME, IMAGE_PATH
-     FROM HOTEL_IMAGE_T
-    WHERE ROOM_NO 
-     <foreach item="item" index="index" collection="list" open="in(" separator="," close=")">
+   FROM HOTEL_IMAGE_T
+   WHERE ROOM_NO IN
+   <foreach item="item" index="index" collection="list" open="(" separator="," close=")">
       #{item.roomNo}
-     </foreach>
-     ORDER BY DECODE(ROOM_NO,
-    <foreach item="item" index="index" collection="list" separator="," close=")">  
-     #{item.roomNo}, (list.size() - ${index})  
-    </foreach>  
- </select>
+   </foreach>
+   ORDER BY 
+   <foreach item="item" index="index" collection="list" separator=",">
+      DECODE(ROOM_NO, #{item.roomNo}, (list.size() - ${index}))
+   </foreach>
+</select>
  
  <select id="getPrice" parameterType="RoomTypeDto" resultType="RoompriceDto">
    SELECT HOTEL_NO, ROOM_NO, BI_PRICE, BS_DATE, BE_DATE, JUN_PRICE, JS_DATE, JE_DATE, SUNG_PRICE, SS_DATE, SE_DATE
      FROM ROOMPRICE_T
      WHERE
-     <if test="hotelNo != null and roomNo == 0">
+     <if test="(hotelNo != null and roomNo == 0) || (roomNo != null and hotelNo != null)">
     	 HOTEL_NO = #{hotelNo} 
 		 </if>
-		 <if test="roomNo != null and hotelNo == 0">
+		 <if test="roomNo != null and hotelNo == 0 ">
 		 	 ROOM_NO = #{roomNo} 
 		 </if>
+		 
  </select>
  
  <insert id="insertRoomtype" parameterType="RoomtypeDto">

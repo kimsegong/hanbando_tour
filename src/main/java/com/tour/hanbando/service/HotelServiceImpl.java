@@ -150,15 +150,19 @@ public class HotelServiceImpl implements HotelService {
   /************************이거 인서트 할때 룸 추가하면 보여줄때 쓰는 서비스********************************/
   
   @Override
-  public void hotelRoomList(HttpServletRequest request, Model model) {
+  public Map<String, Object> hotelRoomList(HttpServletRequest request, Model model) {
     
     int hotelNo = Integer.parseInt(request.getParameter("hotelNo"));
     
     List<RoomtypeDto> roomtypeDto = hotelMapper.getRoomtype(hotelNo);
-    hotelMapper.getRoomFeature(roomtypeDto);
-    hotelMapper.getRoomImage(roomtypeDto);
-    hotelMapper.getPrice(RoomtypeDto.builder().hotelNo(hotelNo).build());
+    List<RoomFeatureDto> roomFeatureDto = hotelMapper.getRoomFeature(roomtypeDto);
+    List<HotelImageDto> hotelImageDto = hotelMapper.getRoomImage(roomtypeDto);
+    List<RoompriceDto> roompriceDto = hotelMapper.getPrice(RoomtypeDto.builder().hotelNo(hotelNo).build());
     
+    return Map.of("roomtype", roomtypeDto, 
+                  "roomFeature", roomFeatureDto,
+                  "image", hotelImageDto,
+                  "price", roompriceDto);
   }
   
   @Override
@@ -199,15 +203,17 @@ public class HotelServiceImpl implements HotelService {
     int minibar = Integer.parseInt(optMinibar.orElse("0"));
     
     System.out.println(minibar);
+    
+    
     int biPrice = Integer.parseInt(multipartRequest.getParameter("biPrice"));
-    String bsDate = multipartRequest.getParameter("bsDate"); 
-    String beDate = multipartRequest.getParameter("beDate"); 
+    String bsDate = multipartRequest.getParameter("bsDate").replace("-", "/"); 
+    String beDate = multipartRequest.getParameter("beDate").replace("-", "/"); 
     int junPrice = Integer.parseInt(multipartRequest.getParameter("junPrice"));
-    String jsDate = multipartRequest.getParameter("jsDate"); 
-    String jeDate = multipartRequest.getParameter("jeDate");
+    String jsDate = multipartRequest.getParameter("jsDate").replace("-", "/"); 
+    String jeDate = multipartRequest.getParameter("jeDate").replace("-", "/");
     int sungPrice = Integer.parseInt(multipartRequest.getParameter("sungPrice"));
-    String ssDate = multipartRequest.getParameter("ssDate"); 
-    String seDate = multipartRequest.getParameter("seDate");
+    String ssDate = multipartRequest.getParameter("ssDate").replace("-", "/"); 
+    String seDate = multipartRequest.getParameter("seDate").replace("-", "/");
     
     RoomtypeDto roomtypeDto = RoomtypeDto.builder()
                                 .hotelNo(hotelNo)
@@ -625,7 +631,7 @@ public class HotelServiceImpl implements HotelService {
   
   
   private int finalPrice(List<LocalDate> allDate, int roomNo) {
-    List<RoompriceDto> roompriceDto = packageMapper.getPrice(RoomtypeDto.builder().roomNo(roomNo).build());
+    List<RoompriceDto> roompriceDto = hotelMapper.getPrice(RoomtypeDto.builder().roomNo(roomNo).build());
     RoompriceDto price = roompriceDto.get(0);
     
     DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyyMMdd");
