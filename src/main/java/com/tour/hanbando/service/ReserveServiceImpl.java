@@ -289,7 +289,7 @@ public class ReserveServiceImpl implements ReserveService {
     
     model.addAttribute("reserveHotelList", reserveHotelList);
     String params = "userNo=" + request.getParameter("userNo");
-    model.addAttribute("paging", myPageUtils.getMvcPaging(request.getContextPath() + "/reserve/reserveList.do", params));
+    model.addAttribute("paging", myPageUtils.getMvcPaging(request.getContextPath() + "/reserve/reserveHotelList.do", params));
     model.addAttribute("beginNo", total - (page - 1) * display);
   }
   
