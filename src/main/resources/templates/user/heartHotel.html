@@ -38,30 +38,30 @@
           </thead>
           <tbody>
            <input type="hidden" id="userNo" th:value="${session.user.userNo}">
-           <th:block th:if="${#lists.isEmpty(heartList)}">
+           <th:block th:if="${#lists.isEmpty(heartHotelList)}">
              <tr style="text-align: center;"> 
                 <td></td>
                 <td>찜한 상품이 없습니다.</td>
                 <td></td>
              </tr>
             </th:block>
-           <th:block  th:each=" heart :${heartList}">
+           <th:block  th:each=" heart :${heartHotelList}">
             <tr>             
               <td scope="row">💙
-                  <input type="checkbox" class="form-check-input chk_each" th:value="${heart.packageDto.packageNo}">
+                  <input type="checkbox" class="form-check-input chk_each" th:value="${heart.hotelDto.hotelNo}">
                   <label class="form-check-label">
                   </label>
               </td>
               <td>
-                <input type="hidden" id="packageNo" th:value="${heart.packageDto.packageNo}">
-                <a th:href="@{/package/detail.do(packageNo=${heart.packageDto.packageNo})}" th:text="${heart.packageDto.packageTitle}"></a>
+                <input type="hidden" id="hotelNo" th:value="${heart.hotelDto.hotelNo}">
+                <a th:href="@{/hotel/detail.do(hotelNo=${heart.hotelDto.hotelNo})}" th:text="${heart.hotelDto.hotelName}"></a>
               </td>
-              <td th:text="|${heart.packageDto.price} 원|"></td>
+              <td>가격</td>
             </tr>
            </th:block>
           </tbody>
           <tfoot>
-           <th:block th:unless="${#lists.isEmpty(heartList)}">
+           <th:block th:unless="${#lists.isEmpty(heartHotelList)}">
                 <tr>
                     <td>
                         <button type="button" class="btn btn-danger remove_heart" onclick="deleteSelected()">삭제</button>
@@ -122,17 +122,17 @@
   
     var confirmResult = confirm('선택된 항목을 삭제하시겠습니까?');
     if (confirmResult) {
-      $.each(selectedItems, (index, packageNo) => {
+      $.each(selectedItems, (index, hotelNo) => {
         var userNo = $('#userNo').val();
   
         $.ajax({
           type: 'post',
-          url: '/user/removeHeart.do',
-          data: { userNo: userNo, packageNo: packageNo },
+          url: '/user/removeHotelHeart.do',
+          data: { userNo: userNo, hotelNo: hotelNo },
           dataType: 'json',
           success: (resData) => {
-            if (resData.removeHeartResult === 1) {
-              $('.chk_each[value=' + packageNo + ']').closest('tr').remove();
+            if (resData.removeHotelHeartResult === 1) {
+              $('.chk_each[value=' + hotelNo + ']').closest('tr').remove();
               console.log('성공');
             } else {
               console.error('삭제 실패');
