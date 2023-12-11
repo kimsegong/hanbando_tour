@@ -4,9 +4,35 @@
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.tour.hanbando.dao.InquiryMapper">
-     <select id="getInquiryList"  resultType="InquiryDto">
-      SELECT INQUIRY_NO, USER_NO, TITLE, CONTENTS, CREATED_AT, SEPARATE
-        FROM INQUIRY_T
+  
+  <resultMap type="InquiryDto"   id="InquiryMap">
+    <id      column="INQUIRY_NO" property="inquiryNo"/>
+    <result  column="TITLE"      property="title"/>
+    <result  column="CONTENTS"   property="contents"/>
+    <result  column="CREATED_AT" property="createdAt"/>
+    <result  column="SEPARATE"   property="separate"/>
+    <association javaType="UserDto" property="userDto">
+      <id        column="USER_NO"   property="userNo"/>
+      <result    column="NAME"      property="name"/>
+    </association>
+  </resultMap>
+  
+  
+     <select id ="getUserInquiryCount" parameterType="int" resultType="int">
+       SELECT COUNT(*)
+         FROM INQUIRY_T
+        WHERE USER_NO =#{userNo}
+     </select>
+     <select id="getUserInquiryList" parameterType="int" resultMap="InquiryMap">
+       SELECT ROW_NUMBER() OVER(ORDER BY INQUIRY_NO DESC) AS RN, INQUIRY_NO, USER_NO, TITLE, CONTENTS, CREATED_AT, SEPARATE
+         FROM INQUIRY_T
+        WHERE USER_NO = #{userNo}
+     </select>
+   
+     <select id="getInquiryList"  resultMap="InquiryMap">
+       SELECT ROW_NUMBER() OVER(ORDER BY INQ.INQUIRY_NO DESC) AS RN, INQ.INQUIRY_NO, INQ.USER_NO, U.NAME, INQ.TITLE, INQ.CONTENTS, INQ.CREATED_AT, INQ.SEPARATE
+         FROM INQUIRY_T INQ INNER JOIN USER_T U
+           ON U.USER_NO = INQ.USER_NO
      </select>
 
      <select id="getInquiryAnswer" parameterType="int" resultType="InquiryAnswerDto">
@@ -72,5 +98,17 @@
          ) 
    </insert>
     
-
+   <select id="getSearchInquiyList" parameterType="Map" resultType="InquiryDto">
+    SELECT INQUIRY_NO, USER_NO, TITLE, CONTENTS, CREATED_AT, SEPARATE
+      FROM (SELECT ROW_NUMBER() OVER(ORDER BY USER_NO DESC) AS RN, INQUIRY_NO, USER_NO, TITLE, CONTENTS, CREATED_AT, SEPARATE
+              FROM INQUIRY_T
+             WHERE ${column} LIKE '%' || #{query} || '%')
+     WHERE RN BETWEEN #{begin} AND #{end}
+   </select>
+   
+   <select id="getSearchInquiryListCount" parameterType="Map" resultType="int">
+    SELECT COUNT(*)
+      FROM INQUIRY_T
+     WHERE ${column} LIKE '%' || #{query} || '%'
+  </select>
 </mapper>

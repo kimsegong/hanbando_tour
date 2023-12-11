@@ -426,7 +426,7 @@ public class HotelServiceImpl implements HotelService {
     
     List<HotelDto> hotel = new ArrayList<>();
     hotel.add(hotelDto); // 가격 가져올려고 
-    
+    List<RoomFeatureDto> roomFeatureDto = hotelMapper.getRoomFeature(roomtypeDto);
     List<Integer> price = getPrice(hotel);
     List<Integer> countReserveRoom = new ArrayList<>();
     for(int i = 0; i < roomtypeDto.size(); i++) {
@@ -442,6 +442,7 @@ public class HotelServiceImpl implements HotelService {
     model.addAttribute("price", roompriceDto);
     model.addAttribute("countReserveRoom", countReserveRoom);
     model.addAttribute("roomType", roomtypeDto);
+    model.addAttribute("roomFeature", roomFeatureDto);
   }
   
   public int getDate(RoomtypeDto roomtypeDto){
@@ -451,7 +452,7 @@ public class HotelServiceImpl implements HotelService {
     String today = sdf.format(calendar.getTime());
     calendar.add(Calendar.DATE, +1);
     String nextDay = sdf.format(calendar.getTime()); 
-    Map<String, Object> map = Map.of("roomNo", roomtypeDto.getRoomFeatureDto().getRoomNo() ,
+    Map<String, Object> map = Map.of("roomNo", roomtypeDto.getRoomNo() ,
                                       "checkin", today ,  
                                       "checkout", nextDay);
     
