@@ -28,7 +28,11 @@ public interface ManageService {
     /* 기존 회원 비밀번호 수정 */
     public int modifyPw(HttpServletRequest request);
     
-    /* 기존 회원 찜목록 상세 */
+    /* 기존 회원 상세 찜 목록 */
+    public void loadHeartList(HttpServletRequest request, Model model);
+    
+    /* 기존 회원 상세 찜 검색 */
+    public void loadSearchHeartList(HttpServletRequest request, Model model);
     
     /* 기존 회원 탈퇴 */
     public void leaveUser(HttpServletRequest request, HttpServletResponse response);

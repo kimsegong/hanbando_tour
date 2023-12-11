@@ -21,8 +21,6 @@ import com.tour.hanbando.dto.ReserveDto;
 import com.tour.hanbando.service.HotelService;
 
 import lombok.RequiredArgsConstructor;
-import retrofit2.http.GET;
-import retrofit2.http.POST;
 
 @RequestMapping("/hotel")
 @RequiredArgsConstructor
@@ -41,7 +39,7 @@ public class HotelController {
   @ResponseBody
   @GetMapping("getList.do")
   public Map<String, Object> getHotelist(HttpServletRequest request){
-    
+    System.out.println(hotelService.getHotelList(request));
     return hotelService.getHotelList(request);
   }
   
@@ -59,7 +57,6 @@ public class HotelController {
   public String hotelDetail(@RequestParam(value = "hotelNo", required = false, defaultValue = "0") int hotelNo, 
                                 HttpServletRequest request, Model model) {
    List<ReserveDto> reserve = hotelService.getReserveUser(hotelNo);
-   System.out.println(reserve);
    model.addAttribute("reserve", reserve); 
    hotelService.hoteDetail(request, hotelNo, model); 
     
@@ -106,7 +103,12 @@ public class HotelController {
   public void getHeart (HttpServletRequest request, Model model) {
     int heartStatus = hotelService.getHeart(request);
     model.addAttribute("heart", heartStatus);
-    
+  }
+  
+  @ResponseBody
+  @PostMapping("/finalPrice.do")
+  public Map<String, Object> getFinalPrice(HttpServletRequest request) {
+    return hotelService.getFinalPrice(request);  
   }
   
   /*************************** 작성 ***************************************************/  
@@ -123,15 +125,11 @@ public class HotelController {
     return ;
   }
   
-  
   @PostMapping("addHotel.do")
   public String writeHotel(MultipartHttpServletRequest multipartRequest, RedirectAttributes redirectAttributes) throws Exception {
-    System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@" + multipartRequest.getParameter("hotelName"));
    int hotelResult = hotelService.writeHotel(multipartRequest) ? 1 : 0;
     
     redirectAttributes.addFlashAttribute("hotelResult", redirectAttributes); 
-    
-    
     return "redirect:/hotel/list.do";
   }
   
@@ -152,8 +150,24 @@ public class HotelController {
     
   }
   
+  /*************************** 삭제 ***************************************************/  
 
   
+  @PostMapping("remove.do")
+  public String remove(@RequestParam(value="hotelNo", required=false, defaultValue="0") int hotelNo
+                     , RedirectAttributes redirectAttributes) {
+    int removeResult = hotelService.removehotel(hotelNo);
+    redirectAttributes.addFlashAttribute("removeResult", removeResult);
+    return "redirect:/hotel/list.do";
+  }
+  
+  /*************************** 수정 ***************************************************/  
+  @PostMapping("/modifyBlog.do")
+  public String modifyBlog(HttpServletRequest request, RedirectAttributes redirectAttributes) {
+    int modifyResult = hotelService.modifyHotel(request);
+    redirectAttributes.addFlashAttribute("modifyResult", modifyResult);
+    return "redirect:/hotel/detail.do?hotelNo=" + request.getParameter("hotelNo");
+  }
    
   
   
