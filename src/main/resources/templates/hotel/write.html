@@ -22,12 +22,15 @@
 		    <div class="col-10" style="border:1px gray dotted">
 		      	<!--/*여기에 작성/ 다 만들고 style 지워주세요  */-->
 				   <h2>호텔 게시글작성</h2>
-			<form method="post" id="hotel_add" th:action="@{/hotel/addHotel.do}" accept="image/*" enctype="multipart/form-data" >
-				<input type="hidden" id="hotelNo" name="hotelNo" th:value="${hotelNo}"> 
-			   <div style="margin: 30px 270px;" class="w-50 p-3">
+			<form method="post" id="hotel_add" th:action="@{/hotel/addHotel.do}"  enctype="multipart/form-data" >
+				<input type="hidden" id="hotelNo" name="hotelNo" th:value="${hotelNo}">
+				<div style="margin: 30px 270px;" class="w-50 p-3">
 		<div style="text-align: left;">
-		      <label for="files" class="form-label">메인첨부</label>
-		      <input type="file" name="files" id="files" class="form-control" multiple>
+        
+      
+      
+		      <label for="files" class="form-label">메인첨부(mainList 파일 이름이 목록에서 보여집니다)</label>
+		      <input type="file" name="files" id="files" class="form-control" accept="image/*" multiple> <button type="button" onclick="deleteAll()">전체삭제</button>
 		  </div>
 		  <div class="attached_list mt-2" id="attached_list"></div>
 		  <div>
@@ -268,8 +271,37 @@
               }
             }).open();
           }
-          
+ const deleteAll = () => {
+    $('#files').val('');
+     $('#attached_list').empty();
+ }
  
+  // 개별 파일의 삭제 버튼에 적용할 메소드
+  const deleteEach = (obj) => {
+  //현재 버튼(obj)의 상위 요소 중 가장 가까운 div 요소를 찾음
+  //div는 선택한 파일 목록을 보여주는 부분
+  const div = $(obj).closest('div');
+  
+  //div에서 'button' 태그 중 현재 버튼(obj)의 index가 몇 번째인지 확인
+  //0부터 시작
+  const index = div.find('button').index(obj);
+  const dataTransfer = new DataTransfer();
+  
+  let files = $('#files')[0].files;  //사용자가 입력한 파일을 변수에 할당
+  
+  let fileArray = Array.from(files);  //변수에 할당된 파일을 배열로 변환(FileList -> Array)
+  
+  fileArray.splice(obj, 1); //해당하는 index의 파일을 배열에서 제거
+  
+  fileArray.forEach(file => { dataTransfer.items.add(file); });
+  //남은 배열을 dataTransfer로 처리(Array -> FileList)
+  
+  $('#files')[0].files = dataTransfer.files; //제거 처리된 FileList를 돌려줌
+  
+  div.empty();
+ }
+
+
 
 	const fnFileCheck = () => {
         $('#files').change((ev) => {
@@ -286,7 +318,7 @@
               $('#attached_list').empty();
               return;
             }
-            $('#attached_list').append('<div>' + files[i].name + '</div>');
+            $('#attached_list').append('<div>' + files[i].name + '<button type="button" class="each" onclick="deleteEach(this)">X</button></div>');
           }
           if(totalSize > maxSize){
             alert('전체 첨부파일의 최대 크기는 100MB입니다.');
@@ -299,6 +331,7 @@
       
 	
 	fnFileCheck();
+	 
 </script>
 	
 	
