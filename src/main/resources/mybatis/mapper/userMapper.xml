@@ -158,32 +158,6 @@
       , MOBILE
       , AGREE
       , STATE
-      , PW_MODIFIED_AT
-      , JOINED_AT
-    ) VALUES (
-        USER_SEQ.NEXTVAL
-      , #{email}
-      , #{name}
-      , #{gender}
-      , #{mobile}
-      , #{agree}
-      , 1
-      , SYSDATE
-      , SYSDATE
-    )
-  </insert>
-  
-  
-  <!-- 카카오 가입 -->
-   <insert id="insertKakaoUser" parameterType="UserDto">
-    INSERT INTO USER_T (
-        USER_NO
-      , EMAIL
-      , NAME
-      , GENDER
-      , MOBILE
-      , AGREE
-      , STATE
       , AUTH
       , PW_MODIFIED_AT
       , JOINED_AT
@@ -194,13 +168,39 @@
       , #{gender}
       , #{mobile}
       , #{agree}
-      , 0
       , 1
-      , TO_CHAR(SYSDATE,'YYYY-MM-DD_HH24:MI:SS')
-      , TO_CHAR(SYSDATE,'YYYY-MM-DD_HH24:MI:SS')
+      , 1
+      , SYSDATE
+      , SYSDATE
     )
   </insert>
   
+  
+  <insert id="kakaoJoin" parameterType="UserDto" >
+     INSERT INTO USER_T(
+        USER_NO
+      , EMAIL
+      , NAME
+      , AGREE
+      , STATE
+      , AUTH
+      , PW_MODIFIED_AT
+      , JOINED_AT
+      
+      ) VALUES (
+          USER_SEQ.NEXTVAL
+        , #{email}
+        , #{name}
+        , #{agree}
+        , 2
+        , 1
+        , SYSDATE
+        , SYSDATE
+       )
+  </insert>
+  
+  
+
 
   
   <select id="getFindId" parameterType="Map" resultType="UserDto">
@@ -223,20 +223,31 @@
      WHERE EMAIL = #{email}
   </update>
   
-  <!--비밀번호 90일 변경 : 1.최근변경날짜를 꺼낸다-->
-  <select id="recentpWChange" parameterType="Map" resultType="int">
-   SELECT EXTRACT(DAY FROM SYSTIMESTAMP - TO_TIMESTAMP(PW_MODIFIED_AT))
-      FROM USER_T
-      WHERE EMAIL = #{email} AND PW = #{pw}
-  </select>
+
   
-  <!--비밀번호 90일 변경 : 2.비밀번호변경을 한다. -->
-  <update id="ninepwChnage" parameterType="UserDto">
+<update id="autoupdatetmpPw" parameterType="UserDto">
     UPDATE USER_T
        SET PW_MODIFIED_AT = SYSDATE
-         , PW = #{pw}
      WHERE USER_NO = #{userNo}
   </update>
   
+  
+  <select id="changePw90" parameterType="Map" resultType="int">
+    SELECT EXTRACT(DAY FROM SYSTIMESTAMP - TO_TIMESTAMP(PW_MODIFIED_AT))
+      FROM   USER_T
+      WHERE  EMAIL = #{email}
+  </select>
+  
+  <update id="updatePw90" parameterType="UserDto">
+		
+    UPDATE USER_T
+       SET PW_MODIFIED_AT = SYSDATE
+     WHERE EMAIL = #{email}
+       AND AUTH = 1
+       AND (SYSDATE - NVL(PW_MODIFIED_AT, JOINED_AT)) >= 90
+      
+  </update>
+
+
 
 </mapper>
