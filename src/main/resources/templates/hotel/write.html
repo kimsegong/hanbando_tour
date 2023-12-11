@@ -6,7 +6,13 @@
 .roomGroup {
   border: thick double darkgray ;
 }
-  
+input {
+  margin-bottom: 10px;
+}  
+
+label {
+  text-align: left;
+}
   
 </style>
 <body>
@@ -26,15 +32,13 @@
 				<input type="hidden" id="hotelNo" name="hotelNo" th:value="${hotelNo}">
 				<div style="margin: 30px 270px;" class="w-50 p-3">
 		<div style="text-align: left;">
-        
       
-      
-		      <label for="files" class="form-label">메인첨부(mainList 파일 이름이 목록에서 보여집니다)</label>
-		      <input type="file" name="files" id="files" class="form-control" accept="image/*" multiple> <button type="button" onclick="deleteAll()">전체삭제</button>
+		      <label for="files" class="form-label" style="font-weight: 500;">메인첨부(mainList 파일이름이 목록에서 보여집니다)</label>
+		      <input type="file" name="files" id="files" class="form-control" accept="image/*" multiple> <button type="button" onclick="deleteAll(this)">전체삭제</button>
 		  </div>
 		  <div class="attached_list mt-2" id="attached_list"></div>
-		  <div>
-       <label for="hotelName">호텔 이름 </label> 
+		  <div style="text-align: left;">
+       <label for="hotelName" class="form-label" style="font-weight: 500;">호텔 이름 </label> 
        <input type="text" id="hotelName" class="form-control" name="hotelName">
       </div>
 		  <div><!-- 추천라디오 및 선택박스 -->
@@ -54,14 +58,14 @@
                 </label>
             </div>
         </div>
-        <div style="text-align: center;">
+        <div style="text-align: left;">
             <div class="form-check">
                 <input class="form-check-input" type="radio" name="status" th:value="1"checked>
                 <label class="form-check-label" for="status">
                     게시
                 </label>
             </div>
-            <div class="form-check">
+            <div style="text-align: left;">
                 <input class="form-check-input" type="radio" name="status"  th:value="0" >
                 <label class="form-check-label" for="status">
                     안게시
@@ -78,18 +82,19 @@
 		  </div>
 		</div>
 		
-		<div>
-      <label for="hEmail">Email</label>
+		<div style="text-align: left;">
+      <label for="hEmail" class="form-label" style="font-weight: 500;" >Email</label>
       <input type="email" id="hEmail" class="form-control" name="hEmail">
     </div>
-		<div>
-      <label for="phoneNumber">전화번호</label>
-      <input type="text" id="phoneNumber" class="form-control" name="phoneNumber">
+		<div style="text-align: left;">
+      <label for="phoneNumber" id="phoneNumber" class="form-label" onfocus="fnCheckPhoneNumber();" style="font-weight: 500;">대표번호</label>
+      <input type="text" id="phoneNumber" class="form-control" name="phoneNumber" placeholder="'-' 제외하고 입력해 주세요">
+      <div id="phoneText"></div>
     </div>
     <div class="row mb-2">
-          <label for="postcode" class="col-sm-3 col-form-label">주소</label>
-          <div class="col-sm-4"><input type="text" name="postcode" id="postcode" class="form-control" onclick="execDaumPostcode()" placeholder="우편번호" readonly></div>
-          <div class="col-sm-5"><input type="button" class="btn btn-outline-success" onclick="execDaumPostcode()" value="우편번호 찾기"></div>
+          <label for="postcode" class="col-form-label" style="font-weight: 500;">주소</label>
+          <div class="col-4"><input type="text" name="postcode" id="postcode" class="form-control" onclick="execDaumPostcode()" placeholder="우편번호" readonly></div>
+          <div class="col-8" style="text-align: right;"><input type="button" class="btn btn-outline-success" onclick="execDaumPostcode()" value="우편번호 찾기"></div>
         </div>
         
         <div class="row mb-2">
@@ -100,7 +105,7 @@
         </div>
         <div class="col-sm-12"><span id="guide" style="color:#999;display:none"></span></div>
         
-    <div>사용할수 있는 시설
+    <div style="display: flex; justify-content: space-between; "><div style="font-weight: 500;">편의 시설</div>
       <label for="morning" class="form-check-label">조식</label>
       <input type="checkbox" id="morning" class="form-check-input" name="morning" value="1">
       <label for="pool" class="form-check-label">수영장</label>
@@ -113,8 +118,8 @@
       <input type="checkbox" id="roomservice" class="form-check-input" name="roomservice" value="1">
     </div>
 		<div>
-    <label for="hotelDetail">호텔 상세</label>
-    <textarea id="hotelDetail" name="hotelDetail">체크인: 체크아웃:</textarea>
+    <label for="hotelDetail" class="col-form-label" style="font-weight: 500;">호텔 상세</label>
+    <textarea id="hotelDetail" class="form-control" name="hotelDetail" rows="10" style="margin-bottom: 10px;">체크인: 시 체크아웃: 시</textarea>
     </form> 
     <!--/* Button trigger modal */--> 
 		<button type="button" class="btn btn-primary" onclick="openHotelRoom()" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
@@ -128,64 +133,6 @@
 		    </div>
 		  </div>
 		  
-    <!--/*
-		<div class="roomGroup">
-      <input type="file" name="files1" class="form-control" multiple>
-      <label for="roomName" >객실이름</label>
-      <input type="text" id="roomName" class="form-control">
-      <label for="roomDetail">객실상세</label>
-      <textarea id="roomDetail" class="form-control"></textarea>
-      <label for="rView">전망</label>
-      <input type="text" id="rView" class="form-control"> 
-      <label for="bed">침대</label>
-      <input type="bed" id="bed" class="form-control"> 
-      <label for="shower">욕실</label>
-      <input type="text" id="shower" class="form-control"> 
-      <label for="rSize">방사이즈</label>
-      <input type="text" id="rSize" class="form-control">
-      <label for="smoke" class="form-check-label">흡연유무</label>
-      <input type="checkbox" id="smoke" class="form-check-input">
-      <label for="bleakfast" class="form-check-label">조식</label>
-      <input type="checkbox" id="bleakfast" class="form-check-input">
-      <label for="people">허용인원</label>
-      <input type="text" id="people" class="form-control">
-      <label for="roomMany">객실개수</label>
-      <input type="text" id="roomMany" class="form-control">
-      
-      <h4>객실 구비사항</h4>
-      <label for="towel" class="form-check-label">수건</label>
-      <input type="checkbox" id="towel" class="form-check-input">
-      <label for="water" class="form-check-label">생수</label>
-      <input type="checkbox" id="water" class="form-check-input">
-      <label for="coffee" class="form-check-label">커피/티</label>
-      <input type="checkbox" id="coffee" class="form-check-input">
-      <label for="drier" class="form-check-label">드라이기</label>
-      <input type="checkbox" id="drier" class="form-check-input">
-      <label for="iron" class="form-check-label">다리미</label>
-      <input type="checkbox" id="iron" class="form-check-input">
-      <label for="minibar" class="form-check-label">미니바</label>
-      <input type="checkbox" id="minibar" class="form-check-input">
-      <div>비수기</div>
-      <label for="biPrice">금액</label>
-      <input type="text" id="biPrice" class="form-control">
-      <label for="bsDate">날짜</label>
-      <input type="date" id="bsDate"><input type="date" id="beDate">
-      <div>준성수기</div>
-      <label for="junPrice">금액</label>
-      <input type="text" id="junPrice" class="form-control">
-      <label for="jsDate">날짜</label>
-      <input type="date" id="jsDate"><input type="date" id="jeDate">
-      <div>성수기</div>
-      <label for="sungPrice">금액</label>
-      <input type="text" id="sungPrice" class="form-control">
-      <label for="ssDate">날짜</label>
-      <input type="date" id="ssDate"><input type="date" id="seDate">
-      
-      <button type="button" id="btnAddRoom" onclick="return roomSubmit(this.form)">객실등록</button>
-    </div>
-		<div id="emptyRoom"></div>
-		*/-->
-		
 		    	  </div>    
 				    <div class="d-grid gap-2 col-6 mx-auto">
 				      
@@ -271,7 +218,7 @@
               }
             }).open();
           }
- const deleteAll = () => {
+ const deleteAll = (this) => {
     $('#files').val('');
      $('#attached_list').empty();
  }
@@ -303,7 +250,7 @@
 
 
 
-	const fnFileCheck = () => {
+	const fnFileCheck = (this) => {
         $('#files').change((ev) => {
           $('#attached_list').empty();
           let maxSize = 1024 * 1024 * 100;
@@ -329,6 +276,14 @@
         })
       }
       
+  function fnCheckPhoneNumber(){
+    let phoneNumber = $('#phoneNumber').val();
+    let regPhoneNumber = /^\d{2,3}-\d{3,4}-\d{4}$/; 
+     if (!regPhoneNumber.test(phoneNumber)){
+    $('#phoneText').text('올바른 전화번호를 입력해주세요');
+    return;  
+    }    
+  }
 	
 	fnFileCheck();
 	 
