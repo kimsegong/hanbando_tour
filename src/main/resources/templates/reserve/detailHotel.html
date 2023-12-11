@@ -272,7 +272,7 @@
           data: {
             impUid, // imp_uid를 환불 `unique key`로 입력
             amount: cancel_request_amount, // 가맹점 클라이언트로부터 받은 환불금액
-            checksum: cancelableAmount // [권장] 환불 가능 금액 입력
+            
           }
         }).done(function(data){
           console.log(data);
@@ -282,12 +282,7 @@
         console.log(resP);
       });
     }
-    
-    function fnGetToken(){
-      $.ajax({
-        url: ''
-      })
-    }
+ 
     
     refundPayment1();
     
