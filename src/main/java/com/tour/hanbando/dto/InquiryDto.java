@@ -15,6 +15,7 @@ public class InquiryDto {
   private String contents;
   private String createdAt;
   private String separate;
+  private int answerStatus;
   private UserDto userDto;
 }
 
