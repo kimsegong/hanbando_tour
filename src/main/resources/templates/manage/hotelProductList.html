@@ -186,13 +186,23 @@
     font-weight: 500;
   }
   
+  .room_part {
+    text-align: left;
+    margin-left: 8%;
+  }
+  
   .room_name {
     color: #404040; 
-    font-size: 10px;
+    font-size: 20px;
+    font-weight: bolder;
   }
   .room_many {
     color: #404040; 
-    font-size: 10px;
+    font-size: 15px;
+  }
+  
+  table thead tr th{
+    font-weight: bolder;
   }
 
 </style>
@@ -402,7 +412,7 @@
                             <th:block th:each="r:${roompriceList}">
                               <th:block th:if="${h.hotelNo == r.hotelNo}">
                                 <th:block th:each="rt:${roomtypeList}">
-                                  <div>
+                                  <div class="room_part">
                                     <span class="room_name" th:if="${r.roomNo == rt.roomNo}" th:text="${rt.roomName}"></span>
                                     <span class="room_many" th:if="${r.roomNo == rt.roomNo}" th:text="|(${rt.roomMany}개)|"></span>
                                   </div>
