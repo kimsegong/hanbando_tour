@@ -247,6 +247,8 @@
        AND (SYSDATE - NVL(PW_MODIFIED_AT, JOINED_AT)) >= 90
       
   </update>
+  
+  
 
 
 
