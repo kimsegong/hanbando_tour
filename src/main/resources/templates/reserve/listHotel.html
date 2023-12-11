@@ -15,7 +15,7 @@
 		    <div class="col-10" >
 		      	<!--/*여기에 작성/ 다 만들고 style 지워주세요  */-->
 		      <div style="padding-bottom: 10px;">
-            <h2>예약내역목록</h2>
+            <span style="font-size: xx-large;">예약내역목록</span>
           </div>
           <div style="margin: 20px auto;">
             <a th:href="|@{/reserve/reserveList.do(userNo=${session.user.userNo})}|"><strong>패키지</strong></a>
@@ -26,12 +26,12 @@
             <table class="table">
               <thead>
                 <tr>
-                  <th>순번</th>
-                  <th>예약날짜/예약번호</th>
-                  <th>호텔명</th>
-                  <th>호텔 체크인/체크아웃</th>
-                  <th>금액</th>
-                  <th>예약상태</th>
+                  <th><strong>순번</strong></th>
+                  <th><strong>예약날짜/예약번호</strong</th>
+                  <th><strong>호텔명</strong</th>
+                  <th><strong>체크인/체크아웃</strong</th>
+                  <th><strong>금액</strong</th>
+                  <th><strong>예약상태</strong</th>
                 </tr>
               </thead>
               <tbody>
@@ -44,7 +44,7 @@
                     <td>
                       <a th:href="@{/hotel/detail.do(hotelNo=${resHo.hotelDto.hotelNo})}" th:text="${resHo.hotelDto.hotelName}"></a>
                     </td>
-                    <td th:text="${resHo.reserveStart}"></td>
+                    <td th:text="|${resHo.reserveStart} ~ ${resHo.reserveFinish}|"></td>
                     <td th:text="|${resHo.reservePrice}원|"></td>
                     <th:block th:if="${resHo.reserveStatus == 0}">
                       <td th:text="결제대기"></td>

@@ -144,7 +144,7 @@ public class ReserveServiceImpl implements ReserveService {
     
     int reserveStatus = Integer.parseInt(request.getParameter("resStatus"));
     String reserveStart = request.getParameter("resStart");
-//    String reserveFinish = "null";
+    String reserveFinish = request.getParameter("resFinish");
     int reservePrice = Integer.parseInt(request.getParameter("totalReservePrice"));
     int userNo = Integer.parseInt(request.getParameter("userNo"));
     int hotelNo = Integer.parseInt(request.getParameter("hotelNo"));
@@ -155,7 +155,7 @@ public class ReserveServiceImpl implements ReserveService {
                             .agree(agree)
                             .reserveStatus(reserveStatus)
                             .reserveStart(reserveStart)
-//                            .reserveFinish(reserveFinish)
+                            .reserveFinish(reserveFinish)
                             .reservePrice(reservePrice)
                             .userDto(UserDto.builder()
                                           .userNo(userNo)
