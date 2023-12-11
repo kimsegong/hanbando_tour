@@ -21,6 +21,7 @@
           <p class="form_title">휴대폰 번호</p>
           <input type="tel" class="inp" id="userPhoneNum" name="userPhoneNum" placeholder="휴대폰 번호를 - 없이 입력해주세요"/>
           <input type="button" class="half_button" id="goSMS" value="SMS 전송" />
+          <div class="col-sm-9 mb-3" id="msg_mobile"></div>
         </div>
         <div class="line_inp confirmDiv">
           <p class="form_title">인증번호</p>
@@ -69,7 +70,7 @@
     
         <div class="row mb-2">
           <label for="mobile" class="col-sm-3 col-form-label">휴대전화번호</label>
-          <div class="col-sm-9"><input type="text" name="mobile" id="mobile" class="form-control"></div>
+          <div class="col-sm-9"><input type="text" name="mobile" id="mobile" class="form-control" readonly></div>
           <div class="col-sm-3"></div>
           <div class="col-sm-9 mb-3" id="msg_mobile"></div>
         </div>
@@ -175,7 +176,9 @@
     </div>
 
   </div>
-  <script>
+  <script th:inline="javascript">
+    
+    
     var emailPassed = false;
   var pwPassed = false;
   var pw2Passed = false;
@@ -185,6 +188,8 @@
   
   
   /* 함수 정의 */
+  
+  
   
   /*인증번호 입력 후 확인하는 곳*/
   
@@ -196,7 +201,7 @@
       alert("인증번호가 발송되었습니다.");
   
       $.ajax({
-        type: 'get',
+        type: 'post',
         url: '/user/execute.form',
         data: 'userPhoneNum=' + sms,
         dataType: 'json',
@@ -212,6 +217,10 @@
   
             if (smsPassed = $('#authNumber').val() == resData.cerNum) {
               alert('핸드폰이 인증되었습니다.');
+              
+              $('#mobile').val(sms);
+              
+              
             } else {
               alert('핸드폰 인증이 실패했습니다.');
             }
@@ -238,24 +247,15 @@
   };
   //이메일 -> 아이디로 쓰기 
 
-  
+
   function fnValidUser() {
-    let validFlag = true;
     
-    if (!emailPassed) {
-      alert('이메일 체크를 해주세요.');
-      return false;
-    }
     
-    if(!pwPassed) {
-      alert('패스워드 확인을 해주세요.');
-      return false;
-    }
-    
-    if (validFlag) {
       $('#frm_join').submit();
     }
-  }
+  
+  
+  
   
   function fnCheckEmail() {
     console.log('btn_get_code');
@@ -388,7 +388,7 @@
   }
   
   const fnCheckMobile = () => {
-    $('#mobile').keyup((ev) => {
+    $('#userPhoneNum').keyup((ev) => {
       ev.target.value = ev.target.value.replaceAll('-', '');
       // 휴대전화번호 검사 정규식 (010숫자8개)
       let regMobile = /^010[0-9]{8}$/;
@@ -425,6 +425,10 @@
   */
   
     fnCheckSms();
+    fnCheckPassword();
+    fnCheckPassword();
+    fnCheckName();
+    fnCheckMobile();
   </script>
   
   

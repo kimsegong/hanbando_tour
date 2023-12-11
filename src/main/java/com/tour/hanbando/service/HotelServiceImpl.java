@@ -23,6 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.tour.hanbando.dao.HotelMapper;
+import com.tour.hanbando.dao.PackageMapper;
 import com.tour.hanbando.dto.FacilitiesDto;
 import com.tour.hanbando.dto.HeartDto;
 import com.tour.hanbando.dto.HotelDto;
@@ -44,6 +45,7 @@ import lombok.RequiredArgsConstructor;
 @Service
 public class HotelServiceImpl implements HotelService {
   private final HotelMapper hotelMapper;
+  private final PackageMapper packageMapper;
   private final MyPageUtils myPageUtils;
   private final HotelFileUtils hotelFileUtils;
   
@@ -550,6 +552,41 @@ public class HotelServiceImpl implements HotelService {
   }
   
   @Override
+  public void getHeartHotel(HttpServletRequest request, Model model) {
+    
+    
+    Optional<String> opt = Optional.ofNullable(request.getParameter("page"));
+    int page = Integer.parseInt(opt.orElse("1"));
+    int display = 10;
+    int userNo = Integer.parseInt(request.getParameter("userNo"));
+    int total = packageMapper.getHeartCount(userNo);
+    
+    myPageUtils.setPaging(page, total, display);
+    
+    Map<String, Object> map = Map.of("begin", myPageUtils.getBegin()
+                                   , "end", myPageUtils.getEnd()
+                                   , "userNo", userNo);
+    
+    List<HeartDto> heartHotelList = hotelMapper.selectHotelHeartList(map);
+
+    model.addAttribute("heartHotelList", heartHotelList);
+    String params = "userNo=" + request.getParameter("userNo");
+    model.addAttribute("paging", myPageUtils.getMvcPaging(request.getContextPath() + "/user/heart.do", params));
+    model.addAttribute("beginNo", total - (page - 1) * display); 
+
+  }
+  
+  @Override
+  public Map<String, Object> removeHotelHeart(int hotelNo) {
+      int removeHotelHeartResult = hotelMapper.deleteHotelHeart(hotelNo);
+      return Map.of("removeHotelHeartResult", removeHotelHeartResult);
+    }
+
+
+
+  
+  
+  @Override
   public int removehotel(int hotelNo) {
     int deleteResult = hotelMapper.deleteHotel(hotelNo);
     return deleteResult;
@@ -588,7 +625,7 @@ public class HotelServiceImpl implements HotelService {
   
   
   private int finalPrice(List<LocalDate> allDate, int roomNo) {
-    List<RoompriceDto> roompriceDto = hotelMapper.getPrice(RoomtypeDto.builder().roomNo(roomNo).build());
+    List<RoompriceDto> roompriceDto = packageMapper.getPrice(RoomtypeDto.builder().roomNo(roomNo).build());
     RoompriceDto price = roompriceDto.get(0);
     
     DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyyMMdd");
