@@ -15,7 +15,7 @@
 		    <div class="col-10">
 		      	<!--/*여기에 작성/ 다 만들고 style 지워주세요  */-->
 		      <div style="padding-bottom: 10px;">
-            <h2>예약내역목록</h2>
+            <span style="font-size: xx-large;">예약내역목록</span>
           </div>
           <div style="margin: 20px auto;">
             <a th:href="|@{/reserve/reserveList.do(userNo=${session.user.userNo})}|"><strong>패키지</strong></a>
@@ -26,13 +26,13 @@
             <table class="table">
               <thead>
                 <tr>
-                  <th>순번</th>
-                  <th>예약날짜/예약번호</th>
-                  <th>예약상품명</th>
-                  <th>예약인원</th>
-                  <th>여행 출발일</th>
-                  <th>금액</th>
-                  <th>예약상태</th>
+                  <th><strong>순번</strong></th>
+                  <th><strong>예약날짜/예약번호</strong></th>
+                  <th><strong>예약상품명</strong></th>
+                  <th><strong>예약인원</strong></th>
+                  <th><strong>여행 출발일</strong></th>
+                  <th><strong>금액</strong></th>
+                  <th><strong>예약상태</strong></th>
                 </tr>
               </thead>
               <tbody>
