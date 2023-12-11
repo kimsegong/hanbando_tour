@@ -74,7 +74,18 @@
 	
 	</div>
 	
-
+  <script th:inline="javascript">
+    
+    function fnCheckResCancel(){
+      if('[[${cancelResult}]]' == 1){
+        alert('예약이 취소되었습니다.');
+      }
+    }
+  
+    fnCheckResCancel();
+  </script>
+  
+  
 	<div th:replace="~{/layout/footer::footer}"></div>
 </body>
 </html>
