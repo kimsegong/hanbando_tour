@@ -68,8 +68,9 @@ public class FaqController {
     return "notice/faqWrite";
   }
   
+  
   @PostMapping("/addFaq.do")
-  public String addNotice(HttpServletRequest request, RedirectAttributes redirectAttributes) {
+  public String addFaq(HttpServletRequest request, RedirectAttributes redirectAttributes) {
     int addResult = faqService.addFaq(request);
     redirectAttributes.addFlashAttribute("addResult", addResult);
     return "redirect:/notice/faqList.do";
