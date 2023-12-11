@@ -55,9 +55,14 @@ h3{
 }
 .btn-heart {
  float: right;		
- height: 35px;
- width: 35px;
+ height: 33px;
+ width: 33px;
  border: 1px white solid;
  background-color: #F1F0E8;
  border-radius: 50%;
+}
+.fa-xl {
+    font-size: 1.5em;
+    line-height: .4em;
+    vertical-align: -0.125em;
 }
