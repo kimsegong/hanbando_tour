@@ -156,16 +156,15 @@ public class HotelServiceImpl implements HotelService {
     
     int hotelNo = Integer.parseInt(request.getParameter("hotelNo"));
     
-    List<RoomtypeDto> roomtypeDto = hotelMapper.getRoomtype(hotelNo);
-    System.out.println(roomtypeDto);
-    List<RoomFeatureDto> roomFeatureDto = hotelMapper.getRoomFeature(roomtypeDto);
-    List<HotelImageDto> hotelImageDto = hotelMapper.getHotelImage(hotelNo);
-    List<RoompriceDto> roompriceDto = hotelMapper.getPrice(RoomtypeDto.builder().hotelNo(hotelNo).build());
+    List<RoomtypeDto> roomtypeList = hotelMapper.getRoomtype(hotelNo);
+    List<RoomFeatureDto> roomFeatureList = hotelMapper.getRoomFeature(roomtypeList);
+    List<HotelImageDto> hotelImageList = hotelMapper.getHotelImage(hotelNo);
+    List<RoompriceDto> roompriceList = hotelMapper.getPrice(RoomtypeDto.builder().hotelNo(hotelNo).build());
     
-    return Map.of("roomtype", roomtypeDto, 
-                  "roomFeature", roomFeatureDto,
-                  "image", hotelImageDto,
-                  "price", roompriceDto);
+    return Map.of("roomtypeList", roomtypeList,
+                  "roomFeatureList", roomFeatureList,
+                  "hotelImageList", hotelImageList,
+                  "roompriceList", roompriceList);
   }
   
   @Override
