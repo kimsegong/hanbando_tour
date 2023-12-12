@@ -10,7 +10,20 @@
   .btn-whitegreen{
     background-color: #EEF0E5;
   }
-  
+  .heart-table {
+    display: table;
+    margin: auto;
+  }
+
+  .heart-row {
+    display: table-row;
+  }
+
+  .heart-cell {
+    display: table-cell;
+    vertical-align: middle;
+    text-align: center;
+  }
 </style>
 <body>
   
@@ -26,7 +39,7 @@
     </div>    
       </div>
       <div class="col-10">
-       <p style="font-size: 30px; font-weight: 400;">💚나의 찜목록💚</p>
+       <p style="font-size: 30px; font-weight: 400;">찜</p>
         <div>
           <div class="btn-group" role="group" aria-label="Faq Category Buttons" style="margin-bottom: 20px;">
             <a th:href="|@{/user/heart.do(userNo=${session.user.userNo})}|" class="btn btn-green my-btn">패키지</a>
@@ -54,18 +67,18 @@
             </tr>
         </th:block>
         <th:block th:each="heart : ${heartList}">
-            <tr style="height: 70px;">
-                <td scope="row" style="height: 100%;">💙
-                    <input type="checkbox" class="form-check-input chk_each" th:value="${heart.packageDto.packageNo}">
-                    <label class="form-check-label"></label>
-                </td>
-                <td style="height: 100%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;">
-                    <input type="hidden" id="packageNo" th:value="${heart.packageDto.packageNo}">
-                    <a th:href="@{/package/detail.do(packageNo=${heart.packageDto.packageNo})}" th:text="${heart.packageDto.packageTitle}"></a>
-                </td>
-                <td style="height: 100%;" th:text="|${heart.packageDto.price} 원|"></td>
-            </tr>
-        </th:block>
+    <tr class="heart-row" style="height: 70px;">
+      <td class="heart-cell" style="height: 100%;">💙
+        <input type="checkbox" class="form-check-input chk_each" th:value="${heart.packageDto.packageNo}">
+        <label class="form-check-label"></label>
+      </td>
+      <td class="heart-cell" style="height: 100%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;">
+        <input type="hidden" id="packageNo" th:value="${heart.packageDto.packageNo}">
+        <a th:href="@{/package/detail.do(packageNo=${heart.packageDto.packageNo})}" style="font-weight: 400;" th:text="${heart.packageDto.packageTitle}"></a>
+      </td>
+      <td class="heart-cell" style="height: 100%;" th:text="|${heart.packageDto.price} 원|"></td>
+    </tr>
+  </th:block>
     </tbody>
     <tfoot>
         <th:block th:unless="${#lists.isEmpty(heartList)}">
