@@ -13,6 +13,47 @@ input {
 label {
   text-align: left;
 }
+#hotelName {
+	font-size: 30px;
+	font-weight: 600;
+}
+#address, .price{
+	display: inline-block;
+}
+.price {
+	float: right;
+	text-align: right;
+}
+.price1 {
+	font-size: 20px;
+	color: darkred;
+	font-weight: 500;
+}
+.detail {
+	border-top: 1px lightgray solid;
+	margin: 10px 0 5px 0;
+	padding: 10px 0 0 0;
+}
+.hotelFac, .roomFac{
+	display: flex;
+	justify-content: space-evenly;
+}
+.choice{
+    box-sizing: border-box;
+    margin: 0px 0px 28px;
+    min-width: 0px;
+    line-break: anywhere;
+    font-size: 20px;
+    letter-spacing: -0.02em;
+    line-height: 30px;
+    font-weight: 700;
+    border-bottom: 1px solid rgb(0, 0, 0);
+    width: 100%;
+    text-align: left;
+    justify-content: space-between;
+    padding: 8px 16px;
+    margin-top: 80px;
+ }
   
 </style>
 <body>
@@ -30,10 +71,10 @@ label {
 				   <h2>호텔 게시글작성</h2>
 			<form method="post" id="hotel_add" th:action="@{/hotel/addHotel.do}"  enctype="multipart/form-data" >
 				<input type="hidden" id="hotelNo" name="hotelNo" th:value="${hotelNo}">
-				<div style="margin: 30px 270px;" class="w-50 p-3">
+				<div style="margin: auto;" class="w-50 p-3">
 		    <div style="text-align: left;">
 		      <label for="files" class="form-label" style="font-weight: 500;">메인첨부(mainList 파일이름이 목록에서 보여집니다)</label>
-		      <input type="file" name="files" id="files" class="form-control" accept="image/*" multiple> <button type="button" onclick="deleteAll(this)">전체삭제</button>
+		      <input type="file" name="files" id="files" class="form-control" accept="image/*" fnFileCheck(); multiple> <button type="button" onclick="deleteAll(this)">전체삭제</button>
 		    </div>
   		  <div class="attached_list mt-2" id="attached_list"></div>
   		  <div style="text-align: left;">
@@ -86,7 +127,7 @@ label {
       <input type="email" id="hEmail" class="form-control" name="hEmail">
     </div>
 		<div style="text-align: left;">
-      <label for="phoneNumber" id="phoneNumber" class="form-label" onfocus="fnCheckPhoneNumber();" style="font-weight: 500;">대표번호</label>
+      <label for="phoneNumber" id="phoneNumber" class="form-label" onfocusout="fnCheckPhoneNumber();" style="font-weight: 500;">대표번호</label>
       <input type="text" id="phoneNumber" class="form-control" name="phoneNumber" placeholder="'-' 제외하고 입력해 주세요">
       <div id="phoneText"></div>
     </div>
@@ -131,20 +172,19 @@ label {
 		    <div class="modal-content">
 		    </div>
 		  </div>
-		    	  </div>    
-		    	  <div id="addroom">
+		</div> 
+	</div>
+		    <div class="col-1">	      
+		    </div>
+		  </div>   
+		    	  <div id="addroom" style="margin-top: 10px;">
             </div>
 
 				    <div class="d-grid gap-2 col-6 mx-auto">
 				      <button type="submit" class="btn btn-primary" style="margin: 32px;">작성완료</button>
 			      </div>
-				 </div>
-				 
-		    <div class="col-1">	      
-		    </div>
-		  </div>
+				
 	  </div>
-	
 	</div>
 <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 <script th:inline="javascript">
@@ -289,7 +329,10 @@ label {
 	const myModalEl = document.getElementById('staticBackdrop')
 	var hotelNo = $('#hotelNo').val();
 	
-  myModalEl.addEventListener('hidden.bs.modal', event => {
+    myModalEl.removeEventListener('hidden.bs.modal', fnAddRoom); 
+	myModalEl.addEventListener('hidden.bs.modal', fnAddRoom);
+	
+  function fnAddRoom (){
     $.ajax({
         type: 'get',
         url: '/hotel/roomList.do',
@@ -297,100 +340,86 @@ label {
         dataType: 'json',
         success: (resData) => {  
                     console.log(resData);
-                  /*       
-                <input type="hidden" th:id="${'roomNo' + roomTypeStat.count}" th:value="${roomType.roomNo}">
-                <div class="border rounded-1">
-                <div class="row">
-                  <div class="col-3">
-                    <div th:id="${'roomCarousel' + roomTypeStat.count}" class="carousel slide">
-                      <div class="carousel-inner">
-                        <th:block th:each="roomImage : ${hotelImage}">
-                            <div th:if="${roomImage.roomNo == roomType.roomNo}" class="carousel-item">
-                               <img th:src="@{|${roomImage.imagePath}/${roomImage.filesystemName}|}" class="d-block w-100" >
-                            </div>
-                        </th:block>
-                        
-                      </div>
-                      <button class="carousel-control-prev" type="button" th:data-bs-target="${'#roomCarousel' + roomTypeStat.count}" data-bs-slide="prev">
-                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                        <span class="visually-hidden">Previous</span>
-                      </button>
-                      <button class="carousel-control-next" type="button" th:data-bs-target="${'#roomCarousel' + roomTypeStat.count}" data-bs-slide="next">
-                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                        <span class="visually-hidden">Next</span>
-                      </button>
-                    </div>
-                    <div th:text="|침대 : ${roomType.bed}|"></div>
-                    <div th:text="|전망 : ${roomType.rView}|"></div>
-                    <div th:text="|허용인원 : ${roomType.people} 명|"></div>
-                    <div th:if="${roomType.bleakfast == 0}">조식 : <i class="fa-solid fa-x" style="color: #96b2c5;"></i></div>
-                    <div th:if="${roomType.bleakfast == 1}">조식 : <i class="fa-sharp fa-solid fa-o" style="color: #96b6c5;"></i></div>
-                    <div th:if="${roomType.smoke == 0}">흡연 : <i class="fa-solid fa-x" style="color: #96b2c5;"></i></div>
-                    <div th:if="${roomType.smoke == 1}">흡연 : <i class="fa-sharp fa-solid fa-o" style="color: #96b6c5;"></i></div>
-                    <div th:text="|${roomType.shower}|"></div>
-                    <div th:text="|방크기 : ${roomType.rSize}|"></div>
-                  </div>
-                  <div class="col-6">
-                    <div  th:class="${'roomName'+roomTypeStat.count}" id="roomName" th:text="${roomType.roomName}" th:value="${roomType.roomName}"></div>
-                    <div th:text="${roomType.roomDetail}" style="border-top: 1px #9399a5 solid;"></div>
-                    
-                    <th:block th:each="feature : ${roomFeature}">
-                      <div class="border rounded-1" th:if="${feature.roomNo == roomType.roomNo}">
-                          <div>객실 시설</div>
-                        <div class="roomFac">
-                          <div th:if="${feature.water == 0}"><i class="fa-solid fa-bottle-water fa-2xl" style="color: #9399a5;"></i><div>물</div></div>
-                          <div th:if="${feature.water == 1}"><i class="fa-solid fa-bottle-water fa-2xl" style="color: #2f7fa7;"></i><div>물</div></div>
-                          <div th:if="${feature.coffee == 0}"><i class="fa-solid fa-mug-saucer fa-2xl" style="color: #9399a5;"></i><div>커피</div></div>
-                          <div th:if="${feature.coffee == 1}"><i class="fa-solid fa-mug-saucer fa-2xl" style="color: #2f7fa7;"></i><div>커피</div></div>
-                          <div th:if="${feature.drier == 0}"><i class="fa-solid fa-wind fa-2xl" style="color: #9399a5;"></i><div>드라이어</div></div>
-                          <div th:if="${feature.drier == 1}"><i class="fa-solid fa-wind fa-2xl" style="color: #2f7fa7;"></i><div>드라이어</div></div>
-                          <div th:if="${feature.towel == 0}"><i class="fa-solid fa-rug fa-2xl" style="color: #9399a5;"></i><div>수건</div></div>
-                          <div th:if="${feature.towel == 1}"><i class="fa-solid fa-rug fa-2xl" style="color: #2f7fa7;"></i><div>수건</div></div>
-                          <div th:if="${feature.minibar == 0}"><i class="fa-solid fa-martini-glass fa-2xl" style="color: #9399a5;"></i><div>미니바</div></div>
-                          <div th:if="${feature.minibar == 1}"><i class="fa-solid fa-martini-glass fa-2xl" style="color: #2f7fa7;"></i><div>미니바</div></div>
-                          <div th:if="${feature.iron == 0}"><i class="fa-solid fa-shirt fa-2xl" style="color: #9399a5;"></i><div>다리미</div></div>
-                          <div th:if="${feature.iron == 1}"><i class="fa-solid fa-shirt fa-2xl" style="color: #2f7fa7;"></i><div>다리미</div></div>
-                      </div>
-                      </div>
-                    </th:block>
-                  </div>
-                  <div class="col-3" style="margin-right: 0;">
-                    <th:block th:each="price : ${price}">
-                      <th:block th:if="${price.roomNo == roomType.roomNo}">
-                        <th:block th:if="${price.bsDate <= #calendars.format(#calendars.createNow(), 'yyyy/MM/dd') && price.beDate >= #calendars.format(#calendars.createNow(), 'yyyy/MM/dd')}">
-                          <div th:text="|비수기 : ${price.bsDate} ~ ${price.beDate}|"></div>
-                          <div th:text="|${price.biPrice}원|"> </div>
-                        </th:block>
-                        <th:block th:if="${price.jsDate <= #calendars.format(#calendars.createNow(), 'yyyy/MM/dd') && price.jeDate >= #calendars.format(#calendars.createNow(), 'yyyy/MM/dd')}">
-                          <div th:text="|준성수기 : ${price.jsDate} ~ ${price.jeDate}|"></div>
-                          <div th:text="|${price.junPrice}원|"> </div>
-                        </th:block>
-                        <th:block th:if="${price.ssDate <= #calendars.format(#calendars.createNow(), 'yyyy/MM/dd') && price.seDate >= #calendars.format(#calendars.createNow(), 'yyyy/MM/dd')}">
-                          <div th:text="|성수기 : ${price.ssDate} ~ ${price.seDate}|"></div>
-                          <div th:text="|${price.sungPrice}원|"> </div>
-                        </th:block>
-                      </th:block>
-                    </th:block>
-                    <div><button type="button" class="btn-choice" th:attr="data-roomno=${'roomNo' + roomTypeStat.count}" onclick="selectRoom(this.getAttribute('data-roomno'))">선택</button></div>
-                    <div th:text="|남은방 : ${roomType.roomMany - countReserveRoom[roomTypeStat.index]} 개| "></div>
-                  </div>
-                </div>
-              </div>
-              </th:block>  
-            </div>
-          */
-          
-        }
-    })
-  })
-	
-	
-	
-	
-	
-	
-	
-	fnFileCheck();
+             if (resData.roomtype != null && resData.roomtype.length > 0) {    
+							 $.each(resData.roomtype, (i, room) => {
+								 let str = ''
+                 str += '<input type="hidden" value="'+room.roomNo+'">';
+                 str += '<div class="border rounded-1">';
+                 str += '<div class="row">';
+                 str += '<div class="col-3">';
+                 str += '<div class=""fileList>'
+									 $.each(resData.image,(i,image) => {
+										 if(image.roomNo = room.roomNo){
+										str += '<div>'+image.originalName+'</div>' ;
+										 }
+									 })
+                 str += '</div>';
+                 str += '<div>침대 :'+room.bed+'</div>';
+                 str += '<div>전망 :'+room.rView+'</div>';
+                 str += '<div>허용인원 :'+room.people+'</div>';
+                 if(room.bleakfast == 0){str += '<div>조식 : <i class="fa-solid fa-x" style="color: #96b2c5;"></i></div>';}
+                 if(room.bleakfast == 1){str += '<div>조식 : <i class="fa-sharp fa-solid fa-o" style="color: #96b6c5;"></i></div>';}
+                 if(room.smoke == 0){str += '<div>흡연 : <i class="fa-solid fa-x" style="color: #96b2c5;"></i></div>';}
+                 if(room.smoke == 1){str += '<div>흡연 : <i class="fa-sharp fa-solid fa-o" style="color: #96b6c5;"></i></div>';}
+                 str += '<div>'+room.shower+'</div>';
+                 str += '<div>'+room.rSize+'</div></div>';
+                 str += '<div class="col-6">';
+                 str += '<div id="roomName">'+room.roomName+'</div>';
+                 str += '<div style="border-top: 1px #9399a5 solid;">'+room.roomDetail+'</div>';
+                  $.each(resData.roomFeature,(i,feature) => {
+										 if(room.roomNo = feature.roomNo){
+											  str += '<div class="border rounded-1">';
+	                      str += '<div>객실 시설</div><div class="roomFac">';
+	                      if(feature.water == 0){str += '<div><i class="fa-solid fa-bottle-water fa-2xl" style="color: #9399a5;"></i><div>물</div></div>';}
+	                      if(feature.water == 1){str += '<div><i class="fa-solid fa-bottle-water fa-2xl" style="color: #2f7fa7;"></i><div>물</div></div>';}
+	                      if(feature.coffee == 0){str += '<div><i class="fa-solid fa-mug-saucer fa-2xl" style="color: #9399a5;"></i><div>커피</div></div>';}
+	                      if(feature.coffee == 1){str += '<div><i class="fa-solid fa-mug-saucer fa-2xl" style="color: #2f7fa7;"></i><div>커피</div></div>';}
+	                      if(feature.drier == 0){str += '<div><i class="fa-solid fa-wind fa-2xl" style="color: #9399a5;"></i><div>드라이어</div></div>';}
+	                      if(feature.drier == 1){str += '<div><i class="fa-solid fa-wind fa-2xl" style="color: #2f7fa7;"></i><div>드라이어</div></div>';}
+	                      if(feature.towel == 0){str += '<div><i class="fa-solid fa-rug fa-2xl" style="color: #9399a5;"></i><div>수건</div></div>';}
+	                      if(feature.towel == 1){str += '<div><i class="fa-solid fa-rug fa-2xl" style="color: #2f7fa7;"></i><div>수건</div></div>';}
+	                      if(feature.minibar == 0){str += '<div><i class="fa-solid fa-martini-glass fa-2xl" style="color: #9399a5;"></i><div>미니바</div></div>';}
+	                      if(feature.minibar == 1){str += '<div><i class="fa-solid fa-martini-glass fa-2xl" style="color: #2f7fa7;"></i><div>미니바</div></div>';}
+	                      if(feature.iron == 0){str += '<div><i class="fa-solid fa-shirt fa-2xl" style="color: #9399a5;"></i><div>다리미</div></div>';}
+	                      if(feature.iron == 1){str += '<div><i class="fa-solid fa-shirt fa-2xl" style="color: #2f7fa7;"></i><div>다리미</div></div>';}
+	                      str += '</div></div>';
+										 }
+									 })
+               		 str +='</div>';
+                 	 str +=' <div class="col-3" style="margin-right: 0;">';
+						  		$.each(resData.price,(i,price) => {
+										if(price.roomNo == room.roomNo){
+											str +='<div>비수기 금액 : '+price.biPrice+'<div>';
+											str +='<div>비수기 날짜: '+price.bsDate+'~'+price.beDate+'<div>';
+											str +='<div>준성수기 금액 : '+price.junPrice+'<div>';
+											str +='<div>준성수기 날짜: '+price.jsDate+'~'+price.jeDate+'<div>';
+											str +='<div>성수기 금액 : '+price.sungPrice+'<div>';
+											str +='<div>성수기 날짜: '+price.ssDate+'~'+price.seDate+'<div>';
+										}
+									})
+                 	 str +='<div><button type="button" class="btn-choice" onclick="deleteRoom('+room.roomNo+')">삭제</button></div>';
+                 	 str +='<div>방개수: '+room.roomMany+'</div>';
+                 	 str +='</div></div></div>';
+                 	 $('#addroom').empty();
+                 	 $('#addroom').append(str);
+        	 })
+       	 }
+   		 }
+ 		 })
+  }
+    var bsDate = $('#bsDate').val();
+  var beDate = $('#beDate').val();
+  var jsDate = $('#jsDate').val();
+  var jeDate = $('#jsDate').val();
+  var ssDate = $('#ssDate').val();
+  var seDate = $('#ssDate').val(); 
+  
+	 const fnDateCheck = () => {
+    if(bsDate > beDate || jsDate > jeDate || ssDate > seDate){
+    alert('날짜를 다시 선택해 주세요 ');
+    }
+  }
+
 	 
 </script>
 	
