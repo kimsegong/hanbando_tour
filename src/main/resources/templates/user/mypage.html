@@ -13,7 +13,24 @@
 </style>
 
 <script th:src="@{/js/user_modify.js(ver=1.0)}"></script>
-
+<script th:inline="javascript">
+  
+  $(() => {
+  fnExtesion();
+})
+  
+  const fnExtesion = () => {
+  let extensionResult = /*[[${extensionResult}]]*/ null;
+  if(extensionResult !== null){
+     if(extensionResult === 1){
+       alert('90일 연장되었습니다.');
+     } else {
+       alert('비밀번호 연장이 되지 않았습니다.');
+     }
+   }
+}
+</script>
+  
 <body>
   
   <div th:replace="~{/layout/header::header}"></div>
@@ -57,7 +74,7 @@
         </div>
         <div class="row mb-2">
           <label for="name" class="col-sm-3 col-form-label">이름</label>
-          <div class="col-sm-9"><input type="text" name="name" th:value="${session.user.name}" id="name" class="form-control w-50 p-3 h-50 d-inline-block"></div>
+          <div class="col-sm-9"><input type="text" name="name" th:value="${session.user.name}" id="name" class="form-control-plaintext w-50 p-3 h-50 d-inline-block" readonly></div>
           <div class="col-sm-3"></div>
           <div class="col-sm-9 mb-3" id="msg_name"></div>
         </div>
