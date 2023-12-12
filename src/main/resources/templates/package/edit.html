@@ -78,7 +78,7 @@
          </div>         
         <div>
           <label for="maxPeople" class="form-label">최대인원수</label>
-          <input type="text" name="maxPeople" id="maxPeople" th:value="${packageDto.maxPeople}" class="form-control">
+          <input type="number" name="maxPeople" id="maxPeople" th:value="${packageDto.maxPeople}" class="form-control">
         </div>                
          <div>
           <label for="miniOne" class="form-label"></label>
@@ -94,11 +94,11 @@
          </div>
         <div>
           <label for="price" class="form-label">가격</label>
-          <input type="text" name="price" id="price" th:value="${packageDto.price}" class="form-control">
+          <input type="number" name="price" id="price" th:value="${packageDto.price}" class="form-control">
         </div>
 
         <div class="mb-3">      
-        <label for="packagePlan" class="form-label"></label>
+        <label for="packagePlan" class="form-label">여행계획</label>
         <textarea class="form-control" id="packagePlan" th:text="${packageDto.packagePlan}" name="packagePlan" rows="10"></textarea>
         </div>
         
@@ -111,12 +111,12 @@
         </div>           
         
         <div class="mb-3">  
-          <label for="hotelContents" class="form-label"></label>
+          <label for="hotelContents" class="form-label">호텔내용</label>
           <textarea class="form-control"  name="hotelContents" id="hotelContents" th:text="${packageDto.hotelContents}" rows="10"></textarea>
         </div>
         
         <div class="mb-3">
-          <label for="danger" class="form-label"></label>
+          <label for="danger" class="form-label">주의사항</label>
           <textarea class="form-control" id="danger" th:text="${packageDto.danger}" name="danger" rows="10"></textarea>
         </div>                
 
