@@ -55,7 +55,7 @@ public class InquiryController {
                      , RedirectAttributes redirectAttributes) {
     int removeResult = inquiryService.removeInquiry(inquiryNo);
     redirectAttributes.addFlashAttribute("removeResult", removeResult);
-    return "redirect:/notice/inquirylist.do";
+    return "redirect:/notice/inquiryManage.do";
   
  }
   
