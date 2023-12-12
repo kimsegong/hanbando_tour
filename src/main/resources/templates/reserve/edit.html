@@ -5,7 +5,7 @@
 <body>
 	<div th:replace="~{/layout/header::header}"></div>
 	
-	<div class="main_wrap">
+	<div class="main_wrap" style="padding-top: 0;">
 	
 	
 		 <div class="container text-center">
@@ -13,20 +13,18 @@
 		    <div class="col-1">	      
 		    </div>
 		    <div class="col-10" >
-		      	<!--/*여기에 작성/ 다 만들고 style 지워주세요  */-->
 		   
   		    <div id="contents">
             <div class="subtitle_wrap">
-              <h2><strong>예약수정하기<strong></h2>
+              <p style="font-size: 30px; font-weight: 400; ">예약수정하기</p>
             </div>
-            <hr>
             
             <!-- 예약 정보 -->
             <form id="frm_modify" method="post">
-              <div>
+              <div style="margin: 20px 0;" class="col-6">
                 <h4><strong>예약자 정보</strong></h4>
               </div>
-              <div class="d-grid gap-2 col-8  mx-auto">
+              <div class="d-grid gap-2 col-8  mx-auto" style="text-align: left;">
                 <table class="table">
                   <colgroup>
                     <col style="width:20%;">
@@ -57,11 +55,11 @@
             
                 
                <!-- 픽업장소 선택 -->
-              <div>
+              <div style="margin: 20px 0;" class="col-6">
                 <h4><strong>출발지 선택</strong></h4>
               </div>
     
-              <div class="d-grid gap-2 col-2 mx-auto">
+              <div class="d-grid gap-2 col-8 mx-auto" style="text-align: left;">
                 <ul class="list-group">
                   <li class="list-group-item">
                     <input class="form-check-input me-1" type="radio" name="departureLoc" id="byOwn" value="byOwn" checked>
@@ -82,8 +80,8 @@
                 </ul>
               </div>
                   
-              <div style="margin-top: 20px;">
-                <button class="btn btn-success btn-lg" type="button" id="btn_modify">수정하기</button>
+              <div class="d-grid gap-2 col-5 mx-auto" style="margin-top: 30px;">
+                <button class="w3-btn w3-round-xxlarge w3-lime w3-block mx-auto" type="button" id="btn_modify">수정하기</button>
               </div>
             </form>
           
