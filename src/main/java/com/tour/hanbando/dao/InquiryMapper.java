@@ -20,6 +20,7 @@ public interface InquiryMapper {
   
   public int insertInquiry(InquiryDto inquiry);
   public InquiryDto getInquiry(int inquiryNo);
+  public int updateAnswerStatus(int inquiryNo);
   public int deleteInquiry(int inquiryNo);
   public int updateInquiry(InquiryDto inquiry);
   

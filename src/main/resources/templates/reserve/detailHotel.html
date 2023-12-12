@@ -17,13 +17,13 @@
 		  <div class="row">
 		    <div class="col-1">	      
 		    </div>
-		    <div class="col-10" style="border:1px gray dotted">
+		    <div class="col-10" >
 		      	<!--/*여기에 작성/ 다 만들고 style 지워주세요  */-->
-		       <div>
+		        <div style="margin: 20px auto;">
               <h2><strong>예약내역상세</strong></h2>
             </div>
             
-            <div>
+            <div  style="margin-top: 40px;">
               <h4><strong>예약자정보</strong></h4>
             </div>
             <div class="d-grid gap-2 col-8  mx-auto">
@@ -56,7 +56,7 @@
               </table>
             </div>
             
-            <div>
+            <div style="margin-top: 30px;">
               <h4><strong>예약 정보</strong></h4>
             </div>
             <div class="d-grid gap-2 col-8  mx-auto">
@@ -134,7 +134,6 @@
                 <button class="btn btn-success" type="button" th:onclick="|location.href='@{/hotel/list.do}'|">다른 호텔 예약하러가기</button>
                 <button type="button" th:onclick="|location.href='@{/reserve/reserveHotelList.do(userNo=${session.user.userNo})}'|" class="btn btn-success">나의 예약목록</button>
                 <button th:if="${reserveHo.reserveStatus != 2}" class="btn btn-outline-danger" type="button" id="btn_res_cancel">예약 취소하기</button>
-                <button class="btn btn-outline-danger" type="button" id="btn_cancel">환불하기</button>
               </form>
             </div>
             
@@ -164,69 +163,69 @@
     var reserveNo = '[[${reserveHo.reserveNo}]]';
     var userEmail = '[[${reserveHo.userDto.email}]]';
     function requestPay() {
-      IMP.request_pay(
-        {
-          //결제 요청 파라미터 
-          pg: "html5_inicis",
-          pay_method: "card",
-          merchant_uid: "test"+ makeMerchantUid,
-          name: '[[${reserveHo.hotelDto.hotelName}]]',
-          amount: payAmount,
-          buyer_email: userEmail,
-          buyer_name: '[[${reserveHo.userDto.name}]]',
-          buyer_tel: '[[${reserveHo.userDto.mobile}]]' // 필수
-        },
-        function (rsp) {
-          // callback
-          if (rsp.success) {
-            console.log(rsp);
-            // 결제 성공 시: 결제 승인 또는 가상계좌 발급에 성공한 경우 DB에 정보 저장
-            $.ajax({
-              url: "/payment/payReserve.do", 
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              data: JSON.stringify({
-                impUid: rsp.imp_uid,            // 결제 고유번호
-                payYn: rsp.success,             // 성공여부
-                payMethod: rsp.pay_method,      // 결제방식
-                paidAmount: rsp.paid_amount,    // 결제금액
-                paidAt: rsp.paid_at,            // 결제시각
-                buyerName: rsp.buyer_name,
-                buyerEmail: rsp.buyer_email,
-                payStatus: rsp.status,          // 결제상태
-                merchantUid: rsp.merchant_uid,  // 주문번호
-                reserveDto: {
-                  reserveNo: reserveNo
-                  }
-              }),
-              dataType: 'json'
-            }).done(function (data) {
-              console.log(data);
-              // 결제승인시 정보 DB 저장 후 예약상태를 '결제대기' >> '예약완료'로 수정
+        IMP.request_pay(
+          {
+            //결제 요청 파라미터 
+            pg: "html5_inicis",
+            pay_method: "card",
+            merchant_uid: "test"+ makeMerchantUid,
+            name: '[[${reserveHo.hotelDto.hotelName}]]',
+            amount: payAmount,
+            buyer_email: userEmail,
+            buyer_name: '[[${reserveHo.userDto.name}]]',
+            buyer_tel: '[[${reserveHo.userDto.mobile}]]' // 필수
+          },
+          function (rsp) {
+            // callback
+            if (rsp.success) {
+              console.log(rsp);
+              // 결제 성공 시: 결제 승인 또는 가상계좌 발급에 성공한 경우 DB에 정보 저장
               $.ajax({
-                url: "/payment/modifyResStatus", // 두 번째 요청의 URL
+                url: "/payment/payReserve.do", 
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 data: JSON.stringify({
-                  reserveNo: reserveNo,
-                  payStatus: rsp.status
-                })
+                  impUid: rsp.imp_uid,            // 결제 고유번호
+                  payYn: rsp.success,             // 성공여부
+                  payMethod: rsp.pay_method,      // 결제방식
+                  paidAmount: rsp.paid_amount,    // 결제금액
+                  paidAt: rsp.paid_at,            // 결제시각
+                  buyerName: rsp.buyer_name,
+                  buyerEmail: rsp.buyer_email,
+                  payStatus: rsp.status,          // 결제상태
+                  merchantUid: rsp.merchant_uid,  // 주문번호
+                  reserveDto: {
+                    reserveNo: reserveNo
+                    }
+                }),
+                dataType: 'json'
               }).done(function (data) {
                 console.log(data);
-                // 두 번째 요청이 성공했을 때의 처리를 여기에 작성합니다.
-                if(data.modifyResStatusResult == '1'){
-                  alert('예약상태가 완료로 변경되었습니다.');
-                  location.reload();
-                }
-              });
-            })
-            alert('성공적으로 결제되었습니다. 예약완료 되었습니다.');
-          } else {
-              console.log(rsp);
-              alert(`결제에 실패하였습니다. ${rsp.error_msg}`);
+                // 결제승인시 정보 DB 저장 후 예약상태를 '결제대기' >> '예약완료'로 수정
+                $.ajax({
+                  url: "/payment/modifyResStatus", // 두 번째 요청의 URL
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                  data: JSON.stringify({
+                    reserveNo: reserveNo,
+                    payStatus: rsp.status
+                  })
+                }).done(function (data) {
+                  console.log(data);
+                  // 두 번째 요청이 성공했을 때의 처리를 여기에 작성합니다.
+                  if(data.modifyResStatusResult == '1'){
+                    alert('예약상태가 완료로 변경되었습니다.');
+                    location.reload();
+                  }
+                });
+              })
+              alert('성공적으로 결제되었습니다. 예약완료 되었습니다.');
+            } else {
+                console.log(rsp);
+                alert(`결제에 실패하였습니다. ${rsp.error_msg}`);
+            }
           }
-        }
-      );
+        );
     }
     
     // reserveNo로 결제내역 가져오는 함수
@@ -272,7 +271,7 @@
           data: {
             impUid, // imp_uid를 환불 `unique key`로 입력
             amount: cancel_request_amount, // 가맹점 클라이언트로부터 받은 환불금액
-            checksum: cancelableAmount // [권장] 환불 가능 금액 입력
+            
           }
         }).done(function(data){
           console.log(data);
@@ -282,12 +281,7 @@
         console.log(resP);
       });
     }
-    
-    function fnGetToken(){
-      $.ajax({
-        url: ''
-      })
-    }
+ 
     
     refundPayment1();
     
@@ -335,8 +329,16 @@
       })
     }
     
+    function fnChkCancel(){
+      $('#btn_res_cancel').click(function(){
+        if(confirm('예약을 취소하시겠습니까?')){
+          $('#frm_btn').attr('action', '/reserve/cancelHotel.do')
+          $('#frm_btn').submit();
+        } 
+      })
+    }
     
-    
+    fnChkCancel();
     fnGetRoomInfo();
     fnCheckReserveResult()
   </script>

@@ -25,21 +25,15 @@
 		      	<!--/*여기에 작성 */-->
 		    <div class="card_wrapper1">
 					<h3> 베스트 패키지 기획전</h3>
-					<div id="best_cards" class="cards">
+					<div id="best_cards" class="cards row">
 					</div>
 				<div class="card_wrapper2">
-					<h3> 테마별 패키지 기획전</h3>
-					<div id="theme_cards" class="theme_cards">
+					<h3><div id="theme"></div>패키지 기획전</h3>
+					<div id="theme_cards" class="theme_cards row">
 						
 					</div>
 					
 				</div>  	
-		      	
-		      	
-		      	
-		      	
-		      	
-		      	
 		    </div>
 		    <div class="col-1">	      
 		    </div>
@@ -81,7 +75,7 @@
 	   })
 	}	 
 	
- 
+ var address = '/package/increseHit.do?packageNo='
 		
 		const fnBestPackage = () => {
       $.ajax({
@@ -91,14 +85,18 @@
         success: (resData) => {  
           if (resData.bestPackageList != null && resData.bestPackageList.length > 0) {
             $.each(resData.bestPackageList, (i, package) => {  
-            
-              let str = '<div class="mycard position-relative">';
-                  str += '<a href="' + '/package/increseHit.do?packageNo=' + package.packageNo+'">';
-                  str += '<img src="https://github.com/skal48/portfolio/blob/main/hanla.jpg?raw=true" class="card_image" alt="Package Image">';
-                  str += '<h4>'+package.packageTitle+'</h4>';
-                  str += '<h4>'+package.price+'</h4></a>';
-                  str += '<button type="button" class="btn-heart position-absolute top-0 end-0"><i class="fa-regular fa-heart fa-xl" style="color: #adc4ce;"></i></button>';
-                  str += '</div>';
+							
+            		let str ='';
+          			str += '<div class="col-md-3">';
+              	str += '<div class="card w-100 p-3" onclick="location.href=\''+address+package.packageNo + '\'">';
+                str += '<img src="' + package.productImageDto.imagePath + '/' + package.productImageDto.filesystemName + '" class="card_image" alt="Package Image">';
+                str += '<div class="card-body">';
+                str += '<p class="card-title">'+package.packageTitle+'</p>';
+                str += '<p class="card-text">'+package.price+'원</p>';
+                str += '<button type="button" class="btn-heart position-absolute top-0 end-0"><i class="fa-regular fa-heart fa-xl" style="color: #FF8080; margin:10px 7px 0 0; line-height: .4em;"></i></button>';
+                str += '</div>';
+                str += '</div>';
+                str += '</div>';
             $('#best_cards').append(str); 
              })
          }
@@ -112,17 +110,29 @@
         url: '/main/getTheme.do', 
         dataType: 'json',
         success: (resData) => {  
+					$('#theme_cards').empty();
+					$('#theme').empty();
           if (resData.themePackageList != null && resData.themePackageList.length > 0) {
-            $.each(resData.themePackageList, (i, package) => {  
-              let str = '<div class="mycard position-relative">';
-                  str += '<a href="' + '/package/increseHit.do?packageNo=' + package.packageNo+'">';
-                  str += '<img src="https://github.com/skal48/portfolio/blob/main/hanla.jpg?raw=true" class="card_image" alt="Package Image">';
-                  str += '<h4>'+package.packageTitle+'</h4>';
-                  str += '<h4>'+package.price+'</h4></a>';
-                  str += '<button type="button" class="btn-heart position-absolute top-0 end-0"><i class="fa-regular fa-heart fa-xl" style="color: #adc4ce;"></i></button>';
-                  str += '</div>';
+            $.each(resData.themePackageList, (i, package) => { 
+							if(package.themeDto.themeNo == 1){
+								fnThemePackage();
+							}else {
+	              let str ='';
+	          			str += '<div class="col-md-3">';
+	              	str += '<div class="card w-100 p-3" onclick="location.href=\''+address+package.packageNo + '\'">';
+	                str += '<img src="' + package.productImageDto.imagePath + '/' + package.productImageDto.filesystemName + '" class="card_image" alt="Package Image">';
+	                str += '<div class="card-body">';
+	                str += '<p class="card-title">'+package.packageTitle+'</p>';
+	                str += '<p class="card-text">'+package.price+'원</p>';
+	                str += '<button type="button" class="btn-heart position-absolute top-0 end-0"><i class="fa-regular fa-heart fa-xl" style="color: #FF8080; margin:10px 7px 0 0; line-height: .4em;"></i></button>';
+	                str += '</div>';
+	                str += '</div>';
+	                str += '</div>';
             $('#theme_cards').append(str);
+            	}
+            
              })
+						$('#theme').append(resData.themePackageList[0].themeDto.themeName);
            }
          }
       })

@@ -1,14 +1,6 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
-<link rel="stylesheet" th:href="@{/css/init.css(ver=1.1)}" />
-<link rel="stylesheet" th:href="@{/css/common.css(ver=1.0)}" />
-<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
-
 
 
 	<div class="main_wrap">
@@ -19,40 +11,43 @@
 	    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 	  </div>
 	  <div class="modal-body">
-	    <div class="roomGroup">
+	    <div class="roomGroup" style="margin:15px;"  >
 				<form id="frm_room" name="frm_room" method="post" accept="image/*" enctype="multipart/form-data">
           <input type="hidden" id="hotelNo" name="hotelNo" th:value="${hotelNo}">
 		      <div style="text-align: left;">
             <label for="files" class="form-label" style="font-weight: 500;">객실사진첨부</label>
-            <input type="file" name="files" id="files" class="form-control" accept="image/*" multiple> <button type="button" onclick="deleteRoomAll()">전체삭제</button>
+            <input type="file" name="files" id="roomFiles" class="form-control" accept="image/*" multiple>
           </div>
-          <div class="attached_list mt-2" id="attached_room_list"></div>
-          <div>
-  		      <label for="roomName" class="form-label">객실이름</label>
+          <div style="text-align: left;">
+  		      <label for="roomName" class="form-label" style="font-weight: 500;">객실이름</label>
   		      <input type="text" id="roomName" class="form-control" name="roomName">
 		      </div>
-		      <div>
-  		      <label for="roomDetail" class="col-form-label">객실상세</label>
+		      <div style="text-align: left;">
+  		      <label for="roomDetail" class="col-form-label" style="font-weight: 500;">객실상세</label>
   		      <textarea id="roomDetail" class="form-control" name="roomDetail" rows="10" style="margin-bottom: 10px;"></textarea>
 		      </div>
-		      <label for="rView" class="form-label">전망</label>
-		      <input type="text" id="rView" class="form-control" name="rView"> 
-		      <label for="bed" class="form-label">침대</label>
-		      <input type="bed" id="bed"class="form-control" name="bed"> 
-		      <label for="shower" class="form-label">욕실</label>
-		      <input type="text" id="shower" class="form-control" name="shower"> 
-		      <label for="rSize" class="form-label">방사이즈</label>
-		      <input type="text" id="rSize" class="form-control" name="rSize">
-		      <label for="smoke" class="form-check-label">흡연유무</label>
-		      <input type="checkbox" id="smoke" class="form-check-input" name="smoke" value="1">
-		      <label for="bleakfast" class="form-check-label">조식</label>
-		      <input type="checkbox" id="bleakfast" class="form-check-input" name="bleakfast" value="1">
-		      <label for="people" class="form-label">허용인원</label>
-		      <input type="text" id="people" class="form-control" name="people">
-		      <label for="roomMany" class="form-label">객실개수</label>
-		      <input type="text" id="roomMany" class="form-control" name="roomMany">
+		      <div style="text-align: left;">
+  		      <label for="rView" class="form-label" style="font-weight: 500;">전망</label>
+  		      <input type="text" id="rView" class="form-control" name="rView"> 
+  		      <label for="bed" class="form-label" style="font-weight: 500;">침대</label>
+  		      <input type="bed" id="bed"class="form-control" name="bed"> 
+  		      <label for="shower" class="form-label" style="font-weight: 500;">욕실</label>
+  		      <input type="text" id="shower" class="form-control" name="shower"> 
+  		      <label for="rSize" class="form-label" style="font-weight: 500;">방사이즈</label>
+  		      <input type="text" id="rSize" class="form-control" name="rSize">
+  		      <div>
+  		      <label for="smoke" class="form-check-label" style="font-weight: 500;">흡연유무</label>
+  		      <input type="checkbox" id="smoke" class="form-check-input" name="smoke" value="1">
+  		      <label for="bleakfast" class="form-check-label" style="font-weight: 500;">조식</label>
+  		      <input type="checkbox" id="bleakfast" class="form-check-input" name="bleakfast" value="1">
+  		      </div>
+  		      <label for="people" class="form-label" style="font-weight: 500;">허용인원</label>
+  		      <input type="text" id="people" class="form-control" name="people">
+  		      <label for="roomMany" class="form-label" style="font-weight: 500;">객실개수</label>
+  		      <input type="text" id="roomMany" class="form-control" name="roomMany">
+		      </div>
 		      
-		      <h4>객실 구비사항</h4>
+		      <h4 style="font-weight: 500;">객실 구비사항</h4>
 		      <label for="towel" class="form-check-label">수건</label>
 		      <input type="checkbox" id="towel" class="form-check-input" name="towel" value="1">
 		      <label for="water" class="form-check-label">생수</label>
@@ -65,22 +60,24 @@
 		      <input type="checkbox" id="iron" class="form-check-input" name="iron" value="1">
 		      <label for="minibar" class="form-check-label">미니바</label>
 		      <input type="checkbox" id="minibar" class="form-check-input" name="minibar" value="1">
-		      <div>비수기</div>
+		      
+		      <div style="font-weight: 500;">비수기</div>
 		      <label for="biPrice" class="form-label">금액</label>
 		      <input type="text" id="biPrice" name="biPrice" class="form-control"s>
 		      <label for="bsDate" class="form-check-label">날짜</label>
 		      <input type="date" id="bsDate" name="bsDate" ><input type="date" id="beDate" name="beDate">
-		      <div>준성수기</div>
+		      <div style="font-weight: 500;">준성수기</div>
 		      <label for="junPrice" class="form-label">금액</label>
 		      <input type="text" id="junPrice" name="junPrice" class="form-control">
 		      <label for="jsDate" class="form-check-input">날짜</label>
 		      <input type="date" id="jsDate" name="jsDate"><input type="date" id="jeDate" name="jeDate">
-		      <div>성수기</div>
+		      <div style="font-weight: 500;">성수기</div>
 		      <label for="sungPrice" class="form-label">금액</label>
 		      <input type="text" id="sungPrice" class="form-control" name="sungPrice">
 		      <label for="ssDate" class="form-check-input">날짜</label>
 		      <input type="date" id="ssDate" name="ssDate"><input type="date" id="seDate" name="seDate">
-    </div>
+		      <!--<input type="date" value="<fmt:formatDate value="${contentNotice}" pattern = "yyyy-MM-dd"/>"> -->
+      </div>
 	  </div>
 	  <div class="modal-footer">
 	    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
@@ -89,8 +86,7 @@
 	</form>
 	
 	</div>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
+
 <script>
      
    $('#btn_room').click(() => {
@@ -119,63 +115,10 @@
    })
   console.log($('#hotelNo').val());
   
- const deleteRoomAll = () => {
-    $('#files').val('');
-     $('#attached_list').empty();
- }
  
-  // 개별 파일의 삭제 버튼에 적용할 메소드
-  const deleteRoomEach = (obj) => {
-  //현재 버튼(obj)의 상위 요소 중 가장 가까운 div 요소를 찾음
-  //div는 선택한 파일 목록을 보여주는 부분
-  const div = $(obj).closest('div');
   
-  //div에서 'button' 태그 중 현재 버튼(obj)의 index가 몇 번째인지 확인
-  //0부터 시작
-  const index = div.find('button').index(obj);
-  const dataTransfer = new DataTransfer();
+ 
   
-  let files = $('#files')[0].files;  //사용자가 입력한 파일을 변수에 할당
-  
-  let fileArray = Array.from(files);  //변수에 할당된 파일을 배열로 변환(FileList -> Array)
-  
-  fileArray.splice(obj, 1); //해당하는 index의 파일을 배열에서 제거
-  
-  fileArray.forEach(file => { dataTransfer.items.add(file); });
-  //남은 배열을 dataTransfer로 처리(Array -> FileList)
-  
-  $('#files')[0].files = dataTransfer.files; //제거 처리된 FileList를 돌려줌
-  
-  div.empty();
- }
-
-  const fnFileRoomCheck = () => {
-        $('#files').change((ev) => {
-          $('#attached_list').empty();
-          let maxSize = 1024 * 1024 * 100;
-          let maxSizePerFile = 1024 * 1024 * 10;
-          let totalSize = 0;
-          let files = ev.target.files;
-          for(let i = 0; i < files.length; i++){
-            totalSize += files[i].size;
-            if(files[i].size > maxSizePerFile){
-              alert('각 첨부파일의 최대 크기는 10MB입니다.');
-              $(ev.target).val('');
-              $('#attached_room_list').empty();
-              return;
-            }
-            $('#attached_room_list').append('<div>' + files[i].name + '<button type="button" class="each" onclick="deleteRoomEach(this)">X</button></div>');
-          }
-          if(totalSize > maxSize){
-            alert('전체 첨부파일의 최대 크기는 100MB입니다.');
-            $(ev.target).val('');
-            $('#attached_room_list').empty();
-            return;
-          }
-        })
-      }
-      
-  fnFileRoomCheck();
   
     
 </script>

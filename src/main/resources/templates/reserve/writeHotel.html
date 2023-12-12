@@ -12,7 +12,7 @@
 		  <div class="row">
 		    <div class="col-1">	        
 		    </div>
-		    <div class="col-10" style="border:1px gray dotted">
+		    <div class="col-10" >
 		      	<!--/*여기에 작성/ 다 만들고 style 지워주세요  */-->
 		      <!--/* 패키지 또는 호텔 번호를 받아오고 필요시 다른 정보도 받아오기 */-->
 		      <div style="margin: 20px auto;">
@@ -20,24 +20,29 @@
 		      </div>
 		      
           <form id="frm_reserve" method="post">
-    	      <div>
+    	      <div style="margin-left: 180px; text-align: left; padding-top: 20px;" width="200px;">
               <ul>
                 <li>
-                  <h4 th:text="${hotel.hotelName}"></h4>
+                  <h4 th:utext="|<strong>${hotel.hotelName}</strong>|"></h4>
                 </li>
                 <li>
                   <h4 th:text="${room.roomName}"></h4>
                 </li>
                 <li th:text="${room.roomDetail}"></li>
-                <li>체크인</li>
-                <li>체크아웃</li>
+                <li style="margin-top: 10px;">
+                  체크인 : 
+                  <span th:text="${checkin}"></span>
+                </li>
+                <li>체크아웃 : 
+                  <span th:text="${checkout}"></span>
+                </li>
               </ul>
     	      </div>
     	      <div style="margin-top: 40px;">
               <h4><strong>예약자 정보</strong></h4>
             </div>
           
-  		      <div class="col-8" style="margin: 0 auto;">
+  		      <div class="col-8" style="margin: 0 auto; padding-top: 10px;">
     		      <table class="table">
                 <tbody>
                   <tr>
@@ -66,10 +71,10 @@
   		      </div>	
          
             <!-- 약관 동의 -->
-            <div class="agreeFrom">
+            <div class="agreeFrom" style="margin-top: 40px;">
               <h4><strong>약관 동의</strong></h4>
             </div>
-            <div class="col-8" style="margin: 0 auto;">
+            <div class="col-8" style="margin: 0 auto; padding-top: 10px;">
               <table class="table">
                 <tbody class="d-grid gap-2 col-8 mx-auto">
                   <tr>
@@ -116,13 +121,13 @@
             <div style="margin-top: 40px;">
               <h4><strong>결제정보</strong></h4>
             </div>
-            <div class="col-5" style="margin: 0 auto;">
+            <div class="col-5" style="margin: 10px auto;">
               <table class="table">
                 <tbody>
                   <tr>
                     <th>결제가격</th>
                     <td>
-                      <span id="totalPrice">??</span>
+                      <span id="totalPrice" th:text="|${finalprice}|"></span>
                       원
                     </td>
                   </tr>
@@ -134,10 +139,9 @@
             <input type="hidden" name="hotelNo" th:value="${hotel.hotelNo}">
             <input type="hidden" name="roomNo" th:value="${roomNo}">
             <input type="hidden" name="resStatus" th:value="0">
-            <input type="hidden" name="reservePerson" th:value="2">
-            <input type="hidden" name="totalReservePrice" th:value="100">
-            <input type="hidden" name="resStart">
-            <input type="hidden" name="resFinish">
+            <input type="hidden" name="reservePrice" th:value="${finalprice}">
+            <input type="hidden" name="resStart" th:value="${checkin}">
+            <input type="hidden" name="resFinish" th:value="${checkout}">
         
             <div class="d-grid gap-2 col-6 mx-auto" style="margin-top: 40px;">
               <button type="button" id="btn_reserve" class="btn btn-success">예약하기</button>
