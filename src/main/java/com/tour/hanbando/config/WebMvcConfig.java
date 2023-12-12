@@ -44,7 +44,6 @@ public class WebMvcConfig implements WebMvcConfigurer {
       .addPathPatterns("/user/logout.do")
       .addPathPatterns("/user/heart.do")
       .addPathPatterns("/user/heartHotel.do")
-      .addPathPatterns("/notice/list.do")
       .addPathPatterns("/reserve/reserveList.do", "/reserve/detail.do", "/reserve/write.form", "/reserve/edit.form")
       .addPathPatterns("/reserve/reserveHotelList.do", "/reserve/writeHotel.form", "/reserve/writeHotel.form", "/reserve/detailHotel.do");
     
