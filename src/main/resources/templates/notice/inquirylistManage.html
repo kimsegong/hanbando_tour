@@ -115,7 +115,7 @@
           <a th:href="@{/notice/faqList.do}" class="w3-bar-item faq">자주묻는질문</a>
           <a th:if="${session.user == null}" th:href="@{/notice/inquirylist.do}" class="w3-bar-item inquiry_user">1:1문의하기</a>
           <a th:if="${session.user != null && session.user.auth == 1}" th:href="@{/notice/inquirylist.do(userNo=${session.user.userNo})}" class="w3-bar-item inquiry_user">1:1문의하기</a>
-          <a th:if="${session.user != null && session.user.auth == 0}" th:href="@{/notice/inquiryManage.do}" class="w3-bar-item inquiry_manage">1:1문의보기</a>
+          <a th:if="${session.user != null && session.user.auth == 0}" th:href="@{/notice/inquiryManage.do}" class="w3-bar-item inquiry_user">1:1문의보기</a>
         </div>  
 
 
@@ -200,6 +200,10 @@
           <th:block th:if="${not #lists.isEmpty(inquiryManageList)}">
           <th:block th:each="in,vs:${inquiryManageList}">
             <tr class="align-bottom">
+              <td>
+                <span class="badge text-bg-secondary" th:if ="${in.answerStatus == 0}" th:text="답변대기"></span>
+                <span class="badge text-bg-info"      th:if ="${in.answerStatus == 1}" th:text="답변완료"></span>
+              </td>              
               <td>
                 <a th:href="@{/notice/inquirydetail.do(inquiryNo=${in.inquiryNo})}" th:text="${in.inquiryNo}"></a>
               </td>
