@@ -667,12 +667,12 @@
   }
   
     const fnHeart = () => {
-    $('.btn_heart').click(() => {     
+    $('#btn_heart').click(() => {     
       var userNo = $('#userNo').val(); 
       $.ajax({
         type: 'post',
         url: '/hotel/heart.do',
-        data: {userNo: userNo, hotelNo: $('#hotelNo').val()},
+        data: {userNo: userNo, hotelNo: hotelNo},
         dataType: 'json',
         success: (resData) => {  
           var str;
@@ -740,8 +740,9 @@ var checkDate = $('.daterange');
   fnReviewRemove();
   fnReserveClick();
   fnRemoveHotel();
-  fnEditHotel()
+  fnEditHotel();
   kakaoMap();
+  fnHeart();
   
 </script>
 	

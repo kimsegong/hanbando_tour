@@ -111,6 +111,7 @@ public class MainServiceImpl implements MainService {
     
     MultipartFile files = multipartRequest.getFile("files");
     int bannerNo=Integer.parseInt(multipartRequest.getParameter("bannerNo"));
+    int state = Integer.parseInt(multipartRequest.getParameter("state"));
     // 첨부 없을 때 : [MultipartFile[field="files", filename=, contentType=application/octet-stream, size=0]]
     // 첨부 1개     : [MultipartFile[field="files", filename="animal1.jpg", contentType=image/jpeg, size=123456]]
     
@@ -121,7 +122,9 @@ public class MainServiceImpl implements MainService {
       attachCount = 0;
     }
 
-      if(files != null && !files.isEmpty()) {
+      int oldState = mainMapper.getNoBannerImage(bannerNo).getState();
+   
+      if((files != null && !files.isEmpty()) || state != oldState) {
         
         String path = mainFileUtil.getUploadPath();
         File dir = new File(path);
@@ -129,14 +132,11 @@ public class MainServiceImpl implements MainService {
           dir.mkdirs();
         }
         
-        List<BannerImageDto> bannerImage = mainMapper.getBannerImage();
         String bannerPath = mainFileUtil.getUploadPath();
         String originalName = files.getOriginalFilename();
         String filesystemName = mainFileUtil.getFilesystemName(originalName);
         String existOriginalName = mainMapper.getNoBannerImage(bannerNo).getOriginalName();
         String existFileSystemName = mainMapper.getNoBannerImage(bannerNo).getFilesystemName();
-        int state = Integer.parseInt(multipartRequest.getParameter("state"));
-        
         if(!existOriginalName.equals(originalName)) {
           
           filesystemName = mainFileUtil.getFilesystemName(files.getOriginalFilename());
