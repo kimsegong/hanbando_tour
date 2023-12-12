@@ -77,8 +77,8 @@
           <input type="text" name="packageTitle" th:value="${packageDto.packageTitle}" id="packageTitle" class="form-control">
          </div>         
         <div>
-          <label for="maxPeople" class="form-label"></label>
-          <input type="text" name="maxPeople" id="maxPeople" th:value="${packageDto.maxPeople}" class="form-control">
+          <label for="maxPeople" class="form-label">최대인원수</label>
+          <input type="number" name="maxPeople" id="maxPeople" th:value="${packageDto.maxPeople}" class="form-control">
         </div>                
          <div>
           <label for="miniOne" class="form-label"></label>
@@ -93,12 +93,12 @@
           <input type="text" name="miniThree" id="miniThree" th:value="${packageDto.miniThree}" class="form-control">
          </div>
         <div>
-          <label for="price" class="form-label"></label>
-          <input type="text" name="price" id="price" th:value="${packageDto.price}" class="form-control">
+          <label for="price" class="form-label">가격</label>
+          <input type="number" name="price" id="price" th:value="${packageDto.price}" class="form-control">
         </div>
 
         <div class="mb-3">      
-        <label for="packagePlan" class="form-label"></label>
+        <label for="packagePlan" class="form-label">여행계획</label>
         <textarea class="form-control" id="packagePlan" th:text="${packageDto.packagePlan}" name="packagePlan" rows="10"></textarea>
         </div>
         
@@ -111,12 +111,12 @@
         </div>           
         
         <div class="mb-3">  
-          <label for="hotelContents" class="form-label"></label>
+          <label for="hotelContents" class="form-label">호텔내용</label>
           <textarea class="form-control"  name="hotelContents" id="hotelContents" th:text="${packageDto.hotelContents}" rows="10"></textarea>
         </div>
         
         <div class="mb-3">
-          <label for="danger" class="form-label"></label>
+          <label for="danger" class="form-label">주의사항</label>
           <textarea class="form-control" id="danger" th:text="${packageDto.danger}" name="danger" rows="10"></textarea>
         </div>                
 
@@ -169,30 +169,51 @@
     });
     
     
-     function validateForm() {
-        var recommendStatus = document.querySelector('input[name="recommendStatus"]:checked');
-        var regionSelect = document.getElementById('regionSelect');
-        var themeSelect = document.getElementById('themeSelect');
-        var packageTitle = document.getElementById('packageTitle');
-        var maxPeople = document.getElementById('maxPeople');
-        var miniOne = document.getElementById('miniOne');
-        var miniTwo = document.getElementById('miniTwo');
-        var miniThree = document.getElementById('miniThree');
-        var price = document.getElementById('price');
-        var packagePlan = document.getElementById('packagePlan');
-        var packageContents = document.getElementById('packageContents');
-        var hotelContents = document.getElementById('hotelContents');
-        var danger = document.getElementById('danger');
+       function validateForm() {
+    var recommendStatus = document.querySelector('input[name="recommendStatus"]:checked');
+    var regionSelect = document.getElementById('regionSelect');
+    var themeSelect = document.getElementById('themeSelect');
+    var packageTitle = document.getElementById('packageTitle');
+    var maxPeople = document.getElementById('maxPeople');
+    var miniOne = document.getElementById('miniOne');
+    var miniTwo = document.getElementById('miniTwo');
+    var miniThree = document.getElementById('miniThree');
+    var price = document.getElementById('price');
+    var packagePlan = document.getElementById('packagePlan');
+    var packageContents = document.getElementById('packageContents');
+    var hotelContents = document.getElementById('hotelContents');
+    var danger = document.getElementById('danger');
 
-         var numberRegex = /^\d+$/;
+    var numberRegex = /^\d+$/;
 
-        if (!recommendStatus || !regionSelect.value || !themeSelect.value || !packageTitle.value || !maxPeople.value || !miniOne.value || !miniTwo.value || !miniThree.value || !price.value || !price.value.match(numberRegex) || !maxPeople.value.match(numberRegex) || !packagePlan.value || !packageContents.value || !hotelContents.value || !danger.value) {
-            alert("입력란 모두 채워주세요. 가격과 인원수는 숫자만 입력 가능합니다.");
-            return false;
-        }
+    // 필수 항목 검증
+    if (!recommendStatus || !regionSelect || regionSelect.value === '-지역-' || !themeSelect || themeSelect.value === '-테마-' || !packageTitle.value || !maxPeople.value || !miniOne.value || !miniTwo.value || !miniThree.value || !price.value || !packagePlan.value || !packageContents.value || !hotelContents.value || !danger.value) {
+        alert("입력란 모두 채워주세요. 가격과 최대인원수가 숫자인지 확인해주세요");
+        return false;
+    }
 
-        return true;
-     }
+    // 숫자가 아닌 경우 바로 경고 표시
+    if (!maxPeople.value.match(numberRegex)) {
+        showWarning(maxPeople, "최대인원은 숫자로 입력해주세요.");
+        return false;
+    }
+
+    if (!price.value.match(numberRegex)) {
+        showWarning(price, "가격은 숫자로 입력해주세요.");
+        return false;
+    }
+
+    return true;
+}
+
+function showWarning(inputElement, message) {
+    var warningElement = document.createElement('div');
+    warningElement.className = 'text-danger';
+    warningElement.textContent = message;
+
+    var parentElement = inputElement.parentElement;
+    parentElement.appendChild(warningElement);
+}
 
   
 

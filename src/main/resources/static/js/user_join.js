@@ -1,6 +1,12 @@
 /**
  * 회원 가입 페이지
  */
+
+$(() => {
+  
+  fnCheckSms();
+  })
+
 /* 전역변수 선언 */
 var emailPassed = false;
 var pwPassed = false;
@@ -12,56 +18,64 @@ var smsPassed = false;
 
 /* 함수 정의 */
 
-/*인증번호 입력 후 확인하는 곳*/
-
-
-
-const fnCheckSms = () => {
-  $('#goSMS').click(() => {
-    let sms = $('#userPhoneNum').val();
-    alert("인증번호가 발송되었습니다.");
-
-    $.ajax({
-      type: 'post',
-      url: '/user/execute.form',
-      data: 'userPhoneNum=' + sms,
-      dataType: 'json',
-      success: (resData) => {
-        $('#authNumber').prop('disabled', false);
-        $('#confirmBnt').prop('disabled', false);
-        
-        // Move the click event binding outside the AJAX success callback
-        // to avoid multiple bindings.
-        $('#confirmBnt').off('click').on('click', () => {
-          console.log(resData.cerNum);
-          //let smsPassed = $('#authNumber').val() === resData.cerNum;
-
-          if (smsPassed = $('#authNumber').val() == resData.cerNum) {
-            alert('핸드폰이 인증되었습니다.');
-          } else {
-            alert('핸드폰 인증이 실패했습니다.');
+ /*인증번호 입력 후 확인하는 곳*/
+  
+  
+  
+  const fnCheckSms = () => {
+    $('#goSMS').click(() => {
+      let sms = $('#userPhoneNum').val();
+      alert("인증번호가 발송되었습니다.");
+  
+      $.ajax({
+        type: 'post',
+        url: '/user/execute.form',
+        data: 'userPhoneNum=' + sms,
+        dataType: 'json',
+        success: (resData) => {
+          $('#authNumber').prop('disabled', false);
+          $('#confirmBnt').prop('disabled', false);
+          
+          
+          
+          
+          
+          // Move the click event binding outside the AJAX success callback
+          // to avoid multiple bindings.
+          $('#confirmBnt').off('click').on('click', () => {
+            console.log(resData.cerNum);
+            //let smsPassed = $('#authNumber').val() === resData.cerNum;
+  
+            if (smsPassed = $('#authNumber').val() == resData.cerNum) {
+              alert('핸드폰이 인증되었습니다.');
+              
+              $('#mobile').val(sms);
+              
+              
+            } else {
+              alert('핸드폰 인증이 실패했습니다.');
+            }
+          });
+        },
+        // Use the error callback to handle AJAX request errors.
+        error: (jqXHR, textStatus, errorThrown) => {
+          let smsPassed = false;
+  
+          switch (jqXHR.status) {
+            case 400:
+              $('#confirmBnt').text('인증번호 형식이 올바르지 않습니다.');
+              break;
+            case 403:
+              $('#confirmBnt').text('이미 인증된 번호입니다.');
+              break;
+            default:
+              // Handle other errors as needed.
+              break;
           }
-        });
-      },
-      // Use the error callback to handle AJAX request errors.
-      error: (jqXHR, textStatus, errorThrown) => {
-        let smsPassed = false;
-
-        switch (jqXHR.status) {
-          case 400:
-            $('#confirmBnt').text('인증번호 형식이 올바르지 않습니다.');
-            break;
-          case 403:
-            $('#confirmBnt').text('이미 인증된 번호입니다.');
-            break;
-          default:
-            // Handle other errors as needed.
-            break;
         }
-      }
+      });
     });
-  });
-};
+  };
 //이메일 -> 아이디로 쓰기 
 
 function fnValidUser() {

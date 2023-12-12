@@ -241,15 +241,12 @@
   <update id="updatePw90" parameterType="UserDto">
 		
     UPDATE USER_T
-       SET PW_MODIFIED_AT = SYSDATE
+       SET PW_MODIFIED_AT = TO_CHAR(SYSDATE,'YYYY/MM/DD')
      WHERE EMAIL = #{email}
        AND AUTH = 1
-       AND (SYSDATE - NVL(PW_MODIFIED_AT, JOINED_AT)) >= 90
       
   </update>
   
-  
-
 
 
 </mapper>

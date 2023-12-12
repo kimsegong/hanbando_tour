@@ -34,6 +34,10 @@
     margin: 20px 0; /* 필요에 따라 마진 조절 가능 */
   }
 
+/* 호버 상태 */
+.btn-outline-kong:hover {
+    color: #FF8F8F;
+}
 </style>  
 <body>
 
@@ -102,48 +106,56 @@
           fnGetPackageList(param);
       })
 
-    const fnGetPackageList = (param, region) => {
-        $.ajax({
-            type: 'get',
-            url: '/package/getList.do',
-            data: {
-                page: page,
-                condition: param,
-                regionNo: region || 0
-            },
-            dataType: 'json',
-            success: (resData) => {
-                totalPage = resData.totalPage;
-                $('#count').empty();
-                $('#count').append(resData.count);
-                if (resData.packageList != null && resData.packageList.length > 0) {                   
-                    $.each(resData.packageList, (i, package) => {
-                        let str = '<div class="col-md-4">';
-                        str += '<div class="card w-100 p-3">';
-                        if (package.productImageDto && package.productImageDto.thumbnail === 1) {
-                            str += '<img src="' + package.productImageDto.imagePath + '/' + package.productImageDto.filesystemName + '" style="height: 250px; " class="card-img-top" alt="Package Image">';
-                        } else {
-                            str += '<img src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2Fdc4Q17%2FbtsBykVk229%2FPtJu2VtYGEdKF5YDcZm7xK%2Fimg.jpg" style="height: 250px;" class="card-img-top" alt="Package Image">';
-                        }
-                        str += '<div class="card-body">';
-                        str += '<p class="card-title">' + package.packageTitle + '</p>';
-                        str += '<p class="card-text">'+ package.price +'원</p>';
-                        str += '<p class="card-text"></p>';
-                        str += '<a href="' + '/package/increseHit.do?packageNo=' + package.packageNo + '" class="btn btn-kong">여행가기</a>';
-                        str += '</div>';
-                        str += '</div>';
-                        str += '</div>';
-                        $('#package_list').append(str);
-                    });
-                } else {
-                    console.log('데이터가 없습니다.');
-                }
-            },
-            error: (error) => {
-                console.error('Ajax 요청 에러:', error);
+  const fnGetPackageList = (param, region) => {
+    $.ajax({
+        type: 'get',
+        url: '/package/getList.do',
+        data: {
+            page: page,
+            condition: param,
+            regionNo: region || 0
+        },
+        dataType: 'json',
+        success: (resData) => {
+            totalPage = resData.totalPage;
+            $('#count').empty();
+            $('#count').append(resData.count);
+            if (resData.packageList != null && resData.packageList.length > 0) {
+                 var address = '/package/increseHit.do?packageNo=';
+                $.each(resData.packageList, (i, package) => {
+                    let str = '<div class="col-md-4">';
+                    str += '<div class="card w-100 p-3" style="height: 450px;" onclick="location.href=\''+address+package.packageNo + '\'">';
+                    
+                    if (package.productImageDto && package.productImageDto.thumbnail === 1) {
+                        str += `<img src="${package.productImageDto.imagePath}/${package.productImageDto.filesystemName}" class="card-img-top" alt="Package Image">`;
+                    } else {
+                        str += '<img src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2Fdc4Q17%2FbtsBykVk229%2FPtJu2VtYGEdKF5YDcZm7xK%2Fimg.jpg" class="card-img-top" alt="Package Image">';
+                    }
+                    
+                    str += '<div class="card-body d-flex flex-column justify-content-between" style="height: 250px;">'; // 내용의 높이를 일정하게 조절
+                    str += `<p class="card-title">${package.packageTitle}</p>`;
+                    str += '<div class="d-flex justify-content-between align-items-end">';
+                    str += `<span class="badge rounded-pill text-bg-success">${package.miniOne}</span>`;
+                    str += `<span class="badge rounded-pill text-bg-warning">${package.miniTwo}</span>`;
+                    str += `<span class="badge rounded-pill text-bg-info">${package.miniThree}</span>`;
+                    str += `<p class="card-text">~${package.price}원</p>`;
+                    str += '</div>';
+                    str += '</div>';
+                    str += '</div>';
+                    str += '</div>';
+                    $('#package_list').append(str);
+                });
+            } else {
+                console.log('데이터가 없습니다.');
             }
-        });
-    }
+        },
+        error: (error) => {
+            console.error('Ajax 요청 에러:', error);
+        }
+    });
+}
+
+
 
     const fnScroll = () => {
         var timerId;
