@@ -128,7 +128,7 @@ public class ReserveController {
     return "reserve/listHotel";
   }
   
-  @GetMapping("/writeHotel.form")
+  @PostMapping("/writeHotel.form")
   public String reserveHotel(HttpServletRequest request, Model model) {
     model.addAttribute("hotel", reserveService.loadHotelInfoWithWriteform(Integer.parseInt(request.getParameter("hotelNo"))));
     model.addAttribute("room", reserveService.loadRoomInfoWithWriteform(Integer.parseInt(request.getParameter("roomNo"))));
