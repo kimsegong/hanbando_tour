@@ -12,7 +12,7 @@
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
 <link rel="stylesheet" th:href="@{/css/init.css(ver=1.1)}" />
 <link rel="stylesheet" th:href="@{/css/header.css(ver=1.1)}" />
-<link rel="stylesheet" th:href="@{/css/main.css(ver=1.1)}" />
+<link rel="stylesheet" th:href="@{/css/main.css(ver=1.2)}" />
 <link rel="stylesheet" th:href="@{/css/footer.css(ver=1.0)}" />
 <link rel="stylesheet" th:href="@{/css/owl.carousel.css(ver=1.0)}" />
 <link rel="stylesheet" th:href="@{/css/owl.theme.default.css(ver=1.0)}" />
@@ -36,6 +36,7 @@
  .btn-no {
    color: white;
  }
+
 </style>
 <body id="body">
  <div th:fragment="header" class="header_wrap">   
@@ -58,7 +59,7 @@
             <div class="col-10">
            <div class="header_search" style="margin-left: 70px;">
              <form class="frm_search" method="get" th:action="@{/main/search.do}">
-             <input type="text" class="form-control header_searchbar w-75 p-3 h-50 d-inline-block" name="query" placeholder="여행지/호텔 입력해주세요🛫">
+             <input type="text" class="form-control header_searchbar w-75 p-3 h-50 d-inline-block rounded-pill"  name="query" placeholder="여행지/호텔 입력해주세요🛫">
               <button type="submit" class="btn_search btn btn-no btn-lg">🔎 </button>
              </form>
             </div>     
@@ -73,30 +74,37 @@
     </div>
     <!-- 아이콘 -->
     <div class="col" style="margin-bottom: 20px;">
+      <th:block th:if="${session.user != null}"> 
       <div style="text-align: center;">
             <a th:href="@{/user/logout.do}" style="font-size: 15px; font-weight: 350;">로그아웃</a>
         </div>
+         </th:block>
+      <th:block th:if="${session.user == null}"> 
+      <div style="text-align: center; height: 30px;">
+            
+        </div>
+         </th:block>
       <div class="col-1" style="margin-top: 50px;">
           <th:block th:if="${session.user == null}">
             <div  class="user" style="font-size: 15px;">
-             <a th:href="@{/user/login.form}"><i class="fa-regular fa-user fa-2xl" style="color: #A3B763; margin-bottom: 18px;"></i><div style="font-size: 13px;">&emsp;로그인&emsp;</div></a> 
-             <a th:href="@{/user/login.form}"><i class="fa-solid fa-plane-departure fa-2xl" style="color: #A3B763; margin-bottom: 18px;"></i><div style="font-size: 13px;">나의예약</div></a>        
+             <a th:href="@{/user/login.form}"><i class="fa-regular fa-user fa-2xl" style="color: #273952; margin-bottom: 18px;"></i><div style="font-size: 13px;">&emsp;로그인&emsp;</div></a> 
+             <a th:href="@{/user/login.form}"><i class="fa-solid fa-list fa-2xl" style="color: #273952; margin-bottom: 18px;"></i><div style="font-size: 13px;">나의예약</div></a>        
            </div> 
           </th:block> 
          <th:block th:if="${session.user != null}"> 
           <th:block th:if="${session.user.auth == 1}">
           <div class="user" style="font-size: 15px;">
-            <a th:href="@{/user/mypage.form}"><i class="fa-solid fa-user fa-2xl" style="color: #A3B763; margin-bottom: 18px;"></i><div style="font-size: 13px;">마이페이지</div></a> 
-            <a th:href="@{/reserve/reserveList.do(userNo=${session.user.userNo})}"><i class="fa-solid fa-list fa-2xl" style="color: #A3B763; margin-bottom: 18px;"></i><div style="font-size: 13px;">나의예약</div></a>   
-            <a th:href="@{/user/heart.do(userNo=${session.user.userNo})}"><i class="fa-solid fa-heart fa-2xl" style="color: #A3B763; margin-bottom: 18px;"></i><div style="font-size: 13px;">찜목록</div></a>   
+            <a th:href="@{/user/mypage.form}"><i class="fa-solid fa-user fa-2xl" style="color: #273952; margin-bottom: 18px;"></i><div style="font-size: 13px;">마이페이지</div></a> 
+            <a th:href="@{/reserve/reserveList.do(userNo=${session.user.userNo})}"><i class="fa-solid fa-list fa-2xl" style="color: #273952; margin-bottom: 18px;"></i><div style="font-size: 13px;">나의예약</div></a>   
+            <a th:href="@{/user/heart.do(userNo=${session.user.userNo})}"><i class="fa-solid fa-heart fa-2xl" style="color: #273952; margin-bottom: 18px;"></i><div style="font-size: 13px;">찜목록</div></a>   
           </div>
          </th:block>
          </th:block>
           <th:block th:if="${session.user != null}">
            <th:block th:if="${session.user.auth == 0}">
            <div class="user">
-            <a th:href="@{/manage/userList.do}"><i class="fa-solid fa-user fa-2xl" style="color: #A3B763;"></i><div style="font-size: 13px;">관리페이지</div></a>            
-            <a th:href="@{/user/logout.do}"><i class="fa-solid fa-right-from-bracket fa-2xl" style="color: #A3B763;"></i><div style="font-size: 13px;">로그아웃</div></a>       
+            <a th:href="@{/manage/userList.do}"><i class="fa-solid fa-user fa-2xl" style="color: #273952;"></i><div style="font-size: 13px;">관리페이지</div></a>            
+            <a th:href="@{/user/logout.do}"><i class="fa-solid fa-right-from-bracket fa-2xl" style="color: #273952;"></i><div style="font-size: 13px;">로그아웃</div></a>       
           </div>  
           </th:block>                                                                          
           </th:block>                                                                          
