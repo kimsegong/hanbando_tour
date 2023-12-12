@@ -120,8 +120,10 @@ public class HotelController {
   }
   @ResponseBody
   @GetMapping("roomList.do")
-  public  Map<String, Object> roomList(HttpServletRequest request, Model model){
-    return hotelService.hotelRoomList(request,model);
+  public Map<String, Object> roomList(HttpServletRequest request){
+    Map<String, Object> map = hotelService.hotelRoomList(request);
+    System.out.println(map);
+    return map;
   }
   
   @PostMapping("addHotel.do")

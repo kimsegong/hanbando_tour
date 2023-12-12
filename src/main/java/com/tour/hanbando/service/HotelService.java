@@ -16,7 +16,7 @@ public interface HotelService {
   public Map<String, Object> getHotelList(HttpServletRequest request);
   public int increseHit(int hotelNo);
   public void regionList(Model model);
-  public Map<String, Object> hotelRoomList(HttpServletRequest request, Model model);
+  public Map<String, Object> hotelRoomList(HttpServletRequest request);
   public void makeHotelNo(Model model);
   public boolean writeRoom(MultipartHttpServletRequest multipartRequest, List<MultipartFile> files) throws Exception;
   public boolean writeHotel(MultipartHttpServletRequest multipartRequest) throws Exception;
