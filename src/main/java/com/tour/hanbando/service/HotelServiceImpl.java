@@ -152,11 +152,12 @@ public class HotelServiceImpl implements HotelService {
   /************************이거 인서트 할때 룸 추가하면 보여줄때 쓰는 서비스********************************/
   
   @Override
-  public Map<String, Object> hotelRoomList(HttpServletRequest request, Model model) {
+  public Map<String, Object> hotelRoomList(HttpServletRequest request) {
     
     int hotelNo = Integer.parseInt(request.getParameter("hotelNo"));
     
     List<RoomtypeDto> roomtypeDto = hotelMapper.getRoomtype(hotelNo);
+    System.out.println(roomtypeDto);
     List<RoomFeatureDto> roomFeatureDto = hotelMapper.getRoomFeature(roomtypeDto);
     List<HotelImageDto> hotelImageDto = hotelMapper.getHotelImage(hotelNo);
     List<RoompriceDto> roompriceDto = hotelMapper.getPrice(RoomtypeDto.builder().hotelNo(hotelNo).build());
