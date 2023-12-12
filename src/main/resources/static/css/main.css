@@ -20,9 +20,9 @@
 	
 }
 .owl-carousel {
-		width:1340px;
-    height: 540px;
-    margin: 0 auto;
+	width:1340px;
+  height: 540px;
+  margin: 0 auto;
 }
 .owl_img {
 	width:1340px;
@@ -34,6 +34,7 @@
 .card_wrapper2 {
 	margin-top: 70px;
 }
+
 h3{
 	text-align: left;
   margin-left: 18px;
@@ -54,12 +55,12 @@ h3{
 	border-radius:5px;
 }
 .btn-heart {
- float: right;		
- height: 33px;
- width: 33px;
- border: 1px white solid;
- background-color: #F1F0E8;
- border-radius: 50%;
+   float: right;		
+   height: 33px;
+   width: 33px;
+   border: 1px white solid;
+   background-color: #F1F0E8;
+   border-radius: 50%;
 }
 .fa-xl {
     font-size: 1.5em;

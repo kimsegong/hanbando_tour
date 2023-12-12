@@ -28,13 +28,13 @@
 		      </div>
 		      <div style="text-align: left;">
   		      <label for="rView" class="form-label" style="font-weight: 500;">전망</label>
-  		      <input type="text" id="rView" class="form-control" name="rView"> 
+  		      <input type="text" id="rView" class="form-control" name="rView" placeholder="오션/산 등"> 
   		      <label for="bed" class="form-label" style="font-weight: 500;">침대</label>
-  		      <input type="bed" id="bed"class="form-control" name="bed"> 
+  		      <input type="bed" id="bed"class="form-control" name="bed" placeholder="더블/킹 등"> 
   		      <label for="shower" class="form-label" style="font-weight: 500;">욕실</label>
-  		      <input type="text" id="shower" class="form-control" name="shower"> 
+  		      <input type="text" id="shower" class="form-control" name="shower" placeholder="샤워실/욕조"> 
   		      <label for="rSize" class="form-label" style="font-weight: 500;">방사이즈</label>
-  		      <input type="text" id="rSize" class="form-control" name="rSize">
+  		      <input type="number" id="rSize" class="form-control" name="rSize">
   		      <div>
   		      <label for="smoke" class="form-check-label" style="font-weight: 500;">흡연유무</label>
   		      <input type="checkbox" id="smoke" class="form-check-input" name="smoke" value="1">
@@ -42,42 +42,45 @@
   		      <input type="checkbox" id="bleakfast" class="form-check-input" name="bleakfast" value="1">
   		      </div>
   		      <label for="people" class="form-label" style="font-weight: 500;">허용인원</label>
-  		      <input type="text" id="people" class="form-control" name="people">
+  		      <input type="number" id="people" class="form-control" name="people">
   		      <label for="roomMany" class="form-label" style="font-weight: 500;">객실개수</label>
-  		      <input type="text" id="roomMany" class="form-control" name="roomMany">
+  		      <input type="number" id="roomMany" class="form-control" name="roomMany">
 		      </div>
-		      
-		      <h4 style="font-weight: 500;">객실 구비사항</h4>
-		      <label for="towel" class="form-check-label">수건</label>
-		      <input type="checkbox" id="towel" class="form-check-input" name="towel" value="1">
-		      <label for="water" class="form-check-label">생수</label>
-		      <input type="checkbox" id="water" class="form-check-input" name="water" value="1">
-		      <label for="coffee" class="form-check-label">커피/티</label>
-		      <input type="checkbox" id="coffee" class="form-check-input" name="coffee" value="1">
-		      <label for="drier" class="form-check-label">드라이기</label>
-		      <input type="checkbox" id="drier" class="form-check-input" name="drier" value="1">
-		      <label for="iron" class="form-check-label">다리미</label>
-		      <input type="checkbox" id="iron" class="form-check-input" name="iron" value="1">
-		      <label for="minibar" class="form-check-label">미니바</label>
-		      <input type="checkbox" id="minibar" class="form-check-input" name="minibar" value="1">
-		      
-		      <div style="font-weight: 500;">비수기</div>
-		      <label for="biPrice" class="form-label">금액</label>
-		      <input type="text" id="biPrice" name="biPrice" class="form-control"s>
-		      <label for="bsDate" class="form-check-label">날짜</label>
-		      <input type="date" id="bsDate" name="bsDate" ><input type="date" id="beDate" name="beDate">
-		      <div style="font-weight: 500;">준성수기</div>
-		      <label for="junPrice" class="form-label">금액</label>
-		      <input type="text" id="junPrice" name="junPrice" class="form-control">
-		      <label for="jsDate" class="form-check-input">날짜</label>
-		      <input type="date" id="jsDate" name="jsDate"><input type="date" id="jeDate" name="jeDate">
-		      <div style="font-weight: 500;">성수기</div>
-		      <label for="sungPrice" class="form-label">금액</label>
-		      <input type="text" id="sungPrice" class="form-control" name="sungPrice">
-		      <label for="ssDate" class="form-check-input">날짜</label>
-		      <input type="date" id="ssDate" name="ssDate"><input type="date" id="seDate" name="seDate">
+		      <div style="text-align: left;">
+  		      <div style="font-weight: 500; margin-bottom: 10px;">객실 구비사항</div>
+  		      <label for="towel" class="form-check-label">수건</label>
+  		      <input type="checkbox" id="towel" class="form-check-input" name="towel" value="1">
+  		      <label for="water" class="form-check-label">생수</label>
+  		      <input type="checkbox" id="water" class="form-check-input" name="water" value="1">
+  		      <label for="coffee" class="form-check-label">커피/티</label>
+  		      <input type="checkbox" id="coffee" class="form-check-input" name="coffee" value="1">
+  		      <label for="drier" class="form-check-label">드라이기</label>
+  		      <input type="checkbox" id="drier" class="form-check-input" name="drier" value="1">
+  		      <label for="iron" class="form-check-label">다리미</label>
+  		      <input type="checkbox" id="iron" class="form-check-input" name="iron" value="1">
+  		      <label for="minibar" class="form-check-label">미니바</label>
+  		      <input type="checkbox" id="minibar" class="form-check-input" name="minibar" value="1">
+		      </div>
+  		      <div style="font-weight: 500; margin-bottom: 10px; text-align: left">비수기</div>
+		      <div class="d-flex ">
+  		      <input type="number" id="biPrice" name="biPrice" class="form-control" placeholder="금액">
+  		      <label for="bsDate" class="form-label">날짜</label>
+  		      <input type="date" id="bsDate" name="bsDate"><input type="date" id="beDate" name="beDate">
+		      </div>
+  		      <div style="font-weight: 500; margin-bottom: 10px; text-align: left">준성수기</div>
+		      <div class="d-flex ">
+  		      <input type="number" id="junPrice" name="junPrice" class="form-control" placeholder="금액">
+  		      <label for="jsDate" class="form-label">날짜</label>
+  		      <input type="date" id="jsDate" name="jsDate"><input type="date" id="jeDate" name="jeDate">
+		      </div>
+  		      <div style="font-weight: 500; margin-bottom: 10px; text-align: left">성수기</div>
+		      <div class="d-flex">
+  		      <input type="number" id="sungPrice" class="form-control" name="sungPrice" placeholder="금액">
+  		      <label for="ssDate" class="form-label" style="width: max-content;">날짜</label>
+  		      <input type="date" id="ssDate" name="ssDate"><input type="date" id="seDate" name="seDate">
+		      </div>
 		      <!--<input type="date" value="<fmt:formatDate value="${contentNotice}" pattern = "yyyy-MM-dd"/>"> -->
-      </div>
+      </form>
 	  </div>
 	  <div class="modal-footer">
 	    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
@@ -106,6 +109,7 @@
 				 if(resData != null && resData != ""){
 					 if(resData == 1){
 						 alert("등록되었습니다.");
+						 $('#staticBackdrop').modal('hide');
 					 } else if(resData == 0) {
 						 alert("등록되지않았습니다.");
 					 }
@@ -115,8 +119,22 @@
    })
   console.log($('#hotelNo').val());
   
- 
   
+$('input[type="date"]').change(() => {
+   
+        var bsDate = new Date($('#bsDate').val());
+        var beDate = new Date($('#beDate').val());
+        var jsDate = new Date($('#jsDate').val());
+        var jeDate = new Date($('#jeDate').val());
+        var ssDate = new Date($('#ssDate').val());
+        var seDate = new Date($('#seDate').val());
+        
+        if(bsDate > beDate || jsDate > jeDate || ssDate > seDate){
+          alert('날짜를 다시 선택해 주세요 ');
+        }
+    });
+
+
  
   
   

@@ -121,8 +121,9 @@ public class HotelController {
   }
   @ResponseBody
   @GetMapping(value="roomList.do", produces = "application/json")
-  public Map<String, Object> roomList(HttpServletRequest request){
+  public Map<String, Object> roomList(HttpServletRequest request, Model model){
     Map<String, Object> map = hotelService.hotelRoomList(request);
+    
     System.out.println(map);
     return map;
   }
