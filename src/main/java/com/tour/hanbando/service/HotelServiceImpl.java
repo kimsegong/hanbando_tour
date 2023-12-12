@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -161,10 +162,11 @@ public class HotelServiceImpl implements HotelService {
     List<HotelImageDto> hotelImageList = hotelMapper.getHotelImage(hotelNo);
     List<RoompriceDto> roompriceList = hotelMapper.getPrice(RoomtypeDto.builder().hotelNo(hotelNo).build());
     
-    return Map.of("roomtypeList", roomtypeList,
-                  "roomFeatureList", roomFeatureList,
-                  "hotelImageList", hotelImageList,
-                  "roompriceList", roompriceList);
+    return Map.of( "roomFeatureList", roomFeatureList,
+                   "hotelImageList", hotelImageList,
+                   "roompriceList", roompriceList,
+                   "roomtypeList", roomtypeList);
+   
   }
   
   @Override
@@ -578,13 +580,21 @@ public class HotelServiceImpl implements HotelService {
                                    , "userNo", userNo);
     
     List<HeartDto> heartHotelList = hotelMapper.selectHotelHeartList(map);
-
+    
+    List<HotelDto> hotelList = new ArrayList<>();
+    for(HeartDto heart : heartHotelList) {
+      hotelList.add(heart.getHotelDto());
+    }
+    List<Integer> price = getPrice(hotelList);
+    
     model.addAttribute("heartHotelList", heartHotelList);
+    model.addAttribute("price", price);
     String params = "userNo=" + request.getParameter("userNo");
     model.addAttribute("paging", myPageUtils.getMvcPaging(request.getContextPath() + "/user/heart.do", params));
     model.addAttribute("beginNo", total - (page - 1) * display); 
 
   }
+  
   
   @Override
   public Map<String, Object> removeHotelHeart(int hotelNo) {
@@ -592,10 +602,6 @@ public class HotelServiceImpl implements HotelService {
       return Map.of("removeHotelHeartResult", removeHotelHeartResult);
     }
 
-
-
-  
-  
   @Override
   public int removehotel(int hotelNo) {
     int deleteResult = hotelMapper.deleteHotel(hotelNo);
