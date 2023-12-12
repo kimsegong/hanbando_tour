@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{/layout/header::head('비밀번호변경')}"></head>
+
+<script th:src="@{/js/user_modify_pw.js(ver=1.0)}"></script>
+
+<body>
+  
+  <div th:replace="~{/layout/header::header}"></div>
+  
+  <div class="main_wrap">
+    
+
+
+
+    <a th:href="@{/user/modifyPw.form}">비밀번호 변경하러가기</a>
+    <form method="post" th:action="@{/user/pwExtension.do}">
+     <input type="hidden" name="email" th:value="${session.user.email}">
+     <input type="hidden" name="userNo" th:value="${session.user.userNo}">
+     <button type="submit">90일 연장하기</button> 
+    </form>
+    
+
+
+
+
+
+    
+
+
+  </div>
+
+     
+  <div th:replace="~{/layout/footer::footer}"></div>
+  
+</body>
+</html>
