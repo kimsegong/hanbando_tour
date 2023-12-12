@@ -115,7 +115,7 @@
           <a th:href="@{/notice/faqList.do}" class="w3-bar-item faq">자주묻는질문</a>
           <a th:if="${session.user == null}" th:href="@{/notice/inquirylist.do}" class="w3-bar-item inquiry_user">1:1문의하기</a>
           <a th:if="${session.user != null && session.user.auth == 1}" th:href="@{/notice/inquirylist.do(userNo=${session.user.userNo})}" class="w3-bar-item inquiry_user">1:1문의하기</a>
-          <a th:if="${session.user != null && session.user.auth == 0}" th:href="@{/notice/inquiryManage.do}" class="w3-bar-item inquiry_manage">1:1문의보기</a>
+          <a th:if="${session.user != null && session.user.auth == 0}" th:href="@{/notice/inquiryManage.do}" class="w3-bar-item inquiry_user">1:1문의보기</a>
         </div>  
 
 

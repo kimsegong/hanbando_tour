@@ -4,7 +4,17 @@
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.tour.hanbando.dao.NoticeMapper">
-
+  
+  <resultMap type="NoticeAttachDto"     id="NoticeAttachMap">
+    <id      column="ATTACH_NO"         property="attachNo" />
+    <result  column="PATH"              property="path" />
+    <result  column="ORIGINAL_FILENAME" property="originalFilename" />
+    <result  column="FILESYSTEM_NAME"   property="filesystemName" />
+    <association javaType="NoticeDto" property="noticeDto" >
+      <id      column="NOTICE_NO"     property="noticeNo" />
+    </association>
+  </resultMap>
+  
   <select id="getNoticeList" parameterType="Map" resultType="NoticeDto">
     SELECT A.NOTICE_NO, A.TITLE, A.CONTENTS, A.CREATED_AT, A.MODIFIED_AT 
       FROM (SELECT ROW_NUMBER() OVER(ORDER BY NOTICE_NO DESC) AS RN, NOTICE_NO, TITLE, CONTENTS, CREATED_AT, MODIFIED_AT FROM NOTICE_T) A 
@@ -23,6 +33,10 @@
    </select>
    
   <insert id="insertNotice" parameterType="NoticeDto"> 
+    <selectKey order="BEFORE" resultType="int" keyProperty="noticeNo">
+      SELECT NOTICE_SEQ.NEXTVAL
+        FROM DUAL
+    </selectKey>
     INSERT INTO NOTICE_T( 
            NOTICE_NO 
          , TITLE 
@@ -31,7 +45,7 @@
          , MODIFIED_AT) 
          
          VALUES( 
-         NOTICE_SEQ.NEXTVAL 
+         #{noticeNo}
        , #{title} 
        , #{contents} 
        , TO_CHAR(SYSDATE, 'YYYY/MM/DD') 
@@ -62,26 +76,35 @@
      WHERE ${column} LIKE '%' || #{query} || '%' 
   </select>
   
-  <select id="getSearchList" parameterType="Map" resultType="NoticeDto"> 
-    SELECT NOTICE_NO, TITLE, CONTENTS, CREATED_AT, MODIFIED_AT 
-      FROM (SELECT ROW_NUMBER() OVER(ORDER BY NOTICE_NO DESC) AS RN, NOTICE_NO, TITLE, CONTENTS, CREATED_AT, MODIFIED_AT FROM NOTICE_T 
-             WHERE ${column} LIKE '%' || #{query} || '%') 
-     WHERE RN BETWEEN #{begin} AND #{end} 
-   </select>
+   <select id="getSearchList" parameterType="Map" resultType="NoticeDto"> 
+     SELECT NOTICE_NO, TITLE, CONTENTS, CREATED_AT, MODIFIED_AT 
+       FROM (SELECT ROW_NUMBER() OVER(ORDER BY NOTICE_NO DESC) AS RN, NOTICE_NO, TITLE, CONTENTS, CREATED_AT, MODIFIED_AT FROM NOTICE_T 
+              WHERE ${column} LIKE '%' || #{query} || '%') 
+      WHERE RN BETWEEN #{begin} AND #{end} 
+    </select>
    
-        <insert id="insertImageList" parameterType="productImageDto">
-        INSERT INTO PRODUCT_IMAGE_T (
-            IMAGE_NO
-          , PACKAGE_NO
-          , FILESYSTEM_NAME
-          , THUMBNAIL
-          , IMAGE_PATH
-        ) VALUES (
-            PRODUCT_IMAGE_SEQ.NEXTVAL
-          , #{packageNo}
-          , #{filesystemName}
-          , #{thumbnail}
-          , #{imagePath}
-        )
-      </insert>
+
+    
+    <insert id="insertNoticeAttach" parameterType="NoticeAttachDto">
+      INSERT INTO NOTICE_ATTACH_T (
+          ATTACH_NO
+        , PATH
+        , ORIGINAL_FILENAME
+        , FILESYSTEM_NAME
+        , NOTICE_NO
+      ) VALUES (
+          NOTICE_ATTACH_SEQ.NEXTVAL
+        , #{path}
+        , #{originalFilename}
+        , #{filesystemName}
+        , #{noticeAttachDto.noticeNo}  
+      )
+    </insert>  
+    
+    <select id="getNoticeAttachList" parameterType="int" resultMap="NoticeAttachMap">
+      SELECT ATTACH_NO, PATH, ORIGINAL_FILENAME, FILESYSTEM_NAME, NOTICE_NO
+        FROM NOTICE_ATTACH_T
+       WHERE NOTICE_NO = #{noticeNo}
+    </select>
+      
 </mapper>
