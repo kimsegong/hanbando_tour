@@ -35,8 +35,9 @@ public class NoticeController {
   }
   
   @PostMapping("/addNotice.do")
-  public String addNotice(HttpServletRequest request, RedirectAttributes redirectAttributes) {
-    int addResult = noticeService.addNotice(request);
+  public String addNotice(MultipartHttpServletRequest multipartRequest
+                        , RedirectAttributes redirectAttributes) throws Exception{
+    boolean addResult = noticeService.addNotice(multipartRequest);
     redirectAttributes.addFlashAttribute("addResult", addResult);
     return "redirect:/notice/list.do";
   }

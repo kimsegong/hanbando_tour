@@ -18,6 +18,7 @@ import org.springframework.web.multipart.MultipartRequest;
 
 import com.gdu.myhome.dto.AttachDto;
 import com.tour.hanbando.dao.NoticeMapper;
+import com.tour.hanbando.dto.NoticeAttachDto;
 import com.tour.hanbando.dto.NoticeDto;
 import com.tour.hanbando.dto.PackageDto;
 import com.tour.hanbando.dto.ProductImageDto;
@@ -64,22 +65,7 @@ public class NoticeServiceImpl implements NoticeService {
   
   
   
-  @Override
-  public int addNotice(HttpServletRequest request) {
-    String title = request.getParameter("title");
-    String contents = request.getParameter("contents");
-    
-    NoticeDto notice = NoticeDto.builder()
-                     .title(title)
-                     .contents(contents)
-                     .build();
-    
-    int addResult = noticeMapper.insertNotice(notice);
-    
-    return addResult;
-    
-   
-  }
+
   
   @Transactional(readOnly=true)
   @Override
@@ -144,83 +130,60 @@ public class NoticeServiceImpl implements NoticeService {
   
   @Override
   public boolean addNotice(MultipartHttpServletRequest multipartRequest) throws Exception {
-      String packageContents = multipartRequest.getParameter("packageContents");
-      int regionNo = Integer.parseInt(multipartRequest.getParameter("regionNo"));
-      int themeNo = Integer.parseInt(multipartRequest.getParameter("themeNo"));   
-      int userNo = Integer.parseInt(multipartRequest.getParameter("userNo"));
-
-          // PackageDto 생성
-          PackageDto packageDto = PackageDto.builder()
-              .userDto(UserDto.builder()
-                            .userNo(userNo)
-                            .build())
-                  .regionDto(RegionDto.builder().regionNo(regionNo).build())
-                  .themeDto(ThemeDto.builder().themeNo(themeNo).build())
-                  .packageTitle(multipartRequest.getParameter("packageTitle"))
-                  .miniOne(multipartRequest.getParameter("miniOne"))
-                  .miniTwo(multipartRequest.getParameter("miniTwo"))
-                  .miniThree(multipartRequest.getParameter("miniThree"))
-                  .packagePlan(multipartRequest.getParameter("packagePlan"))
-                  .packageContents(packageContents)                  
-                  .hotelContents(multipartRequest.getParameter("hotelContents"))
-                  .price(Integer.parseInt(multipartRequest.getParameter("price")))
-                  .danger(multipartRequest.getParameter("danger"))
-                  .maxPeople(Integer.parseInt(multipartRequest.getParameter("maxPeople")))
-                  .recommendStatus(Integer.parseInt(multipartRequest.getParameter("recommendStatus")))
-                  .build();
-
-          int addResult = noticeMapper.insertNotices(noticeDto);
-          // CKEditor 이미지 처리
-          List<String> editorImages = getEditorImageList(packageContents);
-          for (String editorImage : editorImages) {
-            ProductImageDto packageImage = ProductImageDto.builder()                      
-                      .packageNo(packageDto.getPackageNo())
-                      .filesystemName(editorImage)
-                      .imagePath(myNoticeUtils.getNoticeImagePath())                      
-                      .build();
-              noticeMapper.insertNoticeImage(noticeImage);
-          }
+      String title = multipartRequest.getParameter("title");
+      String contents = multipartRequest.getParameter("contents");
       
-              // 파일 업로드 및 이미지 처리
-              List<MultipartFile> files = multipartRequest.getFiles("files");
-                           
-              int attachCount;
-              if(files.get(0).getSize() == 0) {
-                attachCount = 1;
-              } else {
-                attachCount = 0;
-              }              
+      /* noticeDto생성 */
+      NoticeDto notice = NoticeDto.builder()
+                           .title(title)
+                           .contents(contents)
+                           .build();
+      
+      int noticeCount = noticeMapper.insertNotice(notice);
 
-              for (MultipartFile multipartFile : files) {
-                  if (multipartFile != null && !multipartFile.isEmpty()) {
-                      String path = myNoticeUtils.getUploadPath();
-                      File dir = new File(path);
-                      if (!dir.exists()) {
-                          dir.mkdirs();
-                      }
-                      
-                      String filesystemName = myNoticeUtils.getFilesystemName(multipartFile.getOriginalFilename());
-                      String thumbnail = myNoticeUtils.getFilesystemName(multipartFile.getOriginalFilename());
-                      File file = new File(dir, filesystemName);
+      // 파일 업로드 및 이미지 처리
+      List<MultipartFile> files = multipartRequest.getFiles("files");
+      
+      // 파일 개수로는 첨부파일의 유무를 알 수 없음
+      // 파일 이름과 파일 사이즈로 구분
+      int attachCount;
+      if(files.get(0).getSize() == 0) {
+        attachCount = 1;
+      } else {
+        attachCount = 0;
+      }              
 
-                      multipartFile.transferTo(file);
+      for (MultipartFile multipartFile : files) {
+        if (multipartFile != null && !multipartFile.isEmpty()) {
+          String path = myNoticeUtils.getUploadPath();
+          File dir = new File(path);
+          if (!dir.exists()) {
+              dir.mkdirs();
+          }
+          
+          String originalFilename = multipartFile.getOriginalFilename(); //원래파일명
+          String filesystemName = myNoticeUtils.getFilesystemName(originalFilename); //저장할파일명
+          File file = new File(dir, filesystemName);
 
-                      // 변수 초기화
-                      ProductImageDto attach = ProductImageDto.builder()
-                              .packageNo(packageDto.getPackageNo())
-                              .filesystemName(filesystemName)
-                              .thumbnail(thumbnail)
-                              .imagePath(path)
-                              .build();
+          multipartFile.transferTo(file); // 실제로 파일이 저장되는 단계
 
-                      // 이미지 추가 결과 저장
-                      attachCount += noticeMapper.insertImageList(attach);
-                  }
-              }         
+          NoticeAttachDto attach = NoticeAttachDto.builder()
+              .path(path)
+              .originalFilename(originalFilename)
+              .filesystemName(filesystemName)
+              .noticeDto(NoticeDto.builder()
+                           .noticeNo(Integer.parseInt(multipartRequest.getParameter("noticeNo")))
+                           .build())
+              .build();
 
-          // 성공 시 1, 실패 시 0 반환
-          return (addResult == 1) && (files.size() == attachCount);
-      }
+          // 이미지 추가 결과 저장
+          attachCount += noticeMapper.insertNoticeAttach(attach);
+        }
+      }         
+
+    // 성공 시 1, 실패 시 0 반환
+    return (noticeCount == 1) && (files.size() == attachCount);
+  }
   
   
   @Override
@@ -282,24 +245,19 @@ public class NoticeServiceImpl implements NoticeService {
         multipartFile.transferTo(file);
         
         String contentType = Files.probeContentType(file.toPath());  // 이미지의 Content-Type은 image/jpeg, image/png 등 image로 시작한다.
-        int hasThumbnail = (contentType != null && contentType.startsWith("image")) ? 1 : 0;
         
-        if(hasThumbnail == 1) {
-          File thumbnail = new File(dir, "s_" + filesystemName);  // small 이미지를 의미하는 s_을 덧붙임
-          Thumbnails.of(file)
-                    .size(100, 100)      // 가로 100px, 세로 100px
-                    .toFile(thumbnail);
-        }
+
         
-        AttachDto attach = AttachDto.builder()
+        NoticeAttachDto attach = NoticeAttachDto.builder()
                             .path(path)
                             .originalFilename(originalFilename)
                             .filesystemName(filesystemName)
-                            .hasThumbnail(hasThumbnail)
-                            .uploadNo(Integer.parseInt(multipartRequest.getParameter("uploadNo")))
+                            .noticeDto(NoticeDto.builder()
+                                         .noticeNo(Integer.parseInt(multipartRequest.getParameter("noticeNo")))
+                                         .build())
                             .build();
         
-        attachCount += uploadMapper.insertAttach(attach);
+        attachCount += noticeMapper.insertNoticeAttach(attach);
         
       }  // if
       
