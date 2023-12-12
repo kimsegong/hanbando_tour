@@ -50,6 +50,13 @@ public interface UserService {
   public void join(HttpServletRequest request, HttpServletResponse response);
   public ResponseEntity<Map<String, Object>> modify(HttpServletRequest request);
   public void modifyPw(HttpServletRequest request, HttpServletResponse response);
+  
+  
+  
+  
+  
+  //비밀번호 90일 연장
+  public int extensionPw(HttpServletRequest request);
   public void leave(HttpServletRequest request, HttpServletResponse response);
   public void inactiveUserBatch();
   public void active(HttpSession session, HttpServletRequest request, HttpServletResponse response);
