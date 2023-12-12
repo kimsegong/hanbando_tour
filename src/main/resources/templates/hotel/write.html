@@ -329,7 +329,10 @@ label {
 	const myModalEl = document.getElementById('staticBackdrop')
 	var hotelNo = $('#hotelNo').val();
 	
-  myModalEl.addEventListener('hidden.bs.modal', event => {
+    myModalEl.removeEventListener('hidden.bs.modal', fnAddRoom); 
+	myModalEl.addEventListener('hidden.bs.modal', fnAddRoom);
+	
+  function fnAddRoom (){
     $.ajax({
         type: 'get',
         url: '/hotel/roomList.do',
@@ -403,16 +406,20 @@ label {
        	 }
    		 }
  		 })
-  }, {once: true})
+  }
+    var bsDate = $('#bsDate').val();
+  var beDate = $('#beDate').val();
+  var jsDate = $('#jsDate').val();
+  var jeDate = $('#jsDate').val();
+  var ssDate = $('#ssDate').val();
+  var seDate = $('#ssDate').val(); 
   
-	
-	
-	
-	
-	
-	
-	
-	
+	 const fnDateCheck = () => {
+    if(bsDate > beDate || jsDate > jeDate || ssDate > seDate){
+    alert('날짜를 다시 선택해 주세요 ');
+    }
+  }
+
 	 
 </script>
 	
