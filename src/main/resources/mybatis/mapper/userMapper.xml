@@ -55,6 +55,7 @@
       , DETAIL_ADDRESS
       , AGREE
       , STATE
+      , AUTH
       , PW_MODIFIED_AT
       , JOINED_AT
     ) VALUES (
@@ -70,6 +71,7 @@
       , #{detailAddress}
       , #{agree}
       , 0
+      , 1
       , SYSDATE
       , SYSDATE
     )
