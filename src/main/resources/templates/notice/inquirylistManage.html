@@ -201,6 +201,10 @@
           <th:block th:each="in,vs:${inquiryManageList}">
             <tr class="align-bottom">
               <td>
+                <span class="badge text-bg-secondary" th:if ="${in.answerStatus == 0}" th:text="답변대기"></span>
+                <span class="badge text-bg-info"      th:if ="${in.answerStatus == 1}" th:text="답변완료"></span>
+              </td>              
+              <td>
                 <a th:href="@{/notice/inquirydetail.do(inquiryNo=${in.inquiryNo})}" th:text="${in.inquiryNo}"></a>
               </td>
               <td>

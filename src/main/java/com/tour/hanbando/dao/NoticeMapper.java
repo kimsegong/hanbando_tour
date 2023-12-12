@@ -7,7 +7,6 @@ import org.apache.ibatis.annotations.Mapper;
 
 import com.tour.hanbando.dto.NoticeAttachDto;
 import com.tour.hanbando.dto.NoticeDto;
-import com.tour.hanbando.dto.ProductImageDto;
 
 @Mapper
 public interface NoticeMapper {
@@ -22,5 +21,7 @@ public interface NoticeMapper {
   public int insertNotices(NoticeDto noticeDto);
   public int insertNoticeAttach(NoticeAttachDto noticeAttachDto);
   public List<NoticeAttachDto> getNoticeAttachList(int noticeNo);
+  public int deleteAttach(int attachNo);
+  public NoticeAttachDto getNoticeAttach(int attachNo);
   
 }
