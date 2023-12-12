@@ -71,7 +71,7 @@
         <th:block th:unless="${#lists.isEmpty(heartHotelList)}">
             <tr>
                 <td>
-                    <button type="button" class="btn btn-danger remove_heart" onclick="deleteSelected()">삭제</button>
+                    <button type="button" class="w3-btn w3-round-xxlarge w3-red remove_heart" onclick="deleteSelected()">삭제</button>
                 </td>
                 <td th:utext="${paging}" class="paging"></td>
                 <td></td>
