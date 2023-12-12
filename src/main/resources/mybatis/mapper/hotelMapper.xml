@@ -597,12 +597,11 @@
  	  WHERE HOTEL_NO = #{hotelNo}
  </select>  
  <select id="getRoomtype" parameterType="int" resultType ="RoomtypeDto">
-   SELECT R. ROOM_NO, R.HOTEL_NO, R.ROOM_DETAIL, R.ROOM_NAME, R.ROOM_MANY, R.R_VIEW, R.BLEAKFAST, R.SMOKE, R.PEOPLE, R.BED, R.SHOWER, R.R_SIZE,
-          RF.TOWEL, RF.WATER, RF.COFFEE, RF.DRIER, RF.IRON, RF.MINIBAR
-     FROM ROOMTYPE_T R INNER JOIN ROOM_FEATURE_T RF
-       ON R.ROOM_NO = RF.ROOM_NO
-    WHERE R.HOTEL_NO = #{hotelNo}
+   SELECT ROOM_NO, HOTEL_NO, ROOM_DETAIL, ROOM_NAME, ROOM_MANY, R_VIEW, BLEAKFAST, SMOKE, PEOPLE, BED, SHOWER, R_SIZE
+     FROM ROOMTYPE_T 
+    WHERE HOTEL_NO = #{hotelNo}
  </select>
+ 
  <select id="getRoomFeature" resultType="RoomFeatureDto">
  SELECT ROOM_NO,
         TOWEL, 

@@ -18,6 +18,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.tour.hanbando.dto.ReserveDto;
+import com.tour.hanbando.dto.RoomtypeDto;
 import com.tour.hanbando.service.HotelService;
 
 import lombok.RequiredArgsConstructor;
@@ -119,9 +120,11 @@ public class HotelController {
     return "hotel/write";
   }
   @ResponseBody
-  @GetMapping("roomList.do")
-  public  Map<String, Object> roomList(HttpServletRequest request, Model model){
-    return hotelService.hotelRoomList(request,model);
+  @GetMapping(value="roomList.do", produces = "application/json")
+  public Map<String, Object> roomList(HttpServletRequest request){
+    Map<String, Object> map = hotelService.hotelRoomList(request);
+    System.out.println(map);
+    return map;
   }
   
   @PostMapping("addHotel.do")
@@ -161,12 +164,12 @@ public class HotelController {
   }
   
   /*************************** 수정 ***************************************************/  
-  @PostMapping("/modifyBlog.do")
-  public String modifyBlog(HttpServletRequest request, RedirectAttributes redirectAttributes) {
-    int modifyResult = hotelService.modifyHotel(request);
-    redirectAttributes.addFlashAttribute("modifyResult", modifyResult);
-    return "redirect:/hotel/detail.do?hotelNo=" + request.getParameter("hotelNo");
-  }
+//  @PostMapping("/modifyBlog.do")
+//  public String modifyBlog(HttpServletRequest request, RedirectAttributes redirectAttributes) {
+//    int modifyResult = hotelService.modifyHotel(request);
+//    redirectAttributes.addFlashAttribute("modifyResult", modifyResult);
+//    return "redirect:/hotel/detail.do?hotelNo=" + request.getParameter("hotelNo");
+//  }
    
   
   
