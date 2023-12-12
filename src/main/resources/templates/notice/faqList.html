@@ -26,6 +26,7 @@
 
   .title{
     font-size: 30px;
+    font-weight: 400;
   }
   
   .faq-table{
@@ -63,7 +64,9 @@
     font-size: 1.3em;
     font-weight: bolder;
   }
-  
+  .btn-sy {
+    background-color: #96B6C5;
+  }
     
 </style>
 
@@ -77,20 +80,18 @@
   
      <div class="container text-center">
       <div class="row">
-   
-        <div class="col-10">
-            <!--/*여기에 작성/ 다 만들고 style 지워주세요  */-->
-       
-
-        <!--/* 사이드바 */-->
+        <div class="col-1">     
+           <!--/* 사이드바 */-->
         <div class="w3-sidebar w3-bar-block sidebar" style="width:10%; height:200px;">
           <a th:href="@{/notice/list.do}" class="w3-bar-item notice">공지사항</a>
           <a th:href="@{/notice/faqList.do}" class="w3-bar-item faq">자주묻는질문</a>
           <a th:if="${session.user == null}" th:href="@{/notice/inquirylist.do}" class="w3-bar-item inquiry_user">1:1문의하기</a>
           <a th:if="${session.user != null && session.user.auth == 1}" th:href="@{/notice/inquirylist.do(userNo=${session.user.userNo})}" class="w3-bar-item inquiry_user">1:1문의하기</a>
           <a th:if="${session.user != null && session.user.auth == 0}" th:href="@{/notice/inquiryManage.do}" class="w3-bar-item inquiry_manage">1:1문의보기</a>
-        </div>  
-
+        </div>    
+        </div>
+        <div class="col-10">
+            <!--/*여기에 작성/ 다 만들고 style 지워주세요  */-->
 
   <div class="main_list_wrap">
   
@@ -103,7 +104,7 @@
     <div class="btn-toolbar mb-3 justify-content-center" role="toolbar" aria-label="Toolbar with button groups">
       <div class="btn-group me-2" role="group" aria-label="First group">
         <div class="btn-group" role="group" aria-label="Faq Category Buttons">
-          <a th:each="faqCa : ${faqCaList}" th:href="@{/notice/faqList.do(caNo=${faqCa.caNo})}" class="btn btn-warning my-btn" th:text="${faqCa.caTitle}"></a>
+          <a th:each="faqCa : ${faqCaList}" th:href="@{/notice/faqList.do(caNo=${faqCa.caNo})}" class="btn btn-sy my-btn" th:text="${faqCa.caTitle}"></a>
         </div>
       </div>
     </div> 
@@ -207,7 +208,7 @@
                 let str = '<div class="accordion accordion-flush" style="font-size:1.2em">';
                 str += '<div class="accordion-item">';
                 str += '<h2 class="accordion-header">';
-                str += '<button style="font-size:0.6em" class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapse' + i + '" aria-expanded="false" aria-controls="flush-collapse' + i + '">' + faq.title  + '</button>';
+                str += '<button style="font-size:0.6em" class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapse' + i + '" aria-expanded="false" aria-controls="flush-collapse' + i + '"><p>' + faq.title  + '</p></button>';
                 str += '</h2>';
                 str += '<div id="flush-collapse' + i + '" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">';
                 str += '<div class="accordion-body">' + faq.contents + '</div>';
@@ -227,9 +228,11 @@
               str += '          <label for="contents" class="form-label">내용</label>';
               str += '          <textarea class="form-control" id="contents" name="contents">' + faq.contents + '</textarea>';
               str += '        </div>';
-      
+              
+              str += '        <div style="padding-right:60px">';
               str += '        <button type="button" class="btn btn-primary edit-faq-btn" id= "edit_btn">수정하기</button>';
               str += '    <button type="button" class="btn btn-danger remove_Faq">삭제하기</button>';
+              str += '        </div>';
               str += '      </form>';
               str += '    </div>';
              }

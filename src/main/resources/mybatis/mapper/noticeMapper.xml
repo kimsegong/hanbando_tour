@@ -64,7 +64,6 @@
   UPDATE NOTICE_T 
      SET TITLE = #{title} 
    , CONTENTS = #{contents} 
-   , CREATED_AT = TO_CHAR(SYSDATE, 'YYYY/MM/DD') 
    , MODIFIED_AT = TO_CHAR(SYSDATE, 'YYYY/MM/DD') 
   WHERE NOTICE_NO = #{noticeNo} 
   </update>
@@ -97,7 +96,7 @@
         , #{path}
         , #{originalFilename}
         , #{filesystemName}
-        , #{noticeAttachDto.noticeNo}  
+        , #{noticeDto.noticeNo}  
       )
     </insert>  
     
@@ -106,5 +105,16 @@
         FROM NOTICE_ATTACH_T
        WHERE NOTICE_NO = #{noticeNo}
     </select>
-      
+    
+    <select id="getNoticeAttach" parameterType="int"  resultMap="NoticeAttachMap">
+      SELECT ATTACH_NO, PATH, ORIGINAL_FILENAME, FILESYSTEM_NAME, NOTICE_NO
+        FROM NOTICE_ATTACH_T
+       WHERE ATTACH_NO = #{attachNo}
+    </select>  
+    
+    <delete id="deleteAttach" parameterType="int">
+      DELETE
+        FROM NOTICE_ATTACH_T
+       WHERE ATTACH_NO = #{attachNo} 
+    </delete>   
 </mapper>
