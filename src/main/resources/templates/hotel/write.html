@@ -128,7 +128,7 @@ label {
     </div>
 		<div style="text-align: left;">
       <label for="phoneNumber" id="phoneNumber" class="form-label" onfocusout="fnCheckPhoneNumber();" style="font-weight: 500;">대표번호</label>
-      <input type="text" id="phoneNumber" class="form-control" name="phoneNumber" placeholder="'-' 제외하고 입력해 주세요">
+      <input type="number" id="phoneNumber" class="form-control" name="phoneNumber" placeholder="'-' 제외하고 입력해 주세요">
       <div id="phoneText"></div>
     </div>
     <div class="row mb-2">
@@ -197,7 +197,6 @@ label {
 		location.href="/hotel/addRoom.form?hotelNo="+ $('#hotelNo').val();
 		
 	})
-  
   
 	          //본 예제에서는 도로명 주소 표기 방식에 대한 법령에 따라, 내려오는 데이터를 조합하여 올바른 주소를 구성하는 방법을 설명합니다.
           function execDaumPostcode() {
@@ -305,7 +304,7 @@ label {
               $('#attached_list').empty();
               return;
             }
-            $('#attached_list').append('<div>' + files[i].name + '<button type="button" class="each" onclick="deleteEach(this)">X</button></div>');
+            $('#attached_list').append('<div>' + files[i].name + '<button type="button" class="each" onclick="fndeleteEach(this)">X</button></div>');
           }
           if(totalSize > maxSize){
             alert('전체 첨부파일의 최대 크기는 100MB입니다.');
@@ -329,7 +328,7 @@ label {
 	const myModalEl = document.getElementById('staticBackdrop')
 	var hotelNo = $('#hotelNo').val();
 	
-    myModalEl.removeEventListener('hidden.bs.modal', fnAddRoom); 
+  myModalEl.removeEventListener('hidden.bs.modal', fnAddRoom); 
 	myModalEl.addEventListener('hidden.bs.modal', fnAddRoom);
 	
   function fnAddRoom (){
@@ -340,15 +339,15 @@ label {
         dataType: 'json',
         success: (resData) => {  
                     console.log(resData);
-             if (resData.roomtype != null && resData.roomtype.length > 0) {    
-							 $.each(resData.roomtype, (i, room) => {
+             if (resData.roomtypeList != null && resData.roomtypeList.length > 0) {    
+							   $.each(resData.roomtypeList, (i, room) => {
 								 let str = ''
                  str += '<input type="hidden" value="'+room.roomNo+'">';
                  str += '<div class="border rounded-1">';
                  str += '<div class="row">';
                  str += '<div class="col-3">';
                  str += '<div class=""fileList>'
-									 $.each(resData.image,(i,image) => {
+									 $.each(resData.hotelImageList,(i,image) => {
 										 if(image.roomNo = room.roomNo){
 										str += '<div>'+image.originalName+'</div>' ;
 										 }
@@ -366,7 +365,7 @@ label {
                  str += '<div class="col-6">';
                  str += '<div id="roomName">'+room.roomName+'</div>';
                  str += '<div style="border-top: 1px #9399a5 solid;">'+room.roomDetail+'</div>';
-                  $.each(resData.roomFeature,(i,feature) => {
+                  $.each(resData.roomFeatureList,(i,feature) => {
 										 if(room.roomNo = feature.roomNo){
 											  str += '<div class="border rounded-1">';
 	                      str += '<div>객실 시설</div><div class="roomFac">';
@@ -387,7 +386,7 @@ label {
 									 })
                		 str +='</div>';
                  	 str +=' <div class="col-3" style="margin-right: 0;">';
-						  		$.each(resData.price,(i,price) => {
+						  		$.each(resData.roompriceList,(i,price) => {
 										if(price.roomNo == room.roomNo){
 											str +='<div>비수기 금액 : '+price.biPrice+'<div>';
 											str +='<div>비수기 날짜: '+price.bsDate+'~'+price.beDate+'<div>';
@@ -407,18 +406,16 @@ label {
    		 }
  		 })
   }
-    var bsDate = $('#bsDate').val();
-  var beDate = $('#beDate').val();
-  var jsDate = $('#jsDate').val();
-  var jeDate = $('#jsDate').val();
-  var ssDate = $('#ssDate').val();
-  var seDate = $('#ssDate').val(); 
   
-	 const fnDateCheck = () => {
-    if(bsDate > beDate || jsDate > jeDate || ssDate > seDate){
-    alert('날짜를 다시 선택해 주세요 ');
-    }
+  
+  const fndeleteEach = (this) => {
+    const roomNo = this;
+    $.ajax({
+      
+    })
   }
+  
+  
 
 	 
 </script>

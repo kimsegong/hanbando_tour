@@ -26,6 +26,7 @@
     <typeAlias alias="FaqCaDto"         type="com.tour.hanbando.dto.FaqCaDto"/>
     <typeAlias alias="FaqDto"           type="com.tour.hanbando.dto.FaqDto"/>
     <typeAlias alias="NoticeDto"        type="com.tour.hanbando.dto.NoticeDto"/>
+    <typeAlias alias="NoticeAttachDto"  type="com.tour.hanbando.dto.NoticeAttachDto"/>
     
     <typeAlias alias="UserDto"         type="com.tour.hanbando.dto.UserDto"/>
     <typeAlias alias="LeaveUserDto"    type="com.tour.hanbando.dto.LeaveUserDto"/>

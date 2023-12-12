@@ -31,29 +31,6 @@
       </association>
   </resultMap>
   
-  <resultMap type="RoomtypeDto" id="RoomtypeMap">
-    <result column="HOTEL_NO" property="hotelNo"/>
-    <result column="ROOM_DETAIL" property="roomDetail"/>
-    <result column="ROOM_NAME" property="roomName"/>
-    <result column="ROOM_MANY" property="roomMany"/>
-    <result column="R_VIEW" property="rView"/>
-    <result column="BLEAKFAST" property="bleakfast"/>
-    <result column="SMOKE" property="smoke"/>
-    <result column="PEOPLE" property="people"/>
-    <result column="BED" property="bed"/>
-    <result column="SHOWER" property="shower"/>
-    <result column="R_SIZE" property="rSize"/>
-      <association javaType="RoomFeatureDto" property="roomFeatureDto">
-        <result column="ROOM_NO" property="roomNo"/>
-        <result column="TOWEL" property="towel"/>
-        <result column="WATER" property="water"/>
-        <result column="COFFEE" property="coffee"/>
-        <result column="DRIER" property="drier"/>
-        <result column="IRON" property="iron"/>
-        <result column="MINIBAR" property="minibar"/>
-     </association>
- </resultMap>
-  
   <!-- 리뷰테이블 -->
     <resultMap type="ReviewDto" id="ReviewMap">
             <id column="REVIEW_NO" property="reviewNo"/>            
@@ -597,7 +574,7 @@
  	  WHERE HOTEL_NO = #{hotelNo}
  </select>  
  <select id="getRoomtype" parameterType="int" resultType ="RoomtypeDto">
-   SELECT ROOM_NO, HOTEL_NO, ROOM_DETAIL, ROOM_NAME, ROOM_MANY, R_VIEW, BLEAKFAST, SMOKE, PEOPLE, BED, SHOWER, R_SIZE
+   SELECT HOTEL_NO, ROOM_NO, ROOM_DETAIL, ROOM_NAME, ROOM_MANY, R_VIEW, BLEAKFAST, SMOKE, PEOPLE, BED, SHOWER, R_SIZE
      FROM ROOMTYPE_T 
     WHERE HOTEL_NO = #{hotelNo}
  </select>
@@ -610,8 +587,8 @@
         DRIER, 
         IRON, 
         MINIBAR
-  FROM ROOM_FEATURE_T 
-    WHERE ROOM_NO 
+   FROM ROOM_FEATURE_T 
+  WHERE ROOM_NO 
     <foreach item="item" index="index" collection="list" open="in(" separator="," close=")">
          #{item.roomNo}
     </foreach>
@@ -694,15 +671,15 @@
  </select>
  
  <delete id="deleteHeart" parameterType="HeartDto">
-    DELETE FROM HEART_T WHERE USER_NO = #{userNo} AND HOTEL_NO=#{hotelNo}
+    DELETE FROM HEART_T WHERE USER_NO = #{userNo} AND HOTEL_NO=#{hotelDtohotelNo}
 </delete>
 
  <insert id="insertHeart" parameterType="HeartDto">
-    INSERT INTO HEART_T(HOTEL_NO, USER_NO) VALUES (#{hotelNo}, #{userNo})
+    INSERT INTO HEART_T(HOTEL_NO, USER_NO) VALUES (#{hotelDto.hotelNo}, #{userNo})
  </insert>
 
  <select id="getCountHeart" parameterType="HeartDto" resultType="int">
-    SELECT COUNT(*) FROM HEART_T WHERE HOTEL_NO = #{hotelNo} AND USER_NO = #{userNo}
+    SELECT COUNT(*) FROM HEART_T WHERE HOTEL_NO = #{hotelDto.hotelNo} AND USER_NO = #{userNo}
  </select>
  
  <delete id="deleteHotel" parameterType="int">

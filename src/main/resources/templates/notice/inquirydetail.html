@@ -101,8 +101,13 @@
 
     <div class="col-3">
       
-      <a th:href="@{/notice/inquirylist.do(userNo=${session.user.userNo})}">
+      <a th:if="${session.user == null}" th:href="@{/notice/inquirylist.do}" class="w3-bar-item inquiry_user">1:1문의하기</a>
+      <a th:if="${session.user != null && session.user.auth == 1}" th:href="@{/notice/inquirylist.do(userNo=${session.user.userNo})}" class="w3-bar-item inquiry_user">
+        <button type="button" id="btn_inquiry_write">목록보기</button>   
+      </a>
+      <a th:if="${session.user != null && session.user.auth == 0}" th:href="@{/notice/inquiryManage.do}" class="w3-bar-item inquiry_user">
         <button type="button" id="btn_inquiry_write">목록보기</button> 
+      </a>
       </a>
       
     </div>
