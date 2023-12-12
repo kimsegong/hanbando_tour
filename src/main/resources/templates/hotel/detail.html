@@ -206,7 +206,7 @@
 							</div>
 							<div class="col-4 temp">
               <div class="border rounded-1">
-                <form th:action="@{/reserve/writeHotel.form}" method="get">
+                <form th:action="@{/reserve/writeHotel.form}" method="post">
                   <div class="sideTitle" id="sideTitle" th:text="${hotel.hotelName}"></div>
                   <input type="hidden" id="hotelNo" name="hotelNo" th:value="${hotel.hotelNo}">
                   <input type="hidden" id="reserveRoomNo" name="roomNo">
