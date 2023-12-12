@@ -112,6 +112,14 @@ public class ReserveController {
     System.out.println(redirectAttributes.getAttribute("cancelResult"));
     return "redirect:/reserve/reserveList.do?userNo=" + request.getParameter("userNo");
   }
+  
+  @PostMapping("/cancelHotel.do")
+  public String cancelHotelReserve(HttpServletRequest request, RedirectAttributes redirectAttributes) {
+    Map<String, Object> map = reserveService.modifyReserveStatusCancel(request, redirectAttributes);
+    redirectAttributes.addFlashAttribute("cancelResult", map.get("modifyResCancelResult"));
+    System.out.println(redirectAttributes.getAttribute("cancelResult"));
+    return "redirect:/reserve/reserveHotelList.do?userNo=" + request.getParameter("userNo");
+  }
 
   // 호텔 예약관련 요청을 처리
   @GetMapping("/reserveHotelList.do")
@@ -126,6 +134,9 @@ public class ReserveController {
     model.addAttribute("room", reserveService.loadRoomInfoWithWriteform(Integer.parseInt(request.getParameter("roomNo"))));
     model.addAttribute("roomNo", request.getParameter("roomNo")); 
     // 체크인, 체크아웃, 총금액 받아와야 함
+    model.addAttribute("checkin", request.getParameter("checkin"));
+    model.addAttribute("checkout", request.getParameter("checkout"));
+    model.addAttribute("finalprice", request.getParameter("finalprice"));
     return "reserve/writeHotel";
   }
   

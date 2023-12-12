@@ -53,7 +53,7 @@ public class HotelServiceImpl implements HotelService {
   public Map<String, Object> getHotelList(HttpServletRequest request) {
     Optional<String> opt = Optional.ofNullable(request.getParameter("page"));
     int page = Integer.parseInt(opt.orElse("1"));
-    int total = hotelMapper.countHotel();
+    int total = hotelMapper.countHotel(0);
     int display = 9;
     
     myPageUtils.setPaging(page, total, display);
@@ -68,11 +68,11 @@ public class HotelServiceImpl implements HotelService {
                                    , "btnVal", btnVal);
     
     List<HotelDto> hotelDto = new ArrayList<>();
-    
+    int recommend = 0;
     switch (btnVal) {
     case 0 : hotelDto = hotelMapper.selectHotelList(map);
       break;
-    case 1 : hotelDto = hotelMapper.getRecommendHotelList(map);
+    case 1 : hotelDto = hotelMapper.getRecommendHotelList(map); recommend = 1;
       break;
     case 2 : hotelDto = hotelMapper.getReviewHotelList(map);
       break;
@@ -82,11 +82,13 @@ public class HotelServiceImpl implements HotelService {
       break;
     }
     
+    int count = hotelMapper.countHotel(recommend);
+    
     List<Integer> hPrice = getPrice(hotelDto);
     
     Map<String, Object> hotel = Map.of("hotelList", hotelDto
                                       ,"price", hPrice
-                                      ,"count", hotelMapper.countHotel()
+                                      ,"count", count
                                       ,"totalPage", myPageUtils.getTotalPage()
                                       );
     
@@ -150,15 +152,20 @@ public class HotelServiceImpl implements HotelService {
   /************************이거 인서트 할때 룸 추가하면 보여줄때 쓰는 서비스********************************/
   
   @Override
-  public void hotelRoomList(HttpServletRequest request, Model model) {
+  public Map<String, Object> hotelRoomList(HttpServletRequest request) {
     
     int hotelNo = Integer.parseInt(request.getParameter("hotelNo"));
     
     List<RoomtypeDto> roomtypeDto = hotelMapper.getRoomtype(hotelNo);
-    hotelMapper.getRoomFeature(roomtypeDto);
-    hotelMapper.getRoomImage(roomtypeDto);
-    hotelMapper.getPrice(RoomtypeDto.builder().hotelNo(hotelNo).build());
+    System.out.println(roomtypeDto);
+    List<RoomFeatureDto> roomFeatureDto = hotelMapper.getRoomFeature(roomtypeDto);
+    List<HotelImageDto> hotelImageDto = hotelMapper.getHotelImage(hotelNo);
+    List<RoompriceDto> roompriceDto = hotelMapper.getPrice(RoomtypeDto.builder().hotelNo(hotelNo).build());
     
+    return Map.of("roomtype", roomtypeDto, 
+                  "roomFeature", roomFeatureDto,
+                  "image", hotelImageDto,
+                  "price", roompriceDto);
   }
   
   @Override
@@ -199,15 +206,17 @@ public class HotelServiceImpl implements HotelService {
     int minibar = Integer.parseInt(optMinibar.orElse("0"));
     
     System.out.println(minibar);
+    
+    
     int biPrice = Integer.parseInt(multipartRequest.getParameter("biPrice"));
-    String bsDate = multipartRequest.getParameter("bsDate"); 
-    String beDate = multipartRequest.getParameter("beDate"); 
+    String bsDate = multipartRequest.getParameter("bsDate").replace("-", "/"); 
+    String beDate = multipartRequest.getParameter("beDate").replace("-", "/"); 
     int junPrice = Integer.parseInt(multipartRequest.getParameter("junPrice"));
-    String jsDate = multipartRequest.getParameter("jsDate"); 
-    String jeDate = multipartRequest.getParameter("jeDate");
+    String jsDate = multipartRequest.getParameter("jsDate").replace("-", "/"); 
+    String jeDate = multipartRequest.getParameter("jeDate").replace("-", "/");
     int sungPrice = Integer.parseInt(multipartRequest.getParameter("sungPrice"));
-    String ssDate = multipartRequest.getParameter("ssDate"); 
-    String seDate = multipartRequest.getParameter("seDate");
+    String ssDate = multipartRequest.getParameter("ssDate").replace("-", "/"); 
+    String seDate = multipartRequest.getParameter("seDate").replace("-", "/");
     
     RoomtypeDto roomtypeDto = RoomtypeDto.builder()
                                 .hotelNo(hotelNo)
@@ -521,7 +530,9 @@ public class HotelServiceImpl implements HotelService {
   
   @Override
   public double getAverageRating(int hotelNo) {
-    return hotelMapper.starAve(hotelNo);
+    Optional<Double> opt = Optional.ofNullable(hotelMapper.starAve(hotelNo));
+    Double star = opt.orElse(0.0);
+    return star;
   }
   
   @Override
@@ -599,8 +610,10 @@ public class HotelServiceImpl implements HotelService {
    
    String date = request.getParameter("date");
    DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyy/MM/dd");
+   
    LocalDate checkin = getcheckin(date);
    LocalDate checkout = getcheckout(date);
+   
    int totalPrice = finalPrice(makeDateList(checkin, checkout), roomNo);
    String roomName = roomtypeDto.getRoomName();
    Map<String, Object> reserve = Map.of("totalPrice", totalPrice, "roomName", roomName, 
@@ -622,15 +635,11 @@ public class HotelServiceImpl implements HotelService {
     return allDate;
   }
   
-  
-  
   private int finalPrice(List<LocalDate> allDate, int roomNo) {
-    List<RoompriceDto> roompriceDto = packageMapper.getPrice(RoomtypeDto.builder().roomNo(roomNo).build());
+    List<RoompriceDto> roompriceDto = hotelMapper.getPrice(RoomtypeDto.builder().roomNo(roomNo).build());
     RoompriceDto price = roompriceDto.get(0);
     
-    DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyyMMdd");
-    
-    
+    DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyyMMdd");    
     int totalPrice = 0;
     for(LocalDate eachDate: allDate) {
         int date = Integer.parseInt(eachDate.format(fmt));

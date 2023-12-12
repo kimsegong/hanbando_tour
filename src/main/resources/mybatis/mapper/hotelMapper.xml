@@ -20,17 +20,16 @@
     <result column="STATUS" property="status"/>
     <result column="RECOMMEND_STATUS" property="recommendStatus"/>
      <association javaType="RegionDto" property="regionDto">
-          <id column="REGION_NO" property="regionNo"/>
-          <result column="REGION_NAME" property="regionName"/>
+        <id column="REGION_NO" property="regionNo"/>
+        <result column="REGION_NAME" property="regionName"/>
       </association>
       <association javaType="HotelImageDto" property="hotelImageDto">
-					<result column="ORIGINAL_NAME" property="originalName"/>
-					<result column="THUMBNAIL" property="thumbnail"/>
-					<result column="FILESYSTEM_NAME" property="filesystemName"/>
-					<result column="IMAGE_PATH" property="imagePath"/>
+				<result column="ORIGINAL_NAME" property="originalName"/>
+				<result column="THUMBNAIL" property="thumbnail"/>
+				<result column="FILESYSTEM_NAME" property="filesystemName"/>
+				<result column="IMAGE_PATH" property="imagePath"/>
       </association>
   </resultMap>
-  
   
   <resultMap type="RoomtypeDto" id="RoomtypeMap">
     <result column="HOTEL_NO" property="hotelNo"/>
@@ -54,8 +53,6 @@
         <result column="MINIBAR" property="minibar"/>
      </association>
  </resultMap>
-  
-  
   
   <!-- 리뷰테이블 -->
     <resultMap type="ReviewDto" id="ReviewMap">
@@ -195,10 +192,17 @@
          WHERE (H.RN BETWEEN #{begin} AND #{end}) AND HI.THUMBNAIL = 1
     
   </select>
-  <select id="countHotel" resultType="int">
+  <select id="countHotel" parameterType="int" resultType="int">
     SELECT COUNT(*)
       FROM HOTEL_T
-     WHERE STATUS = 1
+     WHERE 
+     <if test="recommend == 0">
+			 STATUS = 1
+		 </if> 
+     <if test="recommend == 1">
+			 STATUS = 1
+			 AND RECOMMEND_STATUS = 1
+		 </if>
   </select>
   
   <select id="getListPrice"  resultType="RoompriceDto">
@@ -406,29 +410,17 @@
    VALUES (#{hotelNo})
  </insert>
  
- <select id="getRoomImage" resultType="HotelImageDto">
-   SELECT HOTEL_NO, ROOM_NO, THUMBNAIL, FILESYSTEM_NAME, IMAGE_PATH
-     FROM HOTEL_IMAGE_T
-    WHERE ROOM_NO 
-     <foreach item="item" index="index" collection="list" open="in(" separator="," close=")">
-      #{item.roomNo}
-     </foreach>
-     ORDER BY DECODE(ROOM_NO,
-    <foreach item="item" index="index" collection="list" separator="," close=")">  
-     #{item.roomNo}, (list.size() - ${index})  
-    </foreach>  
- </select>
- 
  <select id="getPrice" parameterType="RoomTypeDto" resultType="RoompriceDto">
    SELECT HOTEL_NO, ROOM_NO, BI_PRICE, BS_DATE, BE_DATE, JUN_PRICE, JS_DATE, JE_DATE, SUNG_PRICE, SS_DATE, SE_DATE
      FROM ROOMPRICE_T
      WHERE
-     <if test="hotelNo != null and roomNo == 0">
+     <if test="(hotelNo != 0 and roomNo == 0) || (roomNo != 0 and hotelNo != 0)">
     	 HOTEL_NO = #{hotelNo} 
 		 </if>
-		 <if test="roomNo != null and hotelNo == 0">
+		 <if test="roomNo != 0 and hotelNo == 0">
 		 	 ROOM_NO = #{roomNo} 
 		 </if>
+		 
  </select>
  
  <insert id="insertRoomtype" parameterType="RoomtypeDto">
@@ -605,12 +597,11 @@
  	  WHERE HOTEL_NO = #{hotelNo}
  </select>  
  <select id="getRoomtype" parameterType="int" resultType ="RoomtypeDto">
-   SELECT R. ROOM_NO, R.HOTEL_NO, R.ROOM_DETAIL, R.ROOM_NAME, R.ROOM_MANY, R.R_VIEW, R.BLEAKFAST, R.SMOKE, R.PEOPLE, R.BED, R.SHOWER, R.R_SIZE,
-          RF.TOWEL, RF.WATER, RF.COFFEE, RF.DRIER, RF.IRON, RF.MINIBAR
-     FROM ROOMTYPE_T R INNER JOIN ROOM_FEATURE_T RF
-       ON R.ROOM_NO = RF.ROOM_NO
-    WHERE R.HOTEL_NO = #{hotelNo}
+   SELECT ROOM_NO, HOTEL_NO, ROOM_DETAIL, ROOM_NAME, ROOM_MANY, R_VIEW, BLEAKFAST, SMOKE, PEOPLE, BED, SHOWER, R_SIZE
+     FROM ROOMTYPE_T 
+    WHERE HOTEL_NO = #{hotelNo}
  </select>
+ 
  <select id="getRoomFeature" resultType="RoomFeatureDto">
  SELECT ROOM_NO,
         TOWEL, 
@@ -684,7 +675,7 @@
      WHERE A.RN BETWEEN #{begin} AND #{end}
   </select>
   
-  <select id="starAve" resultType="double">
+  <select id="starAve" resultType="Double">
     SELECT AVG(STAR) AS AVERAGE_RATING
       FROM REVIEW_T
      WHERE HOTEL_NO = #{hotelNo}      
