@@ -216,6 +216,19 @@ public class UserController {
     return userService.modify(request);
   }
   
+  @GetMapping("/pwExtension.form")
+  public String pwExtension() {
+    return "user/pwExtension";
+  }
+  
+  @PostMapping("/pwExtension.do")
+  public String pwExtension(HttpServletRequest request, RedirectAttributes redirectAttributes) {
+    int extensionResult =  userService.extensionPw(request);
+    int userNo = Integer.parseInt(request.getParameter("userNo"));
+    redirectAttributes.addFlashAttribute("extensionResult", extensionResult);
+    return "redirect:/user/mypage.form?userNo=" + userNo;
+  }
+  
   @GetMapping("/modifyPw.form")
   public String modifyPwForm() {
     return "user/pw";

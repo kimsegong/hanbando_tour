@@ -191,12 +191,26 @@
   
   
   
-  /*인증번호 입력 후 확인하는 곳*/
+/*인증번호 입력 후 확인하는 곳*/
+  
+  
+  
+ /*인증번호 입력 후 확인하는 곳*/
   
   
   
   const fnCheckSms = () => {
-    $('#goSMS').click(() => {
+    
+     $('#userPhoneNum').keyup((ev) => {
+      ev.target.value = ev.target.value.replaceAll('-', '');
+      // 휴대전화번호 검사 정규식 (010숫자8개)
+      let regMobile = /^010[0-9]{8}$/;
+      mobilePassed = regMobile.test(ev.target.value);
+      if(mobilePassed){
+        $('#msg_mobile').text('');
+        
+        
+        $('#goSMS').off('click').on('click', () => {
       let sms = $('#userPhoneNum').val();
       alert("인증번호가 발송되었습니다.");
   
@@ -208,6 +222,10 @@
         success: (resData) => {
           $('#authNumber').prop('disabled', false);
           $('#confirmBnt').prop('disabled', false);
+          
+          
+          
+          
           
           // Move the click event binding outside the AJAX success callback
           // to avoid multiple bindings.
@@ -240,11 +258,20 @@
             default:
               // Handle other errors as needed.
               break;
-          }
         }
+          }
+        });
       });
-    });
-  };
+
+    } else {
+      $("#goSMS").off("click").on("click", function (event) {
+        event.preventDefault();
+        alert('휴대전화번호를 확인하세요.');
+        $('#msg_mobile').text('휴대전화번호를 확인하세요.');
+      });
+    }
+  });
+};
   //이메일 -> 아이디로 쓰기 
 
 
