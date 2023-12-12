@@ -1,14 +1,6 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
-<link rel="stylesheet" th:href="@{/css/init.css(ver=1.1)}" />
-<link rel="stylesheet" th:href="@{/css/common.css(ver=1.0)}" />
-<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
-
 
 
 	<div class="main_wrap">
@@ -24,7 +16,7 @@
           <input type="hidden" id="hotelNo" name="hotelNo" th:value="${hotelNo}">
 		      <div style="text-align: left;">
             <label for="files" class="form-label" style="font-weight: 500;">객실사진첨부</label>
-            <input type="file" name="files" id="files" class="form-control" accept="image/*" multiple>
+            <input type="file" name="files" id="roomFiles" class="form-control" accept="image/*" multiple>
           </div>
           <div style="text-align: left;">
   		      <label for="roomName" class="form-label" style="font-weight: 500;">객실이름</label>
@@ -94,8 +86,7 @@
 	</form>
 	
 	</div>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
+
 <script>
      
    $('#btn_room').click(() => {
@@ -124,17 +115,9 @@
    })
   console.log($('#hotelNo').val());
   
-  var bsDate = $('#bsDate').val();
-  var beDate = $('#beDate').val();
-  var jsDate = $('#jsDate').val();
-  var jeDate = $('#jsDate').val();
-  var ssDate = $('#ssDate').val();
-  var seDate = $('#ssDate').val();
-  const fnDateCheck = () => {
-    if(bsDate > beDate || jsDate > jeDate || ssDate > seDate){
-    alert('날자를 다시 선택해 주세요 ');
-    }
-  }
+ 
+  
+ 
   
   
     
