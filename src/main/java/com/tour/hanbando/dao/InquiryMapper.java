@@ -7,7 +7,6 @@ import org.apache.ibatis.annotations.Mapper;
 
 import com.tour.hanbando.dto.InquiryAnswerDto;
 import com.tour.hanbando.dto.InquiryDto;
-import com.tour.hanbando.dto.UserDto;
 
 @Mapper
 public interface InquiryMapper {
