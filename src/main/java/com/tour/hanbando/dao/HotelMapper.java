@@ -70,7 +70,7 @@ public interface HotelMapper {
   public int getCountHeart(HeartDto heartDto);
   public List<HeartDto> selectHotelHeartList(Map<String, Object> map);
   public int deleteHotelHeart(int hotelNo);
-  
+  public int getCountHotelHeart(int userNo);
   public int deleteHotel(int hotelNo);
   Double starAve(@Param("hotelNo") int hotelNo);
 }

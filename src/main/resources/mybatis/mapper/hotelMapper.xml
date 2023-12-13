@@ -703,6 +703,13 @@
     SELECT COUNT(*) FROM HEART_T WHERE HOTEL_NO = #{hotelDto.hotelNo} AND USER_NO = #{userNo}
  </select>
  
+ <select id="getCountHotelHeart" parameterType="int" resultType="int">
+    SELECT COUNT(*) 
+      FROM HOTEL_T HOT INNER JOIN HEART_T H
+        ON HOT.HOTEL_NO = H.HOTEL_NO
+     WHERE USER_NO = #{userNo}
+ </select>
+ 
  <delete id="deleteHotel" parameterType="int">
 	 DELETE FROM HOTEL_T WHERE HOTEL_NO = #{hotelNo}
  </delete>

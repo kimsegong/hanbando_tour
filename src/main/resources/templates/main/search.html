@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 
- <head th:replace="~{/layout/header::head('검색 결과')}"></head>
+ <head th:replace="~{layout/header::head('검색 결과')}"></head>
 <style>
   .card {
       width: 18rem;
@@ -27,7 +27,7 @@
 </style>  
 <body>
 
-  <div th:replace="~{/layout/header::header}"></div>
+  <div th:replace="~{layout/header::header}"></div>
 
   <div class="container text-center">  <!-- 그리드 시작 -->  
   
@@ -233,7 +233,7 @@
       
 
 
-    <div th:replace="~{/layout/footer::footer}"></div>
+    <div th:replace="~{layout/footer::footer}"></div>
 
  
 </body>
