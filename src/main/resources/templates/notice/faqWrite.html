@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 
-<head th:replace="~{/layout/header::head('자주묻는질문 작성')}"></head> 
+<head th:replace="~{layout/header::head('자주묻는질문 작성')}"></head> 
     <style>
       .content > .form-control {
         height: 400px;
@@ -40,7 +40,7 @@
     </style>
 
 <body>
-  <div th:replace="~{/layout/header::header}"></div>
+  <div th:replace="~{layout/header::header}"></div>
   
   <div class="main_wrap">
     
@@ -180,7 +180,7 @@ const fnNoticeModify = () => {
   
   
   
-  <div th:replace="~{/layout/footer::footer}"></div>
+  <div th:replace="~{layout/footer::footer}"></div>
 </body>
 </html>
 
