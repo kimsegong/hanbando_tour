@@ -47,7 +47,6 @@ public class InquiryController {
   @GetMapping("/inquirywrite.form")
   public String inquirywrite() {
     return "notice/inquirywrite";
-  
   }
   
   @PostMapping("/inquiryremove.do")
