@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 
-<head th:replace="~{/layout/header::head('내 예약목록')}"></head> 
+<head th:replace="~{layout/header::head('내 예약목록')}"></head> 
 
 <style>
   .btn-green{
@@ -13,7 +13,7 @@
   
 </style>
 <body>
-	<div th:replace="~{/layout/header::header}"></div>
+	<div th:replace="~{layout/header::header}"></div>
 	
 	<div class="main_wrap" style="padding-top: 0;">
 	
@@ -105,7 +105,7 @@
     fnCheckResCancel();
   </script>
 
-	<div th:replace="~{/layout/footer::footer}"></div>
+	<div th:replace="~{layout/footer::footer}"></div>
 </body>
 </html>
 
