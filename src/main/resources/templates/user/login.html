@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 
-<head th:replace="~{/layout/header::head('한반도 투어')}"></head> <!-- 이거 알맞게 바꿔주세요-->
+<head th:replace="~{layout/header::head('한반도 투어')}"></head> <!-- 이거 알맞게 바꿔주세요-->
 <style>
    /* 텍스트 깜빡임 */
 @keyframes blink-effect { 50% { opacity: 0; } } 
@@ -32,7 +32,7 @@
                     <label for="pw"></label>
                     <div class="col-sm-9" style="width: 35%;"><input type="password" name="pw" id="pw" placeholder="비밀번호" class="form-control"></div>
                 </div>
-                <button class="w3-btn w3-round-xxlarge w3-lime w3-block mx-auto" style="width: 35%;" type="submit">로그인</button>
+                <button class="w3-btn w3-round-xxlarge w3-green w3-block mx-auto" style="width: 35%;" type="submit">로그인</button>
                 
                 <div class="mb-3 row justify-content-center" style="margin-top: 10px;">
                     <div class="col-auto">

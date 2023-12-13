@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 
-<head th:replace="~{/layout/header::head('찜페이지')}"></head>
+<head th:replace="~{layout/header::head('찜페이지')}"></head>
 
 <style>
   .btn-green{
-    background-color: #B6C4B6;
+    background-color: #B6BBC4;
   }
   .btn-whitegreen{
-    background-color: #EEF0E5;
+    background-color: #F0ECE5;
   }
     .hotel-table {
     display: table;
@@ -27,7 +27,7 @@
 </style>
 <body>
   
-  <div th:replace="~{/layout/header::header}"></div>
+  <div th:replace="~{layout/header::header}"></div>
   
   <div class="container text-center">  <!-- 그리드 시작 -->  
     <div class="row">
@@ -48,7 +48,7 @@
        </div>
      <table class="table w-75 p-3" style="margin: auto; table-layout: fixed;">
     <thead>
-        <tr class="table-success">
+        <tr class="table-secondary" style="border-top: 1px solid black;">
             <th scope="col">❤️
                 <input type="checkbox" class="form-check-input" id="chk_all">
                 <label class="form-check-label" for="chk_all"></label>
@@ -176,7 +176,7 @@
 
 </script>
     
-  <div th:replace="~{/layout/footer::footer}"></div>
+  <div th:replace="~{layout/footer::footer}"></div>
   
 </body>
 </html>
