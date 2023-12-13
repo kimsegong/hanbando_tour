@@ -158,10 +158,15 @@ public class HotelServiceImpl implements HotelService {
     int hotelNo = Integer.parseInt(request.getParameter("hotelNo"));
     
     List<RoomtypeDto> roomtypeList = hotelMapper.getRoomtype(hotelNo);
-    List<RoomFeatureDto> roomFeatureList = hotelMapper.getRoomFeature(roomtypeList);
-    List<HotelImageDto> hotelImageList = hotelMapper.getHotelImage(hotelNo);
-    List<RoompriceDto> roompriceList = hotelMapper.getPrice(RoomtypeDto.builder().hotelNo(hotelNo).build());
+    List<RoomFeatureDto> roomFeatureList = new ArrayList<>();
+    List<HotelImageDto> hotelImageList = new ArrayList<>();
+    List<RoompriceDto> roompriceList = new ArrayList<>();
     
+    if(roomtypeList.size() != 0) {
+      roomFeatureList = hotelMapper.getRoomFeature(roomtypeList);
+      hotelImageList = hotelMapper.getHotelImage(hotelNo);
+      roompriceList = hotelMapper.getPrice(RoomtypeDto.builder().hotelNo(hotelNo).build());
+    }
     return Map.of( "roomFeatureList", roomFeatureList,
                    "hotelImageList", hotelImageList,
                    "roompriceList", roompriceList,
@@ -672,10 +677,36 @@ public class HotelServiceImpl implements HotelService {
     return totalPrice;
   }
   
+//  @Override
+//  public int modifyHotel(int hotelNo) {
+//    return;
+//  }
+//  
+//  @Override
+//  public int modifyRoom(HttpServletRequest request) {
+//    int result = 0;
+//    
+//    
+//    
+//    return 0;
+//  }
   
   @Override
-  public int modifyHotel(int hotelNo) {
-    return 0;
+  public void getRoom(int roomNo, Model model) {
+    RoomtypeDto roomtypeDto = hotelMapper.roomtype(roomNo);
+    RoompriceDto roompriceDto = hotelMapper.getEachRoomPrice(roomNo);
+    List<HotelImageDto> hotelImageList = hotelMapper.getRoomImage(roomNo);
+    RoomFeatureDto roomFeatureDto = hotelMapper.getEachRoomFeature(roomNo);
+    model.addAttribute("roomtype", roomtypeDto);
+    model.addAttribute("roomprice", roompriceDto);
+    model.addAttribute("hotelImage", hotelImageList);
+    model.addAttribute("roomFeature", roomFeatureDto);
+  }
+  
+  @Override
+  public int deleteRoom(HttpServletRequest request) {
+    int roomNo = Integer.parseInt(request.getParameter("roomNo"));
+    return hotelMapper.deleteRoom(roomNo);
   }
   
   
