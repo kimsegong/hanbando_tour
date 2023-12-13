@@ -120,9 +120,6 @@
   <!-- 네비게이션 바 -->
   <nav class="navbar navbar-expand-lg">
   <div class="container-fluid row" style="border-top: 1px solid #DED0B6; padding: 8px; border-bottom: 1px solid #DED0B6; padding: 8px;">
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
     <div class="collapse navbar-collapse col-3" id="navbarNavDropdown">
       <ul class="navbar-nav" style="margin-left: 9%;">
         <li class="nav-item dropdown">
@@ -145,16 +142,16 @@
           </a>
           <ul class="dropdown-menu">
             <li><a class="dropdown-item" th:href="@{/hotel/list.do}">모든 호텔</a></li>
-            <li><a class="dropdown-item" href="#">서울/경기</a></li>
-            <li><a class="dropdown-item" href="#">인천</a></li>
-            <li><a class="dropdown-item" href="#">강원도</a></li>
-            <li><a class="dropdown-item" href="#">충정도</a></li>
-            <li><a class="dropdown-item" href="#">전라도</a></li>
-            <li><a class="dropdown-item" href="#">경상도</a></li>
+            <li><a class="dropdown-item" th:href="@{/hotel/list.do(regionNo=2)}">서울/경기</a></li>
+            <li><a class="dropdown-item" th:href="@{/hotel/list.do(regionNo=3)}">인천</a></li>
+            <li><a class="dropdown-item" th:href="@{/hotel/list.do(regionNo=4)}">강원도</a></li>
+            <li><a class="dropdown-item" th:href="@{/hotel/list.do(regionNo=5)}">충정도</a></li>
+            <li><a class="dropdown-item" th:href="@{/hotel/list.do(regionNo=6)}">전라도</a></li>
+            <li><a class="dropdown-item" th:href="@{/hotel/list.do(regionNo=7)}">경상도</a></li>
           </ul>
         </li>
         <li class="nav-item">
-          <a class="nav-link" th:href="@{/notice/list.do}" style="font-weight: 400;">고객센터</a>
+          <a class="nav-link" th:href="@{/notice/list.do}" style="font-weight: 500;">고객센터</a>
         </li>
       </ul>
       <div class="col-9"></div>
