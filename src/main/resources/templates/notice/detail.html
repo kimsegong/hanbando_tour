@@ -52,6 +52,9 @@
     margin-top: 100px; /*원하는 픽셀값으로 변경 가능합니다.*/
   }
 
+  .notice-text {
+    font-size: 1.2em;
+  }
 </style>
 
 
@@ -70,94 +73,66 @@
             <!--/*여기에 작성/ 다 만들고 style 지워주세요  */-->
             
 
-    <div class="wrap1">
-      <div class="box1"></div>      
-    </div> 
-            
     <div class="row">
-    <div class="col-7"></div>
-    <div class="col-4" style="display: flex; justify-content: flex-end;">
-      <div class="home">
-        <a th:href="@{/main.do}"><i class="fa-solid fa-house" style="font-size:15px; margin-right: 5px;"></i></a>
-         &nbsp;고객센터  &nbsp;  >   &nbsp; 공지사항
-      </div>
-    </div>
-    <div class="col-1"></div>
-       
-    <div class = "wrap1">
-      <div class="box2"></div>
-    </div>
-    
-   
-    <div class="col-3"> 
+      <div style="margin-left:30%; padding-bottom:20px;">
       <a th:href="@{/notice/list.do}">
         <button type="button" id="btn_list">목록보기</button> 
       </a>
-    </div>
+      </div>
     
     
-    
-    <div class="col-9" style=" margin-top: 50px;">
-      <h2>공지사항</h2>
-      <hr style="border: 1px solid black; margin-bottom: 0; margin-top: 10px;">
-    </div>
+      <p class="title">공지사항</p>
 
 
-    <div class="col-3"></div>
 
     
-    <div class="col-9">   
-    <div class="row">
-      <h4 class="notice-text" style="font-size: 16px; font-weight: bold;" th:text="|공지사항 : ${notice.title}|"></h4>
+    <div class="row notice_title">
+      <h4 class="notice-text" th:text="|공지사항 : ${notice.title}|"></h4>
     </div>
     <div  style=" margin-bottom: 28px;">
-      <h4 class="notice-text" style="font-size: 16px; font-weight: bold;" th:text="|작성일:&nbsp;&nbsp;&nbsp;${notice.createdAt}|"></h4>
+      <h4 class="notice-text" th:text="|작성일:&nbsp;&nbsp;&nbsp;${notice.createdAt}|"></h4>
     </div>
-      <hr style="border: 1px solid black; margin-bottom: 0; margin-top: 10px;">    
-    </div>
+   
+    <div>
+      
+    <div style="font-size: 16px; font-weight: bold; display: inline-block;">첨부파일</div>
+      <div>
+      <th:block th:if="${#lists.isEmpty(attachList)}">
+        <div style="display: inline-block;">첨부 없음</div>
+      </th:block>  
+
+      <th:block th:if="${not #lists.isEmpty(attachList)}">
+        <th:block th:each="a:${attachList}">
+          <div class="attach" th:data-attach_no="${a.attachNo}" style="display: inline-block;">
+            <a th:text="${a.originalFilename}"></a>
+          </div>
+        </th:block>
+        <div style="display: inline-block;">
+          <a th:href="@{/notice/downloadAll.do(noticeNo=${notice.noticeNo})}">모두 다운로드</a>
+        </div>
+      </th:block>       
+      </div>
+      
+      </div>
+      
     
 
     
    
-    <div class="col-3"></div>
-      <div class="col-9">   
       
       <div class="wrap1">
         <div class="box3"></div>
       </div>    
       
       <div class="contents" th:text="${notice.contents}" style="white-space: pre-wrap;"></div>
-      
-      <h3>첨부파일</h3>
-      <div>
-      <th:block th:if="${#lists.isEmpty(attachList)}">
-        <div>첨부 없음</div>
-      </th:block>  
-
-      <th:block th:if="${not #lists.isEmpty(attachList)}">
-        <th:block th:each="a:${attachList}">
-          <div class="attach" th:data-attach_no="${a.attachNo}">
-            <a th:text="${a.originalFilename}"></a>
-          </div>
-        </th:block>
-        <div>
-          <a th:href="@{/notice/downloadAll.do(noticeNo=${notice.noticeNo})}">모두 다운로드</a>
-        </div>
-      </th:block>       
-      </div>
-      
-      
        
-      </div>
       
       <div class="wrap1">
         <div class="box4"></div>        
       </div>
       
       
-      <div class="col-3"></div>
  
-      <div class="col-9"  style="padding-left:10px; padding-right: 40px;">
       <div class="text-center">
       <div>
         <form id="frm_btn" method="post">
@@ -175,7 +150,6 @@
                 </form>
         </form>
       </div> 
-      </div>
       </div>
            
 
@@ -273,4 +247,3 @@
   <div th:replace="~{layout/footer::footer}"></div>
 </body>
 </html>
-

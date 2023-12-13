@@ -12,7 +12,6 @@
     height:40px;
   }  
 
-  
   .btn-outline-primary {
     padding: 10px 24px !important; /* 버튼 내부의 여백을 조절합니다. */
     font-size: 14px !important; /* 글자 크기를 조절합니다. */
@@ -38,6 +37,7 @@
   }
   .title{
     font-size: 30px;
+    font-weight: 400;
   }
   
   .inquiry_user{
@@ -120,7 +120,7 @@
 
 
         <div class="main_list_wrap">    
-        <p class="title">회원 문의내역</p>
+        <p class="title" style="margin-top:18px; padding-left:5px;">회원 문의내역</p>
             
       <div class="row">
       <div class="col-7"></div>
@@ -156,9 +156,9 @@
   <div class="row">
     <div class="col">
     </div>
-    <div class="col-9">
+    <div class="col-9" style="margin-left:40px;">
        
-       <table class="table table-hover">
+       <table class="table table-hover table-inquiryManage">
         <thead>
           <tr>
             <th scope="co1">답변상태</th>
@@ -240,6 +240,7 @@
       <form id="frm_search" method="get" th:action="@{/notice/searchInquiryList.do}" >
         <select name="column" id="column">
           <option value="INQUIRY_NO">문의번호</option>
+          <option value="NAME">작성자</option>
           <option value="SEPARATE">문의유형</option>
           <option value="TITLE">제목</option>
         </select>
