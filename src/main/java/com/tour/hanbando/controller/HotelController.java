@@ -138,7 +138,7 @@ public class HotelController {
   
   @GetMapping("addRoom.form")
   public String HotelRoom(@RequestParam(value="hotelNo", required=false, defaultValue="0")int hotelNo, Model model) {
-   model.addAttribute("hotelNo", hotelNo);
+    model.addAttribute("hotelNo", hotelNo);
     return "hotel/hotelRoom";  
   }
   
@@ -146,10 +146,14 @@ public class HotelController {
   @PostMapping("addHotelRoom.do")
   public int writeRoom(MultipartHttpServletRequest multipartRequest, 
                         @RequestParam("files") List<MultipartFile> files) throws Exception {
-    
     int addResult = hotelService.writeRoom(multipartRequest, files) ? 1 : 0;
-    
     return addResult;
+  }
+  
+  @ResponseBody
+  @GetMapping("deleteRoom.do")
+  public int deleteRoom(HttpServletRequest request) {
+    return hotelService.deleteRoom(request);
   }
   
   
@@ -165,13 +169,25 @@ public class HotelController {
   }
   
   /*************************** 수정 ***************************************************/  
-//  @PostMapping("/modifyBlog.do")
-//  public String modifyBlog(HttpServletRequest request, RedirectAttributes redirectAttributes) {
+//  @PostMapping("/modifyHotel.do")
+//  public String modifyHotel(HttpServletRequest request, RedirectAttributes redirectAttributes) {
 //    int modifyResult = hotelService.modifyHotel(request);
-//    redirectAttributes.addFlashAttribute("modifyResult", modifyResult);
+//     redirectAttributes.addFlashAttribute("modifyResult", modifyResult);
 //    return "redirect:/hotel/detail.do?hotelNo=" + request.getParameter("hotelNo");
 //  }
-   
   
+  @GetMapping("/modifyRoom.form")
+  public String modiRoom(@RequestParam(value="roomNo", required=false, defaultValue="0") int roomNo, Model model) {
+    hotelService.getRoom(roomNo, model);
+    return "hotel/modifyHotelRoom";
+  }
+  
+  
+//  @ResponseBody
+//  @PostMapping("/modifyRoom.do")
+//  public int modifyRoom(HttpServletRequest request) {
+//    return hotelService.modifyRoom(request);
+//  }
+   
   
 }

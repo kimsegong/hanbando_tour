@@ -1,18 +1,19 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 
-<head th:replace="~{/layout/header::head('예약 상세')}">
+<head th:replace="~{layout/header::head('예약 상세')}">
  
 </head> <!-- 이거 알맞게 바꿔주세요-->
 <style>
   .blind {
     display: none;
   }
+  
 </style>
 <body>
-	<div th:replace="~{/layout/header::header}"></div>
+	<div th:replace="~{layout/header::header}"></div>
 	
-	<div class="main_wrap">
+	<div class="main_wrap" style="padding-top: 0;">
 	
 	
 		 <div class="container text-center">
@@ -20,14 +21,14 @@
 		    <div class="col-1">	      
 		    </div>
 		    <div class="col-10">
-		       <div style="margin: 20px auto;">
-              <h2><strong>예약내역상세</strong></h2>
+		       <div>
+             <p style="font-size: 30px; font-weight: 400; ">예약내역상세</p>
             </div>
             
-            <div style="margin-top: 40px;">
+            <div style="margin: 20px 0;" class="col-6">
               <h4><strong>예약자정보</strong></h4>
             </div>
-            <div class="d-grid gap-2 col-8  mx-auto">
+            <div class="d-grid gap-2 col-8  mx-auto" style="text-align: left;">
               <table class="table">
                 <colgroup>
                   <col style="width:20%;">
@@ -57,10 +58,10 @@
               </table>
             </div>
             
-            <div style="margin-top: 30px;">
+            <div style="margin: 20px 0;" class="col-6">
               <h4><strong>예약상품정보</strong></h4>
             </div>
-            <div class="d-grid gap-2 col-8  mx-auto">
+            <div class="d-grid gap-2 col-8  mx-auto" style="text-align: left;">
               <table class="table">
                 <colgroup>
                   <col style="width:20%;">
@@ -79,10 +80,10 @@
                   <td>
                     <span th:text="|총 ${reserve.reservePerson}명|"></span>
                     <span>
-                      <button type="button" id="btn_peopleInfo" class="btn btn-outline-success btn-sm" style="margin-left: 10px;">상세보기</button>
+                      <button type="button" id="btn_peopleInfo" class="w3-btn w3-small w3-round-xxlarge w3-lime" style="margin-left: 10px;"><b>상세보기</b></button>
                     </span>
                     <div class="blind">
-                      <table class="table">
+                      <table class="table" style="margin-top: 20px;">
                         <thead>
                           <tr>
                             <th>성인/소아</th>
@@ -114,7 +115,7 @@
                 </tr>
                 <tr>
                   <td>주의사항</td>
-                  <td th:text="${reserve.packageDto.danger}"></td>
+                  <td th:text="${reserve.packageDto.danger}"  style="white-space: pre;"></td>
                 </tr>
                 <tr>
                   <td>결제금액</td>
@@ -123,7 +124,7 @@
               </table>
             </div>
             
-            <div>
+            <div class="col-6 mx-auto">
               <form id="frm_btn" method="post">
                 <input type="hidden" name="reserveNo" id="reserveNo" th:value="${reserve.reserveNo}">
                 <input type="hidden" name="userNo" th:value="${reserve.userDto.userNo}">
@@ -133,15 +134,21 @@
                 <input type="hidden" name="departureLoc" th:value="${reserve.departureLoc}">
                 <div th:if="${reserve.reserveStatus == 0}">
                   <div class="d-grid gap-2 col-5 mx-auto" style="margin: 10px auto 25px;">
-                    <button class="btn btn-primary" type="button" th:onclick="requestPay()">결제하기</button>
+                    <button class="w3-btn w3-round-xxlarge w3-green w3-block mx-auto" type="button" th:onclick="requestPay()">결제하기</button>
                   </div>
                 </div>
-                <button class="btn btn-success" type="button" th:onclick="|location.href='@{/package/list.do}'|">다른 상품 예약하러가기</button>
-                <button type="button" th:onclick="|location.href='@{/reserve/reserveList.do(userNo=${session.user.userNo})}'|" class="btn btn-success">나의 예약목록</button>
-                <th:block th:if="${reserve.reserveStatus != 2}">
-                  <button th:if="${reserve.reserveStatus != 1}" class="btn btn-outline-secondary" type="button" id="btn_res_modify">예약 수정하러가기</button>
-                  <button class="btn btn-outline-danger" type="button" id="btn_res_cancel">예약 취소하기</button>
-                </th:block>
+                <div style="display: flex;">
+                  <div class="d-grid gap-2 col-5 mx-auto">
+                    <button class="w3-btn w3-round-xxlarge w3-lime w3-block mx-auto" type="button" th:onclick="|location.href='@{/package/list.do}'|">다른 상품 예약하러가기</button>
+                    <button class="w3-btn w3-round-xxlarge w3-lime w3-block mx-auto" type="button" th:onclick="|location.href='@{/reserve/reserveList.do(userNo=${session.user.userNo})}'|" >나의 예약목록</button>
+                  </div>
+                  <div class="d-grid gap-2 col-5 mx-auto">
+                    <th:block th:if="${reserve.reserveStatus != 2}">
+                      <button th:if="${reserve.reserveStatus != 1}" class="w3-btn w3-round-xxlarge w3-lime w3-block mx-auto" type="button" id="btn_res_modify">예약 수정하러가기</button>
+                      <button class="w3-btn w3-round-xxlarge w3-lime w3-block mx-auto" type="button" id="btn_res_cancel">예약 취소하기</button>
+                    </th:block>
+                  </div>
+                </div>
               </form>
             </div>
             
@@ -349,7 +356,7 @@
 	
 	
 	
-	<div th:replace="~{/layout/footer::footer}"></div>
+	<div th:replace="~{layout/footer::footer}"></div>
 </body>
 </html>
 
