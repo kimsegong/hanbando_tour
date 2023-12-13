@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 
-<head th:replace="~{/layout/header::head('패키지썸네일')}"></head>
+<head th:replace="~{layout/header::head('패키지썸네일')}"></head>
 <style>
 
 #previewId {
@@ -13,7 +13,7 @@
 </style>
 <body>
 	
-	<div th:replace="~{/layout/header::header}"></div>
+	<div th:replace="~{layout/header::header}"></div>
 	
 	<div class="container text-center">  <!-- 그리드 시작 -->  
 	  <div class="row">
@@ -79,7 +79,7 @@
 
 
 
-<div th:replace="~{/layout/footer::footer}"></div>
+<div th:replace="~{layout/footer::footer}"></div>
 </body>
 </html>
 
