@@ -1,9 +1,155 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 
-<head></head>
+<head th:replace="~{layout/header::head('한반도 투어')}"></head>
+<style>
+  .text-size {
+    font-size: 30px;
+    text-align: left;
+  }
+</style>
 <body>
 
+   <div th:replace="~{layout/header::header}"></div>
+   
+   <div class="main_wrap">
+      <div class="ad_back">
+         <div class="ad_wrapper">
+           <!--/* 캐러셀 및 이미지  */-->
+        <div class="owl-carousel owl-theme" id="imageWrapper">
+          <!--/* 이미지의 위치에 맞게 src 경로 설정. 여기서는 index.html과 image1,2,3이 같은 폴더 내에 같은 위계에 위치     */-->
+            
+        </div>   
+      </div>     
+     </div>
+   
+       <div class="container text-center">
+        <div class="row">
+          <div class="col-1">         
+          </div>
+          <div class="col-10" >
+               <!--/*여기에 작성 */-->
+          <div class="card_wrapper1">
+               <p class="text-size"> 베스트 패키지 기획전</p>
+               <div id="best_cards" class="cards row">
+               </div>
+            <div class="card_wrapper2">
+               <p class="text-size">패키지 기획전<div id="theme" style="font-size: 20px; text-align: left;"></div></p>
+               <div id="theme_cards" class="theme_cards row">
+                  
+               </div>
+               
+            </div>     
+          </div>
+          <div class="col-1">         
+          </div>
+        </div>
+     </div>
+   
+   </div>
+
+   
+   <script th:inline="javascript">
+    const fnBannerImage = () => {
+          $.ajax({
+           type: 'get',
+        url: '/main/getBanner.do', 
+        dataType: 'json',
+        success: (resData) => {  
+               if (resData.banner != null && resData.banner.length > 0) {
+            $.each(resData.banner, (i, banner) => {  
+                 if(banner.state == 1){
+                      let str = '<div class="item'+banner.bannerNo+'"><a href="'+banner.linkedAddress+'">';
+                   str += '<img class="owl_img" src="'+ banner.bannerPath +'/'+ banner.filesystemName+'" ></a></div>';
+                              
+                     $('#imageWrapper').append(str);      
+                   } else {}
+                        
+             })
+               $(document).ready(function() {
+               var owl = $('.owl-carousel');
+                owl.owlCarousel({
+                  items: 1, // 한번에 보여지는 이미지 수
+                  loop: true, // 항목들을 무한으로 반복하여 보여줄지 여부
+                  autoplay: true, // 자동으로 슬라이드 쇼를 시작할지 여부
+                  autoplayTimeout: 4000, // 다음 이미지로 넘어가는 시간 (단위 : 밀리초)
+                  autoplayHoverPause: true, // 마우스가 이미지에 위에 있을 때 자동 슬라이드를 일시중지 할지 여부
+                });           
+              });
+             }
+          }
+      })
+   }    
+   
+ var address = '/package/increseHit.do?packageNo='
+      
+      const fnBestPackage = () => {
+      $.ajax({
+        type: 'get',
+        url: '/main/getBest.do', 
+        dataType: 'json',
+        success: (resData) => {  
+          if (resData.bestPackageList != null && resData.bestPackageList.length > 0) {
+            $.each(resData.bestPackageList, (i, package) => {  
+                     
+                  let str ='';
+                   str += '<div class="col-md-3">';
+                 str += '<div class="card w-100 p-3" style="height: 300px;" onclick="location.href=\''+address+package.packageNo + '\'">';
+                str += '<img src="' + package.productImageDto.imagePath + '/' + package.productImageDto.filesystemName + '" class="card_image" alt="Package Image">';
+                str += '<div class="card-body d-flex flex-column justify-content-between" style="height: 250px;"">';
+                str += '<p class="card-title">'+package.packageTitle+'</p>';
+                str += '<p class="card-text">'+package.price+'원</p>';
+                str += '</div>';
+                str += '</div>';
+                str += '</div>';
+            $('#best_cards').append(str); 
+             })
+         }
+        }
+       })
+       }
+       
+   const fnThemePackage = () => {
+      $.ajax({
+        type: 'get',
+        url: '/main/getTheme.do', 
+        dataType: 'json',
+        success: (resData) => {  
+               $('#theme_cards').empty();
+               $('#theme').empty();
+          if (resData.themePackageList != null && resData.themePackageList.length > 0) {
+            $.each(resData.themePackageList, (i, package) => { 
+                     if(package.themeDto.themeNo == 1){
+                        fnThemePackage();
+                     }else {
+                 let str ='';
+                      str += '<div class="col-md-3">';
+                    str += '<div class="card w-100 p-3" style="height: 300px;" onclick="location.href=\''+address+package.packageNo + '\'">';
+                   str += '<img src="' + package.productImageDto.imagePath + '/' + package.productImageDto.filesystemName + '" class="card_image" alt="Package Image">';
+                   str += '<div class="card-body d-flex flex-column justify-content-between" style="height: 250px;"">';
+                   str += '<p class="card-title">'+package.packageTitle+'</p>';
+                   str += '<p class="card-text">'+package.price+'원</p>';
+                   str += '</div>';
+                   str += '</div>';
+                   str += '</div>';
+            $('#theme_cards').append(str);
+               }
+            
+             })
+                  $('#theme').append(resData.themePackageList[0].themeDto.themeName);
+           }
+         }
+      })
+     }    
+       
+      
+ 
+   fnBannerImage();       
+  fnBestPackage();
+  fnThemePackage();
+   </script>
+   
+   
+   <div th:replace="~{layout/footer::footer}"></div>
 </body>
 </html>
-

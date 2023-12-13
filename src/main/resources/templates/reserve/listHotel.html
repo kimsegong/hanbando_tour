@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{layout/header::head('내 예약목록')}"></head>
+<style>
+  .btn-green{
+    background-color: #B6BBC4;
+  }
+  .btn-whitegreen{
+    background-color: #F0ECE5;
+  }
+  
+</style>
+<body>
+	<div th:replace="~{layout/header::header}"></div>
+	
+	<div class="main_wrap"  style="padding-top: 0;">
+	
+	
+		 <div class="container text-center">
+		  <div class="row">
+		    <div class="col-1">	      
+          <div class="w3-sidebar w3-bar-block" style="width:10%; height:200px;"> <!-- 사이드바 -->
+            <a th:href="@{/package/list.do}" class="w3-bar-item w3-button">패키지 보러가기</a>
+            <a th:href="@{/hotel/list.do}" class="w3-bar-item w3-button">호텔 보러가기</a>
+            <a th:href="@{/user/heart.do(userNo=${session.user.userNo})}" class="w3-bar-item w3-button">찜목록 보기</a>
+          </div>
+		    </div>
+		    <div class="col-10" style="padding: 0 100px">
+		      <div>
+            <p style="font-size: 30px; font-weight: 400; ">예약내역목록</p>
+          </div>
+          <div>
+            <div class="btn-group" role="group" aria-label="Faq Category Buttons" style="margin-bottom: 20px;">
+              <a th:href="|@{/reserve/reserveList.do(userNo=${session.user.userNo})}|" class="btn btn-whitegreen my-btn">패키지</a>
+              <a th:href="|@{/reserve/reserveHotelList.do(userNo=${session.user.userNo})}|" class="btn btn-green my-btn">호텔</a>
+            </div>
+          </div>
+          <div>
+            <table class="table">
+              <thead class="table-secondary" style="border-top: 1px solid black;" >
+                <tr>
+                  <th>순번</th>
+                  <th>예약날짜/예약번호</th>
+                  <th>호텔명</th>
+                  <th>체크인/체크아웃</th>
+                  <th>금액</th>
+                  <th>예약상태</th>
+                </tr>
+              </thead>
+              <tbody>
+                <th:block th:if="${not #lists.isEmpty(reserveHotelList)}">
+                  <th:block th:each="resHo,vs:${reserveHotelList}">
+                    <tr>
+                      <td th:text="${beginNo - vs.index}"></td>
+                      <td>
+                        <a th:href="@{/reserve/detailHotel.do(reserveNo=${resHo.reserveNo}, roomNo=${resHo.roomtypeDto.roomNo})}" th:text="|${resHo.reservedAt} - ${resHo.reserveNo}|" style="font-weight: 400; "></a>
+                      </td>
+                      <td>
+                        <a th:href="@{/hotel/detail.do(hotelNo=${resHo.hotelDto.hotelNo})}" th:text="${#strings.abbreviate(resHo.hotelDto.hotelName,15)}" style="font-weight: 400; "></a>
+                      </td>
+                      <td th:text="|${resHo.reserveStart} ~ ${resHo.reserveFinish}|"></td>
+                      <td th:text="|${resHo.reservePrice}원|"></td>
+                      <th:block th:if="${resHo.reserveStatus == 0}">
+                        <td th:text="결제대기"></td>
+                      </th:block>
+                      <th:block th:if="${resHo.reserveStatus == 1}">
+                        <td th:text="예약완료"></td>
+                      </th:block>
+                      <th:block th:if="${resHo.reserveStatus == 2}">
+                        <td th:text="취소"></td>
+                      </th:block>
+                    </tr>
+                  </th:block>
+                </th:block>
+                <tr th:if="${#lists.isEmpty(reserveHotelList)}">
+                  <td colspan="7">
+                    <div>예약내역이 없습니다.</div>
+                  </td>
+                </tr>
+              </tbody>
+              <tfoot th:if="${not #lists.isEmpty(reserveHotelList)}">
+                <tr>
+                  <td colspan="6" th:utext="${paging}" class="paging"></td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+		      	
+		    </div>
+		    <div class="col-1">	      
+		    </div>
+		  </div>
+	  </div>
+	
+	</div>
+	
+  <script th:inline="javascript">
+    
+    function fnCheckResCancel(){
+      if('[[${cancelResult}]]' == 1){
+        alert('예약이 취소되었습니다.');
+      }
+    }
+  
+    fnCheckResCancel();
+  </script>
+  
+  
+	<div th:replace="~{layout/footer::footer}"></div>
+</body>
+</html>
+

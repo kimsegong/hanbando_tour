@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{layout/header::head('예약 상세')}"></head> <!-- 이거 알맞게 바꿔주세요-->
+<style>
+  .blind {
+    display: none;
+  }
+</style>
+<body>
+	<div th:replace="~{layout/header::header}"></div>
+	
+	<div class="main_wrap" style="padding-top: 0;">
+	
+	
+		 <div class="container text-center">
+		  <div class="row">
+		    <div class="col-1">	      
+		    </div>
+		    <div class="col-10" >
+		        <div >
+              <p style="font-size: 30px; font-weight: 400; ">예약내역상세</p>
+            </div>
+            
+            <div style="margin: 20px 0;" class="col-6">
+              <h4><strong>예약자정보</strong></h4>
+            </div>
+            <div class="d-grid gap-2 col-8  mx-auto" style="text-align: left;">
+              <table class="table">
+                <colgroup>
+                  <col style="width:20%;">
+                  <col >
+                </colgroup>
+                <tr>
+                  <td>이름</td>
+                  <td th:text="${reserveHo.userDto.name}"></td>
+                </tr>
+                <tr>
+                  <td>휴대폰번호</td>
+                  <td th:text="${reserveHo.userDto.mobile}"></td>
+                </tr>
+                <tr>
+                  <td>성별</td>
+                  <td th:if="${reserveHo.userDto.gender == 'M'}" >남</td>
+                  <td th:if="${reserveHo.userDto.gender == 'F'}" >여</td>
+                </tr>
+                <tr>
+                  <td>이메일</td>
+                  <td th:text="${reserveHo.userDto.email}"></td>
+                </tr>
+                <tr>
+                  <td>요청사항</td>
+                  <td th:text="${reserveHo.requestedTerm}"></td>
+                </tr>
+              </table>
+            </div>
+            
+            <div style="margin: 20px 0;" class="col-6">
+              <h4><strong>예약 정보</strong></h4>
+            </div>
+            <div class="d-grid gap-2 col-8  mx-auto" style="text-align: left;">
+              <table class="table">
+                <colgroup>
+                  <col style="width:20%;">
+                  <col>
+                </colgroup>
+                <tr>
+                  <td>호텔명</td>
+                  <td th:text="${reserveHo.hotelDto.hotelName}"></td>
+                </tr>
+                <tr>
+                  <td>위치</td>
+                  <td th:text="${reserveHo.hotelDto.hotelAddress}"></td>
+                </tr>
+                <tr>
+                  <td>체크인</td>
+                  <td th:text="${reserveHo.reserveStart}"></td>
+                </tr>
+                <tr>
+                  <td>체크아웃</td>
+                  <td th:text="${reserveHo.reserveFinish}"></td>
+                </tr>
+                <tr>
+                  <td>객실</td>
+                  <td>
+                    <span th:text="${reserveHo.roomtypeDto.roomName}"></span>
+                    <span>
+                      <button type="button"  id="btn_roomInfo" class="w3-btn w3-small w3-round-xxlarge w3-lime" style="margin-left: 10px;"  data-bs-toggle="modal" data-bs-target="#exampleModal"><b>상세보기</b></button>
+                    </span>
+                    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" style="text-align: center;">
+                      <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="exampleModalLabel">객실 상세정보</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                          </div>
+                          <div class="modal-body" id="roomInfo">
+                            
+                          </div>
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td>예약상태</td>
+                  <td th:if="${reserveHo.reserveStatus == 0}">결제대기</td>
+                  <td th:if="${reserveHo.reserveStatus == 1}">예약완료</td>
+                  <td th:if="${reserveHo.reserveStatus == 2}">취소</td>
+                </tr>
+                <tr>
+                  <td>결제금액</td>
+                  <td th:utext="|<strong>${reserveHo.reservePrice}원</strong>|"></td>
+                </tr>
+              </table>
+            </div>
+            
+            <div>
+              <form id="frm_btn" method="post">
+                <input type="hidden" name="reserveNo" id="reserveNo" th:value="${reserveHo.reserveNo}">
+                <input type="hidden" name="userNo" th:value="${reserveHo.userDto.userNo}">
+                <input type="hidden" name="userName" th:value="${reserveHo.userDto.name}">
+                <input type="hidden" name="userMobile" th:value="${reserveHo.userDto.mobile}">
+                <input type="hidden" name="requestedTerm" th:value="${reserveHo.requestedTerm}">
+                <div th:if="${reserveHo.reserveStatus == 0}">
+                  <div class="d-grid gap-2 col-5 mx-auto" style="margin: 10px auto 25px;">
+                    <button class="w3-btn w3-round-xxlarge w3-green w3-block mx-auto" type="button" th:onclick="requestPay()">결제하기</button>
+                  </div>
+                </div>
+                <div class="d-grid gap-2 col-5 mx-auto">
+                  <button class="w3-btn w3-round-xxlarge w3-lime w3-block mx-auto" type="button" th:onclick="|location.href='@{/hotel/list.do}'|">다른 호텔 예약하러가기</button>
+                  <button type="button" th:onclick="|location.href='@{/reserve/reserveHotelList.do(userNo=${session.user.userNo})}'|" class="w3-btn w3-round-xxlarge w3-lime w3-block mx-auto">나의 예약목록</button>
+                  <button th:if="${reserveHo.reserveStatus != 2}" class="w3-btn w3-round-xxlarge w3-lime w3-block mx-auto" type="button" id="btn_res_cancel">예약 취소하기</button>
+                </div>
+              </form>
+            </div>
+            
+		    </div>
+		    <div class="col-1">	      
+		    </div>
+		  </div>
+	  </div>
+	
+	</div>
+
+
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+  <script src="https://cdn.iamport.kr/v1/iamport.js"></script>
+  <script>
+    
+    var IMP = window.IMP;
+    IMP.init("imp14397622");
+ 
+    var today = new Date();   
+    var hours = today.getHours(); // 시
+    var minutes = today.getMinutes();  // 분
+    var seconds = today.getSeconds();  // 초
+    var milliseconds = today.getMilliseconds();
+    var makeMerchantUid = hours +  minutes + seconds + milliseconds;
+    var payAmount = '[[${reserveHo.reservePrice}]]';
+    var reserveNo = '[[${reserveHo.reserveNo}]]';
+    var userEmail = '[[${reserveHo.userDto.email}]]';
+    function requestPay() {
+        IMP.request_pay(
+          {
+            //결제 요청 파라미터 
+            pg: "html5_inicis",
+            pay_method: "card",
+            merchant_uid: "test"+ makeMerchantUid,
+            name: '[[${reserveHo.hotelDto.hotelName}]]',
+            amount: payAmount,
+            buyer_email: userEmail,
+            buyer_name: '[[${reserveHo.userDto.name}]]',
+            buyer_tel: '[[${reserveHo.userDto.mobile}]]' // 필수
+          },
+          function (rsp) {
+            // callback
+            if (rsp.success) {
+              console.log(rsp);
+              // 결제 성공 시: 결제 승인 또는 가상계좌 발급에 성공한 경우 DB에 정보 저장
+              $.ajax({
+                url: "/payment/payReserve.do", 
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                data: JSON.stringify({
+                  impUid: rsp.imp_uid,            // 결제 고유번호
+                  payYn: rsp.success,             // 성공여부
+                  payMethod: rsp.pay_method,      // 결제방식
+                  paidAmount: rsp.paid_amount,    // 결제금액
+                  paidAt: rsp.paid_at,            // 결제시각
+                  buyerName: rsp.buyer_name,
+                  buyerEmail: rsp.buyer_email,
+                  payStatus: rsp.status,          // 결제상태
+                  merchantUid: rsp.merchant_uid,  // 주문번호
+                  reserveDto: {
+                    reserveNo: reserveNo
+                    }
+                }),
+                dataType: 'json'
+              }).done(function (data) {
+                console.log(data);
+                // 결제승인시 정보 DB 저장 후 예약상태를 '결제대기' >> '예약완료'로 수정
+                $.ajax({
+                  url: "/payment/modifyResStatus", // 두 번째 요청의 URL
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                  data: JSON.stringify({
+                    reserveNo: reserveNo,
+                    payStatus: rsp.status
+                  })
+                }).done(function (data) {
+                  console.log(data);
+                  // 두 번째 요청이 성공했을 때의 처리를 여기에 작성합니다.
+                  if(data.modifyResStatusResult == '1'){
+                    alert('예약상태가 완료로 변경되었습니다.');
+                    location.reload();
+                  }
+                });
+              })
+              alert('성공적으로 결제되었습니다. 예약완료 되었습니다.');
+            } else {
+                console.log(rsp);
+                alert(`결제에 실패하였습니다. ${rsp.error_msg}`);
+            }
+          }
+        );
+    }
+    
+    // reserveNo로 결제내역 가져오는 함수
+    function refundPayment1(){
+      $('#btn_cancel').click(function(){
+        $.ajax({
+          type: 'post',
+          url: '/payment/getPayLogByResNo',
+          data: 'reserveNo=' + reserveNo,
+          dataType: 'json',
+          success:(function(resP){
+            console.log(resP);
+            refundPayment2(resP); // 한번더 검증을 위해 변수전달
+          })
+        })
+      })
+    }
+    
+    // merchantUid와 취소할 금액으로 내역 다시 조회
+    function refundPayment2(resP) {
+      // resP.payLog : 예약번호로 조회된 결제내역
+      // result.payInfo : merchantUid로 조회된 결제내역 PaymentDto
+      $.ajax({
+        "url": "/payment/cancel", 
+        "type": "POST",
+        "contentType": "application/json",
+        "data": JSON.stringify({
+          "merchantUid": resP.payLog.merchantUid, // 예: ORD20180131-0000011
+          "cancelAmount": resP.payLog.paidAmount // 환불금액
+        }),
+        "dataType": "json"
+      }).done(function(result) { // 환불 성공시 로직 
+        alert("paymentDto 반환");
+        console.log(result);
+        
+        $.ajax({
+          url: "https://api.iamport.kr/payments/cancel",
+          method: "post",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": access_token // 포트원 서버로부터 발급받은 엑세스 토큰
+          },
+          data: {
+            impUid, // imp_uid를 환불 `unique key`로 입력
+            amount: cancel_request_amount, // 가맹점 클라이언트로부터 받은 환불금액
+            
+          }
+        }).done(function(data){
+          console.log(data);
+        })
+      }).fail(function(error) { // 환불 실패시 로직
+        alert("환불 실패");
+        console.log(resP);
+      });
+    }
+ 
+    
+    refundPayment1();
+    
+  </script>
+
+  <script th:inline="javascript">
+    
+    function fnCheckReserveResult(){
+      if('[[${addReserveHotelResult}]]' == '1') {
+        alert('예약되었습니다. 결제를 진행해주시면 예약이 확정됩니다.');
+      }
+    }
+    
+    function fnGetRoomInfo(){
+      $('#btn_roomInfo').click(function(){
+        $.ajax({
+          type: 'get',
+          url: '/reserve/getRoomInfo.do',
+          data: 'roomNo=[[${reserveHo.roomtypeDto.roomNo}]]',
+          datatype: 'json',
+          success:(function(resData){
+            $('#roomInfo').empty();
+            let str = '';
+            str += '<div>';
+            str += '  <div>침대 : ' + resData.room.bed + '</div>';
+            str += '  <div>전망 : ' + resData.room.rview + '</div>';
+            str += '  <div>허용인원 : 최대 ' + resData.room.people + '명</div>';
+            if(resData.room.bleakfast == '0'){
+              str += '  <div>조식 : <i class="fa-solid fa-x" style="color: #96b2c5;"></i></div>';
+            } else {
+              str += '  <div>조식 : <i class="fa-sharp fa-solid fa-o" style="color: #96b6c5;"></i></div>';
+            }
+            if(resData.room.smoke == '0'){
+              str += '  <div>흡연 : <i class="fa-solid fa-x" style="color: #96b2c5;"></i></div>';
+            } else {
+              str += '  <div>흡연 : <i class="fa-sharp fa-solid fa-o" style="color: #96b6c5;"></i></div>';
+            }
+            str += '  <div>방크기 : ' + resData.room.rsize + '</div>';
+            str += '</div>';
+            
+            $('#roomInfo').append(str);
+            
+          })
+        })
+      })
+    }
+    
+    function fnChkCancel(){
+      $('#btn_res_cancel').click(function(){
+        if(confirm('예약을 취소하시겠습니까?')){
+          $('#frm_btn').attr('action', '/reserve/cancelHotel.do')
+          $('#frm_btn').submit();
+        } 
+      })
+    }
+    
+    fnChkCancel();
+    fnGetRoomInfo();
+    fnCheckReserveResult()
+  </script>
+
+  
+	
+	
+	
+	<div th:replace="~{layout/footer::footer}"></div>
+</body>
+</html>
+

@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{layout/header::head(|${user.userNo}번 회원 상세|)}"></head> 
+
+<style>
+  
+ #main_wraper {
+    display: flex;
+  }
+
+  #split1 {
+    flex: 0 0 20%;
+  }
+
+  #split2 {
+    flex: 0 0 80%;
+  }
+  
+  #date {
+    display: flex;
+  }
+  #joined, 
+  #state, 
+  #pw_modified {
+    flex: 0 0 30%;
+    margin-bottom: 3%;
+  }
+  
+  .content {
+    font-size: 1.2em;
+    border-top: 1px solid #ccc;    /* 위쪽 구분선 스타일 및 색상 */
+    border-bottom: 1px solid #ccc; /* 아래쪽 구분선 스타일 및 색상 */
+    padding: 10px;                   /* 위아래 구분선과 내용 간격 조절 */
+    margin-bottom: 5%;
+  }
+  
+  .m_email{
+    margin-left: 14px;
+  }
+  .m_name {
+    margin-left: 32px;
+  }
+  #postcode {
+    margin-left: 11px;
+  }
+  #roadAddress,
+  #jibunAddress,
+  #detailAddress
+   {
+    margin-left: 65px;
+  }
+  
+  .gender {
+    text-align: left;
+  }
+  .container {
+    margin-top: 5%;
+  }
+  .m_event {
+    margin-top: 5%;
+    margin-bottom: 5%;
+    text-align: left;
+  }
+  
+  #btn_modify,
+  #show_list
+   {
+    height: 38px; 
+    color: #96B6C5;         /* 텍스트 색상 */
+    background-color: #fff; /* 기본 배경 색상 */
+    border-color: #96B6C5;  /* 테두리 색상 */
+    border-radius: 10px;      /* 테두리를 둥글게 만듭니다. */
+    transition: all 0.3s;     /* 모든 속성에 대해 0.3초 동안 트랜지션 효과 적용 */
+  }
+  #btn_leave {
+    height: 38px; 
+    color: #fff;               /* 텍스트 색상 */
+    background-color: #96B6C5; /* 기본 배경 색상 */
+    border-color: #96B6C5;     /* 테두리 색상 */
+    border-radius: 10px;         /* 테두리를 둥글게 만듭니다. */
+    transition: all 0.3s;        /* 모든 속성에 대해 0.3초 동안 트랜지션 효과 적용 */
+  }
+  
+  #btn_modify:hover,
+  #show_list:hover
+  {
+    color: #fff;               /* 호버 시 텍스트 색상 */
+    background-color: #96B6C5; /* 호버 시 배경 색상 */
+  }
+  #btn_modify{
+    margin-right: 5%;
+  }
+  #show_list {
+    margin: 5% auto;
+    padding: 0 9%; /* 버튼 크기 */
+  }
+  
+  #btn_modify_pw,
+  #btn_heart_list
+  {
+    height: 38px; 
+    color: #fff;               /* 텍스트 색상 */
+    background-color: #96B6C5; /* 기본 배경 색상 */
+    border-color: #96B6C5;     /* 테두리 색상 */
+    border-radius: 10px;         /* 테두리를 둥글게 만듭니다. */
+    transition: all 0.3s;        /* 모든 속성에 대해 0.3초 동안 트랜지션 효과 적용 */
+    margin-bottom: 15%;
+  }
+  #btn_modify_pw:hover,
+  #btn_heart_list:hover
+  {
+    color: #96B6C5;          /* 호버 시 텍스트 색상 */
+    background-color: #fff;  /* 호버 시 배경 색상 */
+  }
+  #btn_modify_pw {
+    margin-top: 25%;
+    padding: 0 15%;
+  }
+  #btn_heart_list {
+    padding: 0 32%;
+  }
+
+</style>
+<script th:inline="javascript">
+  
+  /* 함수 호출 */
+  $(() => {
+    fnCheckName();
+    fnCheckMobile();
+    fnModifyUser();
+    fnLeaveUser();
+  })
+
+
+  /* 전역변수 선언 */
+  var namePassed = true;
+  var mobilePassed = true;
+  
+  
+  /* 함수 정의 */
+  
+  const fnCheckName = () => {
+    $('#name').blur((ev) => {
+      let name = ev.target.value;
+      let bytes = 0;
+      for(let i = 0; i < name.length; i++){
+        if(name.charCodeAt(i) > 128){  // 코드값이 128을 초과하는 문자는 한 글자 당 2바이트
+          bytes += 2;
+        } else {
+          bytes++;
+        }
+      }
+      namePassed = (bytes <= 50);
+      if(!namePassed){
+        $('#msg_name').text('이름은 50바이트 이내로 작성해야 합니다.');
+      } 
+    })
+  }
+  
+  const fnCheckMobile = () => {
+    $('#mobile').keyup((ev) => {
+      ev.target.value = ev.target.value.replaceAll('-', '');
+      // 휴대전화번호 검사 정규식 (010숫자8개)
+      let regMobile = /^010[0-9]{8}$/;
+      mobilePassed = regMobile.test(ev.target.value);
+      if(mobilePassed){
+        $('#msg_mobile').text('');
+      } else {
+        $('#msg_mobile').text('휴대전화번호를 확인하세요.');       
+      }
+    })
+  }
+  
+  const fnModifyUser = () => {
+    $('#btn_modify').click(() => {
+      if(!mobilePassed){
+        alert('휴대전화번호를 확인하세요.');
+        return;
+     
+      }
+      $.ajax({
+        // 요청
+        type: 'post',
+        url: '/manage/modifyUser.do',
+        data: $('#frm_userDetail').serialize(),
+        // 응답
+        dataType: 'json',
+        success: (resData) => {  // {"modifyResult": 1}
+          if(resData.modifyResult === 1){
+            alert('회원 정보가 수정되었습니다.');
+          } else {
+            alert('회원 정보가 수정되지 않았습니다.');
+          }
+        }
+      })
+    })
+  }
+  
+  
+  const fnLeaveUser = () => {
+    $('#btn_leave').click(() => {
+      if(confirm('회원을 탈퇴시키면 되돌릴 수 없습니다.')){
+        if(confirm('회원을 탈퇴시키겠습니까?')){
+          $('#frm_userDetail').prop('action', '/manage/leaveUser.do');
+          $('#frm_userDetail').submit();
+        }
+      }
+    })
+  }
+  
+  
+</script>
+<body>
+  <div th:replace="~{layout/header::header}"></div>
+  
+  <div class="main_wrap">
+  
+  
+     <div class="container text-center">
+      <div class="row">
+        <div class="col-1">       
+        </div>
+        <div class="col-10" >
+       
+          
+       
+          <div id="main_wraper">
+            
+            <!--/* 비밀번호 변경과 찜 목록으로 이동 가능한 좌측 메뉴 버튼 */-->
+            <div id="split1">
+              <div >
+                <a th:href="@{/manage/modifyPw.form(userNo=${user.userNo})}">
+                  <button type="button" id="btn_modify_pw">회원 비밀번호 변경</button>
+                </a>
+              </div>
+              <div >
+                <a th:href="@{/manage/heartList.do(userNo=${user.userNo})}">
+                 <button type="button" id="btn_heart_list">찜목록</button>
+                </a>
+              </div>
+              
+            </div>
+            
+            
+            <!--/* 회원 상세 정보가 나타나는 곳 */-->
+            <div id="split2">
+              <div>
+              
+                <form id="frm_userDetail" method="post">
+                  
+                  <div id="date">
+                    <div th:text="|가입일 : ${user.joinedAt}|" id="joined"></div>
+                    <div id="state">
+                      <th:block th:if="${user.state == 0}">가입형태 : 일반회원</th:block>
+                      <th:block th:if="${user.state == 1}">가입형태 : 네이버 간편로그인</th:block>
+                      <th:block th:if="${user.state == 2}">가입형태 : 카카오 간편로그인</th:block>
+                    </div>
+                    <div th:text="|비밀번호 변경일 : ${user.pwModifiedAt}|" id="pw_modified"></div>
+                  </div>
+
+                  
+                  <div class="content">
+                      
+                    <div class="mb-3 row">
+                      <div class="col-auto">
+                        <label for="email" class="col-form-label">이메일</label>
+                      </div>
+                      <div class="col-auto">
+                        <input type="text" id="email" th:value="${user.email}" readonly class="form-control-plaintext m_email">
+                      </div>
+                    </div>
+                    
+                    <div class="mb-3 row">
+                      <div class="col-auto">
+                        <label for="name" class="col-form-label">이름</label>
+                      </div>
+                      <div class="col-3">
+                        <input type="text" name="name" id="name" class="form-control m_name" th:value="${user.name}">
+                      </div>
+                      <div class="col-5">
+                        <span id="msg_name" class="form-text"></span>
+                      </div>
+                    </div>
+                    
+                    <div class="mb-3 row">
+                      <div class="col-auto">
+                        <label for="mobile" class="col-form-label">전화번호</label>
+                      </div>
+                      <div class="col-3">
+                        <input type="text" name="mobile" id="mobile" class="form-control" th:value="${user.mobile}">
+                      </div>
+                      <div class="col-3">
+                        <span id="msg_mobile" class="form-text"></span>
+                      </div>
+                    </div>
+                    
+                    <div class="gender">
+                      <div class="form-check form-check-inline">
+                        <input type="radio" name="gender" value="NO" id="none" class="form-check-input">
+                        <label for="none" class="form-check-label">선택안함</label>
+                      </div>
+                      <div class="form-check form-check-inline">
+                        <input type="radio" name="gender" value="M" id="man" class="form-check-input">
+                        <label for="man" class="form-check-label">남자</label>
+                      </div>
+                      <div class="form-check form-check-inline">
+                        <input type="radio" name="gender" value="F" id="woman" class="form-check-input">
+                        <label for="woman" class="form-check-label">여자</label>
+                      </div>
+                    </div>
+                    <script th:inline="javascript">
+                      $(':radio[value=[[${user.gender}]]]').prop('checked', true);
+                    </script>
+                    
+                    
+                    <div class="container">
+                      <div class="row">
+                        <div class="col-auto">
+                          <label for="postcode" class="col-form-label">주소</label>
+                        </div>
+                        <div class="col-md-5">
+                          <div class="form-group mb-2">
+                            <input type="text" id="postcode" name="postcode" placeholder="우편번호" onclick="execDaumPostcode()" readonly th:value="${user.postcode}" class="form-control">
+                          </div>
+                        </div>
+                        <div class="col-md-4">
+                          <label>&nbsp;</label>
+                          <input type="button" onclick="execDaumPostcode()" value="우편번호 찾기" class="btn btn-sm btn-outline-secondary">
+                        </div>
+                      </div>
+                    
+                      <div class="row">
+                        <div class="col-md-10">
+                          <div class="form-group mb-2">
+                            <input type="text" id="roadAddress" name="roadAddress" onclick="execDaumPostcode()" readonly placeholder="도로명주소" th:value="${user.roadAddress}" class="form-control">
+                          </div>
+                        </div>
+                      </div>
+                    
+                      <div class="row">
+                        <div class="col-md-5">
+                          <div class="form-group mb-2">
+                            <input type="text" id="jibunAddress" name="jibunAddress" onclick="execDaumPostcode()" readonly placeholder="지번주소" th:value="${user.jibunAddress}" class="form-control">
+                          </div>
+                        </div>
+                        <span id="guide" style="color:#999;display:none"></span>
+                        <div class="col-md-5">
+                          <div class="form-group mb-2">
+                            <input type="text" id="detailAddress" name="detailAddress" th:placeholder="상세주소" th:value="${user.detailAddress}" class="form-control">
+                            <div class="col-sm-6"><input type="hidden" id="extraAddress" class="form-control" placeholder="참고항목"></div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+                    <script>
+                      //본 예제에서는 도로명 주소 표기 방식에 대한 법령에 따라, 내려오는 데이터를 조합하여 올바른 주소를 구성하는 방법을 설명합니다.
+                      function execDaumPostcode() {
+                        new daum.Postcode({
+                          oncomplete: function(data) {
+                            // 팝업에서 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분.
+                
+                            // 도로명 주소의 노출 규칙에 따라 주소를 표시한다.
+                            // 내려오는 변수가 값이 없는 경우엔 공백('')값을 가지므로, 이를 참고하여 분기 한다.
+                            var roadAddr = data.roadAddress; // 도로명 주소 변수
+                            var extraRoadAddr = ''; // 참고 항목 변수
+                
+                            // 법정동명이 있을 경우 추가한다. (법정리는 제외)
+                            // 법정동의 경우 마지막 문자가 "동/로/가"로 끝난다.
+                            if(data.bname !== '' && /[동|로|가]$/g.test(data.bname)){
+                              extraRoadAddr += data.bname;
+                            }
+                            // 건물명이 있고, 공동주택일 경우 추가한다.
+                            if(data.buildingName !== '' && data.apartment === 'Y'){
+                              extraRoadAddr += (extraRoadAddr !== '' ? ', ' + data.buildingName : data.buildingName);
+                            }
+                            // 표시할 참고항목이 있을 경우, 괄호까지 추가한 최종 문자열을 만든다.
+                            if(extraRoadAddr !== ''){
+                              extraRoadAddr = ' (' + extraRoadAddr + ')';
+                            }
+                
+                            // 우편번호와 주소 정보를 해당 필드에 넣는다.
+                            document.getElementById('postcode').value = data.zonecode;
+                            document.getElementById("roadAddress").value = roadAddr;
+                            document.getElementById("jibunAddress").value = data.jibunAddress;
+                            
+                            // 참고항목 문자열이 있을 경우 해당 필드에 넣는다.
+                            if(roadAddr !== ''){
+                              document.getElementById("extraAddress").value = extraRoadAddr;
+                            } else {
+                              document.getElementById("extraAddress").value = '';
+                            }
+                
+                            var guideTextBox = document.getElementById("guide");
+                            // 사용자가 '선택 안함'을 클릭한 경우, 예상 주소라는 표시를 해준다.
+                            if(data.autoRoadAddress) {
+                              var expRoadAddr = data.autoRoadAddress + extraRoadAddr;
+                              guideTextBox.innerHTML = '(예상 도로명 주소 : ' + expRoadAddr + ')';
+                              guideTextBox.style.display = 'block';
+                            } else if(data.autoJibunAddress) {
+                              var expJibunAddr = data.autoJibunAddress;
+                              guideTextBox.innerHTML = '(예상 지번 주소 : ' + expJibunAddr + ')';
+                              guideTextBox.style.display = 'block';
+                            } else {
+                              guideTextBox.innerHTML = '';
+                              guideTextBox.style.display = 'none';
+                            }
+                          }
+                        }).open();
+                      }
+                    </script>
+                
+  
+                  
+                  <div class="m_event">
+                    <div style="margin-bottom: 10px; font-weight: bold;">이벤트 알림 동의(선택)</div>
+                    <div class="form-check form-check-inline">
+                      <input class="form-check-input" type="radio" name="event" id="event_on" value="on">
+                      <label class="form-check-label" for="event_on">동의함</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <input class="form-check-input" type="radio" name="event" id="event_off" value="off">
+                      <label class="form-check-label" for="event_off">동의안함</label>
+                    </div>
+                  </div>
+                  <script th:inline="javascript">
+                    let agree = /*[[${user.agree}]]*/ null;
+                    if(agree === 0){
+                    $('#event_off').prop('checked', true);
+                    } else if(agree === 1){
+                    $('#event_on').prop('checked', true);
+                    }
+                  </script>
+                  
+                </div>
+
+                <!--/* 회원정보를 수정하거나 탈퇴할 수 있는 버튼 */-->
+                <div >
+                  <input type="hidden" name="userNo" th:value="${user.userNo}">
+                  <button type="button" id="btn_modify">회원정보수정</button>
+                  <button type="button" id="btn_leave" >회원탈퇴</button>
+                </div>
+                
+                </form>
+                
+              </div>
+              
+              <!--/* 회원 관리 목록 페이지로 돌아가는 버튼 */-->
+              <div>
+                <a th:href="@{/manage/userList.do}"><button id="show_list">목록보기</button></a>
+              </div>
+              
+            </div>
+            
+          </div>
+       
+
+        
+        
+            
+        </div>
+        <div class="col-1">       
+        </div>
+      </div>
+    </div>
+  
+  </div>
+
+  
+  
+  
+  <div th:replace="~{layout/footer::footer}"></div>
+</body>
+</html>
+

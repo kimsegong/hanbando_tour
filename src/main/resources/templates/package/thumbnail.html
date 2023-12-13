@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{layout/header::head('패키지썸네일')}"></head>
+<style>
+
+#previewId {
+   width: 560px;
+   height: 270px;
+   margin-top: 20px;
+   margin-bottom: 30px;    
+    }
+</style>
+<body>
+	
+	<div th:replace="~{layout/header::header}"></div>
+	
+	<div class="container text-center">  <!-- 그리드 시작 -->  
+	  <div class="row">
+	    <div class="col-1">
+	    </div>
+	    <div class="col-10" >
+		<h2>썸네일</h2>
+	<form method="post" id="frm_product_add" th:action="@{/package/addThumbnail.do}" enctype="multipart/form-data">
+	  <div style="margin: 30px 270px;" class="w-50 p-3">		 
+		  
+    <div>
+          <input type="text" name="packageTitle" class="form-control">제목 한번더 입력</textarea>
+        <div id="previewId"></div>
+    	  <div>
+    	  	<label for="thumbnailFiles" class="form-label">썸네일첨부</label>
+    	  	 <input type="hidden" th:value="${map.packageNo}" name="packageNo">
+		    <input type="file" name="thumbnailFiles" id="thumbnailFiles" class="form-control" accept="image/gif,image/jpeg,image/png" required/>
+    	  </div>    	  
+
+		  <div class="d-grid gap-2 col-6 mx-auto">	
+			  <input type="hidden" th:value="${map.packageNo}" name="packageNo">
+			  <input type="hidden" name="thumbnail" th:value="1">	     
+		      <button type="submit" class="btn btn-primary" style="margin: 32px;">첨부완료</button>
+	      </div>
+		 </div>
+		 </div>
+		</form>
+		
+		</div>
+    <div class="col-1">      
+    </div>
+  </div>
+  </div>
+<script th:inline="javascript">
+	
+	function previewImage(targetObj, previewId) {
+		
+	const fnFileCheck = () => {
+		    $('#image').change((ev) => {
+		      let maxSize = 1024 * 1024 * 100;
+		      let maxSizePerFile = 1024 * 1024 * 10;
+		      let totalSize = 0;
+		      let thumbnailFiles = ev.target.thumbnailFiles;
+		      for(let i = 0; i < thumbnailFiles.length; i++){
+		        totalSize += thumbnailFiles[i].size;
+		        if(thumbnailFiles[i].size > maxSizePerFile){
+		          alert('각 첨부파일의 최대 크기는 10MB입니다.');
+		          $(ev.target).val('');
+		          return;
+		        }
+		      }
+		      if(totalSize > maxSize){
+		        alert('전체 첨부파일의 최대 크기는 100MB입니다.');
+		        $(ev.target).val('');
+		        return;
+		      }
+		    })
+		  }
+		  
+		  
+	fnFileCheck();	  
+</script>
+
+
+
+<div th:replace="~{layout/footer::footer}"></div>
+</body>
+</html>
+

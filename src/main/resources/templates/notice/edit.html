@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{layout/header::head('한반도 투어')}"></head> <!-- 이거 알맞게 바꿔주세요-->
+<style>
+  .content > .form-control {
+    height: 400px;
+  }
+  
+  .wrap1 > .box1{
+    height: 50px;
+  }
+  
+  .wrap2 > .box2{
+    height: 50px;
+  }
+  
+  .wrap3 > .box3{
+    height: 30px;
+  }
+</style>
+ 
+  
+<body>
+  <div th:replace="~{layout/header::header}"></div>
+  
+  <div class="main_wrap">
+  
+  
+     <div class="container text-center">
+      <div class="row">
+        <div class="col-1">       
+        </div>
+        <div class="col-10" style="border:1px gray dotted">
+            <!--/*여기에 작성/ 다 만들고 style 지워주세요  */-->
+        
+                    <div>
+
+      <form id="frm_notice_modify" method="post" th:action="@{/notice/modifyNotice.do}">
+        
+       <h1 class="title" >공지사항 수정</h1>
+        
+        
+        <div class ="wrap2">
+         <div class="box2"></div>
+        </div>
+        
+        
+        <!-- 제목  -->
+        <div>
+          <label for="title">제목</label>
+          <input type="text" name="title" id="title" class="form-control" th:value="${notice.title}">
+        </div>
+        
+        <div class ="wrap1">
+         <div class="box1"></div>
+        </div>
+      
+        <!-- 내용  -->  
+        <div>
+          <label for="contents">내용</label>
+        </div>
+        <div class="content">  
+          <textarea type="text" name="contents" id="contents" class="form-control" th:text="${notice.contents}"></textarea>
+        </div>
+        
+        <div class ="wrap3">
+         <div class="box3"></div>
+        </div>
+        
+        <h5>신규첨부</h5>
+        <div class="input-group">
+          <input type="file" name="files" id="file" multiple>
+          <button type="button" id="btn_add_attach">첨부추가</button>
+        </div>
+        <div class="attached_list" id="attached_list"></div>
+        
+        <h5>기존 첨부 목록</h5>
+        <div id="attach_list"></div>
+        
+      <!-- 수정완료 submit  -->  
+      <div>
+        <input type="hidden" name="noticeNo" th:value="${notice.noticeNo}">
+        <button class="btn btn-primary col-12" type="submit">수정완료</button>
+      </div>
+        
+      </form>
+      </div>
+            
+            
+            
+            
+        </div>
+        <div class="col-1">       
+        </div>
+      </div>
+    </div>
+  
+ 
+  </div>
+
+      <script th:inline="javascript">
+    
+    const fnFileCheck = () => {
+    $('#files').change((ev) => {
+      $('#attached_list').empty();
+      let maxSize = 1024 * 1024 * 100;
+      let maxSizePerFile = 1024 * 1024 * 10;
+      let totalSize = 0;
+      let files = ev.target.files;
+      for(let i = 0; i < files.length; i++){
+        totalSize += files[i].size;
+        if(files[i].size > maxSizePerFile){
+          alert('각 첨부파일의 최대 크기는 10MB입니다.');
+          $(ev.target).val('');
+          $('#attached_list').empty();
+          return;
+        }
+        $('#attached_list').append('<div>' + files[i].name + '</div>');
+      }
+      if(totalSize > maxSize){
+        alert('전체 첨부파일의 최대 크기는 100MB입니다.');
+        $(ev.target).val('');
+        $('#attached_list').empty();
+        return;
+      }
+    })
+  }
+    
+    const fnAddAttach = () => {
+    $('#btn_add_attach').click(() => {
+      // 폼을 FormData 객체로 생성한다.
+      let formData = new FormData();
+      // 첨부된 파일들을 FormData에 추가한다.
+      let files = $('#file').prop('files');
+      $.each(files, (i, file) => {
+        formData.append('files', file);  // 폼에 포함된 파라미터명은 files이다. files는 여러 개의 파일을 가지고 있다.
+      })
+      // 현재 게시글 번호(uploadNo)를 FormData에 추가한다.
+      formData.append('noticeNo', '[[${notice.noticeNo}]]');
+      // FormData 객체를 보내서 저장한다.
+      $.ajax({
+        // 요청
+        type: 'post',
+        url: '/notice/addAttach.do',
+        data: formData,
+        contentType: false,
+        processData: false,
+        // 응답
+        dataType: 'json',
+        success: (resData) => {  // resData = {"attachResult": true}
+          if(resData.attachResult){
+            alert('첨부 파일이 추가되었습니다.');
+            fnAttachList();
+            $('#attached_list').empty();
+          } else {
+            alert('첨부 파일이 추가되지 않았습니다.');
+          }
+          $('#files').val('');
+        }
+      })
+    })
+  }
+
+  const fnAttachList = () => {
+    $.ajax({
+      // 요청
+      type: 'get',
+      url: '/notice/getAttachList.do',
+      data: 'noticeNo=[[${notice.noticeNo}]]',
+      // 응답
+      dataType: 'json',
+      success: (resData) => {  // resData = {"attachList": []}
+        $('#attach_list').empty();
+        $.each(resData.attachList, (i, attach) => {
+          let str = '<div class="attach">';
+          str += '<span style="margin: 0 10px;">' + attach.originalFilename + '</span>';  
+          str += '<a data-attach_no="' + attach.attachNo + '"><i class="fa-regular fa-circle-xmark ico_remove_attach"></i></a>';
+          str += '</div>';
+          $('#attach_list').append(str);
+        })
+      }
+    })
+  }
+  
+  const fnRemoveAttach = () => {
+    $(document).on('click', '.ico_remove_attach', (ev) => {
+      if(!confirm('해당 첨부 파일을 삭제할까요?')){
+        return;
+      }
+      $.ajax({
+        // 요청
+        type: 'post',
+        url: '/notice/removeAttach.do',
+        data: 'attachNo=' + $(ev.target).parent().data('attach_no'),
+        // 응답
+        dataType: 'json',
+        success: (resData) => {  // resData = {"removeAttachResult": 1}
+          if(resData.removeAttachResult === 1){
+            alert('해당 첨부 파일이 삭제되었습니다.');
+            fnAttachList();
+          } else {
+            alert('해당 첨부 파일이 삭제되지 않았습니다.');
+          }
+        }
+      })
+    })
+  }
+  
+  const fnNoticeModify = () => {
+    $('#frm_notice_modify').submit((ev) => {
+      if($('#title').val() === ''){
+        alert('제목은 반드시 입력해야 합니다.');
+        $('#title').focus();
+        ev.preventDefault();
+        return;
+      } 
+    })
+  }
+
+       fnFileCheck();
+      fnAddAttach();
+      fnAttachList();
+      fnRemoveAttach();
+      fnNoticeModify();
+
+</script>   
+  
+  
+  <div th:replace="~{layout/footer::footer}"></div>
+</body>
+</html>
+

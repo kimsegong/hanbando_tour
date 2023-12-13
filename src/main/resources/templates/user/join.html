@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{layout/header::head('회원가입')}"></head>
+
+<style>
+  .title{
+    font-size: 30px;
+    font-weight: 400;
+  }
+</style>
+<body>
+  
+  <div th:replace="~{layout/header::header}"></div>
+  
+  <div class="main_wrap">
+
+    <div class="wrap wrap_7">
+    
+      <p class="title">회원가입</p>
+    
+      <form id="frm_join" method="post" th:action="@{/user/join.do}">
+   
+        <div class="row mb-2">
+          <label for="email" class="col-sm-3 col-form-label">이메일</label>
+          <div class="col-sm-6"><input type="text" name="email" id="email" placeholder="이메일" class="form-control"></div>
+          <div class="col-sm-3 d-grid gap-2"><button type="button" id="btn_get_code" class="w3-btn w3-round-xxlarge w3-green w3-block mx-auto" onclick="fnCheckEmail();">ID 중복체크</button></div>
+          <div class="col-sm-3"></div>
+          <div class="col-sm-9" id="msg_email"></div>
+        </div>
+         <div class="line_inp row mb-2" style="margin-top: 20px">
+          <label for="userPhoneNum" class="col-sm-3 col-form-label">휴대폰번호</label>
+          <div class="col-sm-6"><input type="tel" class="inp form-control" id="userPhoneNum" name="userPhoneNum" placeholder="휴대폰 번호를 - 없이 입력해주세요"/></div>
+          <div class="col-sm-3 d-grid gap-2"><input type="button" class="half_button w3-btn w3-round-xxlarge w3-green w3-block mx-auto" id="goSMS" value="SMS 전송" /></div>
+          <div class="col-sm-9 mb-3" id="msg_mobile"></div>
+          <div class="col-sm-3"></div>
+         
+        </div>
+        <div class="line_inp confirmDiv row mb-2">
+          <label for="authNumber" class="col-sm-3 col-form-label">인증번호</label>
+          <div class="col-sm-6"><input class="inp form-control " id="authNumber" type="tel" placeholder="SMS로 수신된 인증번호 5자리를 입력해주세요"/></div>
+          <input type="hidden" id="authCode" />  
+          <div class="col-sm-3 d-grid gap-2"><input type="button" class="half_button w3-btn w3-round-xxlarge w3-green w3-block mx-auto" id="confirmBnt" value="인증" /></div>
+          <div class="col-sm-3"></div>
+          
+
+        </div>
+        
+      
+        
+      
+        <hr class="my-3">
+        
+        <div class="row mb-2">
+          <label for="pw" class="col-sm-3 col-form-label">비밀번호</label>
+          <div class="col-sm-9"><input type="password" name="pw" id="pw" class="form-control"></div>
+          <div class="col-sm-3"></div>
+          <div class="col-sm-9 mb-3" id="msg_pw"></div>
+        </div>
+        
+        <div class="row mb-2">
+          <label for="pw2" class="col-sm-3 col-form-label">비밀번호 확인</label>
+          <div class="col-sm-9"><input type="password" id="pw2" class="form-control"></div>
+          <div class="col-sm-3"></div>
+          <div class="col-sm-9 mb-3" id="msg_pw2"></div>
+        </div>
+        
+        <hr class="my-3">
+        
+        <div class="row mb-2">
+          <label for="name" class="col-sm-3 col-form-label">이름</label>
+          <div class="col-sm-9"><input type="text" name="name" id="name" class="form-control"></div>
+          <div class="col-sm-3"></div>
+          <div class="col-sm-9 mb-3" id="msg_name"></div>
+        </div>
+    
+        <div class="row mb-2">
+          <label for="mobile" class="col-sm-3 col-form-label">휴대전화번호</label>
+          <div class="col-sm-9"><input type="text" name="mobile" id="mobile" class="form-control" readonly></div>
+          <div class="col-sm-3"></div>
+          <div class="col-sm-9 mb-3" id="msg_mobile"></div>
+        </div>
+    
+        <div class="row mb-2">
+          <label class="col-sm-3 form-label">성별</label>
+          <div class="col-sm-3">
+            <input type="radio" name="gender" value="NO" id="none" class="form-check-input" checked>
+            <label class="form-check-label" for="none">선택안함</label>
+          </div>
+          <div class="col-sm-3">
+            <input type="radio" name="gender" value="M" id="man" class="form-check-input">
+            <label class="form-check-label" for="man">남자</label>
+          </div>
+          <div class="col-sm-3">
+            <input type="radio" name="gender" value="F" id="woman" class="form-check-input">
+            <label class="form-check-label" for="woman">여자</label>
+          </div>
+        </div>
+        
+ 
+        
+        <hr class="my-3">
+    
+       
+        
+        <div class="row mb-2">
+          <label for="postcode" class="col-sm-3 col-form-label">주소</label>
+          <div class="col-sm-6"><input type="text" name="postcode" id="postcode" class="form-control" onclick="execDaumPostcode()" placeholder="우편번호" readonly></div>
+          <div class="col-sm-3 d-grid gap-2"><input type="button" class="w3-btn w3-round-xxlarge w3-green w3-block mx-auto" onclick="execDaumPostcode()" value="우편번호 찾기"></div>
+          <div class="col-sm-3"></div>
+          <div class="col-sm-9" id="msg_pw"></div>
+        </div>
+        
+        <div class="row mb-2">
+          <div class="col-sm-6"><input type="text" name="roadAddress" id="roadAddress" class="form-control" placeholder="도로명주소" readonly></div>
+          <div class="col-sm-6"><input type="text" name="jibunAddress" id="jibunAddress" class="form-control" placeholder="지번주소" readonly></div>
+        </div>
+        <div class="col-sm-12"><span id="guide" style="color:#999;display:none"></span></div>
+        <div class="row mb-2">
+          <div><input type="text" name="detailAddress" id="detailAddress" class="form-control" placeholder="상세주소"></div>
+        </div>
+        <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+        <script>
+          //본 예제에서는 도로명 주소 표기 방식에 대한 법령에 따라, 내려오는 데이터를 조합하여 올바른 주소를 구성하는 방법을 설명합니다.
+          function execDaumPostcode() {
+            new daum.Postcode({
+              oncomplete: function(data) {
+                // 팝업에서 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분.
+    
+                // 도로명 주소의 노출 규칙에 따라 주소를 표시한다.
+                // 내려오는 변수가 값이 없는 경우엔 공백('')값을 가지므로, 이를 참고하여 분기 한다.
+                var roadAddr = data.roadAddress; // 도로명 주소 변수
+                var extraRoadAddr = ''; // 참고 항목 변수
+    
+                // 법정동명이 있을 경우 추가한다. (법정리는 제외)
+                // 법정동의 경우 마지막 문자가 "동/로/가"로 끝난다.
+                if(data.bname !== '' && /[동|로|가]$/g.test(data.bname)){
+                  extraRoadAddr += data.bname;
+                }
+                // 건물명이 있고, 공동주택일 경우 추가한다.
+                if(data.buildingName !== '' && data.apartment === 'Y'){
+                  extraRoadAddr += (extraRoadAddr !== '' ? ', ' + data.buildingName : data.buildingName);
+                }
+                // 표시할 참고항목이 있을 경우, 괄호까지 추가한 최종 문자열을 만든다.
+                if(extraRoadAddr !== ''){
+                  extraRoadAddr = ' (' + extraRoadAddr + ')';
+                }
+    
+                // 우편번호와 주소 정보를 해당 필드에 넣는다.
+                document.getElementById('postcode').value = data.zonecode;
+                document.getElementById("roadAddress").value = roadAddr;
+                document.getElementById("jibunAddress").value = data.jibunAddress;
+                
+                // 참고항목 문자열이 있을 경우 해당 필드에 넣는다.
+                if(roadAddr !== ''){
+                  document.getElementById("extraAddress").value = extraRoadAddr;
+                } else {
+                  document.getElementById("extraAddress").value = '';
+                }
+    
+                var guideTextBox = document.getElementById("guide");
+                // 사용자가 '선택 안함'을 클릭한 경우, 예상 주소라는 표시를 해준다.
+                if(data.autoRoadAddress) {
+                  var expRoadAddr = data.autoRoadAddress + extraRoadAddr;
+                  guideTextBox.innerHTML = '(예상 도로명 주소 : ' + expRoadAddr + ')';
+                  guideTextBox.style.display = 'block';
+                } else if(data.autoJibunAddress) {
+                  var expJibunAddr = data.autoJibunAddress;
+                  guideTextBox.innerHTML = '(예상 지번 주소 : ' + expJibunAddr + ')';
+                  guideTextBox.style.display = 'block';
+                } else {
+                  guideTextBox.innerHTML = '';
+                  guideTextBox.style.display = 'none';
+                }
+              }
+            }).open();
+          }
+        </script>
+        
+        <div class="mt-3 text-center" style="margin-top: 20px">
+          <input type="hidden" name="event" th:value="${event}">
+          <button type="button" class="w3-btn w3-round-xxlarge w3-green w3-block mx-auto" onClick="fnValidUser();">회원가입하기</button>
+        </div>
+        
+      </form>
+    
+    </div>
+
+  </div>
+  <script th:inline="javascript">
+    
+    
+  var emailPassed = false;
+  var pwPassed = false;
+  var pw2Passed = false;
+  var namePassed = false;
+  var mobilePassed = false;
+  var smsPassed = false;
+  
+  
+  /* 함수 정의 */
+  
+  
+  
+/*인증번호 입력 후 확인하는 곳*/
+  
+  
+  
+ /*인증번호 입력 후 확인하는 곳*/
+  
+  
+  
+  const fnCheckSms = () => {
+    
+     $('#userPhoneNum').keyup((ev) => {
+      ev.target.value = ev.target.value.replaceAll('-', '');
+      // 휴대전화번호 검사 정규식 (010숫자8개)
+      let regMobile = /^010[0-9]{8}$/;
+      mobilePassed = regMobile.test(ev.target.value);
+      if(mobilePassed){
+        $('#msg_mobile').text('');
+        
+        
+        $('#goSMS').off('click').on('click', () => {
+      let sms = $('#userPhoneNum').val();
+      alert("인증번호가 발송되었습니다.");
+  
+      $.ajax({
+        type: 'post',
+        url: '/user/execute.form',
+        data: 'userPhoneNum=' + sms,
+        dataType: 'json',
+        success: (resData) => {
+          $('#authNumber').prop('disabled', false);
+          $('#confirmBnt').prop('disabled', false);
+          
+          
+          
+          
+          
+          // Move the click event binding outside the AJAX success callback
+          // to avoid multiple bindings.
+          $('#confirmBnt').off('click').on('click', () => {
+            console.log(resData.cerNum);
+            //let smsPassed = $('#authNumber').val() === resData.cerNum;
+  
+            if (smsPassed = $('#authNumber').val() == resData.cerNum) {
+              alert('핸드폰이 인증되었습니다.');
+              
+              $('#mobile').val(sms);
+              
+              
+            } else {
+              alert('핸드폰 인증이 실패했습니다.');
+            }
+          });
+        },
+        // Use the error callback to handle AJAX request errors.
+        error: (jqXHR, textStatus, errorThrown) => {
+          let smsPassed = false;
+  
+          switch (jqXHR.status) {
+            case 400:
+              $('#confirmBnt').text('인증번호 형식이 올바르지 않습니다.');
+              break;
+            case 403:
+              $('#confirmBnt').text('이미 인증된 번호입니다.');
+              break;
+            default:
+              // Handle other errors as needed.
+              break;
+        }
+          }
+        });
+      });
+
+    } else {
+      $("#goSMS").off("click").on("click", function (event) {
+        event.preventDefault();
+        alert('휴대전화번호를 확인하세요.');
+        $('#msg_mobile').text('휴대전화번호를 확인하세요.');
+      });
+    }
+  });
+};
+  //이메일 -> 아이디로 쓰기 
+
+
+  function fnValidUser() {
+    
+    
+      $('#frm_join').submit();
+    }
+  
+  
+  
+  
+  function fnCheckEmail() {
+    console.log('btn_get_code');
+    let email = $('#email').val();
+  
+    // 1. 정규식 검사
+    let regEmail = /^[A-Za-z0-9-_]+@[A-Za-z0-9]{2,}([.][A-Za-z]{2,6}){1,2}$/;
+    if (!regEmail.test(email)) {
+      $('#msg_email').text('이메일 형식이 올바르지 않습니다.');
+      return;
+    }
+  
+    // 2. 이메일 중복 체크
+    $.ajax({
+      // 요청
+      type: 'get',
+      url: '/user/checkEmail.do',
+      data: 'email=' + email,
+      // 응답
+      dataType: 'json',
+      success: (resData) => {  // resData === {"enableEmail": true}
+        if (resData.enableEmail) {
+          console.log('resolve');
+          $('#msg_email').text('');
+          if(!emailPassed){
+            alert('해당 아이디를 사용할 수 있습니다.');
+            return;
+          }
+      
+        } else {
+          console.log('reject');
+          $('#msg_email').text('이미 가입한 이메일입니다. 다른 이메일을 입력해 주세요.');
+        }
+      } 
+    });
+  
+    
+  
+  }
+  
+  /* 함수 정의 */
+  
+  
+  /*$('#btn_get_code').click(() => {
+    
+    // 연속된 ajax() 함수 호출의 실행 순서를 보장하는 JavaScript 객체 Promise
+    new Promise((resolve, reject) => {
+      
+  
+      
+    })
+    .then(() => {
+      // 성공적으로 이메일 체크가 완료된 경우의 로직
+      // 이 부분에 추가로 실행할 코드를 작성하세요.
+        
+      console.log('then');
+        }).catch((state) => {
+      // 실패한 경우의 로직
+      emailPassed = false;
+      switch (state) {
+        case 1:
+          
+          break;
+        case 2:
+          
+          break;
+      }
+    })
+    });
+  */
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  /////
+  const fnCheckPassword = () => {
+    $('#pw').keyup((ev) => {
+      let pw = $(ev.target).val();
+      // 비밀번호 : 8~20자, 영문,숫자,특수문자, 2가지 이상 포함
+      let validPwCount = /[A-Z]/.test(pw)          // 대문자가 있으면   true
+                       + /[a-z]/.test(pw)          // 소문자가 있으면   true
+                       + /[0-9]/.test(pw)          // 숫자가 있으면     true
+                       + /[^A-Za-z0-9]/.test(pw);  // 특수문자가 있으면 true
+      pwPassed = pw.length >= 8 && pw.length <= 20 && validPwCount >= 2;
+      if(pwPassed){
+        $('#msg_pw').text('사용 가능한 비밀번호입니다.');
+      } else {
+        $('#msg_pw').text('비밀번호는 8~20자, 영문/숫자/특수문자를 2가지 이상 포함해야 합니다.');       
+      }
+    })
+  }
+  
+  const fnCheckPassword2 = () => {
+    $('#pw2').blur((ev) => {
+      let pw = $('#pw').val();
+      let pw2 = ev.target.value;
+      pw2Passed = (pw !== '') && (pw === pw2);
+      if(pw2Passed){
+        $('#msg_pw2').text('');
+      } else {
+        $('#msg_pw2').text('비밀번호 입력을 확인하세요.');
+      }
+    })
+  }
+  
+  const fnCheckName = () => {
+    $('#name').blur((ev) => {
+      let name = ev.target.value;
+      let bytes = 0;
+      for(let i = 0; i < name.length; i++){
+        if(name.charCodeAt(i) > 128){  // 코드값이 128을 초과하는 문자는 한 글자 당 2바이트임
+          bytes += 2;
+        } else {
+          bytes++;
+        }
+      }
+      namePassed = (bytes <= 50);
+      if(!namePassed){
+        $('#msg_name').text('이름은 50바이트 이내로 작성해야 합니다.');
+      }
+    })
+  }
+  
+  const fnCheckMobile = () => {
+    $('#userPhoneNum').keyup((ev) => {
+      ev.target.value = ev.target.value.replaceAll('-', '');
+      // 휴대전화번호 검사 정규식 (010숫자8개)
+      let regMobile = /^010[0-9]{8}$/;
+      mobilePassed = regMobile.test(ev.target.value);
+      if(mobilePassed){
+        $('#msg_mobile').text('');
+      } else {
+        $('#msg_mobile').text('휴대전화번호를 확인하세요.');       
+      }
+    })
+  }
+ 
+ 
+   const fnBlankCheck = () => {
+    $('#frm_join').submit((ev) => {
+      if($('#email').val().trim() === ''){
+        ev.preventDefault();
+        alert('이메일은 반드시 입력해야합니다.');
+        return;
+      } else if($('#userPhoneNum').val().trim() === '') {
+        ev.preventDefault();
+        alert('핸드폰번호는 반드시 입력해야합니다.');
+        return;
+      } else if($('#authNumber').val().trim() === '') {
+        ev.preventDefault();
+        alert('인증번호는 반드시 입력해야합니다.');
+      } else if($('#pw').val().trim() === '') {
+        ev.preventDefault();
+        alert('비밀번호는 반드시 입력해야합니다.');
+      } else if($('#pw2').val().trim() === '') {
+        ev.preventDefault();
+        alert('비밀번호 확인을 반드시 해야합니다.');
+      } else if($('#name').val().trim() === '') {
+        ev.preventDefault();
+        alert('이름을 반드시 입력해야합니다.');
+     } 
+       });
+};
+
+      
+  
+  
+  /*const fnJoin = () => {
+    $('#frm_join').submit((ev) => {
+      if(!emailPassed){
+        alert('이메일을 인증 받아야 합니다.');
+        ev.preventDefault();
+        return;
+      } else if(!pwPassed || !pw2Passed){
+        alert('비밀번호를 확인하세요.');
+        ev.preventDefault();
+        return;
+      } else if(!namePassed){
+        alert('이름을 확인하세요.');
+        ev.preventDefault();
+        return;
+      } else if(!mobilePassed){
+        alert('휴대전화번호를 확인하세요.');
+        ev.preventDefault();
+        return;
+      }
+    })
+  }
+  
+  */
+    fnCheckSms();
+    fnCheckPassword();
+    fnCheckPassword();
+    fnCheckName();
+    fnCheckMobile();
+    fnBlankCheck();
+    /*fnJoin();*/
+  </script>
+  
+  
+  
+  
+  <div th:replace="~{layout/footer::footer}"></div>
+  
+</body>
+</html>

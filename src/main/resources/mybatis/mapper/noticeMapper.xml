@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.tour.hanbando.dao.NoticeMapper">
+  
+  <resultMap type="NoticeAttachDto"     id="NoticeAttachMap">
+    <id      column="ATTACH_NO"         property="attachNo" />
+    <result  column="PATH"              property="path" />
+    <result  column="ORIGINAL_FILENAME" property="originalFilename" />
+    <result  column="FILESYSTEM_NAME"   property="filesystemName" />
+    <association javaType="NoticeDto" property="noticeDto" >
+      <id      column="NOTICE_NO"     property="noticeNo" />
+    </association>
+  </resultMap>
+  
+  <select id="getNoticeList" parameterType="Map" resultType="NoticeDto">
+    SELECT A.NOTICE_NO, A.TITLE, A.CONTENTS, A.CREATED_AT, A.MODIFIED_AT 
+      FROM (SELECT ROW_NUMBER() OVER(ORDER BY NOTICE_NO DESC) AS RN, NOTICE_NO, TITLE, CONTENTS, CREATED_AT, MODIFIED_AT FROM NOTICE_T) A 
+     WHERE A.RN BETWEEN #{begin} AND #{end} 
+   </select>
+   
+  <select id="getNotice" parameterType="int" resultType="NoticeDto"> 
+    SELECT NOTICE_NO, TITLE, CONTENTS, CREATED_AT, MODIFIED_AT 
+      FROM NOTICE_T 
+     WHERE NOTICE_NO= #{noticeNo} 
+   </select>
+   
+  <select id="getNoticeCount" resultType="int"> 
+    SELECT COUNT(*) 
+      FROM NOTICE_T 
+   </select>
+   
+  <insert id="insertNotice" parameterType="NoticeDto"> 
+    <selectKey order="BEFORE" resultType="int" keyProperty="noticeNo">
+      SELECT NOTICE_SEQ.NEXTVAL
+        FROM DUAL
+    </selectKey>
+    INSERT INTO NOTICE_T( 
+           NOTICE_NO 
+         , TITLE 
+         , CONTENTS 
+         , CREATED_AT 
+         , MODIFIED_AT) 
+         
+         VALUES( 
+         #{noticeNo}
+       , #{title} 
+       , #{contents} 
+       , TO_CHAR(SYSDATE, 'YYYY/MM/DD') 
+       , TO_CHAR(SYSDATE, 'YYYY/MM/DD') 
+       ) 
+   </insert>
+   
+  
+  <delete id="deleteNotice" parameterType="int"> 
+  DELETE 
+    FROM NOTICE_T 
+   WHERE NOTICE_NO = #{noticeNo}
+  </delete>
+ 
+  <update id="updateNotice" parameterType="NoticeDto"> 
+  UPDATE NOTICE_T 
+     SET TITLE = #{title} 
+   , CONTENTS = #{contents} 
+   , MODIFIED_AT = TO_CHAR(SYSDATE, 'YYYY/MM/DD') 
+  WHERE NOTICE_NO = #{noticeNo} 
+  </update>
+    
+    
+  <select id="getSearchCount" parameterType="Map" resultType="int"> 
+    SELECT COUNT(*) 
+      FROM NOTICE_T 
+     WHERE ${column} LIKE '%' || #{query} || '%' 
+  </select>
+  
+   <select id="getSearchList" parameterType="Map" resultType="NoticeDto"> 
+     SELECT NOTICE_NO, TITLE, CONTENTS, CREATED_AT, MODIFIED_AT 
+       FROM (SELECT ROW_NUMBER() OVER(ORDER BY NOTICE_NO DESC) AS RN, NOTICE_NO, TITLE, CONTENTS, CREATED_AT, MODIFIED_AT FROM NOTICE_T 
+              WHERE ${column} LIKE '%' || #{query} || '%') 
+      WHERE RN BETWEEN #{begin} AND #{end} 
+    </select>
+   
+
+    
+    <insert id="insertNoticeAttach" parameterType="NoticeAttachDto">
+      INSERT INTO NOTICE_ATTACH_T (
+          ATTACH_NO
+        , PATH
+        , ORIGINAL_FILENAME
+        , FILESYSTEM_NAME
+        , NOTICE_NO
+      ) VALUES (
+          NOTICE_ATTACH_SEQ.NEXTVAL
+        , #{path}
+        , #{originalFilename}
+        , #{filesystemName}
+        , #{noticeDto.noticeNo}  
+      )
+    </insert>  
+    
+    <select id="getNoticeAttachList" parameterType="int" resultMap="NoticeAttachMap">
+      SELECT ATTACH_NO, PATH, ORIGINAL_FILENAME, FILESYSTEM_NAME, NOTICE_NO
+        FROM NOTICE_ATTACH_T
+       WHERE NOTICE_NO = #{noticeNo}
+    </select>
+    
+    <select id="getNoticeAttach" parameterType="int"  resultMap="NoticeAttachMap">
+      SELECT ATTACH_NO, PATH, ORIGINAL_FILENAME, FILESYSTEM_NAME, NOTICE_NO
+        FROM NOTICE_ATTACH_T
+       WHERE ATTACH_NO = #{attachNo}
+    </select>  
+    
+    <delete id="deleteAttach" parameterType="int">
+      DELETE
+        FROM NOTICE_ATTACH_T
+       WHERE ATTACH_NO = #{attachNo} 
+    </delete>   
+</mapper>

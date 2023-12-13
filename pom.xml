@@ -17,6 +17,24 @@
 		<java.version>11</java.version>
 	</properties>
 	<dependencies>
+    
+
+
+    
+    <!-- 타임리프 추가 라이브러리 -->
+    <dependency>
+	      <groupId>org.thymeleaf.extras</groupId>
+	      <artifactId>thymeleaf-extras-java8time</artifactId>
+	      <version>3.0.4.RELEASE</version>
+    </dependency>
+    
+    
+    <!-- CoolSMS(Maven) -->
+    <dependency>
+        <groupId>net.nurigo</groupId>
+        <artifactId>sdk</artifactId>
+        <version>4.3.0</version>
+    </dependency>
 
     <!-- jasypt(Java Simplified Encryption) -->
     <dependency>

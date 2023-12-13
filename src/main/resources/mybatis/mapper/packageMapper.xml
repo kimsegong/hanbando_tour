@@ -1,0 +1,542 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+ <mapper namespace="com.tour.hanbando.dao.PackageMapper">
+    <!-- 패키지테이블 -->
+    <resultMap type="PackageDto" id="PackageMap">
+          <id column="PACKAGE_NO" property="packageNo"/>
+          <result column="PACKAGE_TITLE" property="packageTitle"/>
+          <result column="MINI_ONE" property="miniOne"/>
+          <result column="MINI_TWO" property="miniTwo"/>
+          <result column="MINI_THREE" property="miniThree"/>
+          <result column="PACKAGE_PLAN" property="packagePlan"/>
+          <result column="PACKAGE_CONTENTS" property="packageContents"/>
+          <result column="HOTEL_CONTENTS" property="hotelContents"/>
+          <result column="PRICE" property="price"/>
+          <result column="DANGER" property="danger"/>
+          <result column="CREATED_AT" property="createdAt"/>
+          <result column="MODIFIED_AT" property="modifiedAt"/>
+          <result column="HIT" property="hit"/>
+          <result column="STATUS" property="status"/>
+          <result column="MAX_PEOPLE" property="maxPeople"/>
+          <result column="RECOMMEND_STATUS" property="recommendStatus"/>
+      <association javaType="RegionDto" property="regionDto">
+          <id column="REGION_NO" property="regionNo"/>
+          <result column="REGION_NAME" property="regionName"/>
+      </association>
+      <association javaType="ThemeDto" property="themeDto">
+          <id column="THEME_NO" property="themeNo"/>
+          <result column="THEME_NAME" property="themeName"/>
+      </association>
+      <association javaType="ProductImageDto" property="productImageDto">
+          <id column="IMAGE_NO" property="imageNo"/>
+          <result column="THUMBNAIL" property="thumbnail"/>
+          <result column="FILESYSTEM_NAME" property="filesystemName"/>
+          <result column="IMAGE_PATH" property="imagePath"/>
+      </association>
+    </resultMap>
+    <!-- 리뷰테이블 -->
+    <resultMap type="ReviewDto" id="ReviewMap">
+            <id column="REVIEW_NO" property="reviewNo"/>            
+            <result column="RESERVE_NO" property="reserveNo"/>
+            <result column="REVIEW_CONTENTS" property="reviewContents"/>
+            <result column="PACKAGE_NO" property="packageNo"/>
+            <result column="HOTEL_NO" property="hotelNo"/>
+            <result column="STAR" property="star"/>
+            <result column="REGIST_AT" property="registAt"/>   
+        <association javaType="UserDto" property="userDto">
+            <id column="USER_NO" property="userNo"/>
+            <result column="EMAIL" property="email"/>
+            <result column="NAME" property="name"/>    
+        </association>
+     </resultMap>       
+
+    <!-- 찜테이블 -->
+    <resultMap type="HeartDto" id="HeartMap">           
+      <association javaType="PackageDto" property="packageDto">
+        <id column="PACKAGE_NO" property="packageNo"/>            
+        <result column="PACKAGE_TITLE" property="packageTitle"/>      
+        <result column="PRICE" property="price"/>      
+       </association>
+     <association property="userDto" javaType="UserDto">
+          <result column="USER_NO" property="userNo"/>
+      </association>
+      <association javaType="HotelDto" property="hotelDto">
+        <id column="HOTEL_NO" property="hotelNo"/>            
+        <result column="HOTEL_NAME" property="hotelName"/>      
+      </association>
+    </resultMap>
+    
+    <resultMap type="ReserveDto" id="ReserveMap">
+    <id column="RESERVE_NO" property="reserveNo"/>
+    <result column="RESERVED_AT" property="reservedAt"/>
+    <result column="REQUESTED_TERM" property="requestedTerm"/>
+    <result column="AGREE" property="agree"/>
+    <result column="DEPARTURE_LOC" property="departureLoc"/>
+    <result column="RESERVE_STATUS" property="reserveStatus"/>
+    <result column="RESERVE_START" property="reserveStart"/>
+    <result column="RESERVE_FINISH" property="reserveFinish"/>
+    <result column="RESERVE_PERSON" property="reservePerson"/>
+    <result column="RESERVE_PRICE" property="reservePrice"/>
+    <association javaType="UserDto" property="userDto">
+      <id column="USER_NO" property="userNo"/>
+      <result column="EMAIL" property="email" />
+      <result column="PW" property="pw" />
+      <result column="NAME" property="name" />
+      <result column="GENDER" property="gender" />
+      <result column="MOBILE" property="mobile" />
+      <result column="POSTCODE" property="postcode" />
+      <result column="ROAD_ADDRESS" property="roadAddress" />
+      <result column="JIBUN_ADDRESS" property="jibunAddress" />
+      <result column="DETAIL_ADDRESS" property="detailAddress" />
+      <result column="AGREE" property="agree" />
+      <result column="STATE" property="state" />
+      <result column="AUTH" property="auth" />
+      <result column="PW_MODIFIED_AT" property="pwModifiedAt" />
+      <result column="JOINED_AT" property="joinedAt" />  
+    </association>
+    <association property="packageDto" resultMap="PackageMap"/>
+    <association javaType="HotelDto" property="hotelDto">
+      <id column="HOTEL_NO" property="hotelNo"/>
+      <result column="REGION_NO" property="regionNo"/>
+      <result column="HOTEL_NAME" property="hotelName"/>
+      <result column="HOTEL_ADDRESS" property="hotelAddress"/>
+      <result column="LATITUDE" property="latitude"/>
+      <result column="LONGITUDE" property="longitude"/>
+      <result column="HOTEL_DETAIL" property="hotelDetail"/>
+      <result column="PHONE_NUMBER" property="phoneNumber"/>
+      <result column="H_EMAIL" property="HEmail"/>
+      <result column="CREATED_AT" property="createdAt"/>
+      <result column="MODIFIED_AT" property="modifiedAt"/>
+      <result column="HIT" property="hit"/>
+      <result column="STATUS" property="status"/>
+      <result column="RECOMMEND_STATUS" property="recommendStatus"/>
+    </association>
+    <association javaType="RoomtypeDto" property="roomtypeDto">
+      <id column="ROOM_NO" property="roomNo"/>
+      <result column="HOTEL_NO" property="hotelNo"/>
+      <result column="ROOM_DETAIL" property="roomDetail"/>
+      <result column="ROOM_NAME" property="roomName"/>
+      <result column="ROOM_MANY" property="roomMany"/>
+      <result column="VIEW" property="view"/>
+      <result column="BREAKFAST" property="breakfast"/>
+      <result column="SMOKE" property="smoke"/>
+      <result column="PEOPLE" property="people"/>
+      <result column="BED" property="bed"/>
+      <result column="SHOWER" property="shower"/>
+      <result column="SIZE" property="size"/>
+    </association>
+  </resultMap> 
+  
+    <select id="getPackageCount" resultType="int">
+      SELECT COUNT(*)
+        FROM PACKAGE_T
+       <where>
+          <if test="regionNo != 0">
+            AND REGION_NO = #{regionNo}
+          </if>
+          <if test="condition == 'recommendStatus'">
+            AND RECOMMEND_STATUS = 1
+          </if>
+       </where>
+    </select>
+    
+    <select id="getCount" resultType="int">
+      SELECT COUNT(*)
+        FROM PACKAGE_T
+    </select>
+    
+
+    <!-- 패키지리스트불러오기 -->
+    <select id="getPackageList" parameterType="Map" resultMap="PackageMap">
+  	  SELECT
+  	    P.PACKAGE_NO,
+  	    P.REGION_NO,
+  	    P.THEME_NO,
+  	    P.MINI_ONE,
+        P.MINI_TWO,
+        P.MINI_THREE,
+  	    P.PACKAGE_TITLE,
+  	    P.PRICE,
+  	    P.HIT,
+  	    P.STATUS,
+  	    P.RECOMMEND_STATUS,
+  	    PI.IMAGE_NO,
+  	    PI.THUMBNAIL,
+  	    PI.FILESYSTEM_NAME,
+  	    PI.IMAGE_PATH
+  	  FROM (
+  	    SELECT
+  	      PT.PACKAGE_NO,
+  	      PT.REGION_NO,
+  	      PT.THEME_NO,
+  	      PT.PACKAGE_TITLE,
+  	      PT.MINI_ONE,
+          PT.MINI_TWO,
+          PT.MINI_THREE,
+  	      PT.PRICE,
+  	      PT.HIT,
+  	      PT.STATUS,
+  	      PT.MAX_PEOPLE,
+  	      PT.RECOMMEND_STATUS,
+  	      ROW_NUMBER() OVER (
+  	        <choose>
+  	          <when test="condition == 'rowPrice'">
+  	            ORDER BY PT.PRICE ASC
+  	          </when>
+  	          <when test="condition == 'highPrice'">
+  	            ORDER BY PT.PRICE DESC
+  	          </when>
+  	          <otherwise>
+  	            ORDER BY PT.PACKAGE_NO DESC
+  	          </otherwise>
+  	        </choose>
+  	      ) AS RN
+  	    FROM PACKAGE_T PT 
+  	   <where>
+  	    <if test="regionNo != 0">
+          AND PT.REGION_NO = #{regionNo}
+        </if>
+  	    <if test="condition == 'recommendStatus'">
+  	      AND PT.RECOMMEND_STATUS = 1
+  	    </if>
+  	    </where>
+  	  ) P
+  	  LEFT JOIN PRODUCT_IMAGE_T PI ON P.PACKAGE_NO = PI.PACKAGE_NO
+  	  LEFT JOIN REGION_T R ON P.REGION_NO = R.REGION_NO
+  	  LEFT JOIN THEME_T T ON P.THEME_NO = T.THEME_NO
+  	  WHERE (P.RN BETWEEN #{begin} AND #{end}) AND PI.THUMBNAIL = 1
+  	  ORDER BY P.RN ASC
+	</select>
+	
+
+    <select id="getRegion" resultType="regionDto">
+      SELECT REGION_NO, REGION_NAME
+        FROM REGION_T     
+    </select>
+    
+    <select id="getTheme" resultType="themeDto">
+      SELECT THEME_NO, THEME_NAME
+        FROM THEME_T    
+    </select>
+
+    <insert id="insertPackage" parameterType="PackageDto">
+      <selectKey order="BEFORE" keyProperty="packageNo" resultType="int">
+          SELECT PACKAGE_SEQ.NEXTVAL 
+            FROM DUAL
+      </selectKey>
+        INSERT INTO PACKAGE_T (
+            PACKAGE_NO,
+            REGION_NO,
+            THEME_NO,
+            PACKAGE_TITLE,
+            MINI_ONE,
+            MINI_TWO,
+            MINI_THREE,
+            PACKAGE_PLAN,
+            PACKAGE_CONTENTS,
+            HOTEL_CONTENTS,
+            PRICE,
+            DANGER,
+            CREATED_AT,
+            MODIFIED_AT,
+            MAX_PEOPLE,
+            RECOMMEND_STATUS
+        ) VALUES (
+            #{packageNo},
+            #{regionDto.regionNo},
+            #{themeDto.themeNo},
+            #{packageTitle},
+            #{miniOne},
+            #{miniTwo},
+            #{miniThree},
+            #{packagePlan},
+            #{packageContents},
+            #{hotelContents},
+            #{price},
+            #{danger},
+            TO_CHAR(SYSDATE,'YYYY/MM/DD'),
+            TO_CHAR(SYSDATE,'YYYY/MM/DD'),
+            #{maxPeople},
+            #{recommendStatus}
+        )
+    </insert>
+
+	 <update id="insertPackageTh" parameterType="PackageDto">
+		  UPDATE PACKAGE_T SET PACKAGE_TITLE= #{packageTitle}  
+		   WHERE PACKAGE_NO = #{packageNo}
+     </update>
+		
+	<!-- 이미지 -->
+     <insert id="insertImageList" parameterType="productImageDto">
+        INSERT INTO PRODUCT_IMAGE_T (
+            IMAGE_NO
+          , PACKAGE_NO
+          , FILESYSTEM_NAME
+          , THUMBNAIL
+          , IMAGE_PATH
+        ) VALUES (
+            PRODUCT_IMAGE_SEQ.NEXTVAL
+          , #{packageNo}
+          , #{filesystemName}
+          , #{thumbnail}
+          , #{imagePath}
+        )
+      </insert>
+      
+      
+     <!-- ck이미지 -->
+      <insert id="insertPackageImage" parameterType="productImageDto">
+        INSERT INTO PRODUCT_IMAGE_T (
+            IMAGE_NO
+          , PACKAGE_NO
+          , FILESYSTEM_NAME
+          , IMAGE_PATH
+        ) VALUES (
+            PRODUCT_IMAGE_SEQ.NEXTVAL
+          , #{packageNo}
+          , #{filesystemName}
+          , #{imagePath}
+        )
+      </insert>
+      
+      <insert id="insertRegion" parameterType="regionDto">
+        INSERT INTO REGION_T (
+            REGION_NO
+          , REGION_NAME
+        ) VALUES (
+            REGION_SEQ.NEXTVAL
+          , #{regionName}
+        )
+      </insert>
+      
+      <insert id="insertTheme" parameterType="themeDto">
+        INSERT INTO THEME_T (
+            THEME_NO
+          , THEME_NAME
+        ) VALUES (
+            THEME_SEQ.NEXTVAL
+          , #{themeName}
+        )
+      </insert>
+  
+      <select id="getPackage" parameterType="int" resultMap="PackageMap">
+        SELECT
+            P.PACKAGE_NO,
+            P.REGION_NO,
+            P.THEME_NO,
+            P.PACKAGE_TITLE,
+            P.MINI_ONE,
+            P.MINI_TWO,
+            P.MINI_THREE,
+            P.PACKAGE_PLAN,
+            P.PACKAGE_CONTENTS,
+            P.HOTEL_CONTENTS,
+            P.PRICE,
+            P.DANGER,
+            P.CREATED_AT,
+            P.MODIFIED_AT,
+            P.HIT,
+            P.STATUS,
+            P.MAX_PEOPLE,
+            P.RECOMMEND_STATUS,
+            I.IMAGE_NO,
+            I.THUMBNAIL,
+            I.FILESYSTEM_NAME,
+            I.IMAGE_PATH,
+            R.REGION_NAME,
+            T.THEME_NAME
+        FROM PACKAGE_T P
+        LEFT JOIN PRODUCT_IMAGE_T I ON P.PACKAGE_NO = I.PACKAGE_NO
+        LEFT JOIN REGION_T R ON P.REGION_NO = R.REGION_NO
+        LEFT JOIN THEME_T T ON P.THEME_NO = T.THEME_NO
+        WHERE P.PACKAGE_NO = #{packageNo}
+      </select>
+      
+      <select id="getImage" parameterType="int" resultType="ProductImageDto">
+        SELECT IMAGE_NO, IMAGE_PATH, FILESYSTEM_NAME, THUMBNAIL, PACKAGE_NO
+          FROM PRODUCT_IMAGE_T
+         WHERE IMAGE_NO = #{imageNo}
+      </select>
+      
+      
+      <select id="getPackageImageList" parameterType="int" resultType="ProductImageDto">
+        SELECT PACKAGE_NO, IMAGE_NO, IMAGE_PATH, THUMBNAIL, FILESYSTEM_NAME
+          FROM PRODUCT_IMAGE_T
+         WHERE PACKAGE_NO = #{packageNo}  
+      </select>
+      
+      <select id="getPackageThumbnailList" parameterType="int" resultType="ProductImageDto">
+        SELECT PACKAGE_NO, IMAGE_NO, THUMBNAIL, IMAGE_PATH
+          FROM PRODUCT_IMAGE_T  
+      </select>
+
+      <update id="updatePackage" parameterType="PackageDto">
+        UPDATE PACKAGE_T
+           SET REGION_NO = #{regionDto.regionNo},
+               THEME_NO = #{themeDto.themeNo},
+               PACKAGE_TITLE = #{packageTitle},
+               MINI_ONE = #{miniOne},
+               MINI_TWO = #{miniTwo},
+               MINI_THREE = #{miniThree},
+               PACKAGE_PLAN = #{packagePlan},
+               PACKAGE_CONTENTS = #{packageContents},
+               HOTEL_CONTENTS = #{hotelContents},
+               PRICE = #{price},
+               DANGER = #{danger},
+               MODIFIED_AT = TO_CHAR(SYSDATE,'YYYY/MM/DD'),
+               MAX_PEOPLE = #{maxPeople},
+               RECOMMEND_STATUS = #{recommendStatus}
+         WHERE
+             PACKAGE_NO = #{packageNo}
+      </update>
+      
+      <select id="getReserve" parameterType="int" resultMap="ReserveMap">
+          SELECT RES.RESERVE_NO, RES.RESERVED_AT, RES.REQUESTED_TERM, RES.AGREE, RES.DEPARTURE_LOC, RES.RESERVE_STATUS, RES.RESERVE_START, RES.RESERVE_FINISH, RES.RESERVE_PERSON, RES.RESERVE_PRICE
+               , U.USER_NO, U.NAME, U.EMAIL, U.GENDER, U.MOBILE, U.AUTH
+               , P.PACKAGE_NO, P.PACKAGE_TITLE, P.PACKAGE_PLAN, P.PRICE, P.MAX_PEOPLE, P.DANGER
+            FROM USER_T U INNER JOIN RESERVE_T RES
+              ON U.USER_NO = RES.USER_NO INNER JOIN PACKAGE_T P
+              ON P.PACKAGE_NO = RES.PACKAGE_NO
+            WHERE RES.PACKAGE_NO = #{packageNo} 
+       </select>
+      
+      
+      
+      <update id="packageHit" parameterType="int">
+        UPDATE PACKAGE_T
+           SET HIT = HIT + 1
+         WHERE PACKAGE_NO = #{packageNo}  
+      </update>
+
+      <select id="getHitList" parameterType="Map" resultType="packageDto">
+        SELECT PACKAGE_NO, PACKAGE_TITLE, PACKAGE_PLAN, HIT 
+        FROM PACKAGE_T
+        ORDER BY HIT DESC
+      </select>
+
+      
+      <insert id="insertReview" parameterType="ReviewDto">
+        INSERT INTO REVIEW_T (
+            REVIEW_NO
+          , PACKAGE_NO
+          , USER_NO
+          , REVIEW_CONTENTS
+          , REGIST_AT
+          , STAR
+        ) VALUES (
+            REVIEW_SEQ.NEXTVAL
+          , #{packageNo}
+          , #{userDto.userNo}
+          , #{reviewContents}
+          , TO_CHAR(SYSDATE,'YYYY/MM/DD')
+          , #{star}
+        )
+      </insert>
+  
+      <select id="getReviewCount" parameterType="int" resultType="int">
+        SELECT COUNT(*)
+          FROM REVIEW_T
+         WHERE PACKAGE_NO = #{packageNo}
+      </select>
+
+      <select id="getReviewList" parameterType="Map" resultMap="ReviewMap">
+        SELECT A.REVIEW_NO, A.PACKAGE_NO, A.STAR, A.USER_NO, A.REVIEW_CONTENTS, A.REGIST_AT, A.NAME
+          FROM (SELECT ROW_NUMBER() OVER(ORDER BY REVIEW_NO DESC) AS RN, C.REVIEW_NO, C.REVIEW_CONTENTS, C.STAR, C.PACKAGE_NO, C.REGIST_AT, U.USER_NO, U.NAME
+                  FROM USER_T U INNER JOIN REVIEW_T C
+                    ON U.USER_NO = C.USER_NO
+                 WHERE C.PACKAGE_NO = #{packageNo}) A
+         WHERE A.RN BETWEEN #{begin} AND #{end}
+      </select>
+              
+      <select id="getReviewStarList" parameterType="Map" resultMap="ReviewMap">
+          SELECT A.REVIEW_NO, A.PACKAGE_NO, A.STAR, A.USER_NO, A.REVIEW_CONTENTS, A.REGIST_AT, A.NAME
+          FROM (
+              SELECT ROW_NUMBER() OVER(ORDER BY STAR DESC) AS RN, C.REVIEW_NO, C.REVIEW_CONTENTS, C.STAR, C.PACKAGE_NO, C.REGIST_AT, U.USER_NO, U.NAME
+              FROM USER_T U
+              INNER JOIN REVIEW_T C ON U.USER_NO = C.USER_NO
+              WHERE C.PACKAGE_NO = #{packageNo}
+          ) A
+          WHERE A.RN BETWEEN #{begin} AND #{end}
+      </select>
+        
+              
+      <select id="starList" parameterType="int" resultMap="ReviewMap">
+        SELECT REVIEW_NO, STAR, USER_NO
+          FROM REVIEW_T
+         WHERE PACKAGE_NO = #{packageNo}
+         ORDER BY STAR ASC;    
+      </select>
+      
+      <select id="starAve" resultType="double">
+        SELECT AVG(STAR) AS AVERAGE_RATING
+          FROM REVIEW_T
+         WHERE PACKAGE_NO = #{packageNo}      
+      </select>
+      
+      <insert id="heartProduct" parameterType="HeartDto">
+        INSERT INTO HEART_T (
+          PACKAGE_NO  
+        , USER_NO
+        )VALUES(
+          #{packageDto.packageNo}
+        , #{userDto.userNo}
+         )
+      </insert>
+      
+      <delete id="deleteReview" parameterType="int">
+         DELETE 
+           FROM REVIEW_T
+          WHERE REVIEW_NO = #{reviewNo}
+      </delete>
+      
+      <delete id="deletePackage" parameterType="int">
+         DELETE 
+           FROM PACKAGE_T 
+          WHERE PACKAGE_NO = #{packageNo}
+      </delete>
+    
+      <delete id="deletePackageImageList" parameterType="int">
+        DELETE
+          FROM PRODUCT_IMAGE_T
+         WHERE PACKAGE_NO = #{packageNo}
+      </delete>      
+      
+      <delete id="deletePackageImage" parameterType="String">
+        DELETE
+          FROM PRODUCT_IMAGE_T
+         WHERE FILESYSTEM_NAME = #{filesystemName}
+      </delete>     
+      
+     <select id="selectHeartList" parameterType="Map" resultMap="HeartMap">
+      SELECT  A.PACKAGE_NO, A.PACKAGE_TITLE, A.PRICE, A.USER_NO
+        FROM (SELECT ROW_NUMBER() OVER(ORDER BY H.PACKAGE_NO DESC) AS RN, H.USER_NO, H.PACKAGE_NO, P.PACKAGE_TITLE, P.PRICE
+                FROM HEART_T H INNER JOIN PACKAGE_T P
+                  ON H.PACKAGE_NO = P.PACKAGE_NO
+               WHERE H.USER_NO = #{userNo}) A
+       WHERE A.RN BETWEEN #{begin} AND #{end}       
+     </select>
+     
+     <select id="getHeartCount" resultType="int" parameterType="int">
+      SELECT COUNT(*)
+        FROM PACKAGE_T PA INNER JOIN HEART_T H
+          ON PA.PACKAGE_NO = H.PACKAGE_NO
+       WHERE USER_NO = #{userNo}
+      </select>
+
+      <select id="checkHeart" parameterType="Map" resultType="int">
+        SELECT COUNT(*) 
+          FROM HEART_T 
+         WHERE USER_NO = #{userNo}
+      </select>
+      
+      <delete id="deleteHeart" parameterType="int">
+        DELETE
+          FROM HEART_T
+         WHERE PACKAGE_NO = #{packageNo}
+      </delete>
+      
+</mapper>
+

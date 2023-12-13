@@ -1,0 +1,688 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.tour.hanbando.dao.ManageMapper">
+  
+  <!-- 패키지 DTO -->
+  <resultMap type="PackageDto"          id="PackageMap">
+    <id      column="PACKAGE_NO"        property="packageNo"/>
+    <result  column="PACKAGE_TITLE"     property="packageTitle"/>
+    <result  column="MINI_ONE"          property="miniOne"/>
+    <result  column="MINI_TWO"          property="miniTwo"/>
+    <result  column="MINI_THREE"        property="miniThree"/>
+    <result  column="PACKAGE_PLAN"      property="packagePlan"/>
+    <result  column="PACKAGE_CONTENTS"  property="packageContents"/>
+    <result  column="HOTEL_CONTENTS"    property="hotelContents"/>
+    <result  column="PRICE"             property="price"/>
+    <result  column="DANGER"            property="danger"/>
+    <result  column="CREATED_AT"        property="createdAt"/>
+    <result  column="MODIFIED_AT"       property="modifiedAt"/>
+    <result  column="HIT"               property="hit"/>
+    <result  column="STATUS"            property="status"/>
+    <result  column="MAX_PEOPLE"        property="maxPeople"/>
+    <result  column="RECOMMEND_STATUS"  property="recommendStatus"/>
+    <association javaType="RegionDto" property="regionDto">
+      <id        column="REGION_NO"   property="regionNo"/>
+      <result    column="REGION_NAME" property="regionName"/>
+    </association>
+    <association javaType="ThemeDto" property="themeDto">
+      <id        column="THEME_NO"   property="themeNo"/>
+    </association>
+    <association javaType="ProductImageDto" property="productImageDto">
+      <id        column="IMAGE_NO"          property="imageNo"/>
+    </association>
+  </resultMap>
+    
+  <!-- 호텔 DTO -->
+  <resultMap type="HotelDto"            id="HotelMap">
+    <id      column="HOTEL_NO"          property="hotelNo" />
+    <result  column="HOTEL_NAME"        property="hotelName" />
+    <result  column="HOTEL_ADDRESS"     property="hotelAddress" />
+    <result  column="LATITUDE"          property="latitude" />
+    <result  column="LONGITUDE"         property="longitude" />
+    <result  column="HOTEL_DETAIL"      property="hotelDetail" />
+    <result  column="PHONE_NUMBER"      property="phoneNumber" />
+    <result  column="H_EMAIL"           property="HEmail" />
+    <result  column="CREATED_AT"        property="createdAt" />
+    <result  column="MODIFIED_AT"       property="modifiedAt" />
+    <result  column="HIT"               property="hit" />
+    <result  column="STATUS"            property="status" />
+    <result  column="RECOMMEND_STATUS"  property="recommendStatus" />
+    <association javaType="RegionDto" property="regionDto">
+      <id        column="REGION_NO"   property="regionNo"/>
+      <result    column="REGION_NAME" property="regionName"/>
+    </association>
+  </resultMap>
+
+  
+  <!-- 예약 DTO -->
+  <resultMap type="ReserveDto"       id="ReserveMap">
+    <id      column="RESERVE_NO"     property="reserveNo" />
+    <result  column="RESERVED_AT"    property="reservedAt"/>
+    <result  column="REQUESTED_TERM" property="requestedTerm"/>
+    <result  column="AGREE"          property="agree"/>
+    <result  column="DEPARTURE_LOC"  property="departureLoc"/>
+    <result  column="RESERVE_STATUS" property="reserveStatus"/>
+    <result  column="RESERVE_START"  property="reserveStart"/>
+    <result  column="RESERVE_FINISH" property="reserveFinish"/>
+    <result  column="RESERVE_PERSON" property="reservePerson"/>
+    <result  column="RESERVE_PRICE"  property="reservePrice"/>
+    <association javaType="UserDto"      property="userDto">
+      <id        column="USER_NO"        property="userNo"/>
+      <result    column="EMAIL"          property="email"/>
+      <result    column="PW"             property="pw"/>
+      <result    column="NAME"           property="name"/>
+      <result    column="GENDER"         property="gender"/>
+      <result    column="MOBILE"         property="mobile"/>
+      <result    column="POSTCODE"       property="postcode"/>
+      <result    column="ROAD_ADDRESS"   property="roadAddress"/>
+      <result    column="JIBUN_ADDRESS"  property="jibunAddress"/>
+      <result    column="DETAIL_ADDRESS" property="detailAddress"/>
+      <result    column="AGREE"          property="agree"/>
+      <result    column="STATE"          property="state"/>
+      <result    column="AUTH"           property="auth"/>
+      <result    column="PW_MODIFIED_AT" property="pwModifiedAt"/>
+      <result    column="JOINED_AT"      property="joinedAt"/>
+    </association>
+    <association javaType="PackageDto"  property="packageDto">
+      <id        column="PACKAGE_NO"    property="packageNo" />
+      <result    column="PACKAGE_TITLE" property="packageTitle"/>
+      <result    column="DANGER"        property="danger"/>
+    </association>
+    <association javaType="HotelDto" property="hotelDto">
+      <id        column="HOTEL_NO"   property="hotelNo" />
+      <result    column="HOTEL_NAME" property="hotelName"/>
+      <result    column="HOTEL_ADDRESS" property="hotelAddress"/>
+      <result    column="PHONE_NUMBER" property="phoneNumber"/>
+    </association>
+  </resultMap>
+  
+  <!-- 여행객 DTO -->
+  <resultMap type="TouristDto"   id="TouristMap" >
+    <id      column="TOURIST_NO" property="touristNo" />
+    <result  column="NAME"       property="name" />
+    <result  column="BIRTH_DATE" property="birthDate" />
+    <result  column="GENDER"     property="gender" />
+    <result  column="MOBILE"     property="mobile" />
+    <result  column="AGE_CASE"   property="ageCase" />
+    <association javaType="ReserveDto" property="reserveDto">
+      <id        column="RESERVE_NO"   property="reserveNo" />
+    </association>
+  </resultMap>
+  
+  <!-- 리뷰 DTO -->
+  <resultMap type="ReviewDto"         id="ReviewMap">
+    <id      column="REVIEW_NO"       property="reviewNo"/>
+    <result  column="PACKAGE_NO"      property="packageNo" />
+    <result  column="REVIEW_CONTENTS" property="reviewContents"/>
+    <result  column="HOTEL_NO"        property="hotelNo" />
+    <result  column="REGIST_AT"       property="registAt"/>
+    <result  column="STAR"            property="star"/>
+    <association javaType="UserDto"      property="userDto">
+      <id        column="USER_NO"        property="userNo"/>
+      <result    column="EMAIL"          property="email"/>
+      <result    column="PW"             property="pw"/>
+      <result    column="NAME"           property="name"/>
+      <result    column="GENDER"         property="gender"/>
+      <result    column="MOBILE"         property="mobile"/>
+      <result    column="POSTCODE"       property="postcode"/>
+      <result    column="ROAD_ADDRESS"   property="roadAddress"/>
+      <result    column="JIBUN_ADDRESS"  property="jibunAddress"/>
+      <result    column="DETAIL_ADDRESS" property="detailAddress"/>
+      <result    column="AGREE"          property="agree"/>
+      <result    column="STATE"          property="state"/>
+      <result    column="AUTH"           property="auth"/>
+      <result    column="PW_MODIFIED_AT" property="pwModifiedAt"/>
+      <result    column="JOINED_AT"      property="joinedAt"/>
+    </association>
+  </resultMap>
+  
+  <!-- 찜 DTO -->
+  <resultMap type="HeartDto" id="HeartMap" >
+    <association javaType="UserDto" property="userDto">
+      <id        column="USER_NO"   property="userNo" />
+      <result    column="EMAIL"     property="email" />
+      <result    column="NAME"      property="name" />
+    </association>
+    <association javaType="PackageDto"  property="packageDto">
+      <id        column="PACKAGE_NO"    property="packageNo" />
+      <result    column="PACKAGE_TITLE" property="packageTitle" />
+      <result    column="PRICE"         property="price" />
+    </association>
+    <association javaType="HotelDto" property="hotelDto">
+      <id        column="HOTEL_NO"   property="hotelNo" />
+      <result    column="HOTEL_NAME" property="hotelName" />
+    </association>
+  </resultMap>
+	
+  <!-- 회원 관리 목록 -->
+  <select id="getUserCount" resultType="int">
+    SELECT COUNT(*)
+      FROM USER_T
+  </select>
+
+  <select id="getUserList" parameterType="Map" resultType="UserDto">
+    SELECT USER_NO, EMAIL, PW, NAME, GENDER, MOBILE, POSTCODE, ROAD_ADDRESS, JIBUN_ADDRESS, DETAIL_ADDRESS, AGREE, STATE, AUTH, PW_MODIFIED_AT, JOINED_AT
+      FROM (SELECT ROW_NUMBER() OVER(ORDER BY USER_NO DESC) AS RN, USER_NO, EMAIL, PW, NAME, GENDER, MOBILE, POSTCODE, ROAD_ADDRESS, JIBUN_ADDRESS, DETAIL_ADDRESS, AGREE, STATE, AUTH, PW_MODIFIED_AT, JOINED_AT
+              FROM USER_T)
+     WHERE RN BETWEEN #{begin} AND #{end}
+  </select>
+
+  <!-- 회원 검색결과 목록 -->
+  <select id="getSearchUserCount" parameterType="Map" resultType="int">
+    SELECT COUNT(*)
+      FROM USER_T
+     WHERE ${column} LIKE '%' || #{query} || '%'
+  </select>
+  <select id="getSearchUser" parameterType="Map" resultType="UserDto">
+    SELECT USER_NO, EMAIL, PW, NAME, GENDER, MOBILE, POSTCODE, ROAD_ADDRESS, JIBUN_ADDRESS, DETAIL_ADDRESS, AGREE, STATE, AUTH, PW_MODIFIED_AT, JOINED_AT
+      FROM (SELECT ROW_NUMBER() OVER(ORDER BY USER_NO DESC) AS RN, USER_NO, EMAIL, PW, NAME, GENDER, MOBILE, POSTCODE, ROAD_ADDRESS, JIBUN_ADDRESS, DETAIL_ADDRESS, AGREE, STATE, AUTH, PW_MODIFIED_AT, JOINED_AT
+              FROM USER_T
+             WHERE ${column} LIKE '%' || #{query} || '%')
+     WHERE RN BETWEEN #{begin} AND #{end}
+  </select>
+  
+  <!-- 찜 목록 가져오기 -->
+  <select id="getHeartCount" parameterType="Map" resultType="int">
+    SELECT COUNT(*)
+      FROM HEART_T
+     WHERE USER_NO = #{userNo}
+  </select>
+  <select id="getHeartList" parameterType="Map" resultMap="HeartMap">
+    SELECT A.USER_NO, A.EMAIL, A.NAME, A.PACKAGE_NO, A.PACKAGE_TITLE, A.PRICE, A.HOTEL_NO, A.HOTEL_NAME
+      FROM (SELECT ROW_NUMBER() OVER(ORDER BY HT.USER_NO) AS RN
+                 , HT.USER_NO, U.EMAIL, U.NAME
+                 , HT.PACKAGE_NO, P.PACKAGE_TITLE, P.PRICE
+                 , HT.HOTEL_NO, HO.HOTEL_NAME
+              FROM USER_T U LEFT OUTER JOIN HEART_T HT 
+                ON U.USER_NO = HT.USER_NO LEFT OUTER JOIN PACKAGE_T P
+                ON P.PACKAGE_NO = HT.PACKAGE_NO LEFT OUTER JOIN HOTEL_T HO
+                ON HO.HOTEL_NO = HT.HOTEL_NO
+             WHERE HT.USER_NO = #{userNo}) A
+     WHERE RN BETWEEN #{begin} AND #{end}
+  </select>
+  
+  
+  <!-- 찜 검색 가져오기 -->
+  <select id="getHeartSearchCount" parameterType="Map" resultType="int">
+    SELECT COUNT(*)
+      FROM HEART_T HT LEFT OUTER JOIN PACKAGE_T P
+        ON P.PACKAGE_NO = HT.PACKAGE_NO LEFT OUTER JOIN HOTEL_T HO
+        ON HO.HOTEL_NO = HT.HOTEL_NO
+       <where>
+         <if test="userNo != null">
+           HT.USER_NO = #{userNo}
+         </if>
+         <if test="column != null and query != null">
+           AND ${column} LIKE '%' || #{query} || '%'
+         </if>
+       </where>
+  </select>
+  <select id="getHeartSearchList" parameterType="Map" resultMap="HeartMap">
+    SELECT A.USER_NO, A.EMAIL, A.NAME, A.PACKAGE_NO, A.PACKAGE_TITLE, A.PRICE, A.HOTEL_NO, A.HOTEL_NAME
+      FROM (SELECT ROW_NUMBER() OVER(ORDER BY HT.USER_NO) AS RN
+                 , HT.USER_NO, U.EMAIL, U.NAME
+                 , HT.PACKAGE_NO, P.PACKAGE_TITLE, P.PRICE
+                 , HT.HOTEL_NO, HO.HOTEL_NAME
+              FROM USER_T U LEFT OUTER JOIN HEART_T HT 
+                ON U.USER_NO = HT.USER_NO LEFT OUTER JOIN PACKAGE_T P
+                ON P.PACKAGE_NO = HT.PACKAGE_NO LEFT OUTER JOIN HOTEL_T HO
+                ON HO.HOTEL_NO = HT.HOTEL_NO
+               <where>
+                 <if test="userNo != null">
+                   HT.USER_NO = #{userNo}
+                 </if>
+                 <if test="column != null and query != null">
+                   AND ${column} LIKE '%' || #{query} || '%'
+                 </if>
+               </where>) A
+     WHERE RN BETWEEN #{begin} AND #{end}
+  </select>
+
+  
+  
+  <!-- 휴면회원 관리 목록 -->
+  <select id="getInactiveCount" resultType="int">
+    SELECT COUNT(*)
+      FROM INACTIVE_USER_T
+  </select>
+  <select id="getInactiveList" parameterType="Map" resultType="InactiveUserDto">
+    SELECT USER_NO, EMAIL, PW, NAME, GENDER, MOBILE, POSTCODE, ROAD_ADDRESS, JIBUN_ADDRESS, DETAIL_ADDRESS, AGREE, STATE, AUTH, PW_MODIFIED_AT, JOINED_AT, INACTIVED_AT
+      FROM (SELECT ROW_NUMBER() OVER(ORDER BY INACTIVED_AT DESC) AS RN, USER_NO, EMAIL, PW, NAME, GENDER, MOBILE, POSTCODE, ROAD_ADDRESS, JIBUN_ADDRESS, DETAIL_ADDRESS, AGREE, STATE, AUTH, PW_MODIFIED_AT, JOINED_AT, INACTIVED_AT
+              FROM INACTIVE_USER_T)
+     WHERE RN BETWEEN #{begin} AND #{end}
+  </select>
+  
+  <!-- 휴면회원 검색결과 목록 -->
+  <select id="getSearchInactiveCount" parameterType="Map" resultType="int">
+    SELECT COUNT(*)
+      FROM INACTIVE_USER_T
+     WHERE ${column} LIKE '%' || #{query} || '%'
+  </select>
+  <select id="getSearchInactive" parameterType="Map" resultType="InactiveUserDto">
+    SELECT USER_NO, EMAIL, PW, NAME, GENDER, MOBILE, POSTCODE, ROAD_ADDRESS, JIBUN_ADDRESS, DETAIL_ADDRESS, AGREE, STATE, AUTH, PW_MODIFIED_AT, JOINED_AT, INACTIVED_AT
+      FROM (SELECT ROW_NUMBER() OVER(ORDER BY INACTIVED_AT DESC) AS RN, USER_NO, EMAIL, PW, NAME, GENDER, MOBILE, POSTCODE, ROAD_ADDRESS, JIBUN_ADDRESS, DETAIL_ADDRESS, AGREE, STATE, AUTH, PW_MODIFIED_AT, JOINED_AT, INACTIVED_AT
+              FROM INACTIVE_USER_T
+             WHERE ${column} LIKE '%' || #{query} || '%')
+     WHERE RN BETWEEN #{begin} AND #{end}
+  </select>
+  
+  <!-- 휴면 회원 상세 -->
+  <select id="getInactiveUser" parameterType="int" resultType="InactiveUserDto">
+    SELECT USER_NO, EMAIL, PW, NAME, GENDER, MOBILE, POSTCODE, ROAD_ADDRESS, JIBUN_ADDRESS, DETAIL_ADDRESS, AGREE, STATE, AUTH, PW_MODIFIED_AT, JOINED_AT, INACTIVED_AT
+      FROM INACTIVE_USER_T
+     WHERE USER_NO = #{userNo}
+  </select>
+
+  <!-- 탈퇴 회원 관리 목록 -->
+  <select id="getLeaveUserCount" resultType="int">
+    SELECT COUNT(*)
+      FROM LEAVE_USER_T
+  </select>
+  <select id="getLeaveUserList" parameterType="Map" resultType="LeaveUserDto">
+    SELECT EMAIL, JOINED_AT, LEAVED_AT
+      FROM (SELECT ROW_NUMBER() OVER(ORDER BY LEAVED_AT DESC) AS RN, EMAIL, JOINED_AT, LEAVED_AT
+              FROM LEAVE_USER_T)
+     WHERE RN BETWEEN #{begin} AND #{end}
+  </select>
+  
+  <!-- 탈퇴 회원 검색 목록 -->
+  <select id="getSearchLeaveCount" parameterType="Map" resultType="int">
+    SELECT COUNT(*)
+      FROM LEAVE_USER_T
+     WHERE ${column} LIKE '%' || #{query} || '%'
+  </select>
+  <select id="getSearchLeaveList" parameterType="Map" resultType="LeaveUserDto">
+    SELECT EMAIL, JOINED_AT, LEAVED_AT
+      FROM (SELECT ROW_NUMBER() OVER(ORDER BY LEAVED_AT DESC) AS RN, EMAIL, JOINED_AT, LEAVED_AT
+              FROM LEAVE_USER_T
+             WHERE ${column} LIKE '%' || #{query} || '%')
+     WHERE RN BETWEEN #{begin} AND #{end}
+  </select>
+  
+  <!-- 패키지 상품 목록 -->
+  <select id="getPackageCount" resultType="int">
+    SELECT COUNT(*)
+      FROM PACKAGE_T
+  </select>
+  <select id="getPackageList" parameterType="Map" resultMap="PackageMap">
+    SELECT A.PACKAGE_NO, A.REGION_NO, A.REGION_NAME, A.THEME_NO, A.PACKAGE_TITLE, A.MINI_ONE, A.MINI_TWO, A.MINI_THREE, A.PACKAGE_PLAN, A.PACKAGE_CONTENTS, A.HOTEL_CONTENTS, A.PRICE, A.DANGER, A.CREATED_AT, A.MODIFIED_AT, A.HIT, A.STATUS, A.MAX_PEOPLE, A.RECOMMEND_STATUS
+      FROM (SELECT ROW_NUMBER() OVER(ORDER BY P.PACKAGE_NO DESC) AS RN, P.PACKAGE_NO, P.REGION_NO, R.REGION_NAME, P.THEME_NO, P.PACKAGE_TITLE, P.MINI_ONE, P.MINI_TWO, P.MINI_THREE, P.PACKAGE_PLAN, P.PACKAGE_CONTENTS, P.HOTEL_CONTENTS, P.PRICE, P.DANGER, P.CREATED_AT, P.MODIFIED_AT, P.HIT, P.STATUS, P.MAX_PEOPLE, P.RECOMMEND_STATUS
+              FROM PACKAGE_T P INNER JOIN REGION_T R
+                ON R.REGION_NO = P.REGION_NO) A
+     WHERE A.RN BETWEEN #{begin} AND #{end}
+  </select>
+  
+  
+  <!-- 패키지 상품 검색 -->
+  <select id="getSearchPackageProducCount" parameterType="Map" resultType="int">
+    SELECT COUNT(*)
+      FROM PACKAGE_T
+       <where>
+         <if test="regionNo != 0">
+           REGION_NO = ${regionNo}
+         </if>
+         <if test="status == 1 or status == 0">
+           AND STATUS = ${status}
+         </if>
+         <if test="recommendStatus == 1 or recommendStatus == 0">
+           AND RECOMMEND_STATUS = ${recommendStatus}
+         </if>
+         <if test="column != null and query != null">
+           AND ${column} LIKE '%' || #{query} || '%'
+         </if>
+       </where> 
+  </select>
+  <select id="getSearchPackageProductList" parameterType="Map" resultMap="PackageMap">
+    SELECT A.PACKAGE_NO, A.REGION_NO, A.REGION_NAME, A.THEME_NO, A.PACKAGE_TITLE, A.MINI_ONE, A.MINI_TWO, A.MINI_THREE, A.PACKAGE_PLAN, A.PACKAGE_CONTENTS, A.HOTEL_CONTENTS, A.PRICE, A.DANGER, A.CREATED_AT, A.MODIFIED_AT, A.HIT, A.STATUS, A.MAX_PEOPLE, A.RECOMMEND_STATUS
+      FROM (SELECT ROW_NUMBER() OVER(ORDER BY P.PACKAGE_NO DESC) AS RN, P.PACKAGE_NO, P.REGION_NO, R.REGION_NAME, P.THEME_NO, P.PACKAGE_TITLE, P.MINI_ONE, P.MINI_TWO, P.MINI_THREE, P.PACKAGE_PLAN, P.PACKAGE_CONTENTS, P.HOTEL_CONTENTS, P.PRICE, P.DANGER, P.CREATED_AT, P.MODIFIED_AT, P.HIT, P.STATUS, P.MAX_PEOPLE, P.RECOMMEND_STATUS
+              FROM PACKAGE_T P INNER JOIN REGION_T R
+                ON R.REGION_NO = P.REGION_NO
+              <where>
+                <if test="regionNo != 0">
+                  P.REGION_NO = ${regionNo}
+                </if>
+                <if test="status == 1 or status == 0">
+                  AND P.STATUS = ${status}
+                </if>
+                <if test="recommendStatus == 1 or recommendStatus == 0">
+                  AND P.RECOMMEND_STATUS = ${recommendStatus}
+                </if>
+                <if test="column != null and query != null">
+                  AND P.${column} LIKE '%' || #{query} || '%'
+                </if>
+              </where> 
+            ) A
+     WHERE A.RN BETWEEN #{begin} AND #{end}
+  </select>
+  
+  <!-- 호텔 상품 목록 -->
+  <select id="getHotelCount" resultType="int">
+    SELECT COUNT(*)
+      FROM HOTEL_T
+  </select>
+  <select id="getHotelList" parameterType="Map" resultMap="HotelMap">
+    SELECT A.HOTEL_NO, A.REGION_NO, A.REGION_NAME, A.HOTEL_NAME, A.HOTEL_ADDRESS, A.LATITUDE, A.LONGITUDE, A.HOTEL_DETAIL, A.PHONE_NUMBER, A.H_EMAIL, A.CREATED_AT, A.MODIFIED_AT, A.HIT, A.STATUS, A.RECOMMEND_STATUS
+      FROM (SELECT ROW_NUMBER() OVER(ORDER BY H.HOTEL_NO DESC) AS RN, H.HOTEL_NO, H.REGION_NO, R.REGION_NAME, H.HOTEL_NAME, H.HOTEL_ADDRESS, H.LATITUDE, H.LONGITUDE, H.HOTEL_DETAIL, H.PHONE_NUMBER, H.H_EMAIL, H.CREATED_AT, H.MODIFIED_AT, H.HIT, H.STATUS, H.RECOMMEND_STATUS
+              FROM REGION_T R INNER JOIN HOTEL_T H
+                ON H.REGION_NO = R.REGION_NO) A
+     WHERE A.RN BETWEEN #{begin} AND #{end}
+  </select>
+  
+  <!-- 호텔 상품 검색 -->
+  <select id="getSearchHotelProductCount" parameterType="Map" resultType="int">
+    SELECT COUNT(*)
+      FROM HOTEL_T
+       <where>
+         <if test="regionNo != 0">
+           REGION_NO = ${regionNo}
+         </if>
+         <if test="status == 1 or status == 0">
+           AND STATUS = ${status}
+         </if>
+         <if test="recommendStatus == 1 or recommendStatus == 0">
+           AND RECOMMEND_STATUS = ${recommendStatus}
+         </if>
+         <if test="column != null and query != null">
+           AND ${column} LIKE '%' || #{query} || '%'
+         </if>
+       </where> 
+  </select>
+  <select id="getSearchHotelProductList" parameterType="Map" resultMap="HotelMap">
+    SELECT A.HOTEL_NO, A.REGION_NO, A.REGION_NAME, A.HOTEL_NAME, A.HOTEL_ADDRESS, A.LATITUDE, A.LONGITUDE, A.HOTEL_DETAIL, A.PHONE_NUMBER, A.H_EMAIL, A.CREATED_AT, A.MODIFIED_AT, A.HIT, A.STATUS, A.RECOMMEND_STATUS
+      FROM (SELECT ROW_NUMBER() OVER(ORDER BY H.HOTEL_NO DESC) AS RN, H.HOTEL_NO, H.REGION_NO, R.REGION_NAME, H.HOTEL_NAME, H.HOTEL_ADDRESS, H.LATITUDE, H.LONGITUDE, H.HOTEL_DETAIL, H.PHONE_NUMBER, H.H_EMAIL, H.CREATED_AT, H.MODIFIED_AT, H.HIT, H.STATUS, H.RECOMMEND_STATUS
+              FROM REGION_T R INNER JOIN HOTEL_T H
+                ON H.REGION_NO = R.REGION_NO
+               <where>
+                 <if test="regionNo != 0">
+                   H.REGION_NO = ${regionNo}
+                 </if>
+                 <if test="status == 1 or status == 0">
+                   AND H.STATUS = ${status}
+                 </if>
+                 <if test="recommendStatus == 1 or recommendStatus == 0">
+                   AND H.RECOMMEND_STATUS = ${recommendStatus}
+                 </if>
+                 <if test="column != null and query != null">
+                   AND H.${column} LIKE '%' || #{query} || '%'
+                 </if>
+               </where> 
+           ) A
+     WHERE A.RN BETWEEN #{begin} AND #{end}
+  </select>
+  
+  <!-- 호텔 객실 기간별 가격 -->
+  <select id="getRoomPrice" resultType="RoompriceDto">
+    SELECT HOTEL_NO, ROOM_NO, BI_PRICE, BS_DATE, BE_DATE, JUN_PRICE, JS_DATE, JE_DATE, SUNG_PRICE, SS_DATE, SE_DATE
+      FROM ROOMPRICE_T
+  </select>
+  
+  <!-- 호텔 객실 타입 -->
+  <select id="getRoomType" resultType="RoomtypeDto">
+    SELECT ROOM_NO, HOTEL_NO, ROOM_NAME, ROOM_MANY
+      FROM ROOMTYPE_T
+  </select>
+  
+  <!-- 호텔 객실 가격 변경 -->
+  <update id="updateRoomPrice" parameterType="RoompriceDto">
+    UPDATE ROOMPRICE_T
+       SET BI_PRICE = #{biPrice}
+         , BS_DATE = #{bsDate}
+         , BE_DATE = #{beDate}
+         , JUN_PRICE = #{junPrice}
+         , JS_DATE = #{jsDate}
+         , JE_DATE = #{jeDate}
+         , SUNG_PRICE = #{sungPrice}
+         , SS_DATE = #{ssDate}
+         , SE_DATE = #{seDate}
+     WHERE HOTEL_NO = #{hotelNo}
+       AND ROOM_NO = #{roomNo}
+  </update>
+
+
+  <!-- 지역 목록 -->
+  <select id="getRegionList" resultType="RegionDto">
+    SELECT REGION_NO, REGION_NAME
+      FROM REGION_T
+  </select>
+  
+  
+  <!-- 패키지 예약/추천 변경 -->
+  <update id="updatePackageRecommend" parameterType="PackageDto">
+    UPDATE PACKAGE_T
+       SET RECOMMEND_STATUS = #{recommendStatus}
+         , STATUS = #{status}
+     WHERE PACKAGE_NO = #{packageNo}
+  </update>
+  
+  <!-- 호텔 판매/추천 변경 -->
+  <update id="updateHotelRecommend" parameterType="HotelDto">
+    UPDATE HOTEL_T
+       SET RECOMMEND_STATUS = #{recommendStatus}
+         , STATUS = #{status}
+     WHERE HOTEL_NO = #{hotelNo}
+  </update>
+  
+  <!-- 예약 목록 -->
+  <select id="getReserveCount" resultType="int">
+    SELECT COUNT(*)
+      FROM RESERVE_T
+  </select>
+  <select id="getReservePeopleCount" resultType="int">
+    SELECT SUM(RESERVE_PERSON)
+      FROM RESERVE_T
+  </select>
+  <select id="getReserveList" parameterType="Map" resultMap="ReserveMap">
+    SELECT *
+      FROM (SELECT A.*, ROW_NUMBER() OVER(ORDER BY A.RESERVE_NO DESC) AS RN
+              FROM (SELECT R.RESERVE_NO, R.RESERVED_AT, R.REQUESTED_TERM, R.AGREE, R.DEPARTURE_LOC, R.RESERVE_STATUS, R.RESERVE_START, R.RESERVE_FINISH, R.RESERVE_PERSON, R.RESERVE_PRICE, R.ROOM_NO,
+                           R.USER_NO, U.NAME,
+                           R.PACKAGE_NO, P.PACKAGE_TITLE,
+                           R.HOTEL_NO, H.HOTEL_NAME
+                      FROM RESERVE_T R LEFT OUTER JOIN USER_T U
+                        ON U.USER_NO = R.USER_NO LEFT OUTER JOIN PACKAGE_T P
+                        ON P.PACKAGE_NO = R.PACKAGE_NO LEFT OUTER JOIN HOTEL_T H
+                        ON H.HOTEL_NO = R.HOTEL_NO) A 
+            )
+     WHERE RN BETWEEN #{begin} AND #{end}
+  </select>
+  
+  <!-- 예약 검색 목록 -->
+  <select id="getSearchReserveCount" parameterType="Map" resultType="int">
+    SELECT COUNT(*)
+      FROM (SELECT R.RESERVE_NO, R.RESERVED_AT, R.REQUESTED_TERM, R.AGREE, R.DEPARTURE_LOC, R.RESERVE_STATUS, R.RESERVE_START, R.RESERVE_FINISH, R.RESERVE_PERSON, R.RESERVE_PRICE, R.ROOM_NO,
+                   R.USER_NO, U.NAME,
+                   R.PACKAGE_NO, P.PACKAGE_TITLE,
+                   R.HOTEL_NO, H.HOTEL_NAME
+              FROM RESERVE_T R LEFT OUTER JOIN USER_T U
+                ON U.USER_NO = R.USER_NO LEFT OUTER JOIN PACKAGE_T P
+                ON P.PACKAGE_NO = R.PACKAGE_NO LEFT OUTER JOIN HOTEL_T H
+                ON H.HOTEL_NO = R.HOTEL_NO
+           ) A 
+       <where>
+         <if test="columnGubun != ''">
+           A.${columnGubun} IS NOT NULL
+         </if>
+         <if test="reserveStatus == 0 or reserveStatus == 1 or reserveStatus == 2">
+           AND A.RESERVE_STATUS = ${reserveStatus}
+         </if>
+         <if test="columnRe != null and queryRe != null">
+           AND A.${columnRe} LIKE '%' || #{queryRe} || '%'
+         </if>
+         <if test="columnPro != '' and queryPro != null">
+           AND A.${columnPro} LIKE '%' || #{queryPro} || '%'
+         </if>
+         <if test="columnProName != '' and queryProName != null">
+           AND A.${columnProName} LIKE '%' || #{queryProName} || '%'
+         </if>
+       </where>
+  </select>
+  <select id="getSearchResevePeopleCount" parameterType="Map" resultType="int">
+    SELECT SUM(A.RESERVE_PERSON)
+      FROM (SELECT R.RESERVE_NO, R.RESERVED_AT, R.REQUESTED_TERM, R.AGREE, R.DEPARTURE_LOC, R.RESERVE_STATUS, R.RESERVE_START, R.RESERVE_FINISH, R.RESERVE_PERSON, R.RESERVE_PRICE, R.ROOM_NO,
+                   R.USER_NO, U.NAME,
+                   R.PACKAGE_NO, P.PACKAGE_TITLE,
+                   R.HOTEL_NO, H.HOTEL_NAME
+              FROM RESERVE_T R LEFT OUTER JOIN USER_T U
+                ON U.USER_NO = R.USER_NO LEFT OUTER JOIN PACKAGE_T P
+                ON P.PACKAGE_NO = R.PACKAGE_NO LEFT OUTER JOIN HOTEL_T H
+                ON H.HOTEL_NO = R.HOTEL_NO
+           ) A 
+       <where>
+         <if test="columnGubun != ''">
+           A.${columnGubun} IS NOT NULL
+         </if>
+         <if test="reserveStatus == 0 or reserveStatus == 1 or reserveStatus == 2">
+           AND A.RESERVE_STATUS = ${reserveStatus}
+         </if>
+         <if test="columnRe != null and queryRe != null">
+           AND A.${columnRe} LIKE '%' || #{queryRe} || '%'
+         </if>
+         <if test="columnPro != '' and queryPro != null">
+           AND A.${columnPro} LIKE '%' || #{queryPro} || '%'
+         </if>
+         <if test="columnProName != '' and queryProName != null">
+           AND A.${columnProName} LIKE '%' || #{queryProName} || '%'
+         </if>
+       </where>
+  </select>
+  <select id="getSearchReserveList" parameterType="Map" resultMap="ReserveMap">
+    SELECT *
+      FROM (SELECT A.*, ROW_NUMBER() OVER(ORDER BY A.RESERVE_NO DESC) AS RN
+              FROM (SELECT R.RESERVE_NO, R.RESERVED_AT, R.REQUESTED_TERM, R.AGREE, R.DEPARTURE_LOC, R.RESERVE_STATUS, R.RESERVE_START, R.RESERVE_FINISH, R.RESERVE_PERSON, R.RESERVE_PRICE, R.ROOM_NO,
+                           R.USER_NO, U.NAME,
+                           R.PACKAGE_NO, P.PACKAGE_TITLE,
+                           R.HOTEL_NO, H.HOTEL_NAME
+                      FROM RESERVE_T R LEFT OUTER JOIN USER_T U
+                        ON U.USER_NO = R.USER_NO LEFT OUTER JOIN PACKAGE_T P
+                        ON P.PACKAGE_NO = R.PACKAGE_NO LEFT OUTER JOIN HOTEL_T H
+                        ON H.HOTEL_NO = R.HOTEL_NO
+                   ) A 
+                       <where>
+                         <if test="columnGubun != ''">
+                           A.${columnGubun} IS NOT NULL
+                         </if>
+                         <if test="reserveStatus == 0 or reserveStatus == 1 or reserveStatus == 2">
+                           AND A.RESERVE_STATUS = ${reserveStatus}
+                         </if>
+                         <if test="columnRe != null and queryRe != null">
+                           AND A.${columnRe} LIKE '%' || #{queryRe} || '%'
+                         </if>
+                         <if test="columnPro != '' and queryPro != null">
+                           AND A.${columnPro} LIKE '%' || #{queryPro} || '%'
+                         </if>
+                         <if test="columnProName != '' and queryProName != null">
+                           AND A.${columnProName} LIKE '%' || #{queryProName} || '%'
+                         </if>
+                       </where>
+           )
+     WHERE RN BETWEEN #{begin} AND #{end}
+  </select>
+
+  
+  <!-- 패키지 예약 상세 -->
+  <select id="getReservePackage" parameterType="int" resultMap="ReserveMap">
+    SELECT RES.RESERVE_NO, RES.RESERVED_AT, RES.REQUESTED_TERM, RES.AGREE, RES.DEPARTURE_LOC, RES.RESERVE_STATUS, RES.RESERVE_START, RES.RESERVE_FINISH, RES.RESERVE_PERSON, RES.RESERVE_PRICE
+         , RES.USER_NO, U.EMAIL, U.NAME, U.GENDER, U.MOBILE
+         , RES.PACKAGE_NO, PAC.PACKAGE_TITLE, PAC.DANGER
+      FROM RESERVE_T RES INNER JOIN USER_T U
+        ON U.USER_NO = RES.USER_NO INNER JOIN PACKAGE_T PAC
+        ON PAC.PACKAGE_NO = RES.PACKAGE_NO
+     WHERE RES.RESERVE_NO = #{reserveNo}
+  </select>
+  
+  <!-- 호텔 예약 상세 -->
+  <select id="getReserveHotel" parameterType="int" resultMap="ReserveMap">
+    SELECT RES.RESERVE_NO, RES.RESERVED_AT, RES.REQUESTED_TERM, RES.AGREE, RES.DEPARTURE_LOC, RES.RESERVE_STATUS, RES.RESERVE_START, RES.RESERVE_FINISH, RES.RESERVE_PERSON, RES.RESERVE_PRICE
+         , RES.USER_NO, U.EMAIL, U.NAME, U.GENDER, U.MOBILE
+         , RES.HOTEL_NO, HO.HOTEL_NAME, HO.HOTEL_ADDRESS, HO.PHONE_NUMBER
+      FROM RESERVE_T RES INNER JOIN USER_T U
+        ON U.USER_NO = RES.USER_NO INNER JOIN HOTEL_T HO
+        ON HO.HOTEL_NO = RES.HOTEL_NO
+     WHERE RES.RESERVE_NO = #{reserveNo}
+  </select>
+  
+  <!-- 여행객 상세 -->
+  <select id="getTourist" parameterType="int" resultMap="TouristMap">
+    SELECT RES.RESERVE_NO, TOU.TOURIST_NO, TOU.NAME, TOU.BIRTH_DATE, TOU.GENDER, TOU.MOBILE, TOU.AGE_CASE
+      FROM RESERVE_T RES INNER JOIN TOURIST_T TOU
+        ON TOU.RESERVE_NO = RES.RESERVE_NO
+     WHERE RES.RESERVE_NO = #{reserveNo}
+  </select>
+  <select id="getAdultCount" parameterType="int" resultType="int">
+    SELECT COUNT(TOU.AGE_CASE)
+      FROM RESERVE_T RES INNER JOIN TOURIST_T TOU
+        ON TOU.RESERVE_NO = RES.RESERVE_NO
+     WHERE RES.RESERVE_NO = #{reserveNo}
+       AND TOU.AGE_CASE = 0
+  </select>
+  <select id="getChildCount" parameterType="int" resultType="int">
+    SELECT COUNT(TOU.AGE_CASE)
+  FROM RESERVE_T RES INNER JOIN TOURIST_T TOU
+    ON TOU.RESERVE_NO = RES.RESERVE_NO
+     WHERE RES.RESERVE_NO = #{reserveNo}
+       AND TOU.AGE_CASE = 1
+  </select>
+  
+  <!-- 리뷰 목록 -->
+  <select id="getReviewCount" resultType="int">
+    SELECT COUNT(*)
+      FROM REVIEW_T
+  </select>
+  <select id="getReviewList" parameterType="Map" resultMap="ReviewMap">
+    SELECT A.USER_NO, A.NAME, A.REVIEW_NO, A.PACKAGE_NO, A.HOTEL_NO, A.REVIEW_CONTENTS, A.STAR, A.REGIST_AT
+      FROM (SELECT ROW_NUMBER() OVER(ORDER BY REVIEW_NO DESC) AS RN, R.REVIEW_NO, R.PACKAGE_NO, R.HOTEL_NO, R.REVIEW_CONTENTS, R.STAR, R.REGIST_AT,
+                   R.USER_NO, U.NAME
+              FROM USER_T U INNER JOIN REVIEW_T R
+                ON U.USER_NO = R.USER_NO) A
+     WHERE RN BETWEEN #{begin} AND #{end}
+  </select>
+  
+  <!-- 리뷰 검색 -->
+  <select id="getSearchReviewCount" parameterType="Map" resultType="int">
+    SELECT COUNT(R.REVIEW_NO)
+      FROM USER_T U INNER JOIN REVIEW_T R
+        ON U.USER_NO = R.USER_NO
+      <where>
+        <if test="columnGubun != ''">
+          ${columnGubun} IS NOT NULL
+        </if>
+        <if test="column != null and query != null">
+          AND ${column} LIKE '%' || #{query} || '%'
+        </if>
+      </where>   
+  </select>
+  <select id="getSearchReviewList" parameterType="Map" resultMap="ReviewMap">
+    SELECT A.USER_NO, A.NAME, A.REVIEW_NO, A.PACKAGE_NO, A.HOTEL_NO, A.REVIEW_CONTENTS, A.STAR, A.REGIST_AT
+      FROM (SELECT ROW_NUMBER() OVER(ORDER BY R.REVIEW_NO DESC) AS RN, R.REVIEW_NO, R.PACKAGE_NO, R.HOTEL_NO, R.REVIEW_CONTENTS, R.STAR, R.REGIST_AT,
+                   R.USER_NO, U.NAME
+              FROM USER_T U INNER JOIN REVIEW_T R
+                ON U.USER_NO = R.USER_NO
+              <where>
+                <if test="columnGubun != ''">
+                  ${columnGubun} IS NOT NULL
+                </if>
+                <if test="column != null and query != null">
+                  AND ${column} LIKE '%' || #{query} || '%'
+                </if>
+              </where>
+            ) A
+     WHERE A.RN BETWEEN #{begin} AND #{end}
+  </select>
+
+  <!-- 리뷰 삭제 -->
+  <delete id="deleteReview" parameterType="int">
+    DELETE
+      FROM REVIEW_T
+     WHERE REVIEW_NO = #{reviewNo}
+  </delete>
+  
+  
+  
+  
+  
+  
+  
+</mapper>
