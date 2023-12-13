@@ -1,36 +1,42 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 
-<head th:replace="~{/layout/header::head('내 예약목록')}"></head> <!-- 이거 알맞게 바꿔주세요-->
+<head th:replace="~{layout/header::head('내 예약목록')}"></head> 
+
+<style>
+  .btn-green{
+    background-color: #B6C4B6;
+  }
+  .btn-whitegreen{
+    background-color: #EEF0E5;
+  }
+  
+</style>
 <body>
-	<div th:replace="~{/layout/header::header}"></div>
+	<div th:replace="~{layout/header::header}"></div>
 	
-	<div class="main_wrap">
+	<div class="main_wrap" style="padding-top: 0;">
 	
 	
 		 <div class="container text-center">
 		  <div class="row">
 		    <div class="col-1">	      
 		    </div>
-		    <div class="col-10">
-		      	<!--/*여기에 작성/ 다 만들고 style 지워주세요  */-->
-		      <div style="padding-bottom: 10px;">
-            <span style="font-size: xx-large;">예약내역목록</span>
+		    <div class="col-10" style="padding: 0 100px">
+		      <div>
+            <p style="font-size: 30px; font-weight: 400; ">예약내역목록</p>
           </div>
-          <div style="margin: 20px auto;">
-            <ul class="nav nav-underline justify-content-center">
-              <li class="nav-item">
-                <a class="nav-link active" th:href="|@{/reserve/reserveList.do(userNo=${session.user.userNo})}|"><strong>패키지</strong></a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" th:href="|@{/reserve/reserveHotelList.do(userNo=${session.user.userNo})}|"><strong>호텔</strong></a>
-              </li>
-            </ul>
-          </div>
+          <div>
+            <div class="btn-group" role="group" aria-label="Faq Category Buttons" style="margin-bottom: 20px;">
+              <a th:href="|@{/reserve/reserveList.do(userNo=${session.user.userNo})}|" class="btn btn-green my-btn">패키지</a>
+              <a th:href="|@{/reserve/reserveHotelList.do(userNo=${session.user.userNo})}|" class="btn btn-whitegreen my-btn">호텔</a>
+            </div>
+         </div>
+          
           <div>
             <table class="table">
               <thead>
-                <tr>
+                <tr class="table-success">
                   <th><strong>순번</strong></th>
                   <th><strong>예약날짜/예약번호</strong></th>
                   <th><strong>예약상품명</strong></th>
@@ -41,29 +47,37 @@
                 </tr>
               </thead>
               <tbody>
-                <th:block th:each="res,vs:${reserveList}">
-                  <tr>
-                    <td th:text="${beginNo - vs.index}"></td>
-                    <td>
-                      <a th:href="@{/reserve/detail.do(reserveNo=${res.reserveNo})}" th:text="|${res.reservedAt} - ${res.reserveNo}|"></a>
-                    </td>
-                    <td>
-                      <a th:href="@{/package/detail.do(packageNo=${res.packageDto.packageNo})}" th:text="${res.packageDto.packageTitle}"></a>
-                    </td>
-                    <td th:text="${res.reservePerson}"></td>
-                    <td th:text="${res.reserveStart}"></td>
-                    <td th:text="|${res.reservePrice}원|"></td>
-                    <th:block th:if="${res.reserveStatus == 0}">
-                      <td th:text="결제대기"></td>
-                    </th:block>
-                    <th:block th:if="${res.reserveStatus == 1}">
-                      <td th:text="예약완료"></td>
-                    </th:block>
-                    <th:block th:if="${res.reserveStatus == 2}">
-                      <td th:text="취소"></td>
-                    </th:block>
-                  </tr>
-                </th:block>  
+                <th:block th:if="${not #lists.isEmpty(reserveList)}">
+                  <th:block th:each="res,vs:${reserveList}">
+                    <tr>
+                      <td th:text="${beginNo - vs.index}"></td>
+                      <td>
+                        <a th:href="@{/reserve/detail.do(reserveNo=${res.reserveNo})}" th:text="|${res.reservedAt} - ${res.reserveNo}|"></a>
+                      </td>
+                      <td>
+                        <a th:href="@{/package/detail.do(packageNo=${res.packageDto.packageNo})}" th:text="${#strings.abbreviate(res.packageDto.packageTitle,25)}"></a>
+                      </td>
+                      <td th:text="${res.reservePerson}"></td>
+                      <td th:text="${res.reserveStart}"></td>
+                      <td th:text="|${res.reservePrice}원|"></td>
+                      <th:block th:if="${res.reserveStatus == 0}">
+                        <td th:text="결제대기"></td>
+                      </th:block>
+                      <th:block th:if="${res.reserveStatus == 1}">
+                        <td th:text="예약완료"></td>
+                      </th:block>
+                      <th:block th:if="${res.reserveStatus == 2}">
+                        <td th:text="취소"></td>
+                      </th:block>
+                    </tr>
+                  </th:block>  
+                </th:block>
+                
+                <tr th:if="${#lists.isEmpty(reserveList)}">
+                  <td colspan="7">
+                    <div>예약내역이 없습니다.</div>
+                  </td>
+                </tr>
               </tbody>
               <tfoot th:if="${not #lists.isEmpty(reserveList)}">
                 <tr>
@@ -91,7 +105,7 @@
     fnCheckResCancel();
   </script>
 
-	<div th:replace="~{/layout/footer::footer}"></div>
+	<div th:replace="~{layout/footer::footer}"></div>
 </body>
 </html>
 

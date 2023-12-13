@@ -108,7 +108,10 @@
     
     <div class="col-9">   
     <div class="row">
-      <h4 class="notice-text" style="font-size: 16px; font-weight: bold;" th:text="|공지사항 : ${notice.title}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;작성일:&nbsp;&nbsp;&nbsp;${notice.createdAt}|"></h4>
+      <h4 class="notice-text" style="font-size: 16px; font-weight: bold;" th:text="|공지사항 : ${notice.title}|"></h4>
+    </div>
+    <div  style=" margin-bottom: 28px;">
+      <h4 class="notice-text" style="font-size: 16px; font-weight: bold;" th:text="|작성일:&nbsp;&nbsp;&nbsp;${notice.createdAt}|"></h4>
     </div>
       <hr style="border: 1px solid black; margin-bottom: 0; margin-top: 10px;">    
     </div>
@@ -123,8 +126,27 @@
         <div class="box3"></div>
       </div>    
       
-      <div class="contents" th:text="${notice.contents}"></div>
-        
+      <div class="contents" th:text="${notice.contents}" style="white-space: pre-wrap;"></div>
+      
+      <h3>첨부파일</h3>
+      <div>
+      <th:block th:if="${#lists.isEmpty(attachList)}">
+        <div>첨부 없음</div>
+      </th:block>  
+
+      <th:block th:if="${not #lists.isEmpty(attachList)}">
+        <th:block th:each="a:${attachList}">
+          <div class="attach" th:data-attach_no="${a.attachNo}">
+            <a th:text="${a.originalFilename}"></a>
+          </div>
+        </th:block>
+        <div>
+          <a th:href="@{/notice/downloadAll.do(noticeNo=${notice.noticeNo})}">모두 다운로드</a>
+        </div>
+      </th:block>       
+      </div>
+      
+      
        
       </div>
       
@@ -163,12 +185,6 @@
         <div class="box5"></div>        
       </div>
       
-        
-
-
-       
- 
-     
 
   
   
@@ -180,20 +196,6 @@
   </div>
 
     
-
-
-
-
-
-      
-    
-    
-    
-    
-
-    
-    
-    
     
     
     
@@ -204,23 +206,6 @@
       </div>
       
       
-      
-      
-      
-      
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
             
             
             
@@ -247,6 +232,7 @@
         $('#btn_edit').click(() => {
           event.preventDefault();
           if(confirm('수정할꺼에요?')){
+          frmBtn.attr('method', 'get');
           frmBtn.attr('action', '/notice/edit.form');
           frmBtn.submit();
           }
@@ -263,10 +249,21 @@
           
         })
       }
-  
+      
+      
+      
+      
+            const fnDownload = () => {
+        $('.attach').click(function(){
+          if(confirm('다운로드 할까요?')){
+            location.href = '/notice/download.do?attachNo=' + $(this).data('attach_no');
+          }
+        })
+      }
+      
       fnEditNotice();
       fnRemoveNotice();      
-      
+      fnDownload();      
       
       </script>
   
