@@ -44,6 +44,7 @@
 
   .title{
     font-size: 30px;
+    font-weight: 400;
   }
   
   .inquiry_user{
@@ -147,7 +148,7 @@
   <div class="row">
     <div class="col">
     </div>
-    <div class="col-9">
+    <div class="col-9" style="border: 1px solid gray; margin-left: 20px; overflow: hidden;">
      <div th:if="${inquiryCount == 0}">작성된 문의글이 없습니다</div>
    
      <div th:if="${inquiryCount != 0}">

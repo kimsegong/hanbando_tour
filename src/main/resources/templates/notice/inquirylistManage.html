@@ -38,6 +38,7 @@
   }
   .title{
     font-size: 30px;
+    font-weight: 400;
   }
   
   .inquiry_user{
@@ -156,7 +157,7 @@
   <div class="row">
     <div class="col">
     </div>
-    <div class="col-9">
+    <div class="col-9" style="border: 1px solid gray; margin-left: 20px;">
        
        <table class="table table-hover">
         <thead>
@@ -240,6 +241,7 @@
       <form id="frm_search" method="get" th:action="@{/notice/searchInquiryList.do}" >
         <select name="column" id="column">
           <option value="INQUIRY_NO">문의번호</option>
+          <option value="NAME">작성자</option>
           <option value="SEPARATE">문의유형</option>
           <option value="TITLE">제목</option>
         </select>
