@@ -576,7 +576,7 @@ public class HotelServiceImpl implements HotelService {
     int page = Integer.parseInt(opt.orElse("1"));
     int display = 10;
     int userNo = Integer.parseInt(request.getParameter("userNo"));
-    int total = packageMapper.getHeartCount(userNo);
+    int total = hotelMapper.getCountHotelHeart(userNo);
     
     myPageUtils.setPaging(page, total, display);
     
