@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="~{/layout/header::head('Sign Up')}"></head>
+<head th:replace="~{layout/header::head('Sign Up')}"></head>
 <body>
-  <div th:replace="~{/layout/header::header}"></div>
+  <div th:replace="~{layout/header::header}"></div>
  <div id="modal" class="modal-overlay" style="display: none;">
     <div class="modal-window">
       <div class="title">
@@ -12,6 +12,6 @@
       <div class="content" id="id_value"></div>
     </div>
   </div>
-  <div th:replace="~{/layout/footer::footer}"></div>
+  <div th:replace="~{layout/footer::footer}"></div>
 </body>
 </html>
