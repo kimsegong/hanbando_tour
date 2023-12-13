@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 
-<head th:replace="~{/layout/header::head('예약하기')}"></head> <!-- 이거 알맞게 바꿔주세요-->
+<head th:replace="~{layout/header::head('예약하기')}"></head> <!-- 이거 알맞게 바꿔주세요-->
 <body>
-	<div th:replace="~{/layout/header::header}"></div>
+	<div th:replace="~{layout/header::header}"></div>
 	
-	<div class="main_wrap">
+	<div class="main_wrap" style="padding-top: 0;">
 	
 	
 		 <div class="container text-center">
@@ -13,10 +13,9 @@
 		    <div class="col-1">	        
 		    </div>
 		    <div class="col-10" >
-		      	<!--/*여기에 작성/ 다 만들고 style 지워주세요  */-->
-		      <!--/* 패키지 또는 호텔 번호를 받아오고 필요시 다른 정보도 받아오기 */-->
+		      
 		      <div style="margin: 20px auto;">
-            <h2><strong>호텔 예약하기</strong></h2>
+            <p style="font-size: 30px; font-weight: 400; ">호텔 예약하기</p>
 		      </div>
 		      
           <form id="frm_reserve" method="post">
@@ -38,11 +37,11 @@
                 </li>
               </ul>
     	      </div>
-    	      <div style="margin-top: 40px;">
+    	      <div style="margin: 30px 0 10px;" class="col-6">
               <h4><strong>예약자 정보</strong></h4>
             </div>
           
-  		      <div class="col-8" style="margin: 0 auto; padding-top: 10px;">
+  		      <div class="d-grid gap-2 col-8  mx-auto" style="text-align: left;">
     		      <table class="table">
                 <tbody>
                   <tr>
@@ -71,12 +70,14 @@
   		      </div>	
          
             <!-- 약관 동의 -->
-            <div class="agreeFrom" style="margin-top: 40px;">
-              <h4><strong>약관 동의</strong></h4>
+            <div style="margin: 40px 0 10px;" class="col-6">
+              <div class="agreeFrom">
+                <h4><strong>약관 동의</strong></h4>
+              </div>
             </div>
-            <div class="col-8" style="margin: 0 auto; padding-top: 10px;">
+            <div class="d-grid gap-2 col-8  mx-auto" style="text-align: left;">
               <table class="table">
-                <tbody class="d-grid gap-2 col-8 mx-auto">
+                <tbody>
                   <tr>
                     <td>
                       <div>
@@ -104,7 +105,7 @@
                     </td>
                   </tr>
                 </tbody>
-                <tfoot class="d-grid gap-2 col-8 mx-auto">
+                <tfoot>
                   <tr>
                     <td>
                       <div>
@@ -118,10 +119,10 @@
                 </tfoot>
               </table>
             </div>
-            <div style="margin-top: 40px;">
+            <div style="margin: 40px 0 10px;" class="col-6">
               <h4><strong>결제정보</strong></h4>
             </div>
-            <div class="col-5" style="margin: 10px auto;">
+            <div class="d-grid gap-2 col-8  mx-auto" style="text-align: left;">
               <table class="table">
                 <tbody>
                   <tr>
@@ -144,7 +145,7 @@
             <input type="hidden" name="resFinish" th:value="${checkout}">
         
             <div class="d-grid gap-2 col-6 mx-auto" style="margin-top: 40px;">
-              <button type="button" id="btn_reserve" class="btn btn-success">예약하기</button>
+              <button type="button" id="btn_reserve" class="w3-btn w3-round-xxlarge w3-green w3-block mx-auto">예약하기</button>
             </div>
           </form>
 		      
@@ -197,7 +198,7 @@
   </script>
 	
 
-	<div th:replace="~{/layout/footer::footer}"></div>
+	<div th:replace="~{layout/footer::footer}"></div>
 </body>
 </html>
 

@@ -128,7 +128,7 @@ label {
     </div>
 		<div style="text-align: left;">
       <label for="phoneNumber" id="phoneNumber" class="form-label" onfocusout="fnCheckPhoneNumber();" style="font-weight: 500;">대표번호</label>
-      <input type="text" id="phoneNumber" class="form-control" name="phoneNumber" placeholder="'-' 제외하고 입력해 주세요">
+      <input type="number" id="phoneNumber" class="form-control" name="phoneNumber" placeholder="'-' 제외하고 입력해 주세요">
       <div id="phoneText"></div>
     </div>
     <div class="row mb-2">
@@ -193,12 +193,6 @@ label {
     $('.modal-content').load("/hotel/addRoom.form?hotelNo="+ $('#hotelNo').val());
   }
   
-  $('#temp').click(function(){
-		location.href="/hotel/addRoom.form?hotelNo="+ $('#hotelNo').val();
-		
-	})
-  
-  
 	          //본 예제에서는 도로명 주소 표기 방식에 대한 법령에 따라, 내려오는 데이터를 조합하여 올바른 주소를 구성하는 방법을 설명합니다.
           function execDaumPostcode() {
             new daum.Postcode({
@@ -258,35 +252,36 @@ label {
               }
             }).open();
           }
+          
  const deleteAll = () => {
     $('#files').val('');
      $('#attached_list').empty();
  }
  
   // 개별 파일의 삭제 버튼에 적용할 메소드
-  const deleteEach = (obj) => {
-  //현재 버튼(obj)의 상위 요소 중 가장 가까운 div 요소를 찾음
-  //div는 선택한 파일 목록을 보여주는 부분
-  const div = $(obj).closest('div');
-  
-  //div에서 'button' 태그 중 현재 버튼(obj)의 index가 몇 번째인지 확인
-  //0부터 시작
-  const index = div.find('button').index(obj);
-  const dataTransfer = new DataTransfer();
-  
-  let files = $('#files')[0].files;  //사용자가 입력한 파일을 변수에 할당
-  
-  let fileArray = Array.from(files);  //변수에 할당된 파일을 배열로 변환(FileList -> Array)
-  
-  fileArray.splice(obj, 1); //해당하는 index의 파일을 배열에서 제거
-  
-  fileArray.forEach(file => { dataTransfer.items.add(file); });
-  //남은 배열을 dataTransfer로 처리(Array -> FileList)
-  
-  $('#files')[0].files = dataTransfer.files; //제거 처리된 FileList를 돌려줌
-  
-  div.empty();
- }
+    function fndeleteEach(obj){
+		  //현재 버튼(obj)의 상위 요소 중 가장 가까운 div 요소를 찾음
+		  //div는 선택한 파일 목록을 보여주는 부분
+		  const div = $(obj).closest('div');
+		  
+		  //div에서 'button' 태그 중 현재 버튼(obj)의 index가 몇 번째인지 확인
+		  //0부터 시작
+		  const index = div.find('button').index(obj);
+		  const dataTransfer = new DataTransfer();
+		  
+		  let files = $('#files')[0].files;  //사용자가 입력한 파일을 변수에 할당
+		  
+		  let fileArray = Array.from(files);  //변수에 할당된 파일을 배열로 변환(FileList -> Array)
+		  
+		  fileArray.splice(obj, 1); //해당하는 index의 파일을 배열에서 제거
+		  
+		  fileArray.forEach(file => { dataTransfer.items.add(file); });
+		  //남은 배열을 dataTransfer로 처리(Array -> FileList)
+		  
+		  $('#files')[0].files = dataTransfer.files; //제거 처리된 FileList를 돌려줌
+		  
+		  div.empty();
+  }
 
 
 
@@ -305,7 +300,7 @@ label {
               $('#attached_list').empty();
               return;
             }
-            $('#attached_list').append('<div>' + files[i].name + '<button type="button" class="each" onclick="deleteEach(this)">X</button></div>');
+            $('#attached_list').append('<div>' + files[i].name + '<button type="button" class="each" onclick="fndeleteEach(this);">X</button></div>');
           }
           if(totalSize > maxSize){
             alert('전체 첨부파일의 최대 크기는 100MB입니다.');
@@ -329,7 +324,7 @@ label {
 	const myModalEl = document.getElementById('staticBackdrop')
 	var hotelNo = $('#hotelNo').val();
 	
-    myModalEl.removeEventListener('hidden.bs.modal', fnAddRoom); 
+  myModalEl.removeEventListener('hidden.bs.modal', fnAddRoom); 
 	myModalEl.addEventListener('hidden.bs.modal', fnAddRoom);
 	
   function fnAddRoom (){
@@ -337,19 +332,20 @@ label {
         type: 'get',
         url: '/hotel/roomList.do',
         data: {hotelNo : hotelNo},
+        async: false,
         dataType: 'json',
         success: (resData) => {  
                     console.log(resData);
-             if (resData.roomtype != null && resData.roomtype.length > 0) {    
-							 $.each(resData.roomtype, (i, room) => {
+              
 								 let str = ''
+							   $.each(resData.roomtypeList, (i, room) => {
+                 str += '<div class="border rounded-1" style="margin-bottom: 10px;">';
                  str += '<input type="hidden" value="'+room.roomNo+'">';
-                 str += '<div class="border rounded-1">';
                  str += '<div class="row">';
                  str += '<div class="col-3">';
-                 str += '<div class=""fileList>'
-									 $.each(resData.image,(i,image) => {
-										 if(image.roomNo = room.roomNo){
+                 str += '<div class=""fileList>';
+									 $.each(resData.hotelImageList,(k,image) => {
+										 if(image.roomNo == room.roomNo){
 										str += '<div>'+image.originalName+'</div>' ;
 										 }
 									 })
@@ -366,8 +362,8 @@ label {
                  str += '<div class="col-6">';
                  str += '<div id="roomName">'+room.roomName+'</div>';
                  str += '<div style="border-top: 1px #9399a5 solid;">'+room.roomDetail+'</div>';
-                  $.each(resData.roomFeature,(i,feature) => {
-										 if(room.roomNo = feature.roomNo){
+                  $.each(resData.roomFeatureList,(j,feature) => {
+										 if(room.roomNo == feature.roomNo){
 											  str += '<div class="border rounded-1">';
 	                      str += '<div>객실 시설</div><div class="roomFac">';
 	                      if(feature.water == 0){str += '<div><i class="fa-solid fa-bottle-water fa-2xl" style="color: #9399a5;"></i><div>물</div></div>';}
@@ -386,41 +382,53 @@ label {
 										 }
 									 })
                		 str +='</div>';
-                 	 str +=' <div class="col-3" style="margin-right: 0;">';
-						  		$.each(resData.price,(i,price) => {
+                 	 str +='<div class="col-3" style="margin-right: 0;">';
+						  		$.each(resData.roompriceList,(l,price) => {
 										if(price.roomNo == room.roomNo){
-											str +='<div>비수기 금액 : '+price.biPrice+'<div>';
-											str +='<div>비수기 날짜: '+price.bsDate+'~'+price.beDate+'<div>';
-											str +='<div>준성수기 금액 : '+price.junPrice+'<div>';
-											str +='<div>준성수기 날짜: '+price.jsDate+'~'+price.jeDate+'<div>';
-											str +='<div>성수기 금액 : '+price.sungPrice+'<div>';
-											str +='<div>성수기 날짜: '+price.ssDate+'~'+price.seDate+'<div>';
+											str +='<div>비수기 금액 : '+price.biPrice+'</div>';
+											str +='<div>비수기 날짜: '+price.bsDate+'~'+price.beDate+'</div>';
+											str +='<div>준성수기 금액 : '+price.junPrice+'</div>';
+											str +='<div>준성수기 날짜: '+price.jsDate+'~'+price.jeDate+'</div>';
+											str +='<div>성수기 금액 : '+price.sungPrice+'</div>';
+											str +='<div>성수기 날짜: '+price.ssDate+'~'+price.seDate+'</div>';
 										}
 									})
-                 	 str +='<div><button type="button" class="btn-choice" onclick="deleteRoom('+room.roomNo+')">삭제</button></div>';
+                 	 str +='<div><button type="button" class="modify" class="btn-choice" onclick="openModifyHotelRoom('+room.roomNo+')" data-bs-toggle="modal" data-bs-target="#staticBackdrop">수정</button></div>';
+                 	 str +='<div><button type="button" class="btn-choice" onclick="deleteEachRoom('+room.roomNo+')">삭제</button></div>';
                  	 str +='<div>방개수: '+room.roomMany+'</div>';
                  	 str +='</div></div></div>';
-                 	 $('#addroom').empty();
-                 	 $('#addroom').append(str);
+                 	
         	 })
-       	 }
+        	  $('#addroom').empty();
+            $('#addroom').append(str);
+       	 
    		 }
  		 })
   }
-    var bsDate = $('#bsDate').val();
-  var beDate = $('#beDate').val();
-  var jsDate = $('#jsDate').val();
-  var jeDate = $('#jsDate').val();
-  var ssDate = $('#ssDate').val();
-  var seDate = $('#ssDate').val(); 
   
-	 const fnDateCheck = () => {
-    if(bsDate > beDate || jsDate > jeDate || ssDate > seDate){
-    alert('날짜를 다시 선택해 주세요 ');
-    }
-  }
 
-	 
+  function deleteEachRoom(obj){
+    var roomNo = obj;
+    $.ajax({
+        type: 'get',
+        url: '/hotel/deleteRoom.do',
+        data: {roomNo : roomNo},
+        dataType: 'json',
+        success: (resData) => { 
+					console.log(resData)
+					fnAddRoom ();
+				}
+         
+    })
+  }
+  
+   function openModifyHotelRoom(obj){
+		 
+		 console.log(obj + '123');
+    $('.modal-content').load("/hotel/modifyRoom.form?roomNo="+ obj);
+  }
+  
+	 fnFileCheck();
 </script>
 	
 	

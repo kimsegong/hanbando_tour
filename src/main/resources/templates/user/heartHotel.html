@@ -10,7 +10,20 @@
   .btn-whitegreen{
     background-color: #EEF0E5;
   }
-  
+    .hotel-table {
+    display: table;
+    margin: auto;
+  }
+
+  .hotel-row {
+    display: table-row;
+  }
+
+  .hotel-cell {
+    display: table-cell;
+    vertical-align: middle;
+    text-align: center;
+  }
 </style>
 <body>
   
@@ -26,7 +39,7 @@
     </div>    
       </div>
       <div class="col-10">
-       <p style="font-size: 30px; font-weight: 400;">💚나의 찜목록💚</p>
+       <p style="font-size: 30px; font-weight: 400;">찜</p>
         <div>
           <div class="btn-group" role="group" aria-label="Faq Category Buttons" style="margin-bottom: 20px;">
             <a th:href="|@{/user/heart.do(userNo=${session.user.userNo})}|" class="btn btn-whitegreen my-btn">패키지</a>
@@ -53,25 +66,25 @@
                 <td></td>
             </tr>
         </th:block>
-        <th:block th:each="heart : ${heartHotelList}">
-            <tr style="height: 70px;">
-                <td scope="row" style="height: 100%;">💙
-                    <input type="checkbox" class="form-check-input chk_each" th:value="${heart.hotelDto.hotelNo}">
-                    <label class="form-check-label"></label>
-                </td>
-                <td style="height: 100%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;">
-                    <input type="hidden" id="hotelNo" th:value="${heart.hotelDto.hotelNo}">
-                    <a th:href="@{/hotel/detail.do(hotelNo=${heart.hotelDto.hotelNo})}" th:text="${heart.hotelDto.hotelName}"></a>
-                </td>
-                <td style="height: 100%;">가격</td>
-            </tr>
-        </th:block>
+     <th:block th:each="heart ,heartStat : ${heartHotelList}">
+        <tr class="hotel-row" style="height: 70px;">
+          <td class="hotel-cell" style="height: 100%;">💙
+            <input type="checkbox" class="form-check-input chk_each" th:value="${heart.hotelDto.hotelNo}">
+            <label class="form-check-label"></label>
+          </td>
+          <td class="hotel-cell" style="height: 100%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;">
+            <input type="hidden" id="hotelNo" th:value="${heart.hotelDto.hotelNo}">
+            <a th:href="@{/hotel/detail.do(hotelNo=${heart.hotelDto.hotelNo})}" style="font-weight: 400;" th:text="${heart.hotelDto.hotelName}"></a>
+          </td>
+          <td class="hotel-cell" style="height: 100%;" th:text="|${price[heartStat.index]} 원|"></td>
+        </tr>
+      </th:block>
     </tbody>
     <tfoot>
         <th:block th:unless="${#lists.isEmpty(heartHotelList)}">
             <tr>
                 <td>
-                    <button type="button" class="btn btn-danger remove_heart" onclick="deleteSelected()">삭제</button>
+                    <button type="button" class="w3-btn w3-round-xxlarge w3-red remove_heart" onclick="deleteSelected()">삭제</button>
                 </td>
                 <td th:utext="${paging}" class="paging"></td>
                 <td></td>

@@ -9,6 +9,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.security.SecureRandom;
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -170,7 +171,9 @@ public class UserServiceImpl implements UserService {
     
     // 정상적인 로그인 처리하기
     UserDto user = userMapper.getUser(map);
-  
+   
+
+    
     if (user != null) {
       // 로그인 성공 처리
       request.getSession().setAttribute("user", user);
@@ -178,12 +181,16 @@ public class UserServiceImpl implements UserService {
         // 비밀번호 변경 90일 지나면 알림      
         int userPw90 = userMapper.changePw90(map);
         
-        if (userPw90 >= 90) {
+        if (userPw90 >= 90)
+          
+          {
           response.setContentType("text/html; charset=UTF-8");
           PrintWriter outt = response.getWriter();
           outt.println("<script>");
+          
+          
           outt.println("alert('마지막 비밀번호 변경일로부터 90일이 경과했습니다. 비밀번호를 변경해주세요.')");
-          outt.println("location.href='" + request.getContextPath() +  "/user/modifyPw.form'");
+          outt.println("location.href='" + request.getContextPath() +  "/user/pwExtension.form'");
           outt.println("</script>");
           outt.flush();
           outt.close();
@@ -222,6 +229,23 @@ public class UserServiceImpl implements UserService {
      int autoUpdatePw90Result = userMapper.autoupdatetmpPw(user);  
      return autoUpdatePw90Result;
   }
+  
+  //90일 연장하기
+  
+    @Override
+    public int extensionPw(HttpServletRequest request) {
+      
+      String email = request.getParameter("email");
+      
+      UserDto user = UserDto.builder()
+                            .email(email)
+                             .build();
+      
+      
+      int extensionResult = userMapper.updatePw90(user);
+      
+      return extensionResult;
+    }
   
   ////////////////네이버/////////////////////////
   //네이버 로그인1

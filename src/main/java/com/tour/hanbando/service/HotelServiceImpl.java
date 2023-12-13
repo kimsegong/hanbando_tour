@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -157,14 +158,20 @@ public class HotelServiceImpl implements HotelService {
     int hotelNo = Integer.parseInt(request.getParameter("hotelNo"));
     
     List<RoomtypeDto> roomtypeList = hotelMapper.getRoomtype(hotelNo);
-    List<RoomFeatureDto> roomFeatureList = hotelMapper.getRoomFeature(roomtypeList);
-    List<HotelImageDto> hotelImageList = hotelMapper.getHotelImage(hotelNo);
-    List<RoompriceDto> roompriceList = hotelMapper.getPrice(RoomtypeDto.builder().hotelNo(hotelNo).build());
+    List<RoomFeatureDto> roomFeatureList = new ArrayList<>();
+    List<HotelImageDto> hotelImageList = new ArrayList<>();
+    List<RoompriceDto> roompriceList = new ArrayList<>();
     
-    return Map.of("roomtypeList", roomtypeList,
-                  "roomFeatureList", roomFeatureList,
-                  "hotelImageList", hotelImageList,
-                  "roompriceList", roompriceList);
+    if(roomtypeList.size() != 0) {
+      roomFeatureList = hotelMapper.getRoomFeature(roomtypeList);
+      hotelImageList = hotelMapper.getHotelImage(hotelNo);
+      roompriceList = hotelMapper.getPrice(RoomtypeDto.builder().hotelNo(hotelNo).build());
+    }
+    return Map.of( "roomFeatureList", roomFeatureList,
+                   "hotelImageList", hotelImageList,
+                   "roompriceList", roompriceList,
+                   "roomtypeList", roomtypeList);
+   
   }
   
   @Override
@@ -578,13 +585,21 @@ public class HotelServiceImpl implements HotelService {
                                    , "userNo", userNo);
     
     List<HeartDto> heartHotelList = hotelMapper.selectHotelHeartList(map);
-
+    
+    List<HotelDto> hotelList = new ArrayList<>();
+    for(HeartDto heart : heartHotelList) {
+      hotelList.add(heart.getHotelDto());
+    }
+    List<Integer> price = getPrice(hotelList);
+    
     model.addAttribute("heartHotelList", heartHotelList);
+    model.addAttribute("price", price);
     String params = "userNo=" + request.getParameter("userNo");
     model.addAttribute("paging", myPageUtils.getMvcPaging(request.getContextPath() + "/user/heart.do", params));
     model.addAttribute("beginNo", total - (page - 1) * display); 
 
   }
+  
   
   @Override
   public Map<String, Object> removeHotelHeart(int hotelNo) {
@@ -592,10 +607,6 @@ public class HotelServiceImpl implements HotelService {
       return Map.of("removeHotelHeartResult", removeHotelHeartResult);
     }
 
-
-
-  
-  
   @Override
   public int removehotel(int hotelNo) {
     int deleteResult = hotelMapper.deleteHotel(hotelNo);
@@ -666,10 +677,36 @@ public class HotelServiceImpl implements HotelService {
     return totalPrice;
   }
   
+//  @Override
+//  public int modifyHotel(int hotelNo) {
+//    return;
+//  }
+//  
+//  @Override
+//  public int modifyRoom(HttpServletRequest request) {
+//    int result = 0;
+//    
+//    
+//    
+//    return 0;
+//  }
   
   @Override
-  public int modifyHotel(int hotelNo) {
-    return 0;
+  public void getRoom(int roomNo, Model model) {
+    RoomtypeDto roomtypeDto = hotelMapper.roomtype(roomNo);
+    RoompriceDto roompriceDto = hotelMapper.getEachRoomPrice(roomNo);
+    List<HotelImageDto> hotelImageList = hotelMapper.getRoomImage(roomNo);
+    RoomFeatureDto roomFeatureDto = hotelMapper.getEachRoomFeature(roomNo);
+    model.addAttribute("roomtype", roomtypeDto);
+    model.addAttribute("roomprice", roompriceDto);
+    model.addAttribute("hotelImage", hotelImageList);
+    model.addAttribute("roomFeature", roomFeatureDto);
+  }
+  
+  @Override
+  public int deleteRoom(HttpServletRequest request) {
+    int roomNo = Integer.parseInt(request.getParameter("roomNo"));
+    return hotelMapper.deleteRoom(roomNo);
   }
   
   
