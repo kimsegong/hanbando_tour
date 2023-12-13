@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 
- <head th:replace="~{/layout/header::head('패키지상품리스트')}"></head>
+ <head th:replace="~{layout/header::head('패키지상품리스트')}"></head>
 <style>
   .card {
       width: 18rem;
@@ -27,7 +27,7 @@
 </style>  
 <body>
 
-  <div th:replace="~{/layout/header::header}"></div>
+  <div th:replace="~{layout/header::header}"></div>
 
   <div class="container text-center">  <!-- 그리드 시작 -->  
   <div class="row">
@@ -141,7 +141,7 @@
     fnScroll();
   </script>
 
-    <div th:replace="~{/layout/footer::footer}"></div>
+    <div th:replace="~{layout/footer::footer}"></div>
  
 </body>
 </html>

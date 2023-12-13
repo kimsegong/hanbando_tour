@@ -521,15 +521,15 @@
      
      <select id="getHeartCount" resultType="int" parameterType="int">
       SELECT COUNT(*)
-        FROM HEART_T
+        FROM PACKAGE_T PA INNER JOIN HEART_T H
+          ON PA.PACKAGE_NO = H.PACKAGE_NO
        WHERE USER_NO = #{userNo}
       </select>
-      
+
       <select id="checkHeart" parameterType="Map" resultType="int">
         SELECT COUNT(*) 
           FROM HEART_T 
-         WHERE PACKAGE_NO = #{packageNo} 
-           AND USER_NO = #{userNo}
+         WHERE USER_NO = #{userNo}
       </select>
       
       <delete id="deleteHeart" parameterType="int">

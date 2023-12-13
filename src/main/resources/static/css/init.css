@@ -16,6 +16,13 @@ div, ul, li, ol {
 
 }
 
+html {
+  line-height: 0;
+  padding: 0;
+  margin: 0;
+}
+
+
 a {
   text-decoration: none;
   color: #333333;
