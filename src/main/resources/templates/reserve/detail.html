@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 
-<head th:replace="~{/layout/header::head('예약 상세')}">
+<head th:replace="~{layout/header::head('예약 상세')}">
  
 </head> <!-- 이거 알맞게 바꿔주세요-->
 <style>
@@ -11,7 +11,7 @@
   
 </style>
 <body>
-	<div th:replace="~{/layout/header::header}"></div>
+	<div th:replace="~{layout/header::header}"></div>
 	
 	<div class="main_wrap" style="padding-top: 0;">
 	
@@ -65,11 +65,11 @@
               <table class="table">
                 <colgroup>
                   <col style="width:20%;">
-                  <col>
+                  <col style="width:80%;">
                 </colgroup>
                 <tr>
                   <td>상품명</td>
-                  <td th:text="${reserve.packageDto.packageTitle}"></td>
+                  <td th:text="${#strings.abbreviate(reserve.packageDto.packageTitle, 35)}"></td>
                 </tr>
                 <tr>
                   <td>출발일</td>
@@ -115,7 +115,28 @@
                 </tr>
                 <tr>
                   <td>주의사항</td>
-                  <td th:text="${reserve.packageDto.danger}"  style="white-space: pre;"></td>
+                  <td>
+                    <span  th:text="${#strings.abbreviate(reserve.packageDto.danger, 20)}"  style="white-space: pre;"></span>
+                    <span>
+                      <button type="button"  id="btn_danger" class="w3-btn w3-small w3-round-xxlarge w3-lime" style="margin-left: 10px;"  data-bs-toggle="modal" data-bs-target="#exampleModal"><b>상세보기</b></button>
+                    </span>
+                    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" style="text-align: center;">
+                      <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="exampleModalLabel">주의사항</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                          </div>
+                          <div class="modal-body" id="danger">
+                            
+                          </div>
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </td>
                 </tr>
                 <tr>
                   <td>결제금액</td>
@@ -344,6 +365,18 @@
       }
     }
     
+    function fnShowDanger(){
+      $('#btn_danger').click(function(){
+        $('#danger').empty();
+        let str = '';
+        str += '<div style="white-space: pre;">';
+        str += '[[${reserve.packageDto.danger}]]';
+        str += '</div>';
+        $('#danger').append(str);
+      })
+    }
+    
+    fnShowDanger();
     fnChkModify();
     fnGoModify();
     fnShowTourist();
@@ -356,7 +389,7 @@
 	
 	
 	
-	<div th:replace="~{/layout/footer::footer}"></div>
+	<div th:replace="~{layout/footer::footer}"></div>
 </body>
 </html>
 

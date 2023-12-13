@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 
-<head th:replace="~{/layout/header::head('패키지상품')}"></head>
+<head th:replace="~{layout/header::head('패키지상품')}"></head>
 <style>
   .btn-zero {
     color:white;
@@ -69,7 +69,7 @@
 }
 </style>
 <body>
-  <div th:replace="~{/layout/header::header}"></div>
+  <div th:replace="~{layout/header::header}"></div>
         <th:block th:if="${session.user != null}">
          <th:block th:if="${session.user.auth == 0}">
          <form id="frm_btn" method="post">
@@ -766,7 +766,7 @@
 
 
   
-  <div th:replace="~{/layout/footer::footer}"></div>
+  <div th:replace="~{layout/footer::footer}"></div>
 </body>
 </html>
 
