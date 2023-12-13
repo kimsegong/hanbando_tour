@@ -113,6 +113,29 @@
     <div  style=" margin-bottom: 28px;">
       <h4 class="notice-text" style="font-size: 16px; font-weight: bold;" th:text="|작성일:&nbsp;&nbsp;&nbsp;${notice.createdAt}|"></h4>
     </div>
+   
+    <div>
+      
+    <div style="font-size: 16px; font-weight: bold; display: inline-block;">첨부파일</div>
+      <div>
+      <th:block th:if="${#lists.isEmpty(attachList)}">
+        <div style="display: inline-block;">첨부 없음</div>
+      </th:block>  
+
+      <th:block th:if="${not #lists.isEmpty(attachList)}">
+        <th:block th:each="a:${attachList}">
+          <div class="attach" th:data-attach_no="${a.attachNo}" style="display: inline-block;">
+            <a th:text="${a.originalFilename}"></a>
+          </div>
+        </th:block>
+        <div style="display: inline-block;">
+          <a th:href="@{/notice/downloadAll.do(noticeNo=${notice.noticeNo})}">모두 다운로드</a>
+        </div>
+      </th:block>       
+      </div>
+      
+      </div>
+      
       <hr style="border: 1px solid black; margin-bottom: 0; margin-top: 10px;">    
     </div>
     
@@ -127,26 +150,6 @@
       </div>    
       
       <div class="contents" th:text="${notice.contents}" style="white-space: pre-wrap;"></div>
-      
-      <h3>첨부파일</h3>
-      <div>
-      <th:block th:if="${#lists.isEmpty(attachList)}">
-        <div>첨부 없음</div>
-      </th:block>  
-
-      <th:block th:if="${not #lists.isEmpty(attachList)}">
-        <th:block th:each="a:${attachList}">
-          <div class="attach" th:data-attach_no="${a.attachNo}">
-            <a th:text="${a.originalFilename}"></a>
-          </div>
-        </th:block>
-        <div>
-          <a th:href="@{/notice/downloadAll.do(noticeNo=${notice.noticeNo})}">모두 다운로드</a>
-        </div>
-      </th:block>       
-      </div>
-      
-      
        
       </div>
       
