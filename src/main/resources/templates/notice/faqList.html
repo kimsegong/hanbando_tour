@@ -211,30 +211,34 @@
                 str += '<button style="font-size:0.6em" class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapse' + i + '" aria-expanded="false" aria-controls="flush-collapse' + i + '"><p>' + faq.title  + '</p></button>';
                 str += '</h2>';
                 str += '<div id="flush-collapse' + i + '" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">';
+                str += '<div style="padding-right:80px">';
                 str += '<div class="accordion-body">' + faq.contents + '</div>';
-                str += '  <div>';
+                str += '</div>';
+                str += '<div>';
                if (sessionUserNo == 1) {
+              str += '  <div style="padding-right:120px">'
               str += '  <div class="edit-form-wrapper">';
               str += '    <button type="button" class="btn btn-primary edit-faq-btn" data-bs-toggle="collapse" data-bs-target="#editFormCollapse' + faq.faqNo + '">수정하러하기</button>';
               str += '    <div class="collapse" id="editFormCollapse' + faq.faqNo + '">';
               str += '      <form class="edit-form" id="frm_faq_btn" method="post" action="/notice/faqEdit.form">';
               str += '        <input type="hidden" id=faqNo name="faqNo" value="' + faq.faqNo + '">';
-              str += '        <div class="mb-3">';
+              str += '        <div class="mb-3" style="padding-right:50px">';
               str += '          <label for="title" class="form-label">제목</label>';
               str += '          <input type="text" class="form-control" id="title" name="title" value="' + faq.title + '">';
               str += '        </div>';
       
-              str += '        <div class="mb-3">';
+              str += '        <div class="mb-3" style="padding-right:50px">';
               str += '          <label for="contents" class="form-label">내용</label>';
               str += '          <textarea class="form-control" id="contents" name="contents">' + faq.contents + '</textarea>';
               str += '        </div>';
               
-              str += '        <div style="padding-right:60px">';
+              str += '        <div style="padding-right:50px">';
               str += '        <button type="button" class="btn btn-primary edit-faq-btn" id= "edit_btn">수정하기</button>';
               str += '    <button type="button" class="btn btn-danger remove_Faq">삭제하기</button>';
               str += '        </div>';
               str += '      </form>';
               str += '    </div>';
+              str += '  </div>';
              }
              str += '</div>';
              str += '</div>';

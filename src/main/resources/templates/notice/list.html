@@ -85,6 +85,18 @@
     color: #fff;               /* 호버 시 텍스트 색상 */
     background-color: #96B6C5; /* 호버 시 배경 색상 */
   }
+  
+  .main_list_wrap{
+    margin-left: 4%;
+  }
+  
+  .wrap_search{
+    margin-right:0.5%;
+  }
+  
+  .wrap_paging{
+    margin-right:3.5%;
+  }
 </style>
 
 
@@ -109,7 +121,7 @@
         </div>
         
         
-        <div class="main_list_wrap">    
+        <div class="main_list_wrap ">    
         <p class="title">공지사항</p>
         
       <div class="row">
@@ -204,7 +216,7 @@
  
   
 
-    <div>
+    <div class="wrap_search">
       <form method="get" th:action="@{/notice/search.do}">
           <div class = "title_search">
          <input type="radio" class="btn-check" id="option5" name="column" value="TITLE" autocomplete="off" checked>
@@ -217,7 +229,7 @@
         </div>        
        </form>
     </div>
-    <div>
+    <div class="wrap_paging">
       <div th:utext="${paging}"></div>
     </div>
   </div>
