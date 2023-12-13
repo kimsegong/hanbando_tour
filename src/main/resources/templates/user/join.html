@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 
-<head th:replace="~{/layout/header::head('회원가입')}"></head>
+<head th:replace="~{layout/header::head('회원가입')}"></head>
 
 <style>
   .title{
@@ -11,7 +11,7 @@
 </style>
 <body>
   
-  <div th:replace="~{/layout/header::header}"></div>
+  <div th:replace="~{layout/header::header}"></div>
   
   <div class="main_wrap">
 
@@ -34,7 +34,7 @@
           <div class="col-sm-3 d-grid gap-2"><input type="button" class="half_button w3-btn w3-round-xxlarge w3-green w3-block mx-auto" id="goSMS" value="SMS 전송" /></div>
           <div class="col-sm-9 mb-3" id="msg_mobile"></div>
           <div class="col-sm-3"></div>
-          <div class="col-sm-9" id="msg_pw"></div>
+         
         </div>
         <div class="line_inp confirmDiv row mb-2">
           <label for="authNumber" class="col-sm-3 col-form-label">인증번호</label>
@@ -42,7 +42,7 @@
           <input type="hidden" id="authCode" />  
           <div class="col-sm-3 d-grid gap-2"><input type="button" class="half_button w3-btn w3-round-xxlarge w3-green w3-block mx-auto" id="confirmBnt" value="인증" /></div>
           <div class="col-sm-3"></div>
-          <div class="col-sm-9" id="msg_pw"></div>
+          
 
         </div>
         
@@ -96,6 +96,8 @@
             <label class="form-check-label" for="woman">여자</label>
           </div>
         </div>
+        
+ 
         
         <hr class="my-3">
     
@@ -188,7 +190,7 @@
   <script th:inline="javascript">
     
     
-    var emailPassed = false;
+  var emailPassed = false;
   var pwPassed = false;
   var pw2Passed = false;
   var namePassed = false;
@@ -436,8 +438,38 @@
       }
     })
   }
-  /*
-  const fnJoin = () => {
+ 
+ 
+   const fnBlankCheck = () => {
+    $('#frm_join').submit((ev) => {
+      if($('#email').val().trim() === ''){
+        ev.preventDefault();
+        alert('이메일은 반드시 입력해야합니다.');
+        return;
+      } else if($('#userPhoneNum').val().trim() === '') {
+        ev.preventDefault();
+        alert('핸드폰번호는 반드시 입력해야합니다.');
+        return;
+      } else if($('#authNumber').val().trim() === '') {
+        ev.preventDefault();
+        alert('인증번호는 반드시 입력해야합니다.');
+      } else if($('#pw').val().trim() === '') {
+        ev.preventDefault();
+        alert('비밀번호는 반드시 입력해야합니다.');
+      } else if($('#pw2').val().trim() === '') {
+        ev.preventDefault();
+        alert('비밀번호 확인을 반드시 해야합니다.');
+      } else if($('#name').val().trim() === '') {
+        ev.preventDefault();
+        alert('이름을 반드시 입력해야합니다.');
+     } 
+       });
+};
+
+      
+  
+  
+  /*const fnJoin = () => {
     $('#frm_join').submit((ev) => {
       if(!emailPassed){
         alert('이메일을 인증 받아야 합니다.');
@@ -458,19 +490,21 @@
       }
     })
   }
-  */
   
+  */
     fnCheckSms();
     fnCheckPassword();
     fnCheckPassword();
     fnCheckName();
     fnCheckMobile();
+    fnBlankCheck();
+    /*fnJoin();*/
   </script>
   
   
   
   
-  <div th:replace="~{/layout/footer::footer}"></div>
+  <div th:replace="~{layout/footer::footer}"></div>
   
 </body>
 </html>
