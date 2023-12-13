@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{layout/header::head('예약 상세')}">
+ 
+</head> <!-- 이거 알맞게 바꿔주세요-->
+<style>
+  .blind {
+    display: none;
+  }
+  
+</style>
+<body>
+	<div th:replace="~{layout/header::header}"></div>
+	
+	<div class="main_wrap" style="padding-top: 0;">
+	
+	
+		 <div class="container text-center">
+		  <div class="row">
+		    <div class="col-1">	      
+		    </div>
+		    <div class="col-10">
+		       <div>
+             <p style="font-size: 30px; font-weight: 400; ">예약내역상세</p>
+            </div>
+            
+            <div style="margin: 20px 0;" class="col-6">
+              <h4><strong>예약자정보</strong></h4>
+            </div>
+            <div class="d-grid gap-2 col-8  mx-auto" style="text-align: left;">
+              <table class="table">
+                <colgroup>
+                  <col style="width:20%;">
+                  <col >
+                </colgroup>
+                <tr>
+                  <td>이름</td>
+                  <td th:text="${reserve.userDto.name}"></td>
+                </tr>
+                <tr>
+                  <td>휴대폰번호</td>
+                  <td th:text="${reserve.userDto.mobile}"></td>
+                </tr>
+                <tr>
+                  <td>성별</td>
+                  <td th:if="${reserve.userDto.gender == 'M'}" >남</td>
+                  <td th:if="${reserve.userDto.gender == 'F'}" >여</td>
+                </tr>
+                <tr>
+                  <td>이메일</td>
+                  <td th:text="${reserve.userDto.email}"></td>
+                </tr>
+                <tr>
+                  <td>요청사항</td>
+                  <td th:text="${reserve.requestedTerm}"></td>
+                </tr>
+              </table>
+            </div>
+            
+            <div style="margin: 20px 0;" class="col-6">
+              <h4><strong>예약상품정보</strong></h4>
+            </div>
+            <div class="d-grid gap-2 col-8  mx-auto" style="text-align: left;">
+              <table class="table">
+                <colgroup>
+                  <col style="width:20%;">
+                  <col style="width:80%;">
+                </colgroup>
+                <tr>
+                  <td>상품명</td>
+                  <td th:text="${#strings.abbreviate(reserve.packageDto.packageTitle, 35)}"></td>
+                </tr>
+                <tr>
+                  <td>출발일</td>
+                  <td th:text="${reserve.reserveStart}"></td>
+                </tr>
+                <tr>
+                  <td>총인원</td>
+                  <td>
+                    <span th:text="|총 ${reserve.reservePerson}명|"></span>
+                    <span>
+                      <button type="button" id="btn_peopleInfo" class="w3-btn w3-small w3-round-xxlarge w3-lime" style="margin-left: 10px;"><b>상세보기</b></button>
+                    </span>
+                    <div class="blind">
+                      <table class="table" style="margin-top: 20px;">
+                        <thead>
+                          <tr>
+                            <th>성인/소아</th>
+                            <th>이름</th>
+                            <th>생년월일</th>
+                            <th>성별</th>
+                            <th>연락처</th>
+                          </tr>
+                        </thead>
+                        <tbody id="tourPeopleInfo">
+                        <!-- 여행자 정보가 추가되는 부분 -->
+                        </tbody>
+                      </table>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td>출발지</td>
+                  <td th:if="${reserve.departureLoc == 'byOwn'}">자차 이용</td>
+                  <td th:if="${reserve.departureLoc == 'seoulStation'}">서울역</td>
+                  <td th:if="${reserve.departureLoc == 'DDP'}">동대문</td>
+                  <td th:if="${reserve.departureLoc == 'Jamsil'}">잠실</td>
+                </tr>
+                <tr>
+                  <td>예약상태</td>
+                  <td th:if="${reserve.reserveStatus == 0}">결제대기</td>
+                  <td th:if="${reserve.reserveStatus == 1}">예약완료</td>
+                  <td th:if="${reserve.reserveStatus == 2}">취소</td>
+                </tr>
+                <tr>
+                  <td>주의사항</td>
+                  <td>
+                    <span  th:text="${#strings.abbreviate(reserve.packageDto.danger, 20)}"  style="white-space: pre;"></span>
+                    <span>
+                      <button type="button"  id="btn_danger" class="w3-btn w3-small w3-round-xxlarge w3-lime" style="margin-left: 10px;"  data-bs-toggle="modal" data-bs-target="#exampleModal"><b>상세보기</b></button>
+                    </span>
+                    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" style="text-align: center;">
+                      <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="exampleModalLabel">주의사항</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                          </div>
+                          <div class="modal-body" id="danger">
+                            
+                          </div>
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td>결제금액</td>
+                  <td th:utext="|<strong>${reserve.reservePrice}원</strong>|"></td>
+                </tr>
+              </table>
+            </div>
+            
+            <div class="col-6 mx-auto">
+              <form id="frm_btn" method="post">
+                <input type="hidden" name="reserveNo" id="reserveNo" th:value="${reserve.reserveNo}">
+                <input type="hidden" name="userNo" th:value="${reserve.userDto.userNo}">
+                <input type="hidden" name="userName" th:value="${reserve.userDto.name}">
+                <input type="hidden" name="userMobile" th:value="${reserve.userDto.mobile}">
+                <input type="hidden" name="requestedTerm" th:value="${reserve.requestedTerm}">
+                <input type="hidden" name="departureLoc" th:value="${reserve.departureLoc}">
+                <div th:if="${reserve.reserveStatus == 0}">
+                  <div class="d-grid gap-2 col-5 mx-auto" style="margin: 10px auto 25px;">
+                    <button class="w3-btn w3-round-xxlarge w3-green w3-block mx-auto" type="button" th:onclick="requestPay()">결제하기</button>
+                  </div>
+                </div>
+                <div style="display: flex;">
+                  <div class="d-grid gap-2 col-5 mx-auto">
+                    <button class="w3-btn w3-round-xxlarge w3-lime w3-block mx-auto" type="button" th:onclick="|location.href='@{/package/list.do}'|">다른 상품 예약하러가기</button>
+                    <button class="w3-btn w3-round-xxlarge w3-lime w3-block mx-auto" type="button" th:onclick="|location.href='@{/reserve/reserveList.do(userNo=${session.user.userNo})}'|" >나의 예약목록</button>
+                  </div>
+                  <div class="d-grid gap-2 col-5 mx-auto">
+                    <th:block th:if="${reserve.reserveStatus != 2}">
+                      <button th:if="${reserve.reserveStatus != 1}" class="w3-btn w3-round-xxlarge w3-lime w3-block mx-auto" type="button" id="btn_res_modify">예약 수정하러가기</button>
+                      <button class="w3-btn w3-round-xxlarge w3-lime w3-block mx-auto" type="button" id="btn_res_cancel">예약 취소하기</button>
+                    </th:block>
+                  </div>
+                </div>
+              </form>
+            </div>
+            
+		    </div>
+		    <div class="col-1">	      
+		    </div>
+		  </div>
+	  </div>
+	
+	</div>
+	<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+  <script src="https://cdn.iamport.kr/v1/iamport.js"></script>
+  <script>
+    
+    var IMP = window.IMP;
+    IMP.init("imp14397622");
+ 
+    var today = new Date();   
+    var hours = today.getHours(); // 시
+    var minutes = today.getMinutes();  // 분
+    var seconds = today.getSeconds();  // 초
+    var milliseconds = today.getMilliseconds();
+    var makeMerchantUid = hours +  minutes + seconds + milliseconds;
+    var payAmount = '[[${reserve.reservePrice}]]';
+    var reserveNo = '[[${reserve.reserveNo}]]';
+    var userEmail = '[[${reserve.userDto.email}]]';
+    function requestPay() {
+      if(confirm('결제 후에는 예약 수정이 불가합니다. 결제하시겠습니까?')){
+        
+        IMP.request_pay(
+          {
+            //결제 요청 파라미터 
+            pg: "html5_inicis",
+            pay_method: "card",
+            merchant_uid: "test"+ makeMerchantUid,
+            name: '[[${reserve.packageDto.packageTitle}]]',
+            amount: payAmount,
+            buyer_email: userEmail,
+            buyer_name: '[[${reserve.userDto.name}]]',
+            buyer_tel: '[[${reserve.userDto.mobile}]]' // 필수
+          },
+          function (rsp) {
+            // callback
+            if (rsp.success) {
+              console.log(rsp);
+              // 결제 성공 시: 결제 승인 또는 가상계좌 발급에 성공한 경우 DB에 정보 저장
+              $.ajax({
+                url: "/payment/payReserve.do", 
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                data: JSON.stringify({
+                  impUid: rsp.imp_uid,            // 결제 고유번호
+                  payYn: rsp.success,             // 성공여부
+                  payMethod: rsp.pay_method,      // 결제방식
+                  paidAmount: rsp.paid_amount,    // 결제금액
+                  paidAt: rsp.paid_at,            // 결제시각
+                  buyerName: rsp.buyer_name,
+                  buyerEmail: rsp.buyer_email,
+                  payStatus: rsp.status,          // 결제상태
+                  merchantUid: rsp.merchant_uid,  // 주문번호
+                  reserveDto: {
+                    reserveNo: reserveNo
+                    }
+                }),
+                dataType: 'json'
+              }).done(function (data) {
+                console.log(data);
+                // 결제승인시 정보 DB 저장 후 예약상태를 '결제대기' >> '예약완료'로 수정
+                $.ajax({
+                  url: "/payment/modifyResStatus", // 두 번째 요청의 URL
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                  data: JSON.stringify({
+                    reserveNo: reserveNo,
+                    payStatus: rsp.status
+                  })
+                }).done(function (data) {
+                  console.log(data);
+                  // 두 번째 요청이 성공했을 때의 처리를 여기에 작성합니다.
+                  if(data.modifyResStatusResult == '1'){
+                    alert('예약상태가 완료로 변경되었습니다.');
+                    location.reload();
+                  }
+                });
+              })
+              alert('성공적으로 결제되었습니다. 예약완료 되었습니다.');
+            } else {
+                console.log(rsp);
+                alert(`결제에 실패하였습니다. ${rsp.error_msg}`);
+            }
+          }
+        );
+      }
+    }
+    
+    
+  </script>
+  
+    
+  <script th:inline="javascript">
+    
+    function fnShowTourist(){
+      $('#btn_peopleInfo').click(function(){
+        fnBlind();
+        $.ajax({
+          type: 'get',
+          url: '/reserve/getTouristInfo.do',
+          data: 'reserveNo=[[${reserve.reserveNo}]]',
+          dataType: 'json',
+          success:(function(resData){
+            $('#tourPeopleInfo').empty();
+            if(resData.tourists.length === 0){
+              alert('여행자 정보가 없습니다.')
+              return;
+            }
+            $.each(resData.tourists, function(i, c){
+              let str = '';
+              str += '<tr>';
+              if(c.ageCase === 0){
+                str += '  <td>성인</td>';
+              } else {
+                str += '  <td>소아</td>';
+              }
+              str += '  <td>'+ c.name +'</td>';
+              str += '  <td>'+ c.birthDate + '</td>';
+              if(c.gender == 'M'){
+                  str += '  <td>남</td>';
+              } else if(c.gender == 'F'){
+                str += '  <td>여</td>';  
+              } else {
+                str += '  <td>선택안함</td>';
+              }
+              str += '  <td>'+ c.mobile +'</td>';
+              str += '</tr>';
+              $('#tourPeopleInfo').append(str);
+            })
+          })
+        })
+      })
+    }
+  
+    function fnBlind(){
+      var blindTarget = $('#btn_peopleInfo').parent().next();
+      if(blindTarget.hasClass('blind')){
+        blindTarget.removeClass('blind');
+      } else {
+        blindTarget.addClass('blind');
+      }
+    }  
+      
+    function fnGoModify(){
+      $('#btn_res_modify').click(function(){
+        if(confirm('예약 수정화면으로 이동하시겠습니까?                                      여행자 정보는 수정 불가능합니다.')){
+          $('#frm_btn').attr('action', '/reserve/edit.form');
+          $('#frm_btn').submit();
+        } 
+      })
+    }
+  
+    function fnChkCancel(){
+      $('#btn_res_cancel').click(function(){
+        if(confirm('예약을 취소하시겠습니까?')){
+          $('#frm_btn').attr('action', '/reserve/cancel.do')
+          $('#frm_btn').submit();
+        } 
+      })
+    }
+    
+    function fnCheckCurrUser(){
+      let user = /*[[${session.user}]]*/ null;
+      if(user === null){
+        if(confirm('로그인이 필요한 기능입니다. 로그인 할까요?')){
+          location.href = '/user/login.form';
+        }
+      } else if('[[${session.user.userNo}]]' !== '[[${reserve.userDto.userNo}]]') {
+        alert('내 예약 목록으로 이동합니다.')
+        location.href = '/reserve/reserveList.do?userNo=[[${session.user.userNo}]]';
+        return;
+      } else {
+        return;
+      }
+    }
+  
+    function fnChkModify(){
+      if('${modifyResult}' == 1){
+        alert('수정되었습니다.');
+      } 
+    }
+    
+    function fnCheckReserveResult(){
+      if('[[${addTouristResult}]]' == '1') {
+        alert('예약되었습니다. 결제를 진행해주시면 예약이 확정됩니다.');
+      }
+    }
+    
+    function fnShowDanger(){
+      $('#btn_danger').click(function(){
+        $('#danger').empty();
+        let str = '';
+        str += '<div style="white-space: pre;">';
+        str += '[[${reserve.packageDto.danger}]]';
+        str += '</div>';
+        $('#danger').append(str);
+      })
+    }
+    
+    fnShowDanger();
+    fnChkModify();
+    fnGoModify();
+    fnShowTourist();
+    fnChkCancel();
+    fnCheckCurrUser();
+    fnCheckReserveResult();
+  </script>
+
+
+	
+	
+	
+	<div th:replace="~{layout/footer::footer}"></div>
+</body>
+</html>
+

@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{layout/header::head('마이페이지')}"></head>
+<style>
+  #split2 {
+    flex: 0 0 80%;
+  }
+  .title {
+    font-size: 30px;
+    font-weight: 400;
+  }
+ 
+</style>
+
+<script th:src="@{/js/user_modify.js(ver=1.0)}"></script>
+<script th:inline="javascript">
+  
+  $(() => {
+  fnExtesion();
+})
+  
+  const fnExtesion = () => {
+  let extensionResult = /*[[${extensionResult}]]*/ null;
+  if(extensionResult !== null){
+     if(extensionResult === 1){
+       alert('90일 연장되었습니다.');
+     } else {
+       alert('비밀번호 연장이 되지 않았습니다.');
+     }
+   }
+}
+</script>
+  
+<body>
+  
+  <div th:replace="~{layout/header::header}"></div>
+  
+   <div class="main_wrap">
+  
+  
+     <div class="container text-center">
+      <div class="row">
+        <div class="col-1"> 
+      <!--/* 비밀번호 변경과 찜 목록으로 이동 가능한 좌측 메뉴 버튼 */-->
+         <div class="w3-sidebar w3-bar-block" style="width:10%; height:200px;"> <!-- 사이드바 -->
+          <a th:href="@{/user/modifyPw.form}" class="w3-bar-item w3-button">비밀번호변경하기💡</a>
+          <a th:href="@{/reserve/reserveList.do(userNo=${session.user.userNo})}" class="w3-bar-item w3-button">나의 예약보기📆</a>
+          <a th:href="@{/user/heart.do(userNo=${session.user.userNo})}" class="w3-bar-item w3-button">나의 찜한목록보기💚</a>
+         </div>         
+        </div>
+        <div class="col-10" >
+    
+    <div id="main_wraper">             
+    <div id="split2" class="wrap wrap_6" th:if="${session.user != null}">
+    
+      <p class="title">🧒마이페이지👩</p>
+    
+      <form id="frm_mypage" method="post">
+        
+        <div th:if="${session.user.state == 0}" class="text-center">
+          <div class="mb-2">비밀번호 변경</div>
+          <button type="button" id="btn_modify_pw" class="w3-btn w3-round-xxlarge w3-green w3-block mx-auto">비밀번호변경하기</button>
+        </div>
+        <hr class="my-3">
+        
+        <div class="text-center mb-4">개인정보 변경</div>
+        <div class="row mb-4">
+          <div class="col-sm-3">이메일</div>
+          <div class="col-sm-9" th:text="${session.user.email}"></div>
+        </div>
+        <div class="row mb-4">
+          <div class="col-sm-3">가입일</div>
+          <div class="col-sm-9" th:text="${#dates.format(session.user.joinedAt, 'yyyy-MM-dd a hh:mm:ss')}"></div>
+        </div>
+        <div class="row mb-2">
+          <label for="name" class="col-sm-3 col-form-label">이름</label>
+          <div class="col-sm-9"><input type="text" name="name" th:value="${session.user.name}" id="name" class="form-control-plaintext w-50 p-3 h-50 d-inline-block" readonly></div>
+          <div class="col-sm-3"></div>
+          <div class="col-sm-9 mb-3" id="msg_name"></div>
+        </div>
+        <div class="row mb-2">
+          <label for="mobile" class="col-sm-3 col-form-label">핸드폰</label>
+          <div class="col-sm-9"><input type="text" name="mobile" th:value="${session.user.mobile}" id="mobile" class="form-control w-50 p-3 h-50 d-inline-block"></div>
+          <div class="col-sm-3"></div>
+          <div class="col-sm-9 mb-3" id="msg_mobile"></div>
+        </div>       
+        <div class="row mb-2">
+          <label class="col-sm-3 form-label">성별</label>
+          <div class="col-sm-3">
+            <input type="radio" name="gender" value="NO" id="none" class="form-check-input" checked>
+            <label class="form-check-label" for="none">선택안함</label>
+          </div>
+          <div class="col-sm-3">
+            <input type="radio" name="gender" value="M" id="man" class="form-check-input">
+            <label class="form-check-label" for="man">남자</label>
+          </div>
+          <div class="col-sm-3">
+            <input type="radio" name="gender" value="F" id="woman" class="form-check-input">
+            <label class="form-check-label" for="woman">여자</label>
+          </div>
+        </div>
+        <script th:inline="javascript">
+          $(':radio[value=[[${session.user.gender}]]]').prop('checked', true);
+        </script>
+        
+        <hr class="my-3">
+        
+        <div class="row mb-2">
+          <label for="postcode" class="col-sm-3 col-form-label">주소</label>
+          <div class="col-sm-4"><input type="text" name="postcode" th:value="${session.user.postcode}" id="postcode" class="form-control" onclick="execDaumPostcode()" placeholder="우편번호" readonly></div>
+          <div class="col-sm-5"><input type="button" class="w3-btn w3-round-xxlarge w3-green" onclick="execDaumPostcode()" value="우편번호 찾기"></div>
+        </div>
+        
+        <div>
+          <label for="roadAddress" class="col-sm-3 col-form-label">상세주소</label>
+          <div class="col-sm-6"><input type="text" name="roadAddress" th:value="${session.user.roadAddress}" style="margin-bottom: 20px; margin-left: 45%;" id="roadAddress" class="form-control" placeholder="도로명주소" readonly></div>
+          <div class="col-sm-6"><input type="text" name="jibunAddress" th:value="${session.user.jibunAddress}" style="margin-bottom: 20px; margin-left: 45%;" id="jibunAddress" class="form-control" placeholder="지번주소" readonly></div>
+        </div>
+        <div class="col-sm-12"><span id="guide" style="color:#999;display:none"></span></div>
+        <div class="row mb-2">
+          <div class="col-sm-6"><input type="text" name="detailAddress" th:value="${session.user.detailAddress}" style="margin-left: 47%;" id="detailAddress" class="form-control" placeholder="상세주소"></div>
+          <div class="col-sm-6"><input type="hidden" id="extraAddress" class="form-control" placeholder="참고항목"></div>
+        </div>
+        <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+        <script>
+          //본 예제에서는 도로명 주소 표기 방식에 대한 법령에 따라, 내려오는 데이터를 조합하여 올바른 주소를 구성하는 방법을 설명합니다.
+          function execDaumPostcode() {
+            new daum.Postcode({
+              oncomplete: function(data) {
+                // 팝업에서 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분.
+    
+                // 도로명 주소의 노출 규칙에 따라 주소를 표시한다.
+                // 내려오는 변수가 값이 없는 경우엔 공백('')값을 가지므로, 이를 참고하여 분기 한다.
+                var roadAddr = data.roadAddress; // 도로명 주소 변수
+                var extraRoadAddr = ''; // 참고 항목 변수
+    
+                // 법정동명이 있을 경우 추가한다. (법정리는 제외)
+                // 법정동의 경우 마지막 문자가 "동/로/가"로 끝난다.
+                if(data.bname !== '' && /[동|로|가]$/g.test(data.bname)){
+                  extraRoadAddr += data.bname;
+                }
+                // 건물명이 있고, 공동주택일 경우 추가한다.
+                if(data.buildingName !== '' && data.apartment === 'Y'){
+                  extraRoadAddr += (extraRoadAddr !== '' ? ', ' + data.buildingName : data.buildingName);
+                }
+                // 표시할 참고항목이 있을 경우, 괄호까지 추가한 최종 문자열을 만든다.
+                if(extraRoadAddr !== ''){
+                  extraRoadAddr = ' (' + extraRoadAddr + ')';
+                }
+    
+                // 우편번호와 주소 정보를 해당 필드에 넣는다.
+                document.getElementById('postcode').value = data.zonecode;
+                document.getElementById("roadAddress").value = roadAddr;
+                document.getElementById("jibunAddress").value = data.jibunAddress;
+                
+                // 참고항목 문자열이 있을 경우 해당 필드에 넣는다.
+                if(roadAddr !== ''){
+                  document.getElementById("extraAddress").value = extraRoadAddr;
+                } else {
+                  document.getElementById("extraAddress").value = '';
+                }
+    
+                var guideTextBox = document.getElementById("guide");
+                // 사용자가 '선택 안함'을 클릭한 경우, 예상 주소라는 표시를 해준다.
+                if(data.autoRoadAddress) {
+                  var expRoadAddr = data.autoRoadAddress + extraRoadAddr;
+                  guideTextBox.innerHTML = '(예상 도로명 주소 : ' + expRoadAddr + ')';
+                  guideTextBox.style.display = 'block';
+                } else if(data.autoJibunAddress) {
+                  var expJibunAddr = data.autoJibunAddress;
+                  guideTextBox.innerHTML = '(예상 지번 주소 : ' + expJibunAddr + ')';
+                  guideTextBox.style.display = 'block';
+                } else {
+                  guideTextBox.innerHTML = '';
+                  guideTextBox.style.display = 'none';
+                }
+              }
+            }).open();
+          }
+        </script>
+        
+        <div class="row mt-3">
+          <label class="col-sm-12 form-label">이벤트 알림 동의(선택)</label>
+        </div>
+        <div class="row mb-2 d-flex justify-content-center align-items-center">
+          <div class="col-sm-3">
+            <input type="radio" name="event" value="on" id="event_on" class="form-check-input">
+            <label class="form-check-label" for="event_on">동의함</label>
+          </div>
+          <div class="col-sm-3">
+            <input type="radio" name="event" value="off" id="event_off" class="form-check-input">
+            <label class="form-check-label" for="event_off">동의안함</label>
+          </div>
+        </div>
+        <script th:inline="javascript">
+          let agree = /*[[${session.user.agree}]]*/ null;
+          if(agree === 0){
+            $('#event_off').prop('checked', true);
+          } else if(agree === 1){
+            $('#event_on').prop('checked', true);
+          }
+        </script>
+        
+        <hr class="my-3">
+        
+        <div class="text-center">
+          <input type="hidden" name="userNo" th:value="${session.user.userNo}">
+          <button type="button" id="btn_leave" class="w3-btn w3-round-xxlarge w3-grey">회원탈퇴</button>
+          <button type="button" id="btn_modify" class="w3-btn w3-round-xxlarge w3-green">개인정보수정</button>
+        </div>
+        
+          
+        
+        
+      </form>
+    
+    </div>
+    
+    <div th:if="${session.user == null}">
+      로그아웃되었습니다.
+    </div>
+
+  </div>
+  
+  <div th:replace="~{layout/footer::footer}"></div>
+  
+</body>
+</html>

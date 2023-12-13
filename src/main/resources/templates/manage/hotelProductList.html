@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{layout/header::head('호텔상품 관리')}"></head> 
+<style>
+  
+  .split2 {
+    margin-left: 20%;
+  }
+  
+  .listWrap1 {
+    height: 100%;
+    width: 100%;
+  }
+  
+  #userList a,
+  #productList a,
+  #reserveList a,
+  #reviewList a,
+  #bannerList a {
+    display: block;
+    width: 100%;
+    height: 100%;
+    text-decoration: none;
+    color: #404040; /* 기본 글씨 색상 */
+    padding: 10px;
+    box-sizing: border-box;
+    font-size: 2.5em;
+    font-weight: bold;
+    position: relative;
+    transition: color 0.3s; /* hover 시 글씨 색상 변화 트랜지션 설정 */
+  }
+
+  #productList a::after {
+    content: "";
+    display: block;
+    width: 90%;
+    height: 2px;
+    background-color: #404040; /* 언더라인 색상 */
+    transition: width 0.3s;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+  }
+
+  #userList a:hover,
+  #productList a:hover,
+  #reserveList a:hover,
+  #reviewList a:hover,
+  #bannerList a:hover {
+    color: #96B6C5; /* hover 시 글씨 색상 변화 */
+  }
+  
+  #userList a::after,
+  #reserveList a::after,
+  #reviewList a::after,
+  #bannerList a::after {
+    content: "";
+    display: block;
+    width: 0;                    /* 초기에는 0으로 설정 */
+    height: 2px;
+    background-color: #96B6C5; /* 언더라인 색상 */
+    transition: width 0.3s;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+  }
+  
+  #userList a:hover::after,
+  #reserveList a:hover::after,
+  #reviewList a:hover::after,
+  #bannerList a:hover::after {
+    width: 90%;
+  }
+  
+  table a:hover {
+    color: #96B6C5;
+  }
+  
+  .btn_select {
+    height: 38px; 
+    color: #fff;               /* 텍스트 색상 */
+    background-color: #96B6C5; /* 기본 배경 색상 */
+    border-color: #fff;        /* 테두리 색상 */
+    border-radius: 10px;         /* 테두리를 둥글게 만듭니다. */
+    transition: all 0.3s;        /* 모든 속성에 대해 0.3초 동안 트랜지션 효과 적용 */
+  }
+  .btn_select:hover {
+    color: #96B6C5;         /* 호버 시 텍스트 색상 */
+    background-color: #fff; /* 호버 시 배경 색상 */
+  }
+  
+  #btn_search_product {
+    height: 38px; 
+    width: 60px;
+    color: #96B6C5;         /* 텍스트 색상 */
+    background-color: #fff; /* 기본 배경 색상 */
+    border-color: #96B6C5;  /* 테두리 색상 */
+    border-radius: 10px;      /* 테두리를 둥글게 만듭니다. */
+    transition: all 0.3s;     /* 모든 속성에 대해 0.3초 동안 트랜지션 효과 적용 */
+  }
+  #btn_search_product:hover {
+    color: #fff;               /* 호버 시 텍스트 색상 */
+    background-color: #96B6C5; /* 호버 시 배경 색상 */
+  }
+
+  #sel_recommendStatus,
+  #sel_status,
+  #regionName,
+  #column,
+  #query {
+    height: 38px;
+  }
+  
+  #sel_recommendStatus,
+  #sel_status,
+  #regionName,
+  #column {
+    flex: 1;           /* 셀렉트 박스가 나머지 영역을 모두 차지하도록 설정 */
+    margin-right: 5px; /* 셀렉트 박스와 인풋 사이의 간격을 조절 */
+  }
+  
+  table {
+    font-size: 17px;
+  }
+  
+  .listWrap2 {
+  display: flex;
+  justify-content: center; /* 가로 가운데 정렬 */
+  align-items: center;     /* 세로 가운데 정렬 */
+  margin: 2% 15%;
+ }
+
+  .btn_modify_price {
+    height: 38px; 
+    color: #96B6C5;         /* 텍스트 색상 */
+    background-color: #fff; /* 기본 배경 색상 */
+    border-color: #96B6C5;  /* 테두리 색상 */
+    border-radius: 10px;      /* 테두리를 둥글게 만듭니다. */
+    transition: all 0.3s;     /* 모든 속성에 대해 0.3초 동안 트랜지션 효과 적용 */
+    margin-top: 3%;
+  }
+  .btn_modify_price:hover {
+    color: #fff;               /* 호버 시 텍스트 색상 */
+    background-color: #96B6C5; /* 호버 시 배경 색상 */
+  }
+  
+  .sung,
+  .jun, 
+  .bi {
+    margin-top: 1%;
+  }
+  .ssDate {
+    margin-left: 2%;
+  }
+
+  .blind {
+    display: none;
+  }
+  .open_contents {
+    cursor: pointer;
+  }
+
+
+  #package, #hotel {
+    margin: 20px 10px;
+  }
+  #hotel a{
+    display: block;
+    padding: 5px 15px;
+    background-color: #EEE0C9; /* 기본 배경 색상 */
+    text-decoration: none;
+    color: #404040;            /* 버튼 텍스트 색상 */
+    border-radius: 10px;         /* 둥근 모서리 */
+    font-size: medium;
+    font-weight: 500;
+  }
+  #package a {
+    display: block;
+    padding: 5px;
+    background-color: #F1F0E8; /* 기본 배경 색상 */
+    text-decoration: none;
+    color: #404040;            /* 버튼 텍스트 색상 */
+    border-radius: 10px;         /* 둥근 모서리 */
+    font-size: medium;
+    font-weight: 500;
+  }
+  
+  .room_part {
+    text-align: left;
+    margin-left: 8%;
+  }
+  
+  .room_name {
+    color: #404040; 
+    font-size: 20px;
+    font-weight: bolder;
+  }
+  .room_many {
+    color: #404040; 
+    font-size: 15px;
+  }
+  
+  table thead tr th{
+    font-weight: bolder;
+  }
+
+</style>
+<script th:inline="javascript">
+
+  $(() => {
+    fnModifyRecommend();
+    fnModifyPrice();
+    fnBlind();
+  })
+
+
+  const fnModifyRecommend = () => {
+    $('.btn_select').click((ev) => {
+     const formStatus = $(ev.target).closest('tr').find('.frm_modifyRecommend');
+      $.ajax({
+        type: 'post',
+        url: '/manage/modifyHotelRecommend.do',
+        data: formStatus.serialize(),
+        dataType: 'json',
+        success: (resData) => {
+          if(resData.modifyRecommendResult === 1){
+            alert('판매/추천 여부가 변경되었습니다.');
+          } else {
+            alert('판매/추천 여부가 변경되지 않았습니다.');
+          }
+        }
+      })
+    })
+  }
+  
+  const fnModifyPrice = () => {
+    $('.btn_modify_price').click((ev) => {
+      const formPrice = $(ev.target).closest('form');
+      $.ajax({
+        type: 'post',
+        url: '/manage/modifyRoomPrice.do',
+        data: formPrice.serialize(),
+        dataType: 'json',
+        success: (resData) => {
+          if(resData.modifyPriceResult === 1){
+            alert('객실 가격이 변경되었습니다.');
+          } else {
+            alert('객실 가격이 변경되지 않았습니다.');
+          }
+        }
+      })
+    })
+  }
+  
+  
+  const fnBlind = () => {
+    $('.open_contents').click((ev) => {
+      let openContents = $(ev.target).parent().next();
+      if(openContents.hasClass('blind')){
+        $('.show_content').addClass('blind');
+        openContents.removeClass('blind');
+      } else {
+        openContents.addClass('blind');
+      }
+    })
+  }
+
+  
+</script>
+
+<body>
+	<div th:replace="~{layout/header::header}"></div>
+	
+	<div class="main_wrap">
+	
+	
+		 <div class="container text-center">
+		  <div class="row">
+		    <div class="col-1">	      
+		    </div>
+        <div class="col-10" >
+		   
+		   
+        		         
+          <div class="second_main_wrap">
+              
+            <div class="split1 w3-sidebar w3-bar-block">
+                
+              <!--/* 각 관리 페이지로 이동 가능한 좌측 목록 */-->
+              <div class="listWrap1">
+                <div id="userList">
+                  <a th:href="@{/manage/userList.do}">회원관리</a>
+                </div>
+                <div id="productList">
+                  <a th:href="@{/manage/productList.do}">상품관리</a>
+                </div>
+                <div id="reserveList">
+                  <a th:href="@{/manage/reserveList.do}">예약관리</a>
+                </div>
+                <div id="reviewList">
+                  <a th:href="@{/manage/reviewList.do}">리뷰관리</a>
+                </div>
+                <div id="bannerList">
+                  <a th:href="@{/main/bannerList.do}">배너관리</a>
+                </div>
+              </div>
+                
+            </div>
+            
+            
+            <div class="split2">
+                
+              <!--/* 각 상품관리 페이지로 이동 가능한 상단 목록 */-->
+              <div class="listWrap2">
+                <div id="package">
+                  <a th:href="@{/manage/productList.do}">패키지</a>
+                </div>
+                <div id="hotel">
+                  <a th:href="@{/manage/hotelProductList.do}">호텔</a>
+                </div>
+              </div>
+              
+              <!--/* 검색기능 */-->
+              <div>
+                <form id="frm_search" method="get" th:action="@{/manage/hotelProductSearch.do}" >
+                  <select name="regionNo" id="regionName">
+                    <option value="0">전체지역</option>
+                    <th:block th:each="r:${regionList}">
+                      <option th:value="${r.regionNo}" th:text="${r.regionName}"></option>
+                    </th:block>
+                  </select>
+                  <select name="status" id="sel_status">
+                    <option value="2">판매여부</option>
+                    <option value="1">판매중</option>
+                    <option value="0">판매안함</option>
+                  </select>
+                  <select name="recommendStatus" id="sel_recommendStatus">
+                    <option value="2">추천여부</option>
+                    <option value="1">추천</option>
+                    <option value="0">비추천</option>
+                  </select>
+                  <select name="column" id="column" >
+                    <option value="HOTEL_NO">호텔번호</option>
+                    <option value="HOTEL_NAME">호텔명</option>
+                    <option value="CREATED_AT">등록일</option>
+                  </select>
+                  <input type="text" name="query" id="query" placeholder="검색어 입력" >
+                  <button type="submit" id="btn_search_product" >검색</button>
+                </form>
+              </div>
+                
+        
+              <!--/* 관리 호텔목록이 표시될 div */-->
+              <div class="listMainWrap">
+                  
+                <!--/* 총 호텔 수를 표시 */-->
+                <div style="text-align: left;" th:text="|총 ${total}개|"></div>
+                  
+                <!--/* 전체 목록을 나타내는 테이블 */-->
+                <div>
+                  <table border="1" class="table table-hover">
+                    <thead>
+                      <tr>
+                        <th scope="col">호텔번호</th>
+                        <th scope="col">지역</th>
+                        <th scope="col">호텔명</th>
+                        <th scope="col">판매여부</th>
+                        <th scope="col">객실가격</th>
+                        <th scope="col">등록일</th>
+                        <th scope="col">추천</th>
+                      </tr>
+                    </thead>
+                    <tbody class="table-group-divider table_to_detail">
+                      <th:block th:each="h:${hotelList}">
+                        <tr>
+                          <th scope="row" th:text="${h.hotelNo}"></th>
+                          <td>
+                            <a th:href="@{/hotel/detail.do(hotelNo=${h.hotelNo})}" th:text="${h.regionDto.regionName}"></a>
+                          </td>
+                          <td>
+                            <a th:href="@{/hotel/detail.do(hotelNo=${h.hotelNo})}" th:text="${h.hotelName}"></a>
+                          </td>
+                          <td>
+                            <form class="frm_modifyRecommend">
+                              <select name="status" class="status" >
+                                <option value="1" th:selected="${h.status == 1}">판매중</option>
+                                <option value="0" th:selected="${h.status == 0}">판매안함</option>
+                              </select>
+                            </form>
+                          </td>
+                          <td class="open_contents">
+                            가격보기
+                          </td>
+                          <td>
+                            <a th:href="@{/hotel/detail.do(hotelNo=${h.hotelNo})}" th:text="${h.createdAt}"></a>
+                          </td>
+                          <td>
+                            <form class="frm_modifyRecommend">
+                              <select name="recommendStatus" class="recommendStatus" >
+                                <option value="1" class="recommend_status_one" th:selected="${h.recommendStatus == 1}">추천</option>
+                                <option value="0" class="recommend_status_zero" th:selected="${h.recommendStatus == 0}">비추천</option>
+                              </select>
+                              <input type="hidden" name="hotelNo" th:value="${h.hotelNo}">
+                              <button type="button" class="btn_select">저장</button>
+                            </form>
+                          </td>
+                        </tr>
+                        <tr class="blind show_content">
+                          <td colspan="7">
+                            <div th:text="|${h.hotelName}의 전화번호 : ${h.phoneNumber}|"></div>
+                            <th:block th:each="r:${roompriceList}">
+                              <th:block th:if="${h.hotelNo == r.hotelNo}">
+                                <th:block th:each="rt:${roomtypeList}">
+                                  <div class="room_part">
+                                    <span class="room_name" th:if="${r.roomNo == rt.roomNo}" th:text="${rt.roomName}"></span>
+                                    <span class="room_many" th:if="${r.roomNo == rt.roomNo}" th:text="|(${rt.roomMany}개)|"></span>
+                                  </div>
+                                </th:block>
+                                <form class="room_price_change">
+                                  <div class="sung">
+                                    <label for="ssDate">성수기</label>
+                                    <input type="text" name="ssDate" th:value="${r.ssDate}" class="ssDate">
+                                    <input type="text" name="seDate" th:value="${r.seDate}">
+                                    <label for="sungPrice">가격</label>
+                                    <input type="text" name="sungPrice" th:value="${r.sungPrice}" class="sungPrice">
+                                  </div>
+                                  <div class="jun">
+                                    <label for="jsDate">준성수기</label>
+                                    <input type="text" name="jsDate" th:value="${r.jsDate}" class="jsDate">
+                                    <input type="text" name="jeDate" th:value="${r.jeDate}">
+                                    <label for="junPrice">가격</label>
+                                    <input type="text" name="junPrice" th:value="${r.junPrice}" class="junPrice">
+                                  </div>
+                                  <div class="bi">
+                                    <label for="bsDate">비성수기</label>
+                                    <input type="text" name="bsDate" th:value="${r.bsDate}" class="bsDate">
+                                    <input type="text" name="beDate" th:value="${r.beDate}">
+                                    <label for="biPrice">가격</label>
+                                    <input type="text" name="biPrice" th:value="${r.biPrice}" class="biPrice">
+                                  </div>
+                                  <input type="hidden" name="hotelNo" th:value="${r.hotelNo}">
+                                  <input type="hidden" name="roomNo" th:value="${r.roomNo}">
+                                  <button type="button" class="btn_modify_price">수정</button>
+                                </form>
+                              </th:block>
+                            </th:block>
+                          </td>
+                        </tr>
+                      </th:block>
+                    </tbody>
+                    <!--/* 페이징 처리 */-->
+                    <tfoot>
+                      <tr>
+                        <td colspan="7" th:utext="${paging}" class="paging"></td>
+                      </tr>
+                    </tfoot>
+                  </table>
+                    
+
+                
+                </div>
+              </div>
+        
+                
+            </div>      
+          </div>
+        
+        
+		      	
+		    </div>
+		    <div class="col-1">	      
+		    </div>
+		  </div>
+	  </div>
+	
+	</div>
+
+	
+	
+	
+	<div th:replace="~{layout/footer::footer}"></div>
+</body>
+</html>
+

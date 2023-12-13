@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.tour.hanbando.dao.UserMapper">
+
+
+  <select id="getUser" parameterType="Map" resultType="UserDto">
+    SELECT USER_NO, EMAIL, PW, NAME, GENDER, MOBILE, POSTCODE, ROAD_ADDRESS, JIBUN_ADDRESS, DETAIL_ADDRESS, AGREE, STATE, AUTH, PW_MODIFIED_AT, JOINED_AT
+      FROM USER_T
+    <where>
+      <if test="email != null">EMAIL = #{email}</if>
+      <if test="pw != null">AND PW = #{pw}</if>
+      <if test="userNo != null">AND USER_NO = #{userNo}</if>
+    </where>
+  </select>
+  
+  <insert id="insertAccess" parameterType="String">
+    INSERT INTO ACCESS_T (
+        EMAIL
+      , LOGIN_AT
+    ) VALUES (
+        #{email}
+      , SYSDATE
+    )
+  </insert>
+  
+  <select id="getLeaveUser" parameterType="Map" resultType="LeaveUserDto">
+    SELECT EMAIL, JOINED_AT, LEAVED_AT
+      FROM LEAVE_USER_T
+     WHERE EMAIL = #{email}
+  </select>
+
+  <select id="getInactiveUser" parameterType="Map" resultType="InactiveUserDto">
+    SELECT USER_NO, EMAIL, PW, NAME, GENDER, MOBILE, POSTCODE, ROAD_ADDRESS, JIBUN_ADDRESS, DETAIL_ADDRESS, AGREE, STATE, AUTH, PW_MODIFIED_AT, JOINED_AT, INACTIVED_AT
+      FROM INACTIVE_USER_T
+    <where>
+      <if test="email != null">EMAIL = #{email}</if>
+      <if test="pw != null">AND PW = #{pw}</if>
+    </where>
+  </select>
+
+  <insert id="insertUser" parameterType="UserDto">
+    INSERT INTO USER_T (
+        USER_NO
+      , EMAIL
+      , PW
+      , NAME
+      , GENDER
+      , MOBILE
+      , POSTCODE
+      , ROAD_ADDRESS
+      , JIBUN_ADDRESS
+      , DETAIL_ADDRESS
+      , AGREE
+      , STATE
+      , AUTH
+      , PW_MODIFIED_AT
+      , JOINED_AT
+    ) VALUES (
+        USER_SEQ.NEXTVAL
+      , #{email}
+      , #{pw}
+      , #{name}
+      , #{gender}
+      , #{mobile}
+      , #{postcode}
+      , #{roadAddress}
+      , #{jibunAddress}
+      , #{detailAddress}
+      , #{agree}
+      , 0
+      , 1
+      , SYSDATE
+      , SYSDATE
+    )
+  </insert>
+
+  <update id="updateUser" parameterType="UserDto">
+    UPDATE USER_T
+       SET NAME = #{name}
+         , GENDER = #{gender}
+         , MOBILE = #{mobile}
+         , POSTCODE = #{postcode}
+         , ROAD_ADDRESS = #{roadAddress}
+         , JIBUN_ADDRESS = #{jibunAddress}
+         , DETAIL_ADDRESS = #{detailAddress}
+         , AGREE = #{agree}
+     WHERE USER_NO = #{userNo}
+  </update>
+
+  <update id="updateUserPw" parameterType="UserDto">
+    UPDATE USER_T
+       SET PW = #{pw}
+         , PW_MODIFIED_AT = SYSDATE
+     WHERE USER_NO = #{userNo}
+  </update>
+  
+
+
+  <insert id="insertLeaveUser" parameterType="UserDto">
+       INSERT INTO LEAVE_USER_T (
+        EMAIL
+      , JOINED_AT
+      , LEAVED_AT
+    ) VALUES (
+        #{email}
+      , #{joinedAt}
+      , TO_CHAR(SYSDATE,'YYYY/MM/DD')
+    ) 
+  </insert>
+  
+  <delete id="deleteUser" parameterType="UserDto">
+    DELETE
+      FROM USER_T
+     WHERE USER_NO = #{userNo}
+  </delete>
+
+  <insert id="insertInactiveUser">
+    INSERT INTO INACTIVE_USER_T (
+      SELECT USER_NO, U.EMAIL, PW, NAME, GENDER, MOBILE, POSTCODE, ROAD_ADDRESS, JIBUN_ADDRESS, DETAIL_ADDRESS, AGREE, STATE, AUTH, PW_MODIFIED_AT, JOINED_AT, SYSDATE
+        FROM USER_T U LEFT OUTER JOIN ACCESS_T A
+          ON U.EMAIL = A.EMAIL
+       WHERE MONTHS_BETWEEN(SYSDATE, TO_DATE(LOGIN_AT,'YYYY-MM-DD')) >= 12
+          OR (LOGIN_AT IS NULL AND MONTHS_BETWEEN(SYSDATE, TO_DATE(JOINED_AT, 'YYYY-MM-DD')) >= 12)
+    )
+  </insert>
+  
+  <delete id="deleteUserForInactive">
+    DELETE
+      FROM USER_T
+     WHERE EMAIL IN(SELECT U.EMAIL
+                      FROM USER_T U LEFT OUTER JOIN ACCESS_T A
+                        ON U.EMAIL = A.EMAIL
+                     WHERE MONTHS_BETWEEN(SYSDATE, TO_DATE(LOGIN_AT,'YYYY-MM-DD')) >= 12
+                        OR (LOGIN_AT IS NULL AND MONTHS_BETWEEN(SYSDATE, TO_DATE(JOINED_AT, 'YYYY-MM-DD')) >= 12))
+  </delete>
+
+  <insert id="insertActiveUser" parameterType="String">  
+    INSERT INTO USER_T (
+      SELECT USER_NO, EMAIL, PW, NAME, GENDER, MOBILE, POSTCODE, ROAD_ADDRESS, JIBUN_ADDRESS, DETAIL_ADDRESS, AGREE, STATE, AUTH, PW_MODIFIED_AT, JOINED_AT
+        FROM INACTIVE_USER_T
+       WHERE EMAIL = #{email}
+    )
+  </insert>
+
+  <delete id="deleteInactiveUser" parameterType="String">
+    DELETE
+      FROM INACTIVE_USER_T
+     WHERE EMAIL = #{email}  
+  </delete>
+  
+  <insert id="insertNaverUser" parameterType="UserDto">
+    INSERT INTO USER_T (
+        USER_NO
+      , EMAIL
+      , NAME
+      , GENDER
+      , MOBILE
+      , AGREE
+      , STATE
+      , AUTH
+      , PW_MODIFIED_AT
+      , JOINED_AT
+    ) VALUES (
+        USER_SEQ.NEXTVAL
+      , #{email}
+      , #{name}
+      , #{gender}
+      , #{mobile}
+      , #{agree}
+      , 1
+      , 1
+      , SYSDATE
+      , SYSDATE
+    )
+  </insert>
+  
+  
+  <insert id="kakaoJoin" parameterType="UserDto" >
+     INSERT INTO USER_T(
+        USER_NO
+      , EMAIL
+      , NAME
+      , AGREE
+      , STATE
+      , AUTH
+      , PW_MODIFIED_AT
+      , JOINED_AT
+      
+      ) VALUES (
+          USER_SEQ.NEXTVAL
+        , #{email}
+        , #{name}
+        , #{agree}
+        , 2
+        , 1
+        , SYSDATE
+        , SYSDATE
+       )
+  </insert>
+  
+  
+
+
+  
+  <select id="getFindId" parameterType="Map" resultType="UserDto">
+    SELECT EMAIL
+    FROM USER_T
+    WHERE NAME = #{name} AND MOBILE = #{mobile}
+  </select>
+
+<!-- 비밀번호 찾기(아이디와 핸드폰 번호가 일치시)-->
+  <select id="getFindPw" parameterType="Map" resultType="UserDto">
+   SELECT PW
+    FROM USER_T
+    WHERE EMAIL = #{email} AND MOBILE = #{mobile} 
+  </select>
+  <!-- ★★★★(쿼리짜기)로그인 안된 상태에서 찾아지면 로그인이 되고 비밀번호 변경하는것으로 하기-->
+  <update id="modifiedUserPw" parameterType="UserDto">
+    UPDATE USER_T 
+       SET PW = #{pw} 
+         , PW_MODIFIED_AT = SYSDATE 
+     WHERE EMAIL = #{email}
+  </update>
+  
+
+  
+<update id="autoupdatetmpPw" parameterType="UserDto">
+    UPDATE USER_T
+       SET PW_MODIFIED_AT = SYSDATE
+     WHERE USER_NO = #{userNo}
+  </update>
+  
+  
+  <select id="changePw90" parameterType="Map" resultType="int">
+    SELECT EXTRACT(DAY FROM SYSTIMESTAMP - TO_TIMESTAMP(PW_MODIFIED_AT))
+      FROM   USER_T
+      WHERE  EMAIL = #{email}
+  </select>
+  
+  <update id="updatePw90" parameterType="UserDto">
+		
+    UPDATE USER_T
+       SET PW_MODIFIED_AT = TO_CHAR(SYSDATE,'YYYY/MM/DD')
+     WHERE EMAIL = #{email}
+       AND AUTH = 1
+      
+  </update>
+  
+
+
+</mapper>

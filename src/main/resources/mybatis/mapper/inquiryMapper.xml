@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.tour.hanbando.dao.InquiryMapper">
+  
+  <resultMap type="InquiryDto"   id="InquiryMap">
+    <id      column="INQUIRY_NO" property="inquiryNo"/>
+    <result  column="TITLE"      property="title"/>
+    <result  column="CONTENTS"   property="contents"/>
+    <result  column="CREATED_AT" property="createdAt"/>
+    <result  column="SEPARATE"   property="separate"/>
+    <result  column="ANSWER_STATUS" property="answerStatus"/>
+    <association javaType="UserDto" property="userDto">
+      <id        column="USER_NO"   property="userNo"/>
+      <result    column="NAME"      property="name"/>
+    </association>
+     </resultMap>
+     
+     <select id ="getUserInquiryCount" parameterType="int" resultType="int">
+       SELECT COUNT(*)
+         FROM INQUIRY_T
+        WHERE USER_NO =#{userNo}
+     </select>
+     
+     <select id="getUserInquiryList" parameterType="int" resultMap="InquiryMap">
+       SELECT ROW_NUMBER() OVER(ORDER BY INQUIRY_NO DESC) AS RN, INQUIRY_NO, USER_NO, TITLE, CONTENTS, CREATED_AT, SEPARATE, ANSWER_STATUS
+         FROM INQUIRY_T
+        WHERE USER_NO = #{userNo}
+     </select>
+  
+     <select id="getInquiryList"  resultMap="InquiryMap">
+       SELECT ROW_NUMBER() OVER(ORDER BY INQ.INQUIRY_NO DESC) AS RN, INQ.INQUIRY_NO, INQ.USER_NO, U.NAME, INQ.TITLE, INQ.CONTENTS, INQ.CREATED_AT, INQ.SEPARATE, INQ.ANSWER_STATUS
+         FROM INQUIRY_T INQ INNER JOIN USER_T U
+           ON U.USER_NO = INQ.USER_NO
+     </select>
+
+     <select id="getInquiryAnswer" parameterType="int" resultType="InquiryAnswerDto">
+     SELECT ANSWER_NO, USER_NO, INQUIRY_NO, CONTENTS, CREATED_AT
+       FROM INQUIRY_ANSWER_T
+      WHERE INQUIRY_NO= #{inquiryNo} 
+     </select>
+     
+      <insert id="insertInquiry" parameterType="InquiryDto"> 
+      INSERT INTO INQUIRY_T( 
+             INQUIRY_NO 
+           , USER_NO  
+           , TITLE 
+           , CONTENTS 
+           , CREATED_AT        
+           , SEPARATE   
+           , ANSWER_STATUS
+           )
+           VALUES( 
+           INQUIRY_SEQ.NEXTVAL 
+         , #{userDto.userNo}         
+         , #{title} 
+         , #{contents} 
+         , TO_CHAR(SYSDATE, 'YYYY/MM/DD') 
+         , #{separate}
+         , 0
+         ) 
+   </insert>
+   
+   <select id="getInquiry" parameterType="int" resultType="InquiryDto"> 
+    SELECT INQUIRY_NO, USER_NO, TITLE, CONTENTS, CREATED_AT, SEPARATE, ANSWER_STATUS
+      FROM INQUIRY_T 
+     WHERE INQUIRY_NO= #{inquiryNo} 
+   </select>
+   
+   <delete id="deleteInquiry" parameterType="int"> 
+  DELETE 
+    FROM INQUIRY_T
+   WHERE INQUIRY_NO = #{inquiryNo}
+  </delete>
+   
+  <update id="updateInquiry" parameterType="InquiryDto"> 
+    UPDATE INQUIRY_T
+       SET TITLE = #{title} 
+     , CONTENTS = #{contents} 
+     , CREATED_AT = TO_CHAR(SYSDATE, 'YYYY/MM/DD') 
+     , MODIFIED_AT = TO_CHAR(SYSDATE, 'YYYY/MM/DD') 
+    WHERE INQUIRY_NO = #{inquiryNo} 
+  </update>
+  
+  <update id="updateAnswerStatus" parameterType="int">
+    UPDATE INQUIRY_T
+       SET ANSWER_STATUS = 1
+     WHERE INQUIRY_NO = #{inquiryNo}
+  </update>
+    
+   <insert id="insertInquiryAnswer" parameterType="InquiryAnswerDto"> 
+      INSERT INTO INQUIRY_ANSWER_T( 
+             ANSWER_NO
+           , USER_NO  
+           , INQUIRY_NO 
+           , CONTENTS 
+           , CREATED_AT        
+           )
+           VALUES( 
+           INQUIRY_ANSWER_SEQ.NEXTVAL 
+         , #{userNo}         
+         , #{inquiryNo} 
+         , #{contents} 
+         , TO_CHAR(SYSDATE, 'YYYY/MM/DD') 
+         ) 
+   </insert>
+    
+   <select id="getSearchInquiyList" parameterType="Map" resultMap="InquiryMap">
+    SELECT A.INQUIRY_NO, A.USER_NO, A.NAME, A.TITLE, A.CONTENTS, A.CREATED_AT, A.SEPARATE, A.ANSWER_STATUS
+      FROM (SELECT ROW_NUMBER() OVER(ORDER BY INQ.INQUIRY_NO DESC) AS RN, INQ.INQUIRY_NO, INQ.USER_NO, U.NAME, INQ.TITLE, INQ.CONTENTS, INQ.CREATED_AT, INQ.SEPARATE, INQ.ANSWER_STATUS
+              FROM USER_T U INNER JOIN INQUIRY_T INQ
+                ON U.USER_NO = INQ.USER_NO
+             WHERE ${column} LIKE '%' || #{query} || '%') A
+      WHERE RN BETWEEN #{begin} AND #{end}
+   </select>
+   
+   <select id="getSearchInquiryListCount" parameterType="Map" resultType="int">
+    SELECT COUNT(*)
+      FROM USER_T U INNER JOIN INQUIRY_T INQ
+        ON U.USER_NO = INQ.USER_NO
+     WHERE ${column} LIKE '%' || #{query} || '%'
+  </select>
+</mapper>

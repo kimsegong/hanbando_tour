@@ -1,0 +1,740 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.tour.hanbando.dao.HotelMapper">
+  
+  <resultMap type="HotelDto" id="HotelMap">
+    <id column="HOTEL_NO" property="hotelNo"/>
+    <result column="HOTEL_NAME" property="hotelName"/>
+    <result column="HOTEL_ADDRESS" property="hotelAddress"/>
+    <result column="LATITUDE" property="latitude"/>
+    <result column="LONGITUDE" property="longitude"/>
+    <result column="HOTEL_DETAIL" property="hotelDetail"/>
+    <result column="PHONE_NUMBER" property="phoneNumber"/>
+    <result column="H_EMAIL" property="HEmail"/>
+    <result column="CREATED_AT" property="createdAt"/>
+    <result column="MODIFIED_AT" property="modifiedAt"/>
+    <result column="HIT" property="hit"/>
+    <result column="STATUS" property="status"/>
+    <result column="RECOMMEND_STATUS" property="recommendStatus"/>
+     <association javaType="RegionDto" property="regionDto">
+        <id column="REGION_NO" property="regionNo"/>
+        <result column="REGION_NAME" property="regionName"/>
+      </association>
+      <association javaType="HotelImageDto" property="hotelImageDto">
+				<result column="ORIGINAL_NAME" property="originalName"/>
+				<result column="THUMBNAIL" property="thumbnail"/>
+				<result column="FILESYSTEM_NAME" property="filesystemName"/>
+				<result column="IMAGE_PATH" property="imagePath"/>
+      </association>
+  </resultMap>
+  
+  <!-- 리뷰테이블 -->
+    <resultMap type="ReviewDto" id="ReviewMap">
+            <id column="REVIEW_NO" property="reviewNo"/>            
+            <result column="RESERVE_NO" property="reserveNo"/>
+            <result column="REVIEW_CONTENTS" property="reviewContents"/>
+            <result column="PACKAGE_NO" property="packageNo"/>
+            <result column="HOTEL_NO" property="hotelNo"/>
+            <result column="STAR" property="star"/>
+            <result column="REGIST_AT" property="registAt"/>   
+        <association javaType="UserDto" property="userDto">
+            <id column="USER_NO" property="userNo"/>
+            <result column="EMAIL" property="email"/>
+            <result column="NAME" property="name"/>    
+        </association>
+     </resultMap>   
+     
+  <!-- 찜테이블 -->
+    <resultMap type="HeartDto" id="HeartMap">            
+      <association javaType="PackageDto" property="packageDto">
+            <id column="PACKAGE_NO" property="packageNo"/>            
+            <result column="PACKAGE_TITLE" property="packageTitle"/>      
+       </association>
+      <association property="userDto" javaType="UserDto">
+          <result column="USER_NO" property="userNo"/>
+      </association>
+      <association javaType="HotelDto" property="hotelDto">
+            <id column="HOTEL_NO" property="hotelNo"/>            
+            <result column="HOTEL_NAME" property="hotelName"/>      
+       </association>
+    </resultMap>     
+     
+  <resultMap type="ReserveDto" id="ReserveMap">
+    <id column="RESERVE_NO" property="reserveNo"/>
+    <result column="RESERVED_AT" property="reservedAt"/>
+    <result column="REQUESTED_TERM" property="requestedTerm"/>
+    <result column="AGREE" property="agree"/>
+    <result column="DEPARTURE_LOC" property="departureLoc"/>
+    <result column="RESERVE_STATUS" property="reserveStatus"/>
+    <result column="RESERVE_START" property="reserveStart"/>
+    <result column="RESERVE_FINISH" property="reserveFinish"/>
+    <result column="RESERVE_PERSON" property="reservePerson"/>
+    <result column="RESERVE_PRICE" property="reservePrice"/>
+    <association javaType="UserDto" property="userDto">
+        <id column="USER_NO" property="userNo"/>
+        <result column="EMAIL" property="email" />
+        <result column="PW" property="pw" />
+        <result column="NAME" property="name" />
+        <result column="GENDER" property="gender" />
+        <result column="MOBILE" property="mobile" />
+        <result column="POSTCODE" property="postcode" />
+        <result column="ROAD_ADDRESS" property="roadAddress" />
+        <result column="JIBUN_ADDRESS" property="jibunAddress" />
+        <result column="DETAIL_ADDRESS" property="detailAddress" />
+        <result column="AGREE" property="agree" />
+        <result column="STATE" property="state" />
+        <result column="AUTH" property="auth" />
+        <result column="PW_MODIFIED_AT" property="pwModifiedAt" />
+        <result column="JOINED_AT" property="joinedAt" />  
+    </association>
+    <association javaType="PackageDto" property="packageDto">
+        <id column="PACKAGE_NO" property="packageNo"/>
+        <result column="PRICE" property="price" />
+    </association>
+    <association javaType="HotelDto" property="hotelDto">
+        <id column="HOTEL_NO" property="hotelNo"/>
+        <result column="REGION_NO" property="regionNo"/>
+        <result column="HOTEL_NAME" property="hotelName"/>
+        <result column="HOTEL_ADDRESS" property="hotelAddress"/>
+        <result column="LATITUDE" property="latitude"/>
+        <result column="LONGITUDE" property="longitude"/>
+        <result column="HOTEL_DETAIL" property="hotelDetail"/>
+        <result column="PHONE_NUMBER" property="phoneNumber"/>
+        <result column="H_EMAIL" property="HEmail"/>
+        <result column="CREATED_AT" property="createdAt"/>
+        <result column="MODIFIED_AT" property="modifiedAt"/>
+        <result column="HIT" property="hit"/>
+        <result column="STATUS" property="status"/>
+        <result column="RECOMMEND_STATUS" property="recommendStatus"/>
+    </association>
+    <association javaType="RoomtypeDto" property="roomtypeDto">
+        <id column="ROOM_NO" property="roomNo"/>
+        <result column="HOTEL_NO" property="hotelNo"/>
+        <result column="ROOM_DETAIL" property="roomDetail"/>
+        <result column="ROOM_NAME" property="roomName"/>
+        <result column="ROOM_MANY" property="roomMany"/>
+        <result column="VIEW" property="view"/>
+        <result column="BREAKFAST" property="breakfast"/>
+        <result column="SMOKE" property="smoke"/>
+        <result column="PEOPLE" property="people"/>
+        <result column="BED" property="bed"/>
+        <result column="SHOWER" property="shower"/>
+        <result column="SIZE" property="size"/>
+    </association>
+</resultMap>
+     
+  <select id="selectHotelList" parameterType="Map" resultMap="HotelMap">
+        SELECT  H.HOTEL_NO,
+            H.REGION_NO,
+            H.HOTEL_NAME,
+            H.HOTEL_ADDRESS,
+            H.LATITUDE,
+            H.LONGITUDE,
+            H.HOTEL_DETAIL,
+            H.PHONE_NUMBER,
+            H.H_EMAIL,
+            H.CREATED_AT,
+            H.MODIFIED_AT,
+            H.HIT,
+            H.STATUS,
+            H.RECOMMEND_STATUS,
+            HI.THUMBNAIL,
+            HI.FILESYSTEM_NAME,
+            HI.IMAGE_PATH
+     FROM (  
+        SELECT
+            HT.HOTEL_NO,
+            HT.REGION_NO,
+            HT.HOTEL_NAME,
+            HT.HOTEL_ADDRESS,
+            HT.LATITUDE,
+            HT.LONGITUDE,
+            HT.HOTEL_DETAIL,
+            HT.PHONE_NUMBER,
+            HT.H_EMAIL,
+            HT.CREATED_AT,
+            HT.MODIFIED_AT,
+            HT.HIT,
+            HT.STATUS,
+            HT.RECOMMEND_STATUS,
+            ROW_NUMBER() OVER (ORDER BY HOTEL_NO DESC) AS RN
+         FROM
+           HOTEL_T HT
+         ) H
+         LEFT JOIN HOTEL_IMAGE_T HI ON H.HOTEL_NO = HI.HOTEL_NO
+         LEFT JOIN REGION_T R ON H.REGION_NO = R.REGION_NO
+         WHERE (H.RN BETWEEN #{begin} AND #{end}) AND HI.THUMBNAIL = 1
+    
+  </select>
+  <select id="countHotel" parameterType="int" resultType="int">
+    SELECT COUNT(*)
+      FROM HOTEL_T
+     WHERE 
+     <if test="recommend == 0">
+			 STATUS = 1
+		 </if> 
+     <if test="recommend == 1">
+			 STATUS = 1
+			 AND RECOMMEND_STATUS = 1
+		 </if>
+  </select>
+  
+  <select id="getListPrice"  resultType="RoompriceDto">
+    SELECT HOTEL_NO,
+           ROOM_NO,
+           BI_PRICE,
+           BS_DATE,
+           BE_DATE,
+           JUN_PRICE,
+           JS_DATE,
+           JE_DATE,
+           SUNG_PRICE,
+           SS_DATE,
+           SE_DATE
+   FROM (
+   			SELECT  HOTEL_NO,
+                ROOM_NO,
+                BI_PRICE,
+                BS_DATE,
+                BE_DATE,
+                JUN_PRICE,
+                JS_DATE,
+                JE_DATE,
+                SUNG_PRICE,
+                SS_DATE,
+                SE_DATE,
+                ROW_NUMBER() OVER(PARTITION BY HOTEL_NO ORDER BY BI_PRICE ASC) AS RN
+           FROM ROOMPRICE_T
+    ) 
+    WHERE RN = 1 AND HOTEL_NO 
+		<foreach item="item" index="index" collection="list" open="in(" separator="," close=")">
+     #{item.hotelNo}
+    </foreach>
+      ORDER BY DECODE(HOTEL_NO,
+    <foreach item="item" index="index" collection="list" separator="," close=")">  
+     #{item.hotelNo}, ${index}
+    </foreach>  
+  </select>
+  
+	<update id="hotelHit" parameterType="int">
+      UPDATE HOTEL_T
+         SET HIT = HIT + 1
+       WHERE HOTEL_NO = #{hotelNo}  
+  </update>
+
+  <select id="getHitList" parameterType="Map" resultType="HotelDto">
+    SELECT HOTEL_NO, HOTEL_NAME, HIT 
+    	FROM HOTEL_T
+     ORDER BY HIT DESC
+  </select>
+  
+  <sql id="countReview">
+     WITH COUNT_REVIEW AS(
+                SELECT HOTEL_NO,
+                       COUNT(REVIEW_NO) AS CR
+                  FROM REVIEW_T
+                 WHERE HOTEL_NO IS NOT NULL
+              GROUP BY HOTEL_NO
+      )      
+  </sql>
+  
+  <select id="getReviewHotelList" parameterType="Map" resultMap="HotelMap">  
+    SELECT 
+            A.CR,
+            A.HOTEL_NO,
+            A.REGION_NO,
+            A.HOTEL_NAME,
+            A.CREATED_AT,
+            A.MODIFIED_AT,
+            A.HIT,
+            A.STATUS,
+            A.RECOMMEND_STATUS,
+            A.THUMBNAIL,
+            A.FILESYSTEM_NAME,
+            A.IMAGE_PATH
+     FROM ( 
+          <include refid="countReview"/>
+         SELECT DISTINCT  
+            R.CR,
+            H.HOTEL_NO,
+            H.REGION_NO,
+            H.HOTEL_NAME,
+            H.CREATED_AT,
+            H.MODIFIED_AT,
+            H.HIT,
+            H.STATUS,
+            H.RECOMMEND_STATUS,
+            HI.THUMBNAIL,
+            HI.FILESYSTEM_NAME,
+            HI.IMAGE_PATH
+            FROM 
+     HOTEL_T H
+         LEFT JOIN COUNT_REVIEW R ON H.HOTEL_NO = R.HOTEL_NO 
+         LEFT JOIN HOTEL_IMAGE_T HI ON H.HOTEL_NO = HI.HOTEL_NO
+         LEFT JOIN REGION_T R ON H.REGION_NO = R.REGION_NO 
+         WHERE HI.THUMBNAIL =1
+         ORDER BY CR DESC NULLS LAST) A
+         WHERE ROWNUM BETWEEN #{begin} AND #{end}
+  </select>  
+ <select id="getRecommendHotelList" parameterType="Map" resultMap="HotelMap">
+    SELECT  DISTINCT
+        H.HOTEL_NO,
+        H.REGION_NO,
+        H.HOTEL_NAME,
+        H.CREATED_AT,
+        H.MODIFIED_AT,
+        H.HIT,
+        H.STATUS,
+        H.RECOMMEND_STATUS,
+        HI.THUMBNAIL,
+        HI.FILESYSTEM_NAME,
+        HI.IMAGE_PATH
+ FROM (  
+    SELECT 
+        HT.HOTEL_NO,
+        HT.REGION_NO,
+        HT.HOTEL_NAME,
+        HT.CREATED_AT,
+        HT.MODIFIED_AT,
+        HT.HIT,
+        HT.STATUS,
+        HT.RECOMMEND_STATUS,
+        ROW_NUMBER() OVER (ORDER BY HOTEL_NO DESC) AS RN
+     FROM
+       HOTEL_T HT
+       WHERE HT.RECOMMEND_STATUS =1
+     ) H
+     LEFT JOIN HOTEL_IMAGE_T HI ON H.HOTEL_NO = HI.HOTEL_NO
+     LEFT JOIN REGION_T R ON H.REGION_NO = R.REGION_NO
+     WHERE (H.RN BETWEEN #{begin} AND #{end}) AND HI.THUMBNAIL = 1
+
+ </select>  
+ <select id="getPriceHotelList" parameterType="Map" resultMap="HotelMap">
+	 WITH PRICE AS(
+    SELECT HOTEL_NO,
+           MIN(BI_PRICE) AS MB
+     FROM ROOMPRICE_T
+     GROUP BY HOTEL_NO )    
+	SELECT  A.RN,
+	        A.MB,
+	        A.HOTEL_NO,
+	        A.REGION_NO,
+	        A.HOTEL_NAME,
+	        A.HOTEL_ADDRESS,
+	        A.LATITUDE,
+	        A.LONGITUDE,
+	        A.HOTEL_DETAIL,
+	        A.PHONE_NUMBER,
+	        A.H_EMAIL,
+	        A.CREATED_AT,
+	        A.MODIFIED_AT,
+	        A.HIT,
+	        A.STATUS,
+	        A.RECOMMEND_STATUS,
+	        A.THUMBNAIL,
+	        A.FILESYSTEM_NAME,
+	        A.IMAGE_PATH
+	 FROM ( SELECT
+		        H.HOTEL_NO,
+		        H.REGION_NO,
+		        H.HOTEL_NAME,
+		        H.HOTEL_ADDRESS,
+		        H.LATITUDE,
+		        H.LONGITUDE,
+		        H.HOTEL_DETAIL,
+		        H.PHONE_NUMBER,
+		        H.H_EMAIL,
+		        H.CREATED_AT,
+		        H.MODIFIED_AT,
+		        H.HIT,
+		        H.STATUS,
+		        H.RECOMMEND_STATUS,   
+		        HI.THUMBNAIL,
+		        HI.FILESYSTEM_NAME,
+		        HI.IMAGE_PATH,
+		        P.MB,
+		        ROW_NUMBER() OVER(
+		        <if test="btnVal == 3">
+							ORDER BY P.MB ASC     
+						</if>
+						<if test="btnVal == 4">
+							ORDER BY P.MB DESC    
+						</if>
+		        ) AS RN
+		     FROM HOTEL_T H
+		          LEFT JOIN HOTEL_IMAGE_T HI ON H.HOTEL_NO = HI.HOTEL_NO  
+		          LEFT JOIN REGION_T R ON H.REGION_NO = R.REGION_NO
+		          LEFT JOIN PRICE P ON H.HOTEL_NO = P.HOTEL_NO
+		    WHERE HI.THUMBNAIL = 1
+	          	) A 
+	   WHERE A.RN BETWEEN #{begin} AND #{end}
+ </select>
+ <select id="getRegion" parameterType="RegionDto">
+	 SELECT *
+		 FROM REGION_T
+ </select>
+  
+ <select id="getHotelNo" resultType="int">
+   SELECT HOTEL_SEQUENCE.NEXTVAL
+     FROM DUAL
+ </select>
+ 
+ <insert id="insertHotelNo" parameterType="int">
+   INSERT INTO HOTEL_T (HOTEL_NO)
+   VALUES (#{hotelNo})
+ </insert>
+ 
+ <select id="getPrice" parameterType="RoomTypeDto" resultType="RoompriceDto">
+   SELECT HOTEL_NO, ROOM_NO, BI_PRICE, BS_DATE, BE_DATE, JUN_PRICE, JS_DATE, JE_DATE, SUNG_PRICE, SS_DATE, SE_DATE
+     FROM ROOMPRICE_T
+     WHERE
+     <if test="(hotelNo != 0 and roomNo == 0) || (roomNo != 0 and hotelNo != 0)">
+    	 HOTEL_NO = #{hotelNo} 
+		 </if>
+		 <if test="roomNo != 0 and hotelNo == 0">
+		 	 ROOM_NO = #{roomNo} 
+		 </if>
+		 
+ </select>
+ 
+ <insert id="insertRoomtype" parameterType="RoomtypeDto">
+   INSERT INTO 
+      ROOMTYPE_T (
+          ROOM_NO, 
+          HOTEL_NO, 
+          ROOM_DETAIL, 
+          ROOM_NAME, 
+          ROOM_MANY, 
+          R_VIEW, 
+          BLEAKFAST, 
+          SMOKE, 
+          PEOPLE, 
+          BED, 
+          SHOWER, 
+          R_SIZE
+   ) VALUES (
+          ROOM_SEQUENCE.NEXTVAL,
+          #{hotelNo}, 
+          #{roomDetail},
+          #{roomName},
+          #{roomMany},
+          #{rView},
+          #{bleakfast},
+          #{smoke},
+          #{people},
+          #{bed},
+          #{shower},
+          #{rSize}
+          )
+ </insert>
+ <insert id="insertRoomFeature" parameterType="RoomFeatureDto">
+   INSERT INTO 
+     ROOM_FEATURE_T (
+          ROOM_NO, 
+          TOWEL, 
+          WATER, 
+          COFFEE, 
+          DRIER, 
+          IRON, 
+          MINIBAR
+          )VALUES (
+          ROOM_SEQUENCE.CURRVAL,
+          #{towel},
+          #{water},
+          #{coffee},
+          #{drier},
+          #{iron},
+          #{minibar}
+          )
+ </insert>
+ <insert id="insertRoomPrice" parameterType="RoompriceDto">
+   INSERT INTO 
+     ROOMPRICE_T (
+         HOTEL_NO, 
+         ROOM_NO, 
+         BI_PRICE, 
+         BS_DATE, 
+         BE_DATE, 
+         JUN_PRICE, 
+         JS_DATE, 
+         JE_DATE, 
+         SUNG_PRICE, 
+         SS_DATE, 
+         SE_DATE
+     )VALUES (
+          #{hotelNo},
+          ROOM_SEQUENCE.CURRVAL,
+          #{biPrice},
+          #{bsDate},
+          #{beDate},
+          #{junPrice},
+          #{jsDate},
+          #{jeDate},
+          #{sungPrice},
+          #{ssDate},
+          #{seDate}
+          )
+ </insert>
+ 
+ <insert id="insertRoomImage" parameterType="HotelImageDto">
+   INSERT INTO 
+          HOTEL_IMAGE_T (
+            HOTEL_NO, 
+            THUMBNAIL,  
+            <if test="roomNo == 0">
+            ROOM_NO,
+            </if>
+            ORIGINAL_NAME, 
+            FILESYSTEM_NAME, 
+            IMAGE_PATH
+  ) VALUES (
+            #{hotelNo}, 
+            #{thumbnail},
+            <if test="roomNo == 0">
+           	ROOM_SEQUENCE.CURRVAL,
+           	</if>
+          	#{originalName},
+           	#{filesystemName},
+          	#{imagePath}
+           )
+ </insert>
+ <update id="updateHotel" parameterType="HotelDto">
+   UPDATE HOTEL_T
+      SET
+          REGION_NO = #{regionDto.regionNo},
+          HOTEL_NAME = #{hotelName},
+          HOTEL_ADDRESS = #{hotelAddress},
+          LATITUDE = #{latitude},
+          LONGITUDE = #{longitude},
+          HOTEL_DETAIL = #{hotelDetail},
+          PHONE_NUMBER = #{phoneNumber},
+          H_EMAIL = #{hEmail},
+          CREATED_AT = TO_CHAR(SYSDATE,'YYYY/MM/DD'),
+          STATUS = #{status},
+          RECOMMEND_STATUS = #{recommendStatus}
+    WHERE HOTEL_NO = #{hotelNo}
+ </update> 
+ <insert id="insertFacilities" parameterType="FacilitiesDto">
+  INSERT INTO FACILITIES_T (
+                HOTEL_NO, 
+                POOL, 
+                MORNING, 
+                SAUNA, 
+                LOUNGE, 
+                ROOMSERVICE
+               ) VALUES (
+               #{hotelNo},
+               #{pool},
+               #{morning},
+               #{sauna},
+               #{lounge},
+               #{roomservice}
+               )
+ </insert>         
+ <select id="getHotel" parameterType="int" resultMap="HotelMap">
+   SELECT HOTEL_NO,
+   				REGION_NO,
+          HOTEL_NAME,
+          HOTEL_ADDRESS,
+          LATITUDE,
+          LONGITUDE,
+          HOTEL_DETAIL,
+          PHONE_NUMBER,
+          H_EMAIL,
+          CREATED_AT,
+          MODIFIED_AT,
+          HIT,
+          STATUS,
+          RECOMMEND_STATUS
+     FROM HOTEL_T
+    WHERE HOTEL_NO = #{hotelNo} 
+ </select> 
+ <select id="getHotelImage" parameterType="int" resultType="HotelImageDto">
+   SELECT HOTEL_NO,
+          ROOM_NO,
+          ORIGINAL_NAME, 
+          THUMBNAIL,
+          FILESYSTEM_NAME,
+          IMAGE_PATH
+     FROM HOTEL_IMAGE_T
+    WHERE HOTEL_NO = #{hotelNo} 
+    ORDER BY ROOM_NO ASC
+ </select>
+ <select id="getRoomImage" parameterType="int" resultType="HotelImageDto">
+   SELECT HOTEL_NO,
+          ROOM_NO,
+          ORIGINAL_NAME, 
+          THUMBNAIL,
+          FILESYSTEM_NAME,
+          IMAGE_PATH
+     FROM HOTEL_IMAGE_T
+    WHERE ROOM_NO = #{roomNo} 
+    ORDER BY ROOM_NO ASC
+ </select>
+ <select id="getFacilityies" parameterType="int" resultType="FacilitiesDto">
+	 SELECT HOTEL_NO, 
+	 				POOL, 
+	 				MORNING, 
+	 				SAUNA, 
+	 				LOUNGE, 
+	 				ROOMSERVICE
+ 		 FROM FACILITIES_T
+ 	  WHERE HOTEL_NO = #{hotelNo}
+ </select>  
+ <select id="getRoomtype" parameterType="int" resultType ="RoomtypeDto">
+   SELECT HOTEL_NO, ROOM_NO, ROOM_DETAIL, ROOM_NAME, ROOM_MANY, R_VIEW, BLEAKFAST, SMOKE, PEOPLE, BED, SHOWER, R_SIZE
+     FROM ROOMTYPE_T 
+    WHERE HOTEL_NO = #{hotelNo}
+ </select>
+ 
+ <select id="getRoomFeature" resultType="RoomFeatureDto">
+ SELECT ROOM_NO,
+        TOWEL, 
+        WATER, 
+        COFFEE, 
+        DRIER, 
+        IRON, 
+        MINIBAR
+   FROM ROOM_FEATURE_T 
+  WHERE ROOM_NO 
+    <foreach item="item" index="index" collection="list" open="in(" separator="," close=")">
+         #{item.roomNo}
+    </foreach>
+ </select>
+ <select id="getEachRoomFeature" parameterType="int" resultType="RoomFeatureDto">
+ SELECT ROOM_NO,
+        TOWEL, 
+        WATER, 
+        COFFEE, 
+        DRIER, 
+        IRON, 
+        MINIBAR
+   FROM ROOM_FEATURE_T 
+  WHERE ROOM_NO = #{roomNo}
+ </select>
+ <select id="roomtype" parameterType="int" resultType="RoomtypeDto">
+   SELECT ROOM_NO, HOTEL_NO, ROOM_DETAIL, ROOM_NAME, ROOM_MANY, R_VIEW, BLEAKFAST, SMOKE, PEOPLE, BED, SHOWER, R_SIZE
+     FROM ROOMTYPE_T
+    WHERE ROOM_NO = #{roomNo}
+ </select>
+ <select id="countReserveRoom" parameterType="Map" resultType="int">
+	 <![CDATA[ 
+   SELECT NVL(CNT,0)
+  	 FROM ( SELECT COUNT(*) AS CNT
+				      FROM RESERVE_T
+				     WHERE (RESERVE_START = #{checkin}
+				        OR (RESERVE_START <  #{checkin} AND RESERVE_FINISH > #{checkin})
+				        OR (RESERVE_START >  #{checkin} AND RESERVE_START < #{checkout}))
+				       AND ROOM_NO = #{roomNo}
+				     )
+		]]>		     
+  </select>
+  
+  <insert id="insertReview" parameterType="ReviewDto">
+    INSERT INTO REVIEW_T (
+        REVIEW_NO
+      , HOTEL_NO
+      , USER_NO
+      , REVIEW_CONTENTS
+      , REGIST_AT
+      , STAR
+    ) VALUES (
+        REVIEW_SEQ.NEXTVAL
+      , #{hotelNo}
+      , #{userDto.userNo}
+      , #{reviewContents}
+      , TO_CHAR(SYSDATE,'YYYY/MM/DD')
+      , #{star}
+    )
+  </insert>
+  
+ <select id="getReviewCount" parameterType="int" resultType="int">
+        SELECT COUNT(*)
+          FROM REVIEW_T
+         WHERE HOTEL_NO = #{hotelNo}
+ </select>
+ 
+ <select id="getReviewList" parameterType="Map" resultMap="ReviewMap">
+    SELECT A.REVIEW_NO, A.HOTEL_NO, A.STAR, A.USER_NO, A.REVIEW_CONTENTS, A.REGIST_AT, A.NAME
+      FROM (SELECT
+              <if test="sort == 1">  
+              ROW_NUMBER() OVER(ORDER BY REVIEW_NO DESC) AS RN, 
+              </if> 
+              <if test="sort == 2">  
+              ROW_NUMBER() OVER(ORDER BY STAR DESC) AS RN, 
+              </if>
+              C.REVIEW_NO, C.REVIEW_CONTENTS, C.STAR, C.HOTEL_NO, C.REGIST_AT, U.USER_NO, U.NAME
+              FROM USER_T U INNER JOIN REVIEW_T C
+                ON U.USER_NO = C.USER_NO
+             WHERE C.HOTEL_NO = #{hotelNo}) A
+     WHERE A.RN BETWEEN #{begin} AND #{end}
+  </select>
+  
+  <select id="starAve" resultType="Double">
+    SELECT AVG(STAR) AS AVERAGE_RATING
+      FROM REVIEW_T
+     WHERE HOTEL_NO = #{hotelNo}      
+  </select>
+  
+  <delete id="deleteReview" parameterType="int">
+     DELETE 
+       FROM REVIEW_T
+      WHERE REVIEW_NO = #{reviewNo}
+  </delete>
+  
+ <select id="getReserve" parameterType="int" resultMap="ReserveMap">
+    SELECT RESERVE_NO, USER_NO
+      FROM RESERVE_T
+     WHERE HOTEL_NO = #{hotelNo} 
+ </select>
+ 
+ <delete id="deleteHeart" parameterType="HeartDto">
+    DELETE FROM HEART_T WHERE USER_NO = #{userNo} AND HOTEL_NO=#{hotelDtohotelNo}
+</delete>
+
+ <insert id="insertHeart" parameterType="HeartDto">
+    INSERT INTO HEART_T(HOTEL_NO, USER_NO) VALUES (#{hotelDto.hotelNo}, #{userNo})
+ </insert>
+
+ <select id="getCountHeart" parameterType="HeartDto" resultType="int">
+    SELECT COUNT(*) FROM HEART_T WHERE HOTEL_NO = #{hotelDto.hotelNo} AND USER_NO = #{userNo}
+ </select>
+ 
+ <select id="getCountHotelHeart" parameterType="int" resultType="int">
+    SELECT COUNT(*) 
+      FROM HOTEL_T HOT INNER JOIN HEART_T H
+        ON HOT.HOTEL_NO = H.HOTEL_NO
+     WHERE USER_NO = #{userNo}
+ </select>
+ 
+ <delete id="deleteHotel" parameterType="int">
+	 DELETE FROM HOTEL_T WHERE HOTEL_NO = #{hotelNo}
+ </delete>
+ <select id="selectHotelHeartList" parameterType="Map" resultMap="HeartMap">
+      SELECT  A.HOTEL_NO, A.HOTEL_NAME, A.USER_NO
+        FROM (SELECT ROW_NUMBER() OVER(ORDER BY H.HOTEL_NO DESC) AS RN, H.USER_NO, H.HOTEL_NO, P.HOTEL_NAME
+                FROM HEART_T H INNER JOIN HOTEL_T P
+                  ON H.HOTEL_NO = P.HOTEL_NO
+               WHERE H.USER_NO = #{userNo}) A
+       WHERE A.RN BETWEEN #{begin} AND #{end}       
+ </select>
+ 
+ <delete id="deleteHotelHeart" parameterType="int">
+    DELETE
+      FROM HEART_T
+     WHERE HOTEL_NO = #{hotelNo}
+  </delete>
+ <delete id="deleteRoom" parameterType="int">
+	 DELETE FROM ROOMTYPE_T WHERE ROOM_NO = #{roomNo}
+ </delete>
+ <select id="getEachRoomPrice" parameterType="int" resultType="RoompriceDto">
+   SELECT HOTEL_NO, ROOM_NO, BI_PRICE, BS_DATE, BE_DATE, JUN_PRICE, JS_DATE, JE_DATE, SUNG_PRICE, SS_DATE, SE_DATE
+     FROM ROOMPRICE_T
+     WHERE ROOM_NO = #{roomNo} 
+ </select>
+ </mapper>
+ 
+

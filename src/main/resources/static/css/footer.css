@@ -1,0 +1,36 @@
+@charset "UTF-8";
+
+@import url('https://webfontworld.github.io/TheJamsil/TheJamsil.css');
+@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css');
+
+
+.footer_wrap{
+	margin:auto;
+	margin-top: 10px;
+	
+}
+.footer_logo{
+ display: inline-block;
+	margin: auto;
+	
+}
+.footer_wrap img {
+	height: 100px;
+}
+
+.logof {
+  background-image: url(../../image/newlogo.png);
+  background-size: contain;
+  width: 250px ;
+  height: 100px;
+  background-repeat: no-repeat;
+  }
+
+.info{
+  margin: auto;
+	height: 120px;
+	font-size: 13px;
+	padding-top: 12px;
+	padding-left: 13px;
+	color: dimgray;
+}

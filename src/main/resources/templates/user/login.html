@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{layout/header::head('한반도 투어')}"></head> <!-- 이거 알맞게 바꿔주세요-->
+<style>
+   /* 텍스트 깜빡임 */
+@keyframes blink-effect { 50% { opacity: 0; } } 
+.blink { 
+    animation: blink-effect 1s step-end infinite; 
+}
+</style>
+<body style="background-color: #EEF0E5;">
+  
+  <div class="main_wrap">
+  
+     <div class="container text-center">
+    <div class="row">
+        <div class="col-1">       
+        </div>
+        <div class="col-10">
+          <div style="text-align: left; margin-left: 25%; font-size: 16px;">
+            <a href="/">← 뒤로가기</a>
+          </div>
+            <div style="margin-bottom: 10px; font-size: 30px; font-weight: 400; margin-top: 70px;">🎉 한반도 투어에 오신걸 환영합니다.</div>
+            <form method="post" th:action="@{/user/login.do}">
+                <div class="mb-3 row row justify-content-center" style="margin-top: 40px;">
+                    <label for="email"></label>
+                    <div class="col-sm-9" style="width: 35%;"><input type="text" name="email" id="email" placeholder="아이디(이메일 계정)" class="form-control"></div>
+                </div>
+                
+                <div class="mb-3 row row justify-content-center">      
+                    <label for="pw"></label>
+                    <div class="col-sm-9" style="width: 35%;"><input type="password" name="pw" id="pw" placeholder="비밀번호" class="form-control"></div>
+                </div>
+                <button class="w3-btn w3-round-xxlarge w3-green w3-block mx-auto" style="width: 35%;" type="submit">로그인</button>
+                
+                <div class="mb-3 row justify-content-center" style="margin-top: 10px;">
+                    <div class="col-auto">
+                        <a th:href="@{/user/find.form}">아이디찾기</a>
+                    </div>
+                    <div class="col-auto">
+                        <a th:href="@{/user/findPwModified.form}">비밀번호 찾기</a>
+                    </div>
+                    <div class="col-auto">
+                        <a th:href="@{/user/agree.form}" class="blink" style="font-weight: 400; color: #0766AD;">회원가입✨</a>
+                    </div>
+                </div>
+                
+                <div style="margin-bottom: 10px; margin-top: 50px;">간편하게 로그인하기</div>
+                
+                <div class="set" style="height: 100px;">
+                    <input type="hidden" name="referer" th:value="${referer}">
+                    <a th:href="${naverLoginURL}" style="margin-right: 5px;"><img th:src="@{/image/naver아이콘.png}" style="width: 5%;"></a>
+                    <a th:href="${kakaoLoginURL}" style="margin-left: 5px;"><img th:src="@{/image/kakao아이콘.png}" width="5%"></a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+  
+  
+</body>
+</html>
