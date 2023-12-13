@@ -5,11 +5,12 @@
 
 <style>
   .btn-green{
-    background-color: #B6C4B6;
+    background-color: #B6BBC4;
   }
   .btn-whitegreen{
-    background-color: #EEF0E5;
+    background-color: #F0ECE5;
   }
+
   
 </style>
 <body>
@@ -21,6 +22,11 @@
 		 <div class="container text-center">
 		  <div class="row">
 		    <div class="col-1">	      
+          <div class="w3-sidebar w3-bar-block" style="width:10%; height:200px;"> <!-- 사이드바 -->
+            <a th:href="@{/package/list.do}" class="w3-bar-item w3-button">패키지 보러가기</a>
+            <a th:href="@{/hotel/list.do}" class="w3-bar-item w3-button">호텔 보러가기</a>
+            <a th:href="@{/user/heart.do(userNo=${session.user.userNo})}" class="w3-bar-item w3-button">찜목록 보기</a>
+          </div>
 		    </div>
 		    <div class="col-10" style="padding: 0 100px">
 		      <div>
@@ -35,15 +41,15 @@
           
           <div>
             <table class="table">
-              <thead>
-                <tr class="table-success">
-                  <th><strong>순번</strong></th>
-                  <th><strong>예약날짜/예약번호</strong></th>
-                  <th><strong>예약상품명</strong></th>
-                  <th><strong>예약인원</strong></th>
-                  <th><strong>여행 출발일</strong></th>
-                  <th><strong>금액</strong></th>
-                  <th><strong>예약상태</strong></th>
+              <thead class="table-secondary" style="border-top: 1px solid black;" >
+                <tr>
+                  <th>순번</th>
+                  <th>예약날짜/예약번호</th>
+                  <th>예약상품명</th>
+                  <th>예약인원</th>
+                  <th>여행 출발일</th>
+                  <th>금액</th>
+                  <th>예약상태</th>
                 </tr>
               </thead>
               <tbody>
@@ -52,10 +58,10 @@
                     <tr>
                       <td th:text="${beginNo - vs.index}"></td>
                       <td>
-                        <a th:href="@{/reserve/detail.do(reserveNo=${res.reserveNo})}" th:text="|${res.reservedAt} - ${res.reserveNo}|"></a>
+                        <a th:href="@{/reserve/detail.do(reserveNo=${res.reserveNo})}" th:text="|${res.reservedAt} - ${res.reserveNo}|" style="font-weight: 400; "></a>
                       </td>
                       <td>
-                        <a th:href="@{/package/detail.do(packageNo=${res.packageDto.packageNo})}" th:text="${#strings.abbreviate(res.packageDto.packageTitle,25)}"></a>
+                        <a th:href="@{/package/detail.do(packageNo=${res.packageDto.packageNo})}" th:text="${#strings.abbreviate(res.packageDto.packageTitle,25)}" style="font-weight: 400; "></a>
                       </td>
                       <td th:text="${res.reservePerson}"></td>
                       <td th:text="${res.reserveStart}"></td>
