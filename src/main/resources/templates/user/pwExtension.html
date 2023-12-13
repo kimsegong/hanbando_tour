@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 
-<head th:replace="~{/layout/header::head('비밀번호변경')}"></head>
+<head th:replace="~{layout/header::head('비밀번호변경')}"></head>
 
 <script th:src="@{/js/user_modify_pw.js(ver=1.0)}"></script>
 
 <body>
   
-  <div th:replace="~{/layout/header::header}"></div>
+  <div th:replace="~{layout/header::header}"></div>
   
   <div class="main_wrap">
     
@@ -32,7 +32,7 @@
   </div>
 
      
-  <div th:replace="~{/layout/footer::footer}"></div>
+  <div th:replace="~{layout/footer::footer}"></div>
   
 </body>
 </html>
