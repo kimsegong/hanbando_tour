@@ -41,13 +41,20 @@ public interface HotelMapper {
   public int updateHotel(HotelDto hotelDto);
   public int insertFacilities(FacilitiesDto facilitiesDto);
   
+  public RoompriceDto getEachRoomPrice(int roomNo);
+  
+  
+  
   public HotelDto getHotel(int hotelNo);
   public List<HotelImageDto> getHotelImage(int hotelNo);
+  public List<HotelImageDto> getRoomImage(int roomNo);
   public FacilitiesDto getFacilityies(int hotelNo);
   
   public List<RoomtypeDto> getRoomtype(int hotelNo);
   public List<RoomFeatureDto> getRoomFeature(List<RoomtypeDto> roomtypeDto);
+  public RoomFeatureDto getEachRoomFeature(int roomNo);
   public List<RoompriceDto> getPrice(RoomtypeDto roomtypeDto);
+  public int deleteRoom(int roomNo);
   
   public RoomtypeDto roomtype(int roomNo);
   public int countReserveRoom(Map<String, Object> map);
