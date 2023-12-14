@@ -529,7 +529,8 @@
       <select id="checkHeart" parameterType="Map" resultType="int">
         SELECT COUNT(*) 
           FROM HEART_T 
-         WHERE USER_NO = #{userNo}
+         WHERE PACKAGE_NO = #{packageNo} 
+           AND USER_NO = #{userNo}
       </select>
       
       <delete id="deleteHeart" parameterType="int">
