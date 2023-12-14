@@ -692,7 +692,7 @@
  </select>
  
  <delete id="deleteHeart" parameterType="HeartDto">
-    DELETE FROM HEART_T WHERE USER_NO = #{userDto.userNo} AND HOTEL_NO=#{hotelDtohotelNo}
+    DELETE FROM HEART_T WHERE USER_NO = #{userDto.userNo} AND HOTEL_NO=#{hotelDto.hotelNo}
 </delete>
 
  <insert id="insertHeart" parameterType="HeartDto">
