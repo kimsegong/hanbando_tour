@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 
+import com.tour.hanbando.dto.HeartDto;
 import com.tour.hanbando.dto.HotelDto;
 import com.tour.hanbando.dto.InactiveUserDto;
 import com.tour.hanbando.dto.LeaveUserDto;
@@ -29,6 +30,12 @@ public interface ManageMapper {
   public List<UserDto> getSearchUser(Map<String, Object> map);
   
   /* 찜 목록 */
+  public int getHeartCount(Map<String, Object> map);
+  public List<HeartDto> getHeartList(Map<String, Object> map);
+  
+  /* 찜 검색 */
+  public int getHeartSearchCount(Map<String, Object> map);
+  public List<HeartDto> getHeartSearchList(Map<String, Object> map);
 
   /* 휴면회원 관리 목록 */
   public int getInactiveCount();
@@ -79,7 +86,7 @@ public interface ManageMapper {
   /* 패키지 예약/추천 변경 */
   public int updatePackageRecommend(PackageDto packageDto);
   
-  /* 호텔 예약/추천 변경 */
+  /* 호텔 판매/추천 변경 */
   public int updateHotelRecommend(HotelDto hotel);
   
   /* 예약 목록 */

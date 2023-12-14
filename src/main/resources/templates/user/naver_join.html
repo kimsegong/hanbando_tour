@@ -1,53 +1,116 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:form="http://www.w3.org/1999/xhtml">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 
-<head th:replace="~{/layout/header::head('네이버간편가입')}"></head>
+
+<head th:replace="~{layout/header::head('네이버간편가입')}"></head>
+<style>
+  
+  #genderRow {
+    display: none;
+    }
+</style>
+<script>
+  
+  $(() => {
+    fnNaverJoin();
+  })
+  
+  const fnNaverJoin = () => {
+    $('#frm_naver_join').submit((ev) => {
+      if(!$('#service').is(':checked')){
+        alert('이용약관에 동의하세요.');
+        ev.preventDefault();
+        return;
+      }
+    })
+  }
+  
+</script>
 
 <body>
-
-  <div th:replace="~{/layout/header::header}"></div>
-
+  
+  <div th:replace="~{layout/header::header}"></div>
+  
   <div class="main_wrap">
 
     <div class="wrap wrap_6">
-
-      <h1 class="title">네이버 내정보 확인하기</h1>
-
-      <form id="frm_naver_join" method="post" th:action="@{/user/naver/join.do}" th:object="${naverProfile}">
-
+    
+      <h1 class="title">네이버 간편가입</h1>
+    
+      <form id="frm_naver_join" method="post" th:action="@{/user/naver/join.do}">
+        
         <div class="row mb-2">
           <label for="email" class="col-sm-3 col-form-label">이메일</label>
-          <div class="col-sm-9"><input type="text" id="email" class="form-control"th:value="${naverProfile.email}" readonly></div>
+          <div class="col-sm-9"><input type="text" name="email" id="email" class="form-control" th:value="${naverProfile.email}" readonly></div>
         </div>
-
+        
         <div class="row mb-2">
           <label for="name" class="col-sm-3 col-form-label">이름</label>
-          <div class="col-sm-9"><input type="text" id="name" class="form-control" th:value="${naverProfile.name}" readonly></div>
+          <div class="col-sm-9"><input type="text" name="name" id="name" class="form-control" th:value="${naverProfile.name}" readonly></div>
         </div>
-
+    
         <div class="row mb-2">
           <label for="mobile" class="col-sm-3 col-form-label">휴대전화번호</label>
-          <div class="col-sm-9"><input type="text" id="mobile" class="form-control" th:value="${naverProfile.mobile}"readonly></div>
+          <div class="col-sm-9"><input type="text" name="mobile" id="mobile" class="form-control" th:value="${naverProfile.mobile}" readonly></div>
+        </div>
+    
+        <div class="row mb-2" id="genderRow">
+          <label class="col-sm-3 form-label">성별</label>
+          <div class="col-sm-3">
+            <input type="radio" name="gender" value="M" id="man" class="form-check-input">
+            <label class="form-check-label" for="man">남자</label>
+          </div>
+          <div class="col-sm-3">
+            <input type="radio" name="gender" value="F" id="woman" class="form-check-input">
+            <label class="form-check-label" for="woman">여자</label>
+          </div>
         </div>
 
-       
-
+        <script th:inline="javascript">
+          $(':radio[value=[[${naverProfile.gender}]]]').prop('checked', true);
+        </script>
+    
         <hr class="my-3">
-
         
+        <div class="form-check mt-3">
+          <input type="checkbox" class="form-check-input chk_each" id="service">
+          <label class="form-check-label" for="service">
+            서비스 이용약관 동의(필수)
+          </label>
+        </div>
+        <div>
+          <textarea rows="5" class="form-control">
+제 1 장 총 칙 
 
-
+            </textarea>
+        </div>
+        
+        <div class="form-check mt-3">
+          <input type="checkbox" name="event" class="form-check-input chk_each" id="event">
+          <label class="form-check-label" for="event">
+            이벤트 알림 동의(선택)
+          </label>
+        </div>
+        <div>
+          <textarea rows="5" class="form-control">
+이벤트, 혜택등           
+            
+            </textarea>
+        </div>
+        
+        <hr class="my-3">
+    
         <div class="text-center">
           <button type="submit" class="btn btn-primary">회원가입하기</button>
         </div>
-
+        
       </form>
-
+    
     </div>
 
   </div>
-
-  <div th:replace="~{/layout/footer::footer}"></div>
-
+  
+  <div th:replace="~{layout/footer::footer}"></div>
+  
 </body>
 </html>

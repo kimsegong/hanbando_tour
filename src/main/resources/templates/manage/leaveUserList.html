@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 
-<head th:replace="~{/layout/header::head('탈퇴회원 관리')}"></head> 
+<head th:replace="~{layout/header::head('탈퇴회원 관리')}"></head> 
 <style>
   
   .split2 {
@@ -144,11 +144,15 @@
     background-color: #ADC4CE; /* hover 시 배경 색상 지정 */
     color: #fff;               /* hover 시 텍스트 색상 지정 */
   }
+  
+  table thead tr th{
+    font-weight: bolder;
+  }
 
 </style>
 
 <body>
-	<div th:replace="~{/layout/header::header}"></div>
+	<div th:replace="~{layout/header::header}"></div>
 	
 	<div class="main_wrap">
 	
@@ -289,7 +293,7 @@
 	
 	
 	
-	<div th:replace="~{/layout/footer::footer}"></div>
+	<div th:replace="~{layout/footer::footer}"></div>
 </body>
 </html>
 

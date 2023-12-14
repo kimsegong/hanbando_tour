@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 
-<head th:replace="~{/layout/header::head('패키지상품 관리')}"></head> 
+<head th:replace="~{layout/header::head('패키지상품 관리')}"></head> 
 <style>
   
   .split2 {
@@ -155,6 +155,10 @@
     color: #96B6C5;         /* 호버 시 텍스트 색상 */
     background-color: #fff; /* 호버 시 배경 색상 */
   }
+  
+  table thead tr th{
+    font-weight: bolder;
+  }
 
 </style>
 <script th:inline="javascript">
@@ -184,7 +188,7 @@
 </script>
 
 <body>
-	<div th:replace="~{/layout/header::header}"></div>
+	<div th:replace="~{layout/header::header}"></div>
 	
 	<div class="main_wrap">
 	
@@ -357,7 +361,7 @@
 	
 	
 	
-	<div th:replace="~{/layout/footer::footer}"></div>
+	<div th:replace="~{layout/footer::footer}"></div>
 </body>
 </html>
 

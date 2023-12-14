@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 
-<head th:replace="~{/layout/header::head(|${inactiveUser.userNo}번 휴면회원 상세|)}"></head> 
+<head th:replace="~{layout/header::head(|${inactiveUser.userNo}번 휴면회원 상세|)}"></head> 
 <style>
   
  #main_wraper {
@@ -80,7 +80,7 @@
 </style>
 
 <body>
-  <div th:replace="~{/layout/header::header}"></div>
+  <div th:replace="~{layout/header::header}"></div>
   
   <div class="main_wrap">
   
@@ -255,7 +255,7 @@
   
   
   
-  <div th:replace="~{/layout/footer::footer}"></div>
+  <div th:replace="~{layout/footer::footer}"></div>
 </body>
 </html>
 

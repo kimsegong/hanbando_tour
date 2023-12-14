@@ -18,10 +18,10 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.tour.hanbando.dto.ReserveDto;
+import com.tour.hanbando.dto.RoomtypeDto;
 import com.tour.hanbando.service.HotelService;
 
 import lombok.RequiredArgsConstructor;
-import retrofit2.http.GET;
 
 @RequestMapping("/hotel")
 @RequiredArgsConstructor
@@ -40,7 +40,7 @@ public class HotelController {
   @ResponseBody
   @GetMapping("getList.do")
   public Map<String, Object> getHotelist(HttpServletRequest request){
-    
+    System.out.println(hotelService.getHotelList(request));
     return hotelService.getHotelList(request);
   }
   
@@ -58,7 +58,6 @@ public class HotelController {
   public String hotelDetail(@RequestParam(value = "hotelNo", required = false, defaultValue = "0") int hotelNo, 
                                 HttpServletRequest request, Model model) {
    List<ReserveDto> reserve = hotelService.getReserveUser(hotelNo);
-   System.out.println(reserve);
    model.addAttribute("reserve", reserve); 
    hotelService.hoteDetail(request, hotelNo, model); 
     
@@ -83,7 +82,7 @@ public class HotelController {
       Map<String, Object> response = new HashMap<>();
 
       try {
-        double averageRating = hotelService.getAverageRating(hotelNo);
+          double averageRating = hotelService.getAverageRating(hotelNo);
           response.put("success", true);
           response.put("averageRating", averageRating);
       } catch (Exception e) {
@@ -100,6 +99,19 @@ public class HotelController {
     return hotelService.removeReview(reviewNo);
   }
   
+  @ResponseBody
+  @PostMapping("/heart.do")
+  public void getHeart (HttpServletRequest request, Model model) {
+    int heartStatus = hotelService.getHeart(request);
+    model.addAttribute("heart", heartStatus);
+  }
+  
+  @ResponseBody
+  @PostMapping("/finalPrice.do")
+  public Map<String, Object> getFinalPrice(HttpServletRequest request) {
+    return hotelService.getFinalPrice(request);  
+  }
+  
   /*************************** 작성 ***************************************************/  
   @GetMapping("write.form")
   public String write(Model model) {
@@ -108,44 +120,74 @@ public class HotelController {
     return "hotel/write";
   }
   @ResponseBody
-  @GetMapping("roomList.do")
-  public void roomList(HttpServletRequest request, Model model){
+  @GetMapping(value="roomList.do", produces = "application/json")
+  public Map<String, Object> roomList(HttpServletRequest request, Model model){
+    Map<String, Object> map = hotelService.hotelRoomList(request);
     
-    return ;
+    System.out.println(map);
+    return map;
   }
-  
   
   @PostMapping("addHotel.do")
   public String writeHotel(MultipartHttpServletRequest multipartRequest, RedirectAttributes redirectAttributes) throws Exception {
-    System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@" + multipartRequest.getParameter("hotelName"));
    int hotelResult = hotelService.writeHotel(multipartRequest) ? 1 : 0;
     
     redirectAttributes.addFlashAttribute("hotelResult", redirectAttributes); 
-    
-    
     return "redirect:/hotel/list.do";
   }
   
   @GetMapping("addRoom.form")
   public String HotelRoom(@RequestParam(value="hotelNo", required=false, defaultValue="0")int hotelNo, Model model) {
-   model.addAttribute("hotelNo", hotelNo);
+    model.addAttribute("hotelNo", hotelNo);
     return "hotel/hotelRoom";  
   }
   
   @ResponseBody
   @PostMapping("addHotelRoom.do")
   public int writeRoom(MultipartHttpServletRequest multipartRequest, 
-                        @RequestParam("files") List<MultipartFile> files , Model model) throws Exception {
-    
+                        @RequestParam("files") List<MultipartFile> files) throws Exception {
     int addResult = hotelService.writeRoom(multipartRequest, files) ? 1 : 0;
-    
     return addResult;
-    
   }
   
+  @ResponseBody
+  @GetMapping("deleteRoom.do")
+  public int deleteRoom(HttpServletRequest request) {
+    return hotelService.deleteRoom(request);
+  }
+  
+  
+  /*************************** 삭제 ***************************************************/  
 
   
-   
+  @PostMapping("remove.do")
+  public String remove(@RequestParam(value="hotelNo", required=false, defaultValue="0") int hotelNo
+                     , RedirectAttributes redirectAttributes) {
+    int removeResult = hotelService.removehotel(hotelNo);
+    redirectAttributes.addFlashAttribute("removeResult", removeResult);
+    return "redirect:/hotel/list.do";
+  }
   
+  /*************************** 수정 ***************************************************/  
+//  @PostMapping("/modifyHotel.do")
+//  public String modifyHotel(HttpServletRequest request, RedirectAttributes redirectAttributes) {
+//    int modifyResult = hotelService.modifyHotel(request);
+//     redirectAttributes.addFlashAttribute("modifyResult", modifyResult);
+//    return "redirect:/hotel/detail.do?hotelNo=" + request.getParameter("hotelNo");
+//  }
+  
+  @GetMapping("/modifyRoom.form")
+  public String modiRoom(@RequestParam(value="roomNo", required=false, defaultValue="0") int roomNo, Model model) {
+    hotelService.getRoom(roomNo, model);
+    return "hotel/modifyHotelRoom";
+  }
+  
+  
+//  @ResponseBody
+//  @PostMapping("/modifyRoom.do")
+//  public int modifyRoom(HttpServletRequest request) {
+//    return hotelService.modifyRoom(request);
+//  }
+   
   
 }

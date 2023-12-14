@@ -16,6 +16,13 @@ div, ul, li, ol {
 
 }
 
+html {
+  line-height: 0;
+  padding: 0;
+  margin: 0;
+}
+
+
 a {
   text-decoration: none;
   color: #333333;
@@ -24,15 +31,14 @@ i {
   color: #333333;
 }
 a:hover {
-  color: crimson;
+  color: #96B6C5;
 }
 a:hover i {
-  color: crimson;
+  color: #96B6C5;
 }
 ul, ol {
   list-style-type: none;
 }
 .col-10 {
-	padding: 0 0 0 0;
 	margin-top: 20px;
 }

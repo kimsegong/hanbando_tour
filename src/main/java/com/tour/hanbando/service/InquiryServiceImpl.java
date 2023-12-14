@@ -1,6 +1,9 @@
 package com.tour.hanbando.service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -11,6 +14,8 @@ import org.springframework.ui.Model;
 import com.tour.hanbando.dao.InquiryMapper;
 import com.tour.hanbando.dto.InquiryAnswerDto;
 import com.tour.hanbando.dto.InquiryDto;
+import com.tour.hanbando.dto.UserDto;
+import com.tour.hanbando.util.MyPageUtils;
 
 import lombok.RequiredArgsConstructor;
 
@@ -19,8 +24,24 @@ import lombok.RequiredArgsConstructor;
 @Service
 public class InquiryServiceImpl implements InquiryService {
   private final InquiryMapper inquiryMapper;
+  private final MyPageUtils myPageUtils;
   
-  @Transactional
+  /**
+   * 회원 1:1목록
+   */
+  @Transactional(readOnly = true)
+  @Override
+  public void loadUserInquiryList(int userNo, Model model) {
+    List<InquiryDto> inquiryList = inquiryMapper.getUserInquiryList(userNo);
+    int inquiryCount = inquiryMapper.getUserInquiryCount(userNo);
+    model.addAttribute("inquiryList", inquiryList);
+    model.addAttribute("inquiryCount", inquiryCount);
+  }
+  
+  /**
+   * 관리자 1:1목록
+   */
+  @Transactional(readOnly = true)
   @Override
   public void loadInquiryList(HttpServletRequest request, Model model) {
   
@@ -42,7 +63,9 @@ public class InquiryServiceImpl implements InquiryService {
     InquiryDto inquiry = InquiryDto.builder()
                      .title(title)
                      .contents(contents)
-                     .userNo(userNo)
+                     .userDto(UserDto.builder()
+                               .userNo(userNo)
+                               .build())
                      .separate(separate)
                      .build();
     
@@ -94,12 +117,45 @@ public class InquiryServiceImpl implements InquiryService {
                              .build();
     
     int addResult = inquiryMapper.insertInquiryAnswer(answer);
-    
+    if(addResult != 0) {
+    inquiryMapper.updateAnswerStatus(inquiryNo);
+    }
     return addResult;
   }
   @Override
   public InquiryAnswerDto loadInquiryAnswer(int inquiryNo) {
     
     return inquiryMapper.getInquiryAnswer(inquiryNo);
+  }
+  
+  @Override
+  public void loadSearchInquiryList(HttpServletRequest request, Model model) {
+    String column = request.getParameter("column");
+    String query = request.getParameter("query");
+    
+    Map<String, Object> map = new HashMap<String, Object>();
+    map.put("column", column);
+    map.put("query", query);
+    
+    int total = inquiryMapper.getSearchInquiryListCount(map);
+    
+    Optional<String> opt = Optional.ofNullable(request.getParameter("page"));
+    String strPage = opt.orElse("1");
+    int page = Integer.parseInt(strPage);
+    
+    int display = 20;
+    
+    myPageUtils.setPaging(page, total, display);
+    
+    map.put("begin", myPageUtils.getBegin());
+    map.put("end", myPageUtils.getEnd());
+    
+    List<InquiryDto> inquiryManageList = inquiryMapper.getSearchInquiyList(map);
+    
+    model.addAttribute("inquiryManageList", inquiryManageList);
+    model.addAttribute("paging", myPageUtils.getMvcPaging(request.getContextPath() + "/notice/searchInquiryList.do", "column=" + column + "&query=" + query));
+    model.addAttribute("beginNo", total - (page - 1) * display);
+    model.addAttribute("total", total);
+    
   }
 }

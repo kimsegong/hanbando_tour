@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 
- <head th:replace="~{/layout/header::head('검색 결과')}"></head>
+ <head th:replace="~{layout/header::head('검색 결과')}"></head>
 <style>
   .card {
       width: 18rem;
@@ -27,7 +27,7 @@
 </style>  
 <body>
 
-  <div th:replace="~{/layout/header::header}"></div>
+  <div th:replace="~{layout/header::header}"></div>
 
   <div class="container text-center">  <!-- 그리드 시작 -->  
   
@@ -40,57 +40,53 @@
       
       
       <ul class="nav nav-tabs" id="myTab" role="tablist">
-			  <li class="nav-item" role="presentation">
-			    <button class="nav-link active" id="package-tab" data-bs-toggle="tab" data-bs-target="#package" type="button" role="tab" aria-controls="package" aria-selected="true">패키지</button>
-			  </li>
-			  <li class="nav-item" role="presentation">
-			    <button class="nav-link" id="hotel-tab" data-bs-toggle="tab" data-bs-target="#hotel" type="button" role="tab" aria-controls="hotel" aria-selected="false">호텔</button>
-			  </li>
-			</ul>
-			
-			<div class="tab-content" id="myTabContent">
-			  <div class="tab-pane fade show active" id="package" role="tabpanel" aria-labelledby="package" tabindex="0">
-					
-		      <div style="display: flex; justify-content: space-between; align-items: center;">
-		        <div style="display: inline-block;"> 
-		         <span th:text="${count}"></span>개의 상품
-		        </div>
-		        <div class="btn-group btn-group-sm" role="group" aria-label="Small button group" style="display: inline-block;">
-		          <button type="button" class="btn btn-outline-kong" id="recommend">추천순</button>
-		          <button type="button" class="btn btn-outline-kong" id="reviewPackage">리뷰순</button>
-		          <button type="button" class="btn btn-outline-kong" id="reviewPackage">가격낮은순</button>
-		          <button type="button" class="btn btn-outline-kong" id="reviewPackage">가격높은순</button>
-		        </div>
-		      </div>
-		      <hr>
-		      <div class="container">
-		        <div class="row" id="package_list"> 
-		        
-		        </div>
-		      </div>
-					
-				</div>
-			  <div class="tab-pane fade" id="hotel" role="tabpanel" aria-labelledby="hotel" tabindex="0">
-					 <div style="display: flex; justify-content: space-between; align-items: center;">
-		        <div style="display: inline-block;"> 
-		         <span th:text="${count}"></span>개의 상품
-		        </div>
-		        <div class="btn-group btn-group-sm" role="group" aria-label="Small button group" style="display: inline-block;">
-		          <button type="button" class="btn btn-outline-kong" id="recommend">추천순</button>
-		          <button type="button" class="btn btn-outline-kong" id="reviewPackage">리뷰순</button>
-		          <button type="button" class="btn btn-outline-kong" id="reviewPackage">가격낮은순</button>
-		          <button type="button" class="btn btn-outline-kong" id="reviewPackage">가격높은순</button>
-		        </div>
-		      </div>
-		      <hr>
-		      <div class="container">
-		        <div class="row" id="hotel_list"> 
-		          
-		        </div>
-		      </div>
-					
-				</div>
-			</div>
+           <li class="nav-item" role="presentation">
+             <button class="nav-link active" id="package-tab" data-bs-toggle="tab" data-bs-target="#package" type="button" role="tab" aria-controls="package" aria-selected="true">패키지</button>
+           </li>
+           <li class="nav-item" role="presentation">
+             <button class="nav-link" id="hotel-tab" data-bs-toggle="tab" data-bs-target="#hotel" type="button" role="tab" aria-controls="hotel" aria-selected="false">호텔</button>
+           </li>
+         </ul>
+         
+         <div class="tab-content" id="myTabContent">
+           <div class="tab-pane fade show active" id="package" role="tabpanel" aria-labelledby="package" tabindex="0">
+               
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <div style="display: inline-block;"> 
+               <span th:text="${count}"></span>개의 상품
+              </div>
+              <div class="btn-group btn-group-sm" role="group" aria-label="Small button group" style="display: inline-block;">
+                <button type="button" class="btn btn-outline-kong" id="reviewPackage">가격낮은순</button>
+                <button type="button" class="btn btn-outline-kong" id="reviewPackage">가격높은순</button>
+              </div>
+            </div>
+            <hr>
+            <div class="container">
+              <div class="row" id="package_list"> 
+              
+              </div>
+            </div>
+               
+            </div>
+           <div class="tab-pane fade" id="hotel" role="tabpanel" aria-labelledby="hotel" tabindex="0">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+              <div style="display: inline-block;"> 
+               <span th:text="${count}"></span>개의 상품
+              </div>
+              <div class="btn-group btn-group-sm" role="group" aria-label="Small button group" style="display: inline-block;">
+                <button type="button" class="btn btn-outline-kong" id="reviewPackage">가격낮은순</button>
+                <button type="button" class="btn btn-outline-kong" id="reviewPackage">가격높은순</button>
+              </div>
+            </div>
+            <hr>
+            <div class="container">
+              <div class="row" id="hotel_list"> 
+                
+              </div>
+            </div>
+               
+            </div>
+         </div>
       
     </div>
     <div class="col-1">      
@@ -125,10 +121,6 @@
         
      }); 
      $('#hotel-tab').click(() => {
-       console.log($('#hotel_list').text());
-       
-        
-        
      }); 
        
     
@@ -143,15 +135,17 @@
         success: (resData) => {  
           totalPage = resData.totalPage;    
           if (resData.searchPackageList != null && resData.searchPackageList.length > 0) {
+            var address = '/package/increseHit.do?packageNo=';
             $.each(resData.searchPackageList, (i, package) => {           
               let str = '<div class="col-md-4">';
-              str += '<div class="card w-100 p-3">';
-              str += '<img src="https://github.com/skal48/portfolio/blob/main/hanla.jpg?raw=true" style="height: 250px;" class="card-img-top" alt="Package Image">';
-              str += '<div class="card-body">';
+              str += '<div class="card w-100 p-3"style="height: 450px;" onclick="location.href=\''+address+package.packageNo + '\'">';
+              str += '<img src="' + package.productImageDto.imagePath + '/' + package.productImageDto.filesystemName + '" style="height: 250px;" class="card-img-top" alt="Package Image">';
+              str += '<div class="card-body d-flex flex-column justify-content-between" style="height: 250px;">'; // 내용의 높이를 일정하게 조절
               str += '<h5 class="card-title card-font">' + package.packageTitle + '</h5>';
-              str += '<p class="card-text">'+ package.price +'원</p>';
-              str += '<p class="card-text"></p>';
-              str += '<a href="' + '/package/increseHit.do?packageNo=' + package.packageNo + '" class="btn btn-kong">여행가기</a>';           
+              str += '<div class="d-flex justify-content-between align-items-end">';
+              str += `<p class="card-text">~${package.price}원</p>`;
+              str += '<p class="card-text"></p>';       
+              str += '</div>';
               str += '</div>';
               str += '</div>';
               str += '</div>';
@@ -181,14 +175,14 @@
           totalPage = resData.totalPage;    
           if (resData.searchHotelList != null && resData.searchHotelList.length > 0) {
             if(product === '패키지'){  console.log(resData);
+            var address = '/hotel/increseHit.do?hotelNo=';
             $.each(resData.searchHotelList, (i, hotel) => {           
               let str = '<div class="col-md-4">';
-              str += '<div class="card w-100 p-3">';
-              str += '<img src="https://github.com/skal48/portfolio/blob/main/hanla.jpg?raw=true" style="height: 250px;" class="card-img-top" alt="Package Image">';
-              str += '<div class="card-body">';
+              str += '<div class="card w-100 p-3" style="height: 450px;" onclick="location.href=\''+address+hotel.hotelNo + '\'">';
+              str += '<img src="'+ hotel.hotelImageDto.imagePath +'/'+ hotel.hotelImageDto.filesystemName +'" style="height: 250px;" class="card-img-top" alt="Package Image">';
+              str += '<div class="card-body d-flex flex-column justify-content-between" style="height: 250px;">'; // 내용의 높이를 일정하게 조절
               str += '<h5 class="card-title card-font">' + hotel.hotelName + '</h5>';
-              str += '<p class="card-text"></p>';
-              str += '<a href="' + '/hotel/increseHit.do?hotelNo=' + hotel.hotelNo + '" class="btn btn-kong">여행가기</a>';           
+              str += '<p class="card-text"></p>';          
               str += '</div>';
               str += '</div>';
               str += '</div>';
@@ -239,9 +233,8 @@
       
 
 
-    <div th:replace="~{/layout/footer::footer}"></div>
+    <div th:replace="~{layout/footer::footer}"></div>
 
  
 </body>
 </html>
-

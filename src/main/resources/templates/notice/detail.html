@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 
-<head th:replace="~{/layout/header::head('한반도 투어')}"></head> <!-- 이거 알맞게 바꿔주세요-->
+<head th:replace="~{layout/header::head('공지상세')}"></head> 
 
 <style>
   .wrap1 > .box1{
@@ -32,14 +32,35 @@
   .wrap1 > .box5{
    height:30px;
   }  
+    #btn_list {
+    height: 38px; 
+    width: 100px;
+    font-size: 1.2em;
+    color: #96B6C5;         /* 텍스트 색상 */
+    background-color: #fff; /* 기본 배경 색상 */
+    border-color: #96B6C5;  /* 테두리 색상 */
+    border-radius: 10px;      /* 테두리를 둥글게 만듭니다. */
+    transition: all 0.3s;     /* 모든 속성에 대해 0.3초 동안 트랜지션 효과 적용 */
+  }
   
+  #btn_list:hover {
+    color: #fff;               /* 호버 시 텍스트 색상 */
+    background-color: #96B6C5; /* 호버 시 배경 색상 */
+  }
 
+  #btn_list {
+    margin-top: 100px; /*원하는 픽셀값으로 변경 가능합니다.*/
+  }
+
+  .notice-text {
+    font-size: 1.2em;
+  }
 </style>
 
 
 <body>
   
-  <div th:replace="~{/layout/header::header}"></div>
+  <div th:replace="~{layout/header::header}"></div>
   
   <div class="main_wrap">
   
@@ -52,86 +73,66 @@
             <!--/*여기에 작성/ 다 만들고 style 지워주세요  */-->
             
 
-    <div class="wrap1">
-      <div class="box1"></div>      
-    </div> 
-            
     <div class="row">
-    <div class="col-7"></div>
-    <div class="col-4" style="display: flex; justify-content: flex-end;">
-      <div class="home">
-        <a th:href="@{http://localhost:8080}"><i class="fa-solid fa-house" style="font-size:15px; margin-right: 5px;"></i></a>
-         &nbsp;고객센터  &nbsp;  >   &nbsp; 공지사항
-      </div>
-    </div>
-    <div class="col-1"></div>
-       
-    <div class = "wrap1">
-      <div class="box2"></div>
-    </div>
-    
-   
-    <div class="col-3"> 
-      <div>
+      <div style="margin-left:30%; padding-bottom:20px;">
       <a th:href="@{/notice/list.do}">
-      <button type="button" class="btn btn btn-primary" style="width:125px; height:45px">&nbsp;&nbsp;&nbsp;&nbsp;공지사항&nbsp;&nbsp;&nbsp;&nbsp;</button>  
+        <button type="button" id="btn_list">목록보기</button> 
       </a>
-      </div> 
+      </div>
     
+    
+      <p class="title">공지사항</p>
+
+
+
+    
+    <div class="row notice_title">
+      <h4 class="notice-text" th:text="|공지사항 : ${notice.title}|"></h4>
+    </div>
+    <div  style=" margin-bottom: 28px;">
+      <h4 class="notice-text" th:text="|작성일:&nbsp;&nbsp;&nbsp;${notice.createdAt}|"></h4>
+    </div>
+   
     <div>
-      <a th:href="@{/notice/faq.do}">
-      <button type="button" class="btn btn-outline-primary" style="font-size: 14.5px; padding: 10px 22px;">자주묻는질문</button>  
-      </a>
-    </div>
-    
-    <div>
-      <a th:href="@{/notice/inquirywrite.form}">
-      <button type="button" class="btn btn-outline-primary" style="font-size: 14.5px; padding: 10px 22px;">&nbsp;1:1문의하기&nbsp;</button>  
-      </a>
-    </div>
-    </div>
-    
-    
-    
-    <div class="col-9" style=" margin-top: 50px;">
-      <h2>공지사항</h2>
-      <hr style="border: 1px solid black; margin-bottom: 0; margin-top: 10px;">
-    </div>
+      
+    <div style="font-size: 16px; font-weight: bold; display: inline-block;">첨부파일</div>
+      <div>
+      <th:block th:if="${#lists.isEmpty(attachList)}">
+        <div style="display: inline-block;">첨부 없음</div>
+      </th:block>  
 
-
-    <div class="col-3"></div>
-
-    
-    <div class="col-9">   
-    <div class="row">
-      <h4 class="notice-text" style="font-size: 16px; font-weight: bold;" th:text="|공지사항 : ${notice.title}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;작성일:&nbsp;&nbsp;&nbsp;${notice.createdAt}|"></h4>
-    </div>
-      <hr style="border: 1px solid black; margin-bottom: 0; margin-top: 10px;">    
-    </div>
+      <th:block th:if="${not #lists.isEmpty(attachList)}">
+        <th:block th:each="a:${attachList}">
+          <div class="attach" th:data-attach_no="${a.attachNo}" style="display: inline-block;">
+            <a th:text="${a.originalFilename}"></a>
+          </div>
+        </th:block>
+        <div style="display: inline-block;">
+          <a th:href="@{/notice/downloadAll.do(noticeNo=${notice.noticeNo})}">모두 다운로드</a>
+        </div>
+      </th:block>       
+      </div>
+      
+      </div>
+      
     
 
     
    
-    <div class="col-3"></div>
-      <div class="col-9">   
       
       <div class="wrap1">
         <div class="box3"></div>
       </div>    
       
-      <div class="contents" th:text="${notice.contents}"></div>
-        
+      <div class="contents" th:text="${notice.contents}" style="white-space: pre-wrap;"></div>
        
-      </div>
       
       <div class="wrap1">
         <div class="box4"></div>        
       </div>
       
       
-      <div class="col-3"></div>
  
-      <div class="col-9"  style="padding-left:10px; padding-right: 40px;">
       <div class="text-center">
       <div>
         <form id="frm_btn" method="post">
@@ -140,14 +141,15 @@
             <input type="hidden" name="contents" th:value="${notice.contents}">
                 <form class="frm_remove" method="post" th:action="@{/notice/remove.do}" style="display: inline;">
                   <th:block th:if="${session.user != null}">
-                      <input type="hidden" name="noticeNo" th:value="${notice.noticeNo}">
-                      <button type="submit" id="btn_edit" class="btn btn-outline-primary">수정</button>
-                      <button type="submit" id="btn_remove" class="btn btn-danger btn-sm"style="width: 60px; height: 35px;">삭제</button>
+                    <th:block th:if="${session.user.auth == 0}">
+                        <input type="hidden" name="noticeNo" th:value="${notice.noticeNo}">
+                        <button type="submit" id="btn_edit" class="btn btn-outline-primary">수정</button>
+                        <button type="submit" id="btn_remove" class="btn btn-danger btn-sm"style="width: 60px; height: 35px;">삭제</button>
+                    </th:block>
                   </th:block>
                 </form>
         </form>
       </div> 
-      </div>
       </div>
            
 
@@ -157,12 +159,6 @@
         <div class="box5"></div>        
       </div>
       
-        
-
-
-       
- 
-     
 
   
   
@@ -174,38 +170,6 @@
   </div>
 
     
-
-
-
-
-
-    <div>
-        <th:block th:if="${#lists.isEmpty(attachList)}">
-          <div>첨부 없음</div>          
-        </th:block>
-        <th:block th:if="${not #lists.isEmpty(attachList)}">
-          <th:block th:each="atc:${attachList}">
-            <div class="attach" th:data-attach_no="${atc.attachNo}">
-              <th:block th:if="${atc.hasThumbnail == 1}">
-                <img th:src="@{|${atc.path}/s_${atc.filesystemName}|}" alt="썸네일" width="50">
-              </th:block>
-              <th:block th:if="${atc.hasThumbnail == 0}">
-                <img th:src="@{/image/attach1.png}" alt="썸네일" width="50">
-              </th:block>
-              <a th:text="${atc.originalFilename}"></a>
-            </div>
-          </th:block>
-        </th:block>
-      </div>
-      
-    
-    
-    
-    
-
-    
-    
-    
     
     
     
@@ -216,23 +180,6 @@
       </div>
       
       
-      
-      
-      
-      
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
             
             
             
@@ -259,6 +206,7 @@
         $('#btn_edit').click(() => {
           event.preventDefault();
           if(confirm('수정할꺼에요?')){
+          frmBtn.attr('method', 'get');
           frmBtn.attr('action', '/notice/edit.form');
           frmBtn.submit();
           }
@@ -275,17 +223,27 @@
           
         })
       }
-  
+      
+      
+      
+      
+            const fnDownload = () => {
+        $('.attach').click(function(){
+          if(confirm('다운로드 할까요?')){
+            location.href = '/notice/download.do?attachNo=' + $(this).data('attach_no');
+          }
+        })
+      }
+      
       fnEditNotice();
       fnRemoveNotice();      
-      
+      fnDownload();      
       
       </script>
   
   
   
   
-  <div th:replace="~{/layout/footer::footer}"></div>
+  <div th:replace="~{layout/footer::footer}"></div>
 </body>
 </html>
-

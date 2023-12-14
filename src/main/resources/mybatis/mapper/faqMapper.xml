@@ -6,7 +6,7 @@
 <mapper namespace="com.tour.hanbando.dao.FaqMapper">
 
   <select id="getFaqList" parameterType="Map" resultType="FaqDto">
-    SELECT FAQ_NO, CA_NO, TITLE, CONTENTS, CREATED_AT, MODIFIED_AT 
+    SELECT ROW_NUMBER() OVER(ORDER BY FAQ_NO DESC) AS RN, FAQ_NO, CA_NO, TITLE, CONTENTS, CREATED_AT, MODIFIED_AT 
       FROM FAQ_T
      <if test="caNo != 0">
         WHERE CA_NO = #{caNo}
@@ -24,7 +24,7 @@
         FROM FAQ_T
     </select>
     
-    <select id="getFaqCaList" resultType="FaqDto">
+    <select id="getFaqCaList" resultType="FaqCaDto">
     SELECT CA_NO, CA_TITLE
       FROM FAQ_CA_T
    </select>
@@ -61,7 +61,7 @@
     
     <select id="getFaqDetail" resultType="faqCaDto">
       SELECT CA_NO, CA_TITLE
-        FROM FAQ_CA_T     
+        FROM FAQ_CA_T 
     </select>
     
     <delete id="deleteFaq" parameterType="int"> 

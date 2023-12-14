@@ -17,6 +17,7 @@ import org.springframework.ui.Model;
 
 import com.tour.hanbando.dao.ManageMapper;
 import com.tour.hanbando.dao.UserMapper;
+import com.tour.hanbando.dto.HeartDto;
 import com.tour.hanbando.dto.HotelDto;
 import com.tour.hanbando.dto.InactiveUserDto;
 import com.tour.hanbando.dto.LeaveUserDto;
@@ -229,6 +230,73 @@ public class ManageServiceImpl implements ManageService {
   /**
    * 찜 목록 
    */
+  @Transactional(readOnly=true)
+  @Override
+  public void loadHeartList(HttpServletRequest request, Model model) {
+    
+    Optional<String> opt = Optional.ofNullable(request.getParameter("page"));
+    int page = Integer.parseInt(opt.orElse("1"));
+    
+    int userNo = Integer.parseInt(request.getParameter("userNo"));
+    
+    Map<String, Object> map = new HashMap<>();
+    map.put("userNo", userNo);
+    
+    int total = manageMapper.getHeartCount(map);
+    int display = 10;
+    
+    myPageUtils.setPaging(page, total, display);
+    
+    map.put("begin", myPageUtils.getBegin());
+    map.put("end", myPageUtils.getEnd());
+    
+    List<HeartDto> heartList = manageMapper.getHeartList(map);
+    UserDto user = userMapper.getUser(map);
+    
+    model.addAttribute("user", user);
+    model.addAttribute("heartList", heartList);
+    model.addAttribute("paging", myPageUtils.getMvcPaging(request.getContextPath() + "/manage/heartList.do", "userNo=" + userNo));
+    model.addAttribute("beginNo", total - (page - 1) * display);
+    model.addAttribute("total", total);
+    
+  }
+  
+  /**
+   * 찜 검색
+   */
+  @Transactional(readOnly=true)
+  @Override
+  public void loadSearchHeartList(HttpServletRequest request, Model model) {
+    
+    int userNo = Integer.parseInt(request.getParameter("userNo"));
+    String column = request.getParameter("column");
+    String query = request.getParameter("query");
+    
+    Map<String, Object> map = new HashMap<>();
+    map.put("userNo", userNo);
+    map.put("column", column);
+    map.put("query", query);
+    
+    int total = manageMapper.getHeartSearchCount(map);
+    
+    Optional<String> opt = Optional.ofNullable(request.getParameter("page"));
+    int page = Integer.parseInt(opt.orElse("1"));
+    int display = 10;
+    
+    myPageUtils.setPaging(page, total, display);
+    
+    map.put("begin", myPageUtils.getBegin());
+    map.put("end", myPageUtils.getEnd());
+    List<HeartDto> heartList = manageMapper.getHeartSearchList(map);
+    UserDto user = userMapper.getUser(map);
+    
+    model.addAttribute("user", user);
+    model.addAttribute("heartList", heartList);
+    model.addAttribute("paging", myPageUtils.getMvcPaging(request.getContextPath() + "/manage/heartList.do", "userNo=" + userNo + "&column=" + column + "&query" + query));
+    model.addAttribute("beginNo", total - (page - 1) * display);
+    model.addAttribute("total", total);
+    
+  }
 
   
   /**
@@ -612,7 +680,7 @@ public class ManageServiceImpl implements ManageService {
   }
   
   /**
-   * 호텔 예약/추천 여부 변경
+   * 호텔 판매/추천 여부 변경
    * 
    * @author 심희수
    * @param request

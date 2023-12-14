@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 
-<head th:replace="~{/layout/header::head('한반도 투어')}"></head> <!-- 이거 알맞게 바꿔주세요-->
+<head th:replace="~{layout/header::head('한반도 투어')}"></head> <!-- 이거 알맞게 바꿔주세요-->
     <style>
       .content > .form-control {
         height: 400px;
@@ -24,9 +24,60 @@
       }
             
     </style>
-
+   <script>
+     
+     $(() => {
+       fnFileCheck();
+       fnNoticeModify();
+     })
+     
+         const fnFileCheck = () => {
+      $('#files').change((ev) => {
+        $('#attached_list').empty();
+        let maxSize = 1024 * 1024 * 100;
+        let maxSizePerFile = 1024 * 1024 * 10;
+        let totalSize = 0;
+        let files = ev.target.files;
+        for(let i = 0; i < files.length; i++){
+          totalSize += files[i].size;
+          if(files[i].size > maxSizePerFile){
+            alert('각 첨부파일의 최대 크기는 10MB입니다.');
+            $(ev.target).val('');
+            $('#attached_list').empty();
+            return;
+          }
+          $('#attached_list').append('<div>' + files[i].name + '</div>');
+        }
+        if(totalSize > maxSize){
+          alert('전체 첨부파일의 최대 크기는 100MB입니다.');
+          $(ev.target).val('');
+          $('#attached_list').empty();
+          return;
+        }
+      })
+    }  
+ 
+    const fnNoticeModify = () => {
+      $('#frm_notice_add').submit((ev) => {
+        if ($('#title').val() === '') {
+          alert('제목은 반드시 입력해야 합니다.');
+          $('#title').focus();
+          ev.preventDefault();
+          return;
+        }
+        if ($('#contents').val() === '') {
+          alert('내용은 반드시 입력해야 합니다.');
+          $('#contents').focus();
+          ev.preventDefault();
+          return;
+        }
+      });
+    };
+      
+          
+   </script>   
 <body>
-  <div th:replace="~{/layout/header::header}"></div>
+  <div th:replace="~{layout/header::header}"></div>
   
   <div class="main_wrap">
     
@@ -41,7 +92,7 @@
         
               <div>
 
-      <form id="frm_notice_add" method="post" th:action="@{/notice/addNotice.do}">
+      <form id="frm_notice_add" method="post" th:action="@{/notice/addNotice.do}" enctype="multipart/form-data">
         
         <h1 style="text-align: center;">공지사항을 작성하세요</h1>
         
@@ -76,7 +127,9 @@
         <div class="col-1"></div>
         <div class="col-10">
           <div class="file_up" style="padding-left:230px">
-          <input type="file" name="files" id="files" class="form-control" style="width:300px;">
+          <input type="file" name="files" id="files" class="form-control" style="width:300px;" multiple>
+          <div class="attached_list mt-2" id="attached_list"></div>
+
           </div>
           
         <div class ="wrap1">
@@ -107,66 +160,7 @@
             
             
             
-     <script>
-       
-           const fnFileCheck = () => {
-        $('#files').change((ev) => {
-          $('#attached_list').empty();
-          let maxSize = 1024 * 1024 * 100;
-          let maxSizePerFile = 1024 * 1024 * 10;
-          let totalSize = 0;
-          let files = ev.target.files;
-          for(let i = 0; i < files.length; i++){
-            totalSize += files[i].size;
-            if(files[i].size > maxSizePerFile){
-              alert('각 첨부파일의 최대 크기는 10MB입니다.');
-              $(ev.target).val('');
-              $('#attached_list').empty();
-              return;
-            }
-            $('#attached_list').append('<div>' + files[i].name + '</div>');
-          }
-          if(totalSize > maxSize){
-            alert('전체 첨부파일의 최대 크기는 100MB입니다.');
-            $(ev.target).val('');
-            $('#attached_list').empty();
-            return;
-          }
-        })
-      }  
    
-const fnNoticeModify = () => {
-  $('#frm_notice_add').submit((ev) => {
-    if ($('#title').val() === '') {
-      alert('제목은 반드시 입력해야 합니다.');
-      $('#title').focus();
-      ev.preventDefault();
-      return;
-    }
-    if ($('#contents').val() === '') {
-      alert('내용은 반드시 입력해야 합니다.');
-      $('#contents').focus();
-      ev.preventDefault();
-      return;
-    }
-  });
-};
-        
-      
-     
-      fnNoticeModify();   
-        
-        
-            
-            
-            
-            
-            
-            
-     fnFileCheck();      
-            
-            
-     </script>      
             
             
             
@@ -185,7 +179,7 @@ const fnNoticeModify = () => {
   
   
   
-  <div th:replace="~{/layout/footer::footer}"></div>
+  <div th:replace="~{layout/footer::footer}"></div>
 </body>
 </html>
 

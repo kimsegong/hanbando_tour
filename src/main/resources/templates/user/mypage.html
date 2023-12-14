@@ -1,22 +1,40 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 
-<head th:replace="~{/layout/header::head('마이페이지')}"></head>
+<head th:replace="~{layout/header::head('마이페이지')}"></head>
 <style>
   #split2 {
     flex: 0 0 80%;
   }
   .title {
     font-size: 30px;
+    font-weight: 400;
   }
  
 </style>
 
 <script th:src="@{/js/user_modify.js(ver=1.0)}"></script>
-
+<script th:inline="javascript">
+  
+  $(() => {
+  fnExtesion();
+})
+  
+  const fnExtesion = () => {
+  let extensionResult = /*[[${extensionResult}]]*/ null;
+  if(extensionResult !== null){
+     if(extensionResult === 1){
+       alert('90일 연장되었습니다.');
+     } else {
+       alert('비밀번호 연장이 되지 않았습니다.');
+     }
+   }
+}
+</script>
+  
 <body>
   
-  <div th:replace="~{/layout/header::header}"></div>
+  <div th:replace="~{layout/header::header}"></div>
   
    <div class="main_wrap">
   
@@ -25,7 +43,7 @@
       <div class="row">
         <div class="col-1"> 
       <!--/* 비밀번호 변경과 찜 목록으로 이동 가능한 좌측 메뉴 버튼 */-->
-         <div class="w3-sidebar w3-bar-block" style="width:20%; height:200px;"> <!-- 사이드바 -->
+         <div class="w3-sidebar w3-bar-block" style="width:10%; height:200px;"> <!-- 사이드바 -->
           <a th:href="@{/user/modifyPw.form}" class="w3-bar-item w3-button">비밀번호변경하기💡</a>
           <a th:href="@{/reserve/reserveList.do(userNo=${session.user.userNo})}" class="w3-bar-item w3-button">나의 예약보기📆</a>
           <a th:href="@{/user/heart.do(userNo=${session.user.userNo})}" class="w3-bar-item w3-button">나의 찜한목록보기💚</a>
@@ -42,7 +60,7 @@
         
         <div th:if="${session.user.state == 0}" class="text-center">
           <div class="mb-2">비밀번호 변경</div>
-          <button type="button" id="btn_modify_pw" class="btn btn-danger">비밀번호변경하기</button>
+          <button type="button" id="btn_modify_pw" class="w3-btn w3-round-xxlarge w3-green w3-block mx-auto">비밀번호변경하기</button>
         </div>
         <hr class="my-3">
         
@@ -57,7 +75,7 @@
         </div>
         <div class="row mb-2">
           <label for="name" class="col-sm-3 col-form-label">이름</label>
-          <div class="col-sm-9"><input type="text" name="name" th:value="${session.user.name}" id="name" class="form-control w-50 p-3 h-50 d-inline-block"></div>
+          <div class="col-sm-9"><input type="text" name="name" th:value="${session.user.name}" id="name" class="form-control-plaintext w-50 p-3 h-50 d-inline-block" readonly></div>
           <div class="col-sm-3"></div>
           <div class="col-sm-9 mb-3" id="msg_name"></div>
         </div>
@@ -91,7 +109,7 @@
         <div class="row mb-2">
           <label for="postcode" class="col-sm-3 col-form-label">주소</label>
           <div class="col-sm-4"><input type="text" name="postcode" th:value="${session.user.postcode}" id="postcode" class="form-control" onclick="execDaumPostcode()" placeholder="우편번호" readonly></div>
-          <div class="col-sm-5"><input type="button" class="btn btn-outline-success" onclick="execDaumPostcode()" value="우편번호 찾기"></div>
+          <div class="col-sm-5"><input type="button" class="w3-btn w3-round-xxlarge w3-green" onclick="execDaumPostcode()" value="우편번호 찾기"></div>
         </div>
         
         <div>
@@ -165,7 +183,7 @@
         <div class="row mt-3">
           <label class="col-sm-12 form-label">이벤트 알림 동의(선택)</label>
         </div>
-        <div class="row mb-2">
+        <div class="row mb-2 d-flex justify-content-center align-items-center">
           <div class="col-sm-3">
             <input type="radio" name="event" value="on" id="event_on" class="form-check-input">
             <label class="form-check-label" for="event_on">동의함</label>
@@ -188,8 +206,8 @@
         
         <div class="text-center">
           <input type="hidden" name="userNo" th:value="${session.user.userNo}">
-          <button type="button" id="btn_leave" class="btn btn-dark">회원탈퇴</button>
-          <button type="button" id="btn_modify" class="btn btn-success">개인정보수정</button>
+          <button type="button" id="btn_leave" class="w3-btn w3-round-xxlarge w3-grey">회원탈퇴</button>
+          <button type="button" id="btn_modify" class="w3-btn w3-round-xxlarge w3-green">개인정보수정</button>
         </div>
         
           
@@ -205,7 +223,7 @@
 
   </div>
   
-  <div th:replace="~{/layout/footer::footer}"></div>
+  <div th:replace="~{layout/footer::footer}"></div>
   
 </body>
 </html>
