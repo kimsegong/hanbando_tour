@@ -50,7 +50,7 @@ public class PackageServiceImpl implements PackageService {
   public Map<String, Object> getPackageList(HttpServletRequest request, String condition, int recommendStatus) {
 	  Optional<String> optPage = Optional.ofNullable(request.getParameter("page"));
 	    int page = Integer.parseInt(optPage.orElse("1"));
-	    int display = 9;
+	    int display = 12;
 	    int regionNo = Integer.parseInt(request.getParameter("regionNo"));	    
 	    int total = packageMapper.getPackageCount(regionNo, condition);
 
@@ -523,7 +523,13 @@ public class PackageServiceImpl implements PackageService {
       return result;
       
     }
-    
+      
+	@Transactional(readOnly=true)
+	@Override
+    public int getTotalReviewCount(int packageNo) {
+        return packageMapper.getReviewCount(packageNo);
+    }
+	
     @Override
     public Map<String, Object> loadReviewStarList(HttpServletRequest request) {
        int packageNo = Integer.parseInt(request.getParameter("packageNo"));
