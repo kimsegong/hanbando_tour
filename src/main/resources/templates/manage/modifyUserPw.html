@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 
-<head th:replace="~{/layout/header::head(|${user.userNo}번 회원 비밀번호 변경|)}"></head> 
+<head th:replace="~{layout/header::head(|${user.userNo}번 회원 비밀번호 변경|)}"></head> 
 <style>
   
  .container {
@@ -56,6 +56,15 @@
     color: #fff;               /* 호버 시 텍스트 색상 */
     background-color: #96B6C5; /* 호버 시 배경 색상 */
   }
+  
+  .user_email {
+    font-size: 1.7em;
+    font-weight: bold;
+    margin-bottom: 4%;
+    padding-bottom: 2%;
+    color: #96B6C5;
+    border-bottom: 1px solid #ccc;
+  }
 
 
 </style>
@@ -105,7 +114,7 @@
 </script>
 
 <body>
-	<div th:replace="~{/layout/header::header}"></div>
+	<div th:replace="~{layout/header::header}"></div>
 	
 	<div class="main_wrap">
 	
@@ -118,6 +127,8 @@
 		   
 		   
           <div>
+            
+            <div th:text="|${user.email}의 비밀번호 변경|" class="user_email"></div>
             
             <form id="frm_modify_pw" method="post" th:action="@{/manage/modifyUserPw.do}">
 
@@ -161,7 +172,7 @@
 	
 	
 	
-	<div th:replace="~{/layout/footer::footer}"></div>
+	<div th:replace="~{layout/footer::footer}"></div>
 </body>
 </html>
 

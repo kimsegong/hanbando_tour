@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 
-<head th:replace="~{/layout/header::head('한반도 투어')}"></head> <!-- 이거 알맞게 바꿔주세요-->
+<head th:replace="~{layout/header::head('한반도 투어')}"></head> <!-- 이거 알맞게 바꿔주세요-->
 <body>
-	<div th:replace="~{/layout/header::header}"></div>
+	<div th:replace="~{layout/header::header}"></div>
 	
 	<div class="main_wrap">
 	
@@ -13,8 +13,9 @@
 		    <div class="col-1">	      
 		    </div>
 		    <div class="col-10" style="border:1px gray dotted">
-		      	<!--/*여기에 작성/ 다 만들고 style 지워주세요  */-->
-		   
+		      	<input type="text" name="daterange" value="01/01/2018 - 01/15/2018" />
+
+					
 		      	
 		      	
 		    </div>
@@ -28,7 +29,7 @@
 	
 	
 	
-	<div th:replace="~{/layout/footer::footer}"></div>
+	<div th:replace="~{layout/footer::footer}"></div>
 </body>
 </html>
 

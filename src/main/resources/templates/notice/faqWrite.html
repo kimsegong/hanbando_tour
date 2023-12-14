@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 
-<head th:replace="~{/layout/header::head('한반도 투어')}"></head> <!-- 이거 알맞게 바꿔주세요-->
+<head th:replace="~{layout/header::head('자주묻는질문 작성')}"></head> 
     <style>
       .content > .form-control {
         height: 400px;
@@ -22,23 +22,35 @@
       .wrap1 > .box4{
         height: 50px;
       }
-            
+   #btn_faq_write {
+    height: 38px; 
+    width: 120px;
+    font-size: 1.2em;
+    color: #96B6C5;         /* 텍스트 색상 */
+    background-color: #fff; /* 기본 배경 색상 */
+    border-color: #96B6C5;  /* 테두리 색상 */
+    border-radius: 10px;      /* 테두리를 둥글게 만듭니다. */
+    transition: all 0.3s;     /* 모든 속성에 대해 0.3초 동안 트랜지션 효과 적용 */
+  }
+  
+  #btn_faq_write:hover {
+    color: #fff;               /* 호버 시 텍스트 색상 */
+    background-color: #96B6C5; /* 호버 시 배경 색상 */
+  }            
     </style>
 
 <body>
-  <div th:replace="~{/layout/header::header}"></div>
+  <div th:replace="~{layout/header::header}"></div>
   
   <div class="main_wrap">
     
+    <div>  
+      <a th:href="@{/notice/faqDetailWrite.form}" class="btn btn-outline-success" id="btn_faq_write" style="width:180px; margin-left:170px; margin-top:50px;">카테고리 생성</a>
+    </div>
     <div class="wrap wrap_9">
   
      <div class="container text-center">
       <div class="row">
-        <div class="col-1">  
-          <div class="w3-sidebar w3-bar-block" style="width:10%; height:200px;"> <!-- 사이드바 -->
-            <a th:href="@{/notice/faqDetailWrite.form}" class="w3-bar-item w3-button">세부메뉴 작성</a>        
-          </div>   
-        </div>
         <div class="col-10">
             <!--/*여기에 작성/ 다 만들고 style 지워주세요  */-->
         
@@ -46,7 +58,7 @@
 
       <form id="frm_faq_add" method="post" th:action="@{/notice/addFaq.do}">
         
-        <h1 style="text-align: center;">공지사항을 작성하세요</h1>
+        <h1 style="text-align: center;">자주묻는질문을 작성하세요</h1>
         
         
         <div class ="wrap1">
@@ -54,15 +66,15 @@
         </div>
         
         
-        <!-- 제목  -->
+        <!--/* 제목  */-->
         <div>
           <label for="title">제목</label>
           <input type="text" name="title" id="title" class="form-control">
         </div>
         <div class="w-25 p-3">
-         <select id="faqDetailSelect" class="form-select" aria-label="Default select example" name="caNo">
-             <option selected>-분류-</option>
-             <option th:each="faqCa : ${faqCaList}" th:value="${faqCa.caNo}" th:text="${faqCa.caTitle}"></option>
+         <select id="faqDetailSelect" class="form-select" aria-label="Default select example" name="caNo" style="margin-left:-15px;">
+             <option value="0" selected>-분류-</option>
+             <option th:each="faqCa : ${faqCaList}" name="caNo" th:value="${faqCa.caNo}" th:text="${faqCa.caTitle}"></option>
          </select>
         </div>
         
@@ -103,8 +115,7 @@
      <!-- 작성완료 submit  -->  
         <div>
            <form id="frm_detail" method="post">
-            <input type="hidden" name="faqCaNo" th:value="${faqCa.caNo}">
-            <input type="hidden" name="title" th:value="${faqCa.Title}">
+
           <a th:href="@{/notice/faqList.do}">
           <button type="submit" class="btn btn-primary col-12">작성완료</button>
           </a>
@@ -169,7 +180,7 @@ const fnNoticeModify = () => {
   
   
   
-  <div th:replace="~{/layout/footer::footer}"></div>
+  <div th:replace="~{layout/footer::footer}"></div>
 </body>
 </html>
 

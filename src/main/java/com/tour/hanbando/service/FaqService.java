@@ -11,7 +11,11 @@ import com.tour.hanbando.dto.FaqDto;
 
 public interface FaqService {
   public Map<String, Object> loadFaqList(HttpServletRequest request);
+<<<<<<< HEAD
   public FaqCaDto loadFaqCaList(HttpServletRequest request, Model model);
+=======
+  public Map<String, Object>loadFaqCaList(HttpServletRequest request, Model model);
+>>>>>>> 66c6e8c6c300ed2a05fad51ec6fdbd6453531d82
   public void loadFaqCashList(HttpServletRequest request, Model model);
   public void loadFaqKoreaList(HttpServletRequest request, Model model);
   public void loadFaqMemberList(HttpServletRequest request, Model model);

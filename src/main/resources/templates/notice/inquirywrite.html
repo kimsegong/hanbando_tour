@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 
-<head th:replace="~{/layout/header::head('한반도 투어')}"></head> <!-- 이거 알맞게 바꿔주세요-->
+<head th:replace="~{layout/header::head('한반도 투어')}"></head> <!-- 이거 알맞게 바꿔주세요-->
 
 <style>
   .wrap1 > .box1{
@@ -41,12 +41,27 @@
   .btn-outline-primary{
     height:30px;
   }
- 
+
+  #btn_inquiry_list {
+  height: 38px; 
+  width: 100px;
+  font-size: 1.2em;
+  color: #96B6C5;         /* 텍스트 색상 */
+  background-color: #fff; /* 기본 배경 색상 */
+  border-color: #96B6C5;  /* 테두리 색상 */
+  border-radius: 10px;      /* 테두리를 둥글게 만듭니다. */
+  transition: all 0.3s;     /* 모든 속성에 대해 0.3초 동안 트랜지션 효과 적용 */
+  }
+  
+  #btn_inquiry_list:hover {
+    color: #fff;               /* 호버 시 텍스트 색상 */
+    background-color: #96B6C5; /* 호버 시 배경 색상 */
+  }
 </style>
 
 
 <body>
-  <div th:replace="~{/layout/header::header}"></div>
+  <div th:replace="~{layout/header::header}"></div>
   
   <div class="main_wrap">
   
@@ -77,23 +92,11 @@
     
  
     <div class="col-3"> 
-      <div>
-      <a th:href="@{/notice/list.do}">
-      <button type="button" class="btn btn-outline-primary" style="height:40px;">&nbsp;&nbsp;&nbsp;&nbsp;공지사항&nbsp;&nbsp;&nbsp;&nbsp;</button>  
+
+      <a th:href="@{/notice/inquirylist.do(userNo=${session.user.userNo})}" class="w3-bar-item inquiry_user">
+        <button type="button" id="btn_inquiry_list">목록보기</button>   
       </a>
-      </div> 
     
-    <div>
-      <a th:href="@{/notice/faqList.do}">
-      <button type="button" class="btn btn-outline-primary" style="height:40px;">자주묻는질문</button>  
-      </a>
-    </div>
-    
-    <div>
-      <a th:href="@{/notice/inquirywrite.form}">
-      <button type="button" class="btn btn btn-primary" style="height:40px;">&nbsp;1:1문의하기&nbsp;</button>  
-      </a>
-    </div>
     </div>
     
     <div class="col-1" style="font-size:18px;">
@@ -158,15 +161,10 @@
       
       <div>
       <input type="hidden" name="userNo" th:value="${session.user.userNo}">
-      <a th:href = "@{/notice/list.do}">
+      <a th:href = "@{/notice/inquirylist.do(userNo=${session.user.userNo})}">
       <button type="button" class="btn btn-secondary btn-sm">작성 취소</button>&nbsp;&nbsp;&nbsp;
       </a>
-      <a th:href = "@{/notice/inquirylist.do}">
       <button type="submit" class="btn btn-outline-primary" style="margin-right: 8px;">문의 완료</button>  
-      </a> 
-      <a th:href = "@{/notice/inquirylist.do}">
-      <button type="button" class="btn btn-outline-primary">목록보기</button>
-      </a> 
       </div>
       
       </form>
@@ -246,7 +244,7 @@
   
   
   
-  <div th:replace="~{/layout/footer::footer}"></div>
+  <div th:replace="~{layout/footer::footer}"></div>
 </body>
 </html>
 

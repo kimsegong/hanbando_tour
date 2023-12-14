@@ -11,10 +11,11 @@ import lombok.NoArgsConstructor;
 @Builder
 public class InquiryDto {
   private int inquiryNo;
-  private int userNo;
   private String title;
   private String contents;
   private String createdAt;
   private String separate;
+  private int answerStatus;
+  private UserDto userDto;
 }
 

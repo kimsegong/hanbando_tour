@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 
- <head th:replace="~{/layout/header::head('패키지상품리스트')}"></head>
+ <head th:replace="~{layout/header::head('패키지상품리스트')}"></head>
 <style>
   .card {
       width: 18rem;
@@ -27,7 +27,7 @@
 </style>  
 <body>
 
-  <div th:replace="~{/layout/header::header}"></div>
+  <div th:replace="~{layout/header::header}"></div>
 
   <div class="container text-center">  <!-- 그리드 시작 -->  
   <div class="row">
@@ -45,7 +45,7 @@
          <span id="count"></span>개의 상품
         </div>
         <div class="btn-group btn-group-sm" role="group" aria-label="Small button group" style="display: inline-block;">
-          <button type="button" class="btn btn-outline-kong" id="recommend" value="1">추천순</button>
+          <button type="button" class="btn btn-outline-kong" id="recommend" value="1">추천</button>
           <button type="button" class="btn btn-outline-kong" id="review" value="2">리뷰순</button>
           <button type="button" class="btn btn-outline-kong" id="rowPrice" value="3">가격낮은순</button>
           <button type="button" class="btn btn-outline-kong" id="highPrice" value="4">가격높은순</button>
@@ -88,7 +88,7 @@
               let str ='';
               str += '<div class="col-md-4">';
               str += '<div class="card w-100 p-3" onclick="location.href=\''+address+hotel.hotelNo + '\'">';
-              str += '<img src="https://github.com/skal48/portfolio/blob/main/hanla.jpg?raw=true" style="height: 250px;" class="card-img-top" alt="Package Image">';
+              str += '<img src="'+ hotel.hotelImageDto.imagePath +'/'+ hotel.hotelImageDto.filesystemName +'" style="height: 250px;" class="card-img-top" >';
               str += '<div class="card-body">';
               str += '<p class="card-title">' + hotel.hotelName + '</p>';
               str += '<p class="card-text">최저 '+resData.price[i] +'원 부터~</p>';
@@ -141,7 +141,7 @@
     fnScroll();
   </script>
 
-    <div th:replace="~{/layout/footer::footer}"></div>
+    <div th:replace="~{layout/footer::footer}"></div>
  
 </body>
 </html>

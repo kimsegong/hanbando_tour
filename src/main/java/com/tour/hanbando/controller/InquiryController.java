@@ -23,10 +23,17 @@ public class InquiryController {
 
   private final InquiryService inquiryService;
   
+  /*회원이 보는 1:1문의목록*/
   @GetMapping("/inquirylist.do")
-  public String inquirylist(HttpServletRequest request, Model model) {
-    inquiryService.loadInquiryList(request, model);
+  public String inquirylist(@RequestParam(value="userNo", required=false, defaultValue="0") int userNo, Model model) {
+    inquiryService.loadUserInquiryList(userNo, model);
     return "notice/inquirylist";
+  }
+  /* 관리자가 보는 1:1문의목록 */
+  @GetMapping("/inquiryManage.do")
+  public String inquiryManage(HttpServletRequest request, Model model) {
+    inquiryService.loadInquiryList(request, model);
+    return "notice/inquirylistManage";
   }
   
   /* 1:1문의 작성하기 */
@@ -34,13 +41,12 @@ public class InquiryController {
   public String addInquiry(HttpServletRequest request, RedirectAttributes redirectAttributes) {
     int addResult = inquiryService.addInquiry(request);
     redirectAttributes.addFlashAttribute("addResult", addResult);
-    return "redirect:/notice/inquirylist.do";
+    return "redirect:/notice/inquirylist.do?userNo=" +request.getParameter("userNo");
   }
   
   @GetMapping("/inquirywrite.form")
   public String inquirywrite() {
     return "notice/inquirywrite";
-  
   }
   
   @PostMapping("/inquiryremove.do")
@@ -48,7 +54,7 @@ public class InquiryController {
                      , RedirectAttributes redirectAttributes) {
     int removeResult = inquiryService.removeInquiry(inquiryNo);
     redirectAttributes.addFlashAttribute("removeResult", removeResult);
-    return "redirect:/notice/inquirylist.do";
+    return "redirect:/notice/inquiryManage.do";
   
  }
   
@@ -82,5 +88,12 @@ public class InquiryController {
   public String inquiryAnswerWrite(HttpServletRequest request, Model model) {
     model.addAttribute("inquiryNo", request.getParameter("inquiryNo"));
     return "notice/inquiryAnswerWrite";
+  }
+  
+  /* 문의 검색 */
+  @GetMapping("/searchInquiryList.do")
+  public String searchInquiryList(HttpServletRequest request, Model model) {
+    inquiryService.loadSearchInquiryList(request, model);
+    return "notice/inquirylistManage";
   }
 }

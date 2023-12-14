@@ -43,16 +43,24 @@ public Map<String, Object> loadFaqList(HttpServletRequest request) {
                                  , "caNo", caNo);
   
   List<FaqDto> faqList = faqMapper.getFaqList(map);
-  List<FaqCaDto> faqCaList = faqMapper.getFaqCaList();
   
   String paging = myPageUtils.getAjaxPaging();
   Map<String, Object> result = new HashMap<String, Object>();
   result.put("faqList", faqList);
-  result.put("faqCaList", faqCaList);
   result.put("paging", paging);
+
   return result;
   
 }
+public Map<String, Object> loadFaqCaList(HttpServletRequest request, Model model) {
+    List<FaqCaDto> faqCaList = faqMapper.getFaqCaList();
+    Map<String, Object> result = new HashMap<>();
+    result.put("faqCaList", faqCaList);
+    model.addAttribute("faqCaList", faqCaList);
+    return result;
+}
+
+
 @Override
 public void loadFaqCashList(HttpServletRequest request, Model model) {
   
@@ -152,13 +160,8 @@ public int addFaqDetail(HttpServletRequest request) {
 @Override
 public void getFaqDetail(HttpServletRequest request, Model model) {
   
-    String caNo = request.getParameter("caNo");
-    
-    Map<String, Object> map = new HashMap<>();
-    
-    map.put("caNo", caNo);
 
-    List<FaqCaDto> faqCaList = faqMapper.getFaqDetail(map);
+    List<FaqCaDto> faqCaList = faqMapper.getFaqDetail();
     
     model.addAttribute("faqCaList", faqCaList);
 }

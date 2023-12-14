@@ -55,24 +55,7 @@
       <result    column="REGION_NAME" property="regionName"/>
     </association>
   </resultMap>
-  
-  <!-- 객실 타입 DTO -->
-  <resultMap type="RoomtypeDto"   id="RoomtypeMap" >
-    <id      column="HOTEL_NO"    property="hotelNo" />
-    <result  column="ROOM_DETAIL" property="roomDetail" />
-    <result  column="ROOM_NAME"   property="roomName" />
-    <result  column="ROOM_MANY"   property="roomMany" />
-    <result  column="R_VIEW"      property="rView" />
-    <result  column="BLEAKFAST"   property="bleakfast" />
-    <result  column="SMOKE"       property="smoke" />
-    <result  column="PEOPLE"      property="people" />
-    <result  column="BED"         property="bed" />
-    <result  column="SHOWER"      property="shower" />
-    <result  column="R_SIZE"     property="rSize" />
-    <association javaType="RoomFeatureDto" property="roomFeatureDto">
-      <id        column="ROOM_NO"          property="roomNo" />
-    </association>
-  </resultMap>
+
   
   <!-- 예약 DTO -->
   <resultMap type="ReserveDto"       id="ReserveMap">
@@ -155,6 +138,24 @@
       <result    column="JOINED_AT"      property="joinedAt"/>
     </association>
   </resultMap>
+  
+  <!-- 찜 DTO -->
+  <resultMap type="HeartDto" id="HeartMap" >
+    <association javaType="UserDto" property="userDto">
+      <id        column="USER_NO"   property="userNo" />
+      <result    column="EMAIL"     property="email" />
+      <result    column="NAME"      property="name" />
+    </association>
+    <association javaType="PackageDto"  property="packageDto">
+      <id        column="PACKAGE_NO"    property="packageNo" />
+      <result    column="PACKAGE_TITLE" property="packageTitle" />
+      <result    column="PRICE"         property="price" />
+    </association>
+    <association javaType="HotelDto" property="hotelDto">
+      <id        column="HOTEL_NO"   property="hotelNo" />
+      <result    column="HOTEL_NAME" property="hotelName" />
+    </association>
+  </resultMap>
 	
   <!-- 회원 관리 목록 -->
   <select id="getUserCount" resultType="int">
@@ -183,7 +184,62 @@
      WHERE RN BETWEEN #{begin} AND #{end}
   </select>
   
-  <!-- 찜목록 가져오기 -->
+  <!-- 찜 목록 가져오기 -->
+  <select id="getHeartCount" parameterType="Map" resultType="int">
+    SELECT COUNT(*)
+      FROM HEART_T
+     WHERE USER_NO = #{userNo}
+  </select>
+  <select id="getHeartList" parameterType="Map" resultMap="HeartMap">
+    SELECT A.USER_NO, A.EMAIL, A.NAME, A.PACKAGE_NO, A.PACKAGE_TITLE, A.PRICE, A.HOTEL_NO, A.HOTEL_NAME
+      FROM (SELECT ROW_NUMBER() OVER(ORDER BY HT.USER_NO) AS RN
+                 , HT.USER_NO, U.EMAIL, U.NAME
+                 , HT.PACKAGE_NO, P.PACKAGE_TITLE, P.PRICE
+                 , HT.HOTEL_NO, HO.HOTEL_NAME
+              FROM USER_T U LEFT OUTER JOIN HEART_T HT 
+                ON U.USER_NO = HT.USER_NO LEFT OUTER JOIN PACKAGE_T P
+                ON P.PACKAGE_NO = HT.PACKAGE_NO LEFT OUTER JOIN HOTEL_T HO
+                ON HO.HOTEL_NO = HT.HOTEL_NO
+             WHERE HT.USER_NO = #{userNo}) A
+     WHERE RN BETWEEN #{begin} AND #{end}
+  </select>
+  
+  
+  <!-- 찜 검색 가져오기 -->
+  <select id="getHeartSearchCount" parameterType="Map" resultType="int">
+    SELECT COUNT(*)
+      FROM HEART_T HT LEFT OUTER JOIN PACKAGE_T P
+        ON P.PACKAGE_NO = HT.PACKAGE_NO LEFT OUTER JOIN HOTEL_T HO
+        ON HO.HOTEL_NO = HT.HOTEL_NO
+       <where>
+         <if test="userNo != null">
+           HT.USER_NO = #{userNo}
+         </if>
+         <if test="column != null and query != null">
+           AND ${column} LIKE '%' || #{query} || '%'
+         </if>
+       </where>
+  </select>
+  <select id="getHeartSearchList" parameterType="Map" resultMap="HeartMap">
+    SELECT A.USER_NO, A.EMAIL, A.NAME, A.PACKAGE_NO, A.PACKAGE_TITLE, A.PRICE, A.HOTEL_NO, A.HOTEL_NAME
+      FROM (SELECT ROW_NUMBER() OVER(ORDER BY HT.USER_NO) AS RN
+                 , HT.USER_NO, U.EMAIL, U.NAME
+                 , HT.PACKAGE_NO, P.PACKAGE_TITLE, P.PRICE
+                 , HT.HOTEL_NO, HO.HOTEL_NAME
+              FROM USER_T U LEFT OUTER JOIN HEART_T HT 
+                ON U.USER_NO = HT.USER_NO LEFT OUTER JOIN PACKAGE_T P
+                ON P.PACKAGE_NO = HT.PACKAGE_NO LEFT OUTER JOIN HOTEL_T HO
+                ON HO.HOTEL_NO = HT.HOTEL_NO
+               <where>
+                 <if test="userNo != null">
+                   HT.USER_NO = #{userNo}
+                 </if>
+                 <if test="column != null and query != null">
+                   AND ${column} LIKE '%' || #{query} || '%'
+                 </if>
+               </where>) A
+     WHERE RN BETWEEN #{begin} AND #{end}
+  </select>
 
   
   
@@ -364,7 +420,7 @@
   </select>
   
   <!-- 호텔 객실 타입 -->
-  <select id="getRoomType" resultMap="RoomtypeMap">
+  <select id="getRoomType" resultType="RoomtypeDto">
     SELECT ROOM_NO, HOTEL_NO, ROOM_NAME, ROOM_MANY
       FROM ROOMTYPE_T
   </select>
@@ -401,7 +457,7 @@
      WHERE PACKAGE_NO = #{packageNo}
   </update>
   
-  <!-- 호텔 예약/추천 변경 -->
+  <!-- 호텔 판매/추천 변경 -->
   <update id="updateHotelRecommend" parameterType="HotelDto">
     UPDATE HOTEL_T
        SET RECOMMEND_STATUS = #{recommendStatus}

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 
-<head th:replace="~{/layout/header::head('리뷰 관리')}"></head> 
+<head th:replace="~{layout/header::head('리뷰 관리')}"></head> 
 <style>
   
   .split2 {
@@ -140,6 +140,10 @@
   .review_content {
     margin: 3% auto;
   }
+  
+  table thead tr th{
+    font-weight: bolder;
+  }
 
 </style>
 <script th:inline="javascript">
@@ -198,7 +202,7 @@
   
 </script>
 <body>
-	<div th:replace="~{/layout/header::header}"></div>
+	<div th:replace="~{layout/header::header}"></div>
 	
 	<div class="main_wrap">
 	
@@ -339,7 +343,7 @@
 	
 	
 	
-	<div th:replace="~{/layout/footer::footer}"></div>
+	<div th:replace="~{layout/footer::footer}"></div>
 </body>
 </html>
 

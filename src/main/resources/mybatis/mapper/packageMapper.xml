@@ -155,6 +155,9 @@
   	    P.PACKAGE_NO,
   	    P.REGION_NO,
   	    P.THEME_NO,
+  	    P.MINI_ONE,
+        P.MINI_TWO,
+        P.MINI_THREE,
   	    P.PACKAGE_TITLE,
   	    P.PRICE,
   	    P.HIT,
@@ -170,6 +173,9 @@
   	      PT.REGION_NO,
   	      PT.THEME_NO,
   	      PT.PACKAGE_TITLE,
+  	      PT.MINI_ONE,
+          PT.MINI_TWO,
+          PT.MINI_THREE,
   	      PT.PRICE,
   	      PT.HIT,
   	      PT.STATUS,
@@ -464,7 +470,7 @@
          ORDER BY STAR ASC;    
       </select>
       
-      <select id="starAve" resultType="int">
+      <select id="starAve" resultType="double">
         SELECT AVG(STAR) AS AVERAGE_RATING
           FROM REVIEW_T
          WHERE PACKAGE_NO = #{packageNo}      
@@ -502,24 +508,7 @@
         DELETE
           FROM PRODUCT_IMAGE_T
          WHERE FILESYSTEM_NAME = #{filesystemName}
-      </delete>
-      
-      <select id="getPackageInfoByReservationStart" parameterType="map" resultType="PackageDto">
-        SELECT
-            PACKAGE_NO,
-            PACKAGE_TITLE,
-            MAX_PEOPLE
-        FROM
-            PACKAGE_T
-        WHERE
-            PACKAGE_NO = #{packageNo}
-            AND MAX_PEOPLE = (
-                SELECT COALESCE(SUM(RESERVE_PERSON), 0)
-                FROM RESERVE_T
-                WHERE RESERVE_START = #{reserveStart}
-                AND PACKAGE_NO = #{packageNo}
-            )
-      </select>
+      </delete>     
       
      <select id="selectHeartList" parameterType="Map" resultMap="HeartMap">
       SELECT  A.PACKAGE_NO, A.PACKAGE_TITLE, A.PRICE, A.USER_NO
@@ -532,15 +521,15 @@
      
      <select id="getHeartCount" resultType="int" parameterType="int">
       SELECT COUNT(*)
-        FROM HEART_T
+        FROM PACKAGE_T PA INNER JOIN HEART_T H
+          ON PA.PACKAGE_NO = H.PACKAGE_NO
        WHERE USER_NO = #{userNo}
       </select>
-      
+
       <select id="checkHeart" parameterType="Map" resultType="int">
         SELECT COUNT(*) 
           FROM HEART_T 
-         WHERE PACKAGE_NO = #{packageNo} 
-           AND USER_NO = #{userNo}
+         WHERE USER_NO = #{userNo}
       </select>
       
       <delete id="deleteHeart" parameterType="int">

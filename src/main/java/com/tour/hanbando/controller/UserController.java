@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.tour.hanbando.dto.UserDto;
+import com.tour.hanbando.service.HotelService;
 import com.tour.hanbando.service.PackageService;
 import com.tour.hanbando.service.UserService;
 
@@ -34,6 +35,7 @@ public class UserController {
   
   private final UserService userService;
   private final PackageService packageService; 
+  private final HotelService hotelService;
 
   
  //인증번호(회원가입)
@@ -135,36 +137,30 @@ public class UserController {
   }
   
   ///////////////////카카오 로그인////////////////////////
+  @GetMapping("/kakao/getAccessToken.do")
+  public String KakaotAccessToken( HttpServletRequest request ) throws Exception {
+      String accessToken = userService.getKakaoLoginAccessToken(request);
+      return "redirect:/user/kakao/getProfile.do?accessToken=" + accessToken;
+  }
+
+  @GetMapping("/kakao/getProfile.do")
+  public  String getKakaoProfile(HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
+    UserDto kakaoProfile = userService.getKakaoProfile(request.getParameter("accessToken")); 
+    UserDto user = userService.getUser(kakaoProfile.getEmail());
+
+    if(user == null) {
+      model.addAttribute("kakaoProfile", kakaoProfile);
+      return "user/kakao_join";
+    } else {
+      userService.kakaoLogin(request, response, kakaoProfile);
+      return "redirect:/main.do";
+    }
+  }
   
   @PostMapping("/kakao/join.do")
   public void kakaoJoin(HttpServletRequest request, HttpServletResponse response) throws Exception {
     userService.kakaoJoin(request, response);
   }
-  
-  @GetMapping("/kakao/getAccessToken.do")
-  public String getKakaoAccessToken(HttpServletRequest request) throws Exception {
-    String accessToken = userService.getKakaoLoginAccessToken(request);
-    return "redirect:/user/kakao/getProfile.do?accessToken=" + accessToken;
-  }
-  
-  //카카오 토큰 발급
-  @GetMapping("/kakao/getProfile.do")
-  public String getKakaoProfile(HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
-    UserDto kakaoProfile = userService.getKakaoProfile(request.getParameter("accessToken"));
-    UserDto user = userService.getUser(kakaoProfile.getEmail());
-    
-    if(user == null) {
-      // 카카오 간편가입 페이지로 이동
-      model.addAttribute("kakaoProfile", kakaoProfile);
-      return "user/kakao_join";
-    } else {
-      // kakaoProfile로 로그인 처리하기
-      userService.kakaoLogin(request, response, kakaoProfile);
-      return "redirect:/main.do";
-    }
-  }
-    
-
   
   @PostMapping("/login.do")
   public void login(HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -220,6 +216,19 @@ public class UserController {
     return userService.modify(request);
   }
   
+  @GetMapping("/pwExtension.form")
+  public String pwExtension() {
+    return "user/pwExtension";
+  }
+  
+  @PostMapping("/pwExtension.do")
+  public String pwExtension(HttpServletRequest request, RedirectAttributes redirectAttributes) {
+    int extensionResult =  userService.extensionPw(request);
+    int userNo = Integer.parseInt(request.getParameter("userNo"));
+    redirectAttributes.addFlashAttribute("extensionResult", extensionResult);
+    return "redirect:/user/mypage.form?userNo=" + userNo;
+  }
+  
   @GetMapping("/modifyPw.form")
   public String modifyPwForm() {
     return "user/pw";
@@ -253,10 +262,23 @@ public class UserController {
     return "user/heart";
   }
   
+//찜하기
+  @GetMapping("/heartHotel.do")
+  public String Hotelheart(HttpServletRequest request, Model model) {  
+    hotelService.getHeartHotel(request, model);
+    return "user/heartHotel";
+  }
+  
   @ResponseBody
   @PostMapping(value="/removeHeart.do", produces="application/json")
-  public Map<String, Object> removeReview(@RequestParam(value="packageNo", required=false, defaultValue="0") int packageNo) {
+  public Map<String, Object> removePackageHeart(@RequestParam(value="packageNo", required=false, defaultValue="0") int packageNo) {
     return packageService.removeHeart(packageNo);
+  }
+  
+  @ResponseBody
+  @PostMapping(value="/removeHotelHeart.do", produces="application/json")
+  public Map<String, Object> removeHotelheart(@RequestParam(value="hotelNo", required=false, defaultValue="0") int hotelNo) {
+    return hotelService.removeHotelHeart(hotelNo);
   }
   
   //아이디, 비밀번호 찾기
@@ -298,6 +320,13 @@ public class UserController {
         return "user/pwCorrect";
       }
       
-      
+      // 90일 경과 후 비밀번호 업데이트 
+      @GetMapping("/autoUpdatePw.do")
+      public String autoUpdatePw(HttpServletRequest request, RedirectAttributes redirectAttributes) {
+        int autoUpdatePw90Result = userService.autoUpdatePw90(request); 
+        redirectAttributes.addFlashAttribute("autoUpdatePw90Result", autoUpdatePw90Result);
+        return "redirect:/main.do";
+        
+      }
 
 }

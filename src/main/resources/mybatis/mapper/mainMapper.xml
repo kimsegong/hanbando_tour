@@ -5,7 +5,8 @@
 
 <mapper namespace="com.tour.hanbando.dao.MainMapper">
   
-	<resultMap type="PackageDto" id="PackageMap">
+	<!-- 패키지테이블 -->
+    <resultMap type="PackageDto" id="PackageMap">
           <id column="PACKAGE_NO" property="packageNo"/>
           <result column="PACKAGE_TITLE" property="packageTitle"/>
           <result column="MINI_ONE" property="miniOne"/>
@@ -30,35 +31,53 @@
           <id column="THEME_NO" property="themeNo"/>
           <result column="THEME_NAME" property="themeName"/>
       </association>
-      <association javaType="UserDto" property="userDto">
-          <id column="USER_NO" property="userNo"/>
-          <result column="EMAIL" property="email"/>
-          <result column="NAME" property="name"/>
+      <association javaType="ProductImageDto" property="productImageDto">
+          <id column="IMAGE_NO" property="imageNo"/>
+          <result column="THUMBNAIL" property="thumbnail"/>
+          <result column="FILESYSTEM_NAME" property="filesystemName"/>
+          <result column="IMAGE_PATH" property="imagePath"/>
       </association>
     </resultMap>
     
+    <resultMap type="HotelDto" id="HotelMap">
+    <id column="HOTEL_NO" property="hotelNo"/>
+    <result column="HOTEL_NAME" property="hotelName"/>
+    <result column="HOTEL_ADDRESS" property="hotelAddress"/>
+    <result column="LATITUDE" property="latitude"/>
+    <result column="LONGITUDE" property="longitude"/>
+    <result column="HOTEL_DETAIL" property="hotelDetail"/>
+    <result column="PHONE_NUMBER" property="phoneNumber"/>
+    <result column="H_EMAIL" property="HEmail"/>
+    <result column="CREATED_AT" property="createdAt"/>
+    <result column="MODIFIED_AT" property="modifiedAt"/>
+    <result column="HIT" property="hit"/>
+    <result column="STATUS" property="status"/>
+    <result column="RECOMMEND_STATUS" property="recommendStatus"/>
+     <association javaType="RegionDto" property="regionDto">
+          <id column="REGION_NO" property="regionNo"/>
+          <result column="REGION_NAME" property="regionName"/>
+      </association>
+      <association javaType="HotelImageDto" property="hotelImageDto">
+					<result column="ORIGINAL_NAME" property="originalName"/>
+					<result column="THUMBNAIL" property="thumbnail"/>
+					<result column="FILESYSTEM_NAME" property="filesystemName"/>
+					<result column="IMAGE_PATH" property="imagePath"/>
+      </association>
+  </resultMap>
     
-	<select id="searchPackageList" parameterType="Map" resultType="PackageDto">
+	<select id="searchPackageList" parameterType="Map" resultMap="PackageMap">
 		SELECT
         P.PACKAGE_NO,
         P.REGION_NO,
-        R.REGION_NAME,
         P.THEME_NO,
-        T.THEME_NAME,
-        P.PACKAGE_TITLE,
         P.MINI_ONE,
         P.MINI_TWO,
         P.MINI_THREE,
-        P.PACKAGE_PLAN,
-        P.PACKAGE_CONTENTS,
-        P.HOTEL_CONTENTS,
+        T.THEME_NAME,
+        P.PACKAGE_TITLE,
         P.PRICE,
-        P.DANGER,
-        P.CREATED_AT,
-        P.MODIFIED_AT,
-        P.HIT,
+	P.HIT,
         P.STATUS,
-        P.MAX_PEOPLE,
         P.RECOMMEND_STATUS,
         PI.IMAGE_NO,
         PI.THUMBNAIL,
@@ -69,17 +88,11 @@
             PT.PACKAGE_NO,
             PT.REGION_NO,
             PT.THEME_NO,
-            PT.PACKAGE_TITLE,
             PT.MINI_ONE,
             PT.MINI_TWO,
             PT.MINI_THREE,
-            PT.PACKAGE_PLAN,
-            PT.PACKAGE_CONTENTS,
-            PT.HOTEL_CONTENTS,
+            PT.PACKAGE_TITLE,
             PT.PRICE,
-            PT.DANGER,
-            PT.CREATED_AT,
-            PT.MODIFIED_AT,
             PT.HIT,
             PT.STATUS,
             PT.MAX_PEOPLE,
@@ -97,7 +110,7 @@
     LEFT JOIN
         THEME_T T ON P.THEME_NO = T.THEME_NO       
     WHERE
-        P.RN BETWEEN #{begin} AND #{end}
+        P.RN BETWEEN #{begin} AND #{end} AND PI.THUMBNAIL = 1
 	</select>
 
 	<select id="countSearchPackage" parameterType="Map" resultType="int">
@@ -107,7 +120,7 @@
 
 	</select>
 	
-	<select id="searchHotelList" parameterType="Map" resultType="HotelDto">
+	<select id="searchHotelList" parameterType="Map" resultMap="HotelMap">
     SELECT  H.HOTEL_NO,
             H.REGION_NO,
             H.HOTEL_NAME,
@@ -156,23 +169,50 @@
      WHERE HOTEL_NAME LIKE '%' || #{query} || '%'
   </select>
 	
-	<select id="getBestPackage" resultType="PackageDto">
-    SELECT A.PACKAGE_NO, A.PACKAGE_TITLE, A.PRICE, SP, RN
-      FROM (SELECT P.PACKAGE_NO, P.PACKAGE_TITLE, P.PRICE, SUM(R.RESERVE_PERSON) AS SP, ROW_NUMBER() OVER (ORDER BY SUM(R.RESERVE_PERSON) DESC NULLS LAST) AS RN 
-              FROM PACKAGE_T P LEFT JOIN RESERVE_T R 
-                ON P.PACKAGE_NO = R.PACKAGE_NO 
-             GROUP BY P.PACKAGE_NO, P.PACKAGE_TITLE, P.PRICE ) A 
-      WHERE RN BETWEEN 1 AND 4  
+	<select id="getBestPackage" resultMap="PackageMap">
+    SELECT
+				    A.PACKAGE_NO,
+				    A.PACKAGE_TITLE,
+				    A.PRICE,
+				    SP,
+				    RN,
+				    PI.IMAGE_NO,
+				    PI.THUMBNAIL,
+				    PI.FILESYSTEM_NAME,
+				    PI.IMAGE_PATH
+			FROM
+			    (SELECT 
+			            P.PACKAGE_NO,
+			            P.PACKAGE_TITLE,
+			            P.PRICE,
+			            SUM(R.RESERVE_PERSON) AS SP,
+			            ROW_NUMBER() OVER (ORDER BY SUM(R.RESERVE_PERSON) DESC NULLS LAST) AS RN
+			        FROM PACKAGE_T P LEFT JOIN RESERVE_T R ON P.PACKAGE_NO = R.PACKAGE_NO
+			        GROUP BY
+			            P.PACKAGE_NO,
+			            P.PACKAGE_TITLE,
+			            P.PRICE
+			    ) A LEFT JOIN PRODUCT_IMAGE_T PI ON A.PACKAGE_NO = PI.PACKAGE_NO
+			WHERE (RN BETWEEN 1 AND 4) AND PI.THUMBNAIL = 1
   </select>
 	<select id="countTheme" resultType="int">
     SELECT COUNT(*)
       FROM THEME_T
   </select>
-  <select id="getThemePackage" parameterType="int" resultType="PackageDto">
-    SELECT P.PACKAGE_NO, P.PACKAGE_TITLE, P.PRICE, T.THEME_NO, T.THEME_NAME  
-      FROM PACKAGE_T P LEFT OUTER JOIN THEME_T T
-        ON P.THEME_NO = T.THEME_NO
-     WHERE T.THEME_NO = #{themeNo} AND (ROWNUM BETWEEN 1 AND 4)    
+  <select id="getThemePackage" parameterType="int" resultMap="PackageMap">
+    SELECT P.PACKAGE_NO, 
+		       P.PACKAGE_TITLE, 
+		       P.PRICE, 
+		       T.THEME_NO, 
+		       T.THEME_NAME,  
+		       PI.IMAGE_NO,
+		       PI.THUMBNAIL,
+		       PI.FILESYSTEM_NAME,
+		       PI.IMAGE_PATH
+      FROM PACKAGE_T P LEFT JOIN THEME_T T
+        ON P.THEME_NO = T.THEME_NO 
+      LEFT JOIN PRODUCT_IMAGE_T PI ON P.PACKAGE_NO = PI.PACKAGE_NO
+     WHERE T.THEME_NO = #{themeNo} AND (ROWNUM BETWEEN 1 AND 4)  AND PI.THUMBNAIL = 1 
   </select>
 	
 	<select id="getBannerImage" resultType="BannerImageDto">

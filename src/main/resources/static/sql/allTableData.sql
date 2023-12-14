@@ -21,6 +21,7 @@ DROP SEQUENCE HEART_SEQ;
 DROP SEQUENCE REVIEW_SEQ;
 
 DROP SEQUENCE NOTICE_SEQ;
+DROP SEQUENCE NOTICE_ATTACH_SEQ;
 DROP SEQUENCE INQUIRY_SEQ;
 DROP SEQUENCE INQUIRY_ANSWER_SEQ;
 DROP SEQUENCE FAQ_CA_SEQ;
@@ -45,11 +46,12 @@ CREATE SEQUENCE RESERVE_SEQ NOCACHE;
 CREATE SEQUENCE TOURIST_SEQ NOCACHE;
 CREATE SEQUENCE PAYMENT_SEQ NOCACHE;
 
-CREATE SEQUENCE HEART_SEQ         NOCACHE;
+CREATE SEQUENCE HEART_SEQ NOCACHE;
 
 CREATE SEQUENCE REVIEW_SEQ NOCACHE;
 
 CREATE SEQUENCE NOTICE_SEQ         NOCACHE;
+CREATE SEQUENCE NOTICE_ATTACH_SEQ  NOCACHE;
 CREATE SEQUENCE INQUIRY_SEQ        NOCACHE; 
 CREATE SEQUENCE INQUIRY_ANSWER_SEQ NOCACHE;
 CREATE SEQUENCE FAQ_CA_SEQ         NOCACHE;
@@ -59,14 +61,15 @@ CREATE SEQUENCE FAQ_SEQ            NOCACHE;
 -- ******************************************************************************
 -- 테이블 삭제
 
--- 공지 테이블 삭제
-DROP TABLE NOTICE_T;
-
 -- 문의 관련 테이블 삭제
 DROP TABLE FAQ_T;
 DROP TABLE FAQ_CA_T;
 DROP TABLE INQUIRY_ANSWER_T;
 DROP TABLE INQUIRY_T;
+
+-- 공지 테이블 삭제
+DROP TABLE NOTICE_ATTACH_T;
+DROP TABLE NOTICE_T;
 
 -- 리뷰 테이블 삭제
 DROP TABLE REVIEW_T;
@@ -423,6 +426,18 @@ CREATE TABLE NOTICE_T (
     CONSTRAINT PK_NOTICE PRIMARY KEY(NOTICE_NO)
 );
 
+
+-- 공지사항 첨부 파일 테이블
+CREATE TABLE NOTICE_ATTACH_T (
+    ATTACH_NO         NUMBER             NOT NULL,
+    PATH              VARCHAR2(300 BYTE) NOT NULL,
+    ORIGINAL_FILENAME VARCHAR2(300 BYTE) NOT NULL,
+    FILESYSTEM_NAME   VARCHAR2(300 BYTE) NOT NULL,
+    NOTICE_NO         NUMBER             NOT NULL,
+    CONSTRAINT PK_ATTACH PRIMARY KEY(ATTACH_NO),
+    CONSTRAINT FK_NOTICE_ATTACH FOREIGN KEY(NOTICE_NO) REFERENCES NOTICE_T(NOTICE_NO) ON DELETE CASCADE
+);
+
 -- ************************************ 문의 ************************************
 -- 1:1문의 테이블
 CREATE TABLE INQUIRY_T(
@@ -432,9 +447,11 @@ CREATE TABLE INQUIRY_T(
   CONTENTS      CLOB                NULL,      -- 내용
   CREATED_AT    VARCHAR2(50 BYTE)   NULL,      -- 작성일
   SEPARATE      VARCHAR2(50 BYTE)   NULL,      -- 분류 (기타/패키지/호텔)
+  ANSWER_STATUS NUMBER              NULL,      -- 0: 답변대기, 1: 답변완료
   CONSTRAINT PK_INQUIRY      PRIMARY KEY(INQUIRY_NO),
   CONSTRAINT FK_USER_INQUIRY FOREIGN KEY(USER_NO) REFERENCES USER_T(USER_NO) ON DELETE CASCADE
 );
+
 
 -- 1:1문의 답변 테이블
 CREATE TABLE INQUIRY_ANSWER_T(
@@ -471,6 +488,7 @@ CREATE TABLE FAQ_T(
 
 
 
+
 -- ******************************************************************************
 
 
@@ -479,8 +497,8 @@ CREATE TABLE FAQ_T(
 -- ******************************************************************************
 
 -- 관리자 등록 ******************************************************************
-INSERT INTO USER_T (USER_NO, EMAIL, PW, NAME, AGREE, AUTH) VALUES(USER_SEQ.NEXTVAL, 'admin', STANDARD_HASH('1', 'SHA256'), '관리자admin', 0, 0);
-INSERT INTO USER_T (USER_NO, EMAIL, PW, NAME, AGREE, AUTH) VALUES(USER_SEQ.NEXTVAL, 'master', STANDARD_HASH('1', 'SHA256'), '관리자master', 0, 0);
+INSERT INTO USER_T (USER_NO, EMAIL, PW, NAME, AGREE, AUTH, PW_MODIFIED_AT, JOINED_AT) VALUES(USER_SEQ.NEXTVAL, 'admin', STANDARD_HASH('1', 'SHA256'), '관리자admin', 0, 0, TO_CHAR(SYSDATE, 'YYYY/MM/DD'), TO_CHAR(SYSDATE, 'YYYY/MM/DD'));
+INSERT INTO USER_T (USER_NO, EMAIL, PW, NAME, AGREE, AUTH, PW_MODIFIED_AT, JOINED_AT) VALUES(USER_SEQ.NEXTVAL, 'master', STANDARD_HASH('1', 'SHA256'), '관리자master', 0, 0, TO_CHAR(SYSDATE, 'YYYY/MM/DD'), TO_CHAR(SYSDATE, 'YYYY/MM/DD'));
 COMMIT;
 
 -- 회원 등록 ********************************************************************
@@ -1315,7 +1333,7 @@ INSERT INTO HEART_T VALUES(3, NULL, 4);
 INSERT INTO HEART_T VALUES(3, NULL, 10);
 INSERT INTO HEART_T VALUES(3, NULL, 9);
 INSERT INTO HEART_T VALUES(3, NULL, 7);
-INSERT INTO HEART_T VALUES(3, NULL, 2);
+INSERT INTO HEART_T VALUES(3, NULL, 3);
 COMMIT;
 
 -- user2@naver.com
@@ -1378,12 +1396,12 @@ INSERT INTO FAQ_T VALUES(FAQ_SEQ.NEXTVAL, 4, '개명했는데 회원정보에 �
 COMMIT;
 
 -- 1:1 문의 등록(회원)
-INSERT INTO INQUIRY_T VALUES(INQUIRY_SEQ.NEXTVAL, 3, '쩌기요', '저 패키지 여행 안 갔으니까 환불해달라고요', TO_CHAR(SYSDATE,'YYYY/MM/DD'), '패키지');
-INSERT INTO INQUIRY_T VALUES(INQUIRY_SEQ.NEXTVAL, 4, '다른 호텔은 예약이 안 되나요?', '호텔 상품 좀 추가해주세요', TO_CHAR(SYSDATE,'YYYY/MM/DD'), '호텔');
-INSERT INTO INQUIRY_T VALUES(INQUIRY_SEQ.NEXTVAL, 6, '아니 가이드가', '가이드가 말을 왜 그런식으로 해요? 진자 어이없네', TO_CHAR(SYSDATE,'YYYY/MM/DD'), '패키지');
-INSERT INTO INQUIRY_T VALUES(INQUIRY_SEQ.NEXTVAL, 9, '호텔 인원이 추가됐는데요', '추가금 꼭 내야하나요? 카드결제 되나요?', TO_CHAR(SYSDATE,'YYYY/MM/DD'), '호텔');
-INSERT INTO INQUIRY_T VALUES(INQUIRY_SEQ.NEXTVAL, 4, '아니 호텔 상태가 왜이래요', '진심 더러움,, 이거는 환불 해줘야 하는거 아닌가요?', TO_CHAR(SYSDATE,'YYYY/MM/DD'), '호텔');
-INSERT INTO INQUIRY_T VALUES(INQUIRY_SEQ.NEXTVAL, 10, '저 개명했는데요', '이름 변경 해주세요', TO_CHAR(SYSDATE,'YYYY/MM/DD'), '기타');
+INSERT INTO INQUIRY_T VALUES(INQUIRY_SEQ.NEXTVAL, 3, '쩌기요', '저 패키지 여행 안 갔으니까 환불해달라고요', TO_CHAR(SYSDATE,'YYYY/MM/DD'), '패키지', 1);
+INSERT INTO INQUIRY_T VALUES(INQUIRY_SEQ.NEXTVAL, 4, '다른 호텔은 예약이 안 되나요?', '호텔 상품 좀 추가해주세요', TO_CHAR(SYSDATE,'YYYY/MM/DD'), '호텔', 1);
+INSERT INTO INQUIRY_T VALUES(INQUIRY_SEQ.NEXTVAL, 6, '아니 가이드가', '가이드가 말을 왜 그런식으로 해요? 진자 어이없네', TO_CHAR(SYSDATE,'YYYY/MM/DD'), '패키지', 1);
+INSERT INTO INQUIRY_T VALUES(INQUIRY_SEQ.NEXTVAL, 9, '호텔 인원이 추가됐는데요', '추가금 꼭 내야하나요? 카드결제 되나요?', TO_CHAR(SYSDATE,'YYYY/MM/DD'), '호텔', 1);
+INSERT INTO INQUIRY_T VALUES(INQUIRY_SEQ.NEXTVAL, 4, '아니 호텔 상태가 왜이래요', '진심 더러움,, 이거는 환불 해줘야 하는거 아닌가요?', TO_CHAR(SYSDATE,'YYYY/MM/DD'), '호텔', 1);
+INSERT INTO INQUIRY_T VALUES(INQUIRY_SEQ.NEXTVAL, 10, '저 개명했는데요', '이름 변경 해주세요', TO_CHAR(SYSDATE,'YYYY/MM/DD'), '기타', 0);
 COMMIT;
 
 -- 1:1 문의-답변 등록(관리자)

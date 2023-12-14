@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 
-<head th:replace="~{/layout/header::head('호텔상품 관리')}"></head> 
+<head th:replace="~{layout/header::head('호텔상품 관리')}"></head> 
 <style>
   
   .split2 {
@@ -185,6 +185,25 @@
     font-size: medium;
     font-weight: 500;
   }
+  
+  .room_part {
+    text-align: left;
+    margin-left: 8%;
+  }
+  
+  .room_name {
+    color: #404040; 
+    font-size: 20px;
+    font-weight: bolder;
+  }
+  .room_many {
+    color: #404040; 
+    font-size: 15px;
+  }
+  
+  table thead tr th{
+    font-weight: bolder;
+  }
 
 </style>
 <script th:inline="javascript">
@@ -206,9 +225,9 @@
         dataType: 'json',
         success: (resData) => {
           if(resData.modifyRecommendResult === 1){
-            alert('예약/추천 여부가 변경되었습니다.');
+            alert('판매/추천 여부가 변경되었습니다.');
           } else {
-            alert('예약/추천 여부가 변경되지 않았습니다.');
+            alert('판매/추천 여부가 변경되지 않았습니다.');
           }
         }
       })
@@ -251,7 +270,7 @@
 </script>
 
 <body>
-	<div th:replace="~{/layout/header::header}"></div>
+	<div th:replace="~{layout/header::header}"></div>
 	
 	<div class="main_wrap">
 	
@@ -393,9 +412,10 @@
                             <th:block th:each="r:${roompriceList}">
                               <th:block th:if="${h.hotelNo == r.hotelNo}">
                                 <th:block th:each="rt:${roomtypeList}">
-                                  <th:block th:if="${r.roomNo == rt.roomFeatureDto.roomNo}">
-                                    <h3 th:text="${rt.roomName}"></h3>
-                                  </th:block>
+                                  <div class="room_part">
+                                    <span class="room_name" th:if="${r.roomNo == rt.roomNo}" th:text="${rt.roomName}"></span>
+                                    <span class="room_many" th:if="${r.roomNo == rt.roomNo}" th:text="|(${rt.roomMany}개)|"></span>
+                                  </div>
                                 </th:block>
                                 <form class="room_price_change">
                                   <div class="sung">
@@ -459,7 +479,7 @@
 	
 	
 	
-	<div th:replace="~{/layout/footer::footer}"></div>
+	<div th:replace="~{layout/footer::footer}"></div>
 </body>
 </html>
 

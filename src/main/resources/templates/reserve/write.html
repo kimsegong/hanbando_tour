@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 
-<head th:replace="~{/layout/header::head('예약하기')}"></head> <!-- 이거 알맞게 바꿔주세요-->
+<head th:replace="~{layout/header::head('예약하기')}"></head> <!-- 이거 알맞게 바꿔주세요-->
 <body>
-	<div th:replace="~{/layout/header::header}"></div>
+	<div th:replace="~{layout/header::header}"></div>
 	
-	<div class="main_wrap">
+	<div class="main_wrap" style="padding-top: 0;">
 	
 	
 		 <div class="container text-center">
@@ -13,18 +13,18 @@
 		    <div class="col-1">	        
 		    </div>
 		    <div class="col-10" >
-		      <!--/* 패키지 또는 호텔 번호를 받아오고 필요시 다른 정보도 받아오기 */-->
+		      
 		      <div>
-            <h2><strong>패키지 예약하기</strong></h2>
+            <p style="font-size: 30px; font-weight: 400; ">패키지 예약하기</p>
 		      </div>
 		      
 		      <div>
-            <h3 th:text="${pack.packageTitle}" class="col-8" style="margin-left: 30px;">상품명??</h3>
+            <p th:text="${pack.packageTitle}" class="col-10" style="font-size: 20px; font-weight: 300;"></p>
 		      </div>
-		      <div>
+		      <div style="margin: 30px 0 10px;" class="col-6">
             <h4><strong>예약자 정보</strong></h4>
           </div>
-		      <div class="col-8" style="margin: 0 auto;">
+		      <div class="d-grid gap-2 col-8  mx-auto" style="text-align: left;">
   		      <table class="table">
               <tbody>
                 <tr>
@@ -52,10 +52,10 @@
             </table>	
 		      </div>	
 		      
-		      <div style="margin-top: 40px;">
+		      <div style="margin: 40px 0 10px;" class="col-6">
             <h4><strong>요금 및 여행인원</strong></h4>
           </div>
-          <div class="col-10" style="margin: 0 auto;">
+          <div class="d-grid gap-2 col-8  mx-auto" style="text-align: left;">
             <table class="table">
               <thead>
                 <tr>
@@ -73,14 +73,14 @@
                   <td id="adultPrice" th:text="${pack.price}"></td> <!-- 상품가격 -->
                   <td id="childPrice" th:text="${pack.price}"></td> <!-- 성인요금에서 금액변동 적용하기 -->
                   <td>
-                    <select name="adultCnt">
+                    <select class="form-select form-select-sm" name="adultCnt">
                       <th:block th:each="cnt:${#numbers.sequence(0, 20,1)}"> 
                         <option class="adtCnt" th:value="${cntStat.index}" th:text="|${cntStat.index}명|"></option>
                       </th:block>
                     </select>
                   </td>
                   <td>
-                    <select name="childCnt">
+                    <select class="form-select form-select-sm" name="childCnt">
                       <th:block th:each="cnt:${#numbers.sequence(0, 20, 1)}"> 
                         <option class="cldCnt" th:value="${cntStat.index}" th:text="|${cntStat.index}명|"></option>
                       </c:forEach>
@@ -98,10 +98,10 @@
               <tfoot>
                 <tr>
                   <td colspan="3">총계</td>
-                  <td>
+                  <td style="padding-left: 15px;">
                     <span class="adultCntVal">0</span>명
                   </td>
-                  <td>
+                  <td style="padding-left: 15px;">
                     <span class="childCntVal">0</span>명
                   </td>
                 </tr>
@@ -111,19 +111,13 @@
 		      
 		      <!-- 여행자 정보 -->
           <form id="frm_tourist"  method="post">
-            <div style="margin-top: 30px;">
+            <div style="margin: 40px 0 10px;" class="col-6">
               <h4><strong>여행자 정보</strong></h4>
             </div>
-            <div class="col-10" style="margin: 0 auto;">
+            <div class="d-grid gap-2 col-8  mx-auto" style="text-align: center;">
               <table class="table">
                 <thead>
-                  <tr>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td id="msg_mobile"></td>
-                  </tr>
+                  
                   <tr>
                     <th>구분</th>
                     <th>이름</th>
@@ -154,14 +148,14 @@
             -->
           
             <!-- 픽업장소 선택 -->
-            <div style="margin-top: 40px;">
+            <div style="margin: 40px 0 10px;" class="col-6">
               <h4><strong>출발지 선택</strong></h4>
             </div>
-            <div style="margin-bottom: 10px;">
+            <div style="margin-bottom: 10px;" class="col-6">
               총<span class="totalPerson">0</span>명
               <input type="hidden" id="reservePerson" name="reservePerson" class="totalPerson">
             </div>
-            <div class="d-grid gap-2 col-2 mx-auto">
+            <div class="d-grid gap-2 col-8  mx-auto" style="text-align: left;">
               <ul class="list-group">
                 <li class="list-group-item">
                   <input class="form-check-input me-1" type="radio" name="departureLoc" id="byOwn" th:value="byOwn" checked>
@@ -182,94 +176,93 @@
               </ul>
             </div>
               
-            <hr>  
-            
-      
             <!-- 약관 동의 -->
-            <div class="agreeFrom">
-              <h4><strong>약관 동의</strong></h4>
+            <div style="margin: 40px 0 10px;" class="col-6">
+              <div class="agreeFrom">
+                <h4><strong>약관 동의</strong></h4>
+              </div>
             </div>
-              <div class="col-8" style="margin: 0 auto;">
-                <table class="table">
-                  <tbody class="d-grid gap-2 col-8 mx-auto">
-                    <tr>
-                      <td>
-                        <div>
-                          <span>
-                            <input type="checkbox" id="chkAgree" name="requiredA" value="0" class="chk_each">
-                            <label for="chkAgree">개인정보 수집에 동의합니다(필수)</label>
-                          </span>
-                        </div>
-                      </td>
-                      <td>
-                        <a href="#" >자세히</a>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <div>
-                          <span>
-                            <input type="checkbox" id="chkMarketing" name="marketingA" value="1" class="chk_each">
-                            <label for="chkMarketing">마케팅 이용 정보 수집에 동의합니다(선택)</label>
-                          </span>
-                        </div>
-                      </td>
-                      <td>
-                        <a href="#" >자세히</a>
-                      </td>
-                    </tr>
-                  </tbody>
-                  <tfoot class="d-grid gap-2 col-8 mx-auto">
-                    <tr>
-                      <td>
-                        <div>
-                          <span>
-                            <input type="checkbox" id="chkAll">
-                            <label for="chkAll">모든 약관에 동의합니다.</label>
-                          </span>
-                        </div>
-                      </td>
-                    </tr>
-                  </tfoot>
-                </table>
-              </div>
-              <div style="margin-top: 40px;">
-                <h4><strong>예약정보</strong></h4>
-              </div>
-              <div class="col-5" style="margin: 0 auto;">
-                <table class="table">
-                  <tbody>
-                    <tr>
-                      <th>총 여행인원</th>
-                      <td>
-                        성인 : 
-                        <span class="adultCntVal">0</span>
-                         명 / 소아 : 
-                        <span class="childCntVal">0</span>
-                         명
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>
-                        출발일
-                      </td>
-                      <td>
-                        <span th:text="${resStart}"></span>
-                      </td>
-                    </tr>
-                    <tr>
-                      <th>최종결제가격</th>
-                      <td>
-                        <input type="hidden" name="totalReservePrice" class="totalPrice">
-                        <span id="totalPrice"></span>
-                        원
-                      </td>
-                    </tr>
-                  </tbody>
+            <div class="d-grid gap-2 col-8  mx-auto" style="text-align: left;">
+              <table class="table">
+                <tbody>
+                  <tr>
+                    <td>
+                      <div>
+                        <span>
+                          <input type="checkbox" id="chkAgree" name="requiredA" value="0" class="chk_each">
+                          <label for="chkAgree">개인정보 수집에 동의합니다(필수)</label>
+                        </span>
+                      </div>
+                    </td>
+                    <td>
+                      <a href="#" >자세히</a>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <div>
+                        <span>
+                          <input type="checkbox" id="chkMarketing" name="marketingA" value="1" class="chk_each">
+                          <label for="chkMarketing">마케팅 이용 정보 수집에 동의합니다(선택)</label>
+                        </span>
+                      </div>
+                    </td>
+                    <td>
+                      <a href="#" >자세히</a>
+                    </td>
+                  </tr>
+                </tbody>
+                <tfoot>
+                  <tr>
+                    <td>
+                      <div>
+                        <span>
+                          <input type="checkbox" id="chkAll">
+                          <label for="chkAll">모든 약관에 동의합니다.</label>
+                        </span>
+                      </div>
+                    </td>
+                  </tr>
+                </tfoot>
               </table>
-              </div>
+            </div>
+            <div style="margin: 40px 0 10px;" class="col-6">
+              <h4><strong>예약정보</strong></h4>
+            </div>
+            <div class="d-grid gap-2 col-8  mx-auto" style="text-align: left;">
+              <table class="table">
+                <tbody>
+                  <tr>
+                    <th>총 여행인원</th>
+                    <td>
+                      성인 : 
+                      <span class="adultCntVal">0</span>
+                       명 / 소아 : 
+                      <span class="childCntVal">0</span>
+                       명
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      출발일
+                    </td>
+                    <td>
+                      <span th:text="${resStart}"></span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <th>최종결제가격</th>
+                    <td>
+                      <input type="hidden" name="totalReservePrice" class="totalPrice">
+                      <span id="totalPrice"></span>
+                      원
+                    </td>
+                  </tr>
+                </tbody>
+            </table>
+            </div>
             <div class="d-grid gap-2 col-6 mx-auto" style="margin-top: 40px;">
-              <button type="button" id="btn_reserve" class="btn btn-success">예약하기</button>
+              <button type="button" id="btn_reserve" class="w3-btn w3-round-xxlarge w3-green w3-block mx-auto">예약하기</button>
             </div>
           </form>
           
@@ -333,17 +326,17 @@
                 str += '<tr>';
                 str += '  <td><span>성인 </span><span class="ageNum">' + i + '</span></td>';
                 str += '  <input type="hidden" name="ageCase" value="0">';
-                str += '  <td><input type="text" name="touristName" maxlength="10"></td>';
-                  str += '  <td><input type="date" name="birthDate" max="9999-12-31"></td>';
+                str += '  <td><input type="text" class="form-control" size="7" name="touristName" maxlength="10"></td>';
+                  str += '  <td><input type="date"  class="form-control form-control-sm" name="birthDate" max="9999-12-31"></td>';
                   str += '  <td>';
-                    str += '    <select name="gender">';
+                    str += '    <select class="form-select form-select-sm" name="gender">';
                     str += '    <option value="">선택</option>';
                     str += '    <option value="M">남</option>';
                     str += '    <option value="F">여</option>';
                     str += '     </select>';
                     str += '  </td>';
                   str += '  <td>'; 
-                str += '    <input type="text" class="inpMob tourMobile" name="tourMobile" maxlength="11">';
+                str += '    <input type="text" class="inpMob tourMobile form-control" size="10" name="tourMobile" maxlength="11">';
                 str += '  </td>';
                   str += '</tr>';
               }
@@ -353,17 +346,17 @@
                   str += '<tr>';
                   str += '  <td><span>소아 </span><span class="ageNum">' + i + '</span></td>';
                   str += '  <input type="hidden" name="ageCase" value="1">';
-                  str += '  <td><input type="text" name="touristName" maxlength="10"></td>';
-                str += '  <td><input type="date" name="birthDate" max="9999-12-31" ></td>';
+                  str += '  <td><input type="text" class="form-control" size="7" name="touristName" maxlength="10"></td>';
+                str += '  <td><input type="date" class="form-control form-control-sm" name="birthDate" max="9999-12-31" ></td>';
                 str += '  <td>';
-                  str += '    <select name="gender">';
+                  str += '    <select class="form-select form-select-sm" name="gender">';
                   str += '    <option value="">선택</option>';
                   str += '    <option value="M">남</option>';
                   str += '    <option value="F">여</option>';
                   str += '     </select>';
                   str += '  </td>';
                 str += '  <td>'; 
-                str += '    <input type="text" class="inpMob tourMobile" name="tourMobile" maxlength="11">';
+                str += '    <input type="text" class="inpMob tourMobile form-control" size="10" name="tourMobile" maxlength="11">';
               str += '  </td>';
                 str += '</tr>';
                 }
@@ -460,7 +453,7 @@
         }
       }
       if (hasEmptyM) {
-        alert("휴대폰번호는 필수 항목입니다.                                               기호(-)를 제외한 11자리 번호를 입력해주세요");
+        alert("휴대폰번호는 필수 항목입니다.\n기호(-)를 제외한 11자리 번호를 입력해주세요");
         ev.preventDefault();
         return;
       }
@@ -483,7 +476,7 @@
     fnChkEach();
   </script>
 	
-	<div th:replace="~{/layout/footer::footer}"></div>
+	<div th:replace="~{layout/footer::footer}"></div>
 </body>
 </html>
 

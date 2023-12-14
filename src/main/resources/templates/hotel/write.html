@@ -1,17 +1,64 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 
-<head th:replace="~{/layout/header::head('호텔작성')}"></head> <!-- 이거 알맞게 바꿔주세요-->
+<head th:replace="~{layout/header::head('호텔작성')}"></head> <!-- 이거 알맞게 바꿔주세요-->
 <style>
-.roomGroup {
+.modal-body {
   border: thick double darkgray ;
 }
-  
+input {
+  margin-bottom: 10px;
+}  
+
+label {
+  text-align: left;
+}
+#hotelName {
+	font-size: 30px;
+	font-weight: 600;
+}
+#address, .price{
+	display: inline-block;
+}
+.price {
+	float: right;
+	text-align: right;
+}
+.price1 {
+	font-size: 20px;
+	color: darkred;
+	font-weight: 500;
+}
+.detail {
+	border-top: 1px lightgray solid;
+	margin: 10px 0 5px 0;
+	padding: 10px 0 0 0;
+}
+.hotelFac, .roomFac{
+	display: flex;
+	justify-content: space-evenly;
+}
+.choice{
+    box-sizing: border-box;
+    margin: 0px 0px 28px;
+    min-width: 0px;
+    line-break: anywhere;
+    font-size: 20px;
+    letter-spacing: -0.02em;
+    line-height: 30px;
+    font-weight: 700;
+    border-bottom: 1px solid rgb(0, 0, 0);
+    width: 100%;
+    text-align: left;
+    justify-content: space-between;
+    padding: 8px 16px;
+    margin-top: 80px;
+ }
   
 </style>
 <body>
   
-	<div th:replace="~{/layout/header::header}"></div>
+	<div th:replace="~{layout/header::header}"></div>
 	
 	<div class="main_wrap">
 	
@@ -22,20 +69,20 @@
 		    <div class="col-10" style="border:1px gray dotted">
 		      	<!--/*여기에 작성/ 다 만들고 style 지워주세요  */-->
 				   <h2>호텔 게시글작성</h2>
-			<form method="post" id="hotel_add" th:action="@{/hotel/addHotel.do}" accept="image/*" enctype="multipart/form-data" >
-				<input type="hidden" id="hotelNo" name="hotelNo" th:value="${hotelNo}"> 
-			   <div style="margin: 30px 270px;" class="w-50 p-3">
-		<div style="text-align: left;">
-		      <label for="files" class="form-label">메인첨부</label>
-		      <input type="file" name="files" id="files" class="form-control" multiple>
-		  </div>
-		  <div class="attached_list mt-2" id="attached_list"></div>
-		  <div>
-       <label for="hotelName">호텔 이름 </label> 
-       <input type="text" id="hotelName" class="form-control" name="hotelName">
-      </div>
-		  <div><!-- 추천라디오 및 선택박스 -->
-    <div style="display: flex; justify-content: space-between; align-items: center;">
+			<form method="post" id="hotel_add" th:action="@{/hotel/addHotel.do}"  enctype="multipart/form-data" >
+				<input type="hidden" id="hotelNo" name="hotelNo" th:value="${hotelNo}">
+				<div style="margin: auto;" class="w-50 p-3">
+		    <div style="text-align: left;">
+		      <label for="files" class="form-label" style="font-weight: 500;">메인첨부(mainList 파일이름이 목록에서 보여집니다)</label>
+		      <input type="file" name="files" id="files" class="form-control" accept="image/*" fnFileCheck(); multiple> <button type="button" onclick="deleteAll(this)">전체삭제</button>
+		    </div>
+  		  <div class="attached_list mt-2" id="attached_list"></div>
+  		  <div style="text-align: left;">
+         <label for="hotelName" class="form-label" style="font-weight: 500;">호텔 이름 </label> 
+         <input type="text" id="hotelName" class="form-control" name="hotelName">
+        </div>
+		    <div><!-- 추천라디오 및 선택박스 -->
+        <div style="display: flex; justify-content: space-between; align-items: center;">
         <!-- 추천라디오 -->
         <div style="text-align: left;">
             <div class="form-check">
@@ -51,14 +98,14 @@
                 </label>
             </div>
         </div>
-        <div style="text-align: center;">
+        <div style="text-align: left;">
             <div class="form-check">
                 <input class="form-check-input" type="radio" name="status" th:value="1"checked>
                 <label class="form-check-label" for="status">
                     게시
                 </label>
             </div>
-            <div class="form-check">
+            <div style="text-align: left;">
                 <input class="form-check-input" type="radio" name="status"  th:value="0" >
                 <label class="form-check-label" for="status">
                     안게시
@@ -75,18 +122,19 @@
 		  </div>
 		</div>
 		
-		<div>
-      <label for="hEmail">Email</label>
+		<div style="text-align: left;">
+      <label for="hEmail" class="form-label" style="font-weight: 500;" >Email</label>
       <input type="email" id="hEmail" class="form-control" name="hEmail">
     </div>
-		<div>
-      <label for="phoneNumber">전화번호</label>
-      <input type="text" id="phoneNumber" class="form-control" name="phoneNumber">
+		<div style="text-align: left;">
+      <label for="phoneNumber" id="phoneNumber" class="form-label" onfocusout="fnCheckPhoneNumber();" style="font-weight: 500;">대표번호</label>
+      <input type="number" id="phoneNumber" class="form-control" name="phoneNumber" placeholder="'-' 제외하고 입력해 주세요">
+      <div id="phoneText"></div>
     </div>
     <div class="row mb-2">
-          <label for="postcode" class="col-sm-3 col-form-label">주소</label>
-          <div class="col-sm-4"><input type="text" name="postcode" id="postcode" class="form-control" onclick="execDaumPostcode()" placeholder="우편번호" readonly></div>
-          <div class="col-sm-5"><input type="button" class="btn btn-outline-success" onclick="execDaumPostcode()" value="우편번호 찾기"></div>
+          <label for="postcode" class="col-form-label" style="font-weight: 500;">주소</label>
+          <div class="col-4"><input type="text" name="postcode" id="postcode" class="form-control" onclick="execDaumPostcode()" placeholder="우편번호" readonly></div>
+          <div class="col-8" style="text-align: right;"><input type="button" class="btn btn-outline-success" onclick="execDaumPostcode()" value="우편번호 찾기"></div>
         </div>
         
         <div class="row mb-2">
@@ -97,7 +145,7 @@
         </div>
         <div class="col-sm-12"><span id="guide" style="color:#999;display:none"></span></div>
         
-    <div>사용할수 있는 시설
+    <div style="display: flex; justify-content: space-between; "><div style="font-weight: 500;">편의 시설</div>
       <label for="morning" class="form-check-label">조식</label>
       <input type="checkbox" id="morning" class="form-check-input" name="morning" value="1">
       <label for="pool" class="form-check-label">수영장</label>
@@ -110,91 +158,33 @@
       <input type="checkbox" id="roomservice" class="form-check-input" name="roomservice" value="1">
     </div>
 		<div>
-    <label for="hotelDetail">호텔 상세</label>
-    <textarea id="hotelDetail" name="hotelDetail">체크인: 체크아웃:</textarea>
+    <label for="hotelDetail" class="col-form-label" style="font-weight: 500;">호텔 상세</label>
+    <textarea id="hotelDetail" class="form-control" name="hotelDetail" rows="10" style="margin-bottom: 10px;">체크인: 시 체크아웃: 시</textarea>
     </form> 
     <!--/* Button trigger modal */--> 
 		<button type="button" class="btn btn-primary" onclick="openHotelRoom()" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
 		  객실 등록하기 
 		</button>
-		    </form>
+		   
 		<!--/* Modal */-->
 		<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-		  <div class="modal-dialog">
+		  <div class="modal-dialog modal-lg">
 		    <div class="modal-content">
 		    </div>
 		  </div>
-		  
-    <!--/*
-		<div class="roomGroup">
-      <input type="file" name="files1" class="form-control" multiple>
-      <label for="roomName" >객실이름</label>
-      <input type="text" id="roomName" class="form-control">
-      <label for="roomDetail">객실상세</label>
-      <textarea id="roomDetail" class="form-control"></textarea>
-      <label for="rView">전망</label>
-      <input type="text" id="rView" class="form-control"> 
-      <label for="bed">침대</label>
-      <input type="bed" id="bed" class="form-control"> 
-      <label for="shower">욕실</label>
-      <input type="text" id="shower" class="form-control"> 
-      <label for="rSize">방사이즈</label>
-      <input type="text" id="rSize" class="form-control">
-      <label for="smoke" class="form-check-label">흡연유무</label>
-      <input type="checkbox" id="smoke" class="form-check-input">
-      <label for="bleakfast" class="form-check-label">조식</label>
-      <input type="checkbox" id="bleakfast" class="form-check-input">
-      <label for="people">허용인원</label>
-      <input type="text" id="people" class="form-control">
-      <label for="roomMany">객실개수</label>
-      <input type="text" id="roomMany" class="form-control">
-      
-      <h4>객실 구비사항</h4>
-      <label for="towel" class="form-check-label">수건</label>
-      <input type="checkbox" id="towel" class="form-check-input">
-      <label for="water" class="form-check-label">생수</label>
-      <input type="checkbox" id="water" class="form-check-input">
-      <label for="coffee" class="form-check-label">커피/티</label>
-      <input type="checkbox" id="coffee" class="form-check-input">
-      <label for="drier" class="form-check-label">드라이기</label>
-      <input type="checkbox" id="drier" class="form-check-input">
-      <label for="iron" class="form-check-label">다리미</label>
-      <input type="checkbox" id="iron" class="form-check-input">
-      <label for="minibar" class="form-check-label">미니바</label>
-      <input type="checkbox" id="minibar" class="form-check-input">
-      <div>비수기</div>
-      <label for="biPrice">금액</label>
-      <input type="text" id="biPrice" class="form-control">
-      <label for="bsDate">날짜</label>
-      <input type="date" id="bsDate"><input type="date" id="beDate">
-      <div>준성수기</div>
-      <label for="junPrice">금액</label>
-      <input type="text" id="junPrice" class="form-control">
-      <label for="jsDate">날짜</label>
-      <input type="date" id="jsDate"><input type="date" id="jeDate">
-      <div>성수기</div>
-      <label for="sungPrice">금액</label>
-      <input type="text" id="sungPrice" class="form-control">
-      <label for="ssDate">날짜</label>
-      <input type="date" id="ssDate"><input type="date" id="seDate">
-      
-      <button type="button" id="btnAddRoom" onclick="return roomSubmit(this.form)">객실등록</button>
-    </div>
-		<div id="emptyRoom"></div>
-		*/-->
-		
-		    	  </div>    
-				    <div class="d-grid gap-2 col-6 mx-auto">
-				      
-				      <button type="submit" class="btn btn-primary" style="margin: 32px;">작성완료</button>
-			      </div>
-				 </div>
-		    </div>
+		</div> 
+	</div>
 		    <div class="col-1">	      
 		    </div>
-		  </div>
+		  </div>   
+		    	  <div id="addroom" style="margin-top: 10px;">
+            </div>
+
+				    <div class="d-grid gap-2 col-6 mx-auto">
+				      <button type="submit" class="btn btn-primary" style="margin: 32px;">작성완료</button>
+			      </div>
+				
 	  </div>
-	
 	</div>
 <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 <script th:inline="javascript">
@@ -202,12 +192,6 @@
    function openHotelRoom(){
     $('.modal-content').load("/hotel/addRoom.form?hotelNo="+ $('#hotelNo').val());
   }
-  
-  $('#temp').click(function(){
-		location.href="/hotel/addRoom.form?hotelNo="+ $('#hotelNo').val();
-		
-	})
-  
   
 	          //본 예제에서는 도로명 주소 표기 방식에 대한 법령에 따라, 내려오는 데이터를 조합하여 올바른 주소를 구성하는 방법을 설명합니다.
           function execDaumPostcode() {
@@ -269,7 +253,37 @@
             }).open();
           }
           
+ const deleteAll = () => {
+    $('#files').val('');
+     $('#attached_list').empty();
+ }
  
+  // 개별 파일의 삭제 버튼에 적용할 메소드
+    function fndeleteEach(obj){
+		  //현재 버튼(obj)의 상위 요소 중 가장 가까운 div 요소를 찾음
+		  //div는 선택한 파일 목록을 보여주는 부분
+		  const div = $(obj).closest('div');
+		  
+		  //div에서 'button' 태그 중 현재 버튼(obj)의 index가 몇 번째인지 확인
+		  //0부터 시작
+		  const index = div.find('button').index(obj);
+		  const dataTransfer = new DataTransfer();
+		  
+		  let files = $('#files')[0].files;  //사용자가 입력한 파일을 변수에 할당
+		  
+		  let fileArray = Array.from(files);  //변수에 할당된 파일을 배열로 변환(FileList -> Array)
+		  
+		  fileArray.splice(obj, 1); //해당하는 index의 파일을 배열에서 제거
+		  
+		  fileArray.forEach(file => { dataTransfer.items.add(file); });
+		  //남은 배열을 dataTransfer로 처리(Array -> FileList)
+		  
+		  $('#files')[0].files = dataTransfer.files; //제거 처리된 FileList를 돌려줌
+		  
+		  div.empty();
+  }
+
+
 
 	const fnFileCheck = () => {
         $('#files').change((ev) => {
@@ -286,7 +300,7 @@
               $('#attached_list').empty();
               return;
             }
-            $('#attached_list').append('<div>' + files[i].name + '</div>');
+            $('#attached_list').append('<div>' + files[i].name + '<button type="button" class="each" onclick="fndeleteEach(this);">X</button></div>');
           }
           if(totalSize > maxSize){
             alert('전체 첨부파일의 최대 크기는 100MB입니다.');
@@ -297,13 +311,129 @@
         })
       }
       
+  function fnCheckPhoneNumber(){
+    let phoneNumber = $('#phoneNumber').val();
+    let regPhoneNumber = /^\d{2,3}-\d{3,4}-\d{4}$/; 
+     if (!regPhoneNumber.test(phoneNumber)){
+    $('#phoneText').text('올바른 전화번호를 입력해주세요');
+    return;  
+    }    
+  }
 	
-	fnFileCheck();
+
+	const myModalEl = document.getElementById('staticBackdrop')
+	var hotelNo = $('#hotelNo').val();
+	
+  myModalEl.removeEventListener('hidden.bs.modal', fnAddRoom); 
+	myModalEl.addEventListener('hidden.bs.modal', fnAddRoom);
+	
+  function fnAddRoom (){
+    $.ajax({
+        type: 'get',
+        url: '/hotel/roomList.do',
+        data: {hotelNo : hotelNo},
+        async: false,
+        dataType: 'json',
+        success: (resData) => {  
+                    console.log(resData);
+              
+								 let str = ''
+							   $.each(resData.roomtypeList, (i, room) => {
+                 str += '<div class="border rounded-1" style="margin-bottom: 10px;">';
+                 str += '<input type="hidden" value="'+room.roomNo+'">';
+                 str += '<div class="row">';
+                 str += '<div class="col-3">';
+                 str += '<div class=""fileList>';
+									 $.each(resData.hotelImageList,(k,image) => {
+										 if(image.roomNo == room.roomNo){
+										str += '<div>'+image.originalName+'</div>' ;
+										 }
+									 })
+                 str += '</div>';
+                 str += '<div>침대 :'+room.bed+'</div>';
+                 str += '<div>전망 :'+room.rView+'</div>';
+                 str += '<div>허용인원 :'+room.people+'</div>';
+                 if(room.bleakfast == 0){str += '<div>조식 : <i class="fa-solid fa-x" style="color: #96b2c5;"></i></div>';}
+                 if(room.bleakfast == 1){str += '<div>조식 : <i class="fa-sharp fa-solid fa-o" style="color: #96b6c5;"></i></div>';}
+                 if(room.smoke == 0){str += '<div>흡연 : <i class="fa-solid fa-x" style="color: #96b2c5;"></i></div>';}
+                 if(room.smoke == 1){str += '<div>흡연 : <i class="fa-sharp fa-solid fa-o" style="color: #96b6c5;"></i></div>';}
+                 str += '<div>'+room.shower+'</div>';
+                 str += '<div>'+room.rSize+'</div></div>';
+                 str += '<div class="col-6">';
+                 str += '<div id="roomName">'+room.roomName+'</div>';
+                 str += '<div style="border-top: 1px #9399a5 solid;">'+room.roomDetail+'</div>';
+                  $.each(resData.roomFeatureList,(j,feature) => {
+										 if(room.roomNo == feature.roomNo){
+											  str += '<div class="border rounded-1">';
+	                      str += '<div>객실 시설</div><div class="roomFac">';
+	                      if(feature.water == 0){str += '<div><i class="fa-solid fa-bottle-water fa-2xl" style="color: #9399a5;"></i><div>물</div></div>';}
+	                      if(feature.water == 1){str += '<div><i class="fa-solid fa-bottle-water fa-2xl" style="color: #2f7fa7;"></i><div>물</div></div>';}
+	                      if(feature.coffee == 0){str += '<div><i class="fa-solid fa-mug-saucer fa-2xl" style="color: #9399a5;"></i><div>커피</div></div>';}
+	                      if(feature.coffee == 1){str += '<div><i class="fa-solid fa-mug-saucer fa-2xl" style="color: #2f7fa7;"></i><div>커피</div></div>';}
+	                      if(feature.drier == 0){str += '<div><i class="fa-solid fa-wind fa-2xl" style="color: #9399a5;"></i><div>드라이어</div></div>';}
+	                      if(feature.drier == 1){str += '<div><i class="fa-solid fa-wind fa-2xl" style="color: #2f7fa7;"></i><div>드라이어</div></div>';}
+	                      if(feature.towel == 0){str += '<div><i class="fa-solid fa-rug fa-2xl" style="color: #9399a5;"></i><div>수건</div></div>';}
+	                      if(feature.towel == 1){str += '<div><i class="fa-solid fa-rug fa-2xl" style="color: #2f7fa7;"></i><div>수건</div></div>';}
+	                      if(feature.minibar == 0){str += '<div><i class="fa-solid fa-martini-glass fa-2xl" style="color: #9399a5;"></i><div>미니바</div></div>';}
+	                      if(feature.minibar == 1){str += '<div><i class="fa-solid fa-martini-glass fa-2xl" style="color: #2f7fa7;"></i><div>미니바</div></div>';}
+	                      if(feature.iron == 0){str += '<div><i class="fa-solid fa-shirt fa-2xl" style="color: #9399a5;"></i><div>다리미</div></div>';}
+	                      if(feature.iron == 1){str += '<div><i class="fa-solid fa-shirt fa-2xl" style="color: #2f7fa7;"></i><div>다리미</div></div>';}
+	                      str += '</div></div>';
+										 }
+									 })
+               		 str +='</div>';
+                 	 str +='<div class="col-3" style="margin-right: 0;">';
+						  		$.each(resData.roompriceList,(l,price) => {
+										if(price.roomNo == room.roomNo){
+											str +='<div>비수기 금액 : '+price.biPrice+'</div>';
+											str +='<div>비수기 날짜: '+price.bsDate+'~'+price.beDate+'</div>';
+											str +='<div>준성수기 금액 : '+price.junPrice+'</div>';
+											str +='<div>준성수기 날짜: '+price.jsDate+'~'+price.jeDate+'</div>';
+											str +='<div>성수기 금액 : '+price.sungPrice+'</div>';
+											str +='<div>성수기 날짜: '+price.ssDate+'~'+price.seDate+'</div>';
+										}
+									})
+                 	 str +='<div><button type="button" class="modify" class="btn-choice" onclick="openModifyHotelRoom('+room.roomNo+')" data-bs-toggle="modal" data-bs-target="#staticBackdrop">수정</button></div>';
+                 	 str +='<div><button type="button" class="btn-choice" onclick="deleteEachRoom('+room.roomNo+')">삭제</button></div>';
+                 	 str +='<div>방개수: '+room.roomMany+'</div>';
+                 	 str +='</div></div></div>';
+                 	
+        	 })
+        	  $('#addroom').empty();
+            $('#addroom').append(str);
+       	 
+   		 }
+ 		 })
+  }
+  
+
+  function deleteEachRoom(obj){
+    var roomNo = obj;
+    $.ajax({
+        type: 'get',
+        url: '/hotel/deleteRoom.do',
+        data: {roomNo : roomNo},
+        dataType: 'json',
+        success: (resData) => { 
+					console.log(resData)
+					fnAddRoom ();
+				}
+         
+    })
+  }
+  
+   function openModifyHotelRoom(obj){
+		 
+		 console.log(obj + '123');
+    $('.modal-content').load("/hotel/modifyRoom.form?roomNo="+ obj);
+  }
+  
+	 fnFileCheck();
 </script>
 	
 	
 	
-	<div th:replace="~{/layout/footer::footer}"></div>
+	<div th:replace="~{layout/footer::footer}"></div>
 </body>
 </html>
 
