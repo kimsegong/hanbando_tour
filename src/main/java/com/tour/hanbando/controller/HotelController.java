@@ -100,10 +100,9 @@ public class HotelController {
   }
   
   @ResponseBody
-  @PostMapping("/heart.do")
-  public void getHeart (HttpServletRequest request, Model model) {
-    int heartStatus = hotelService.getHeart(request);
-    model.addAttribute("heart", heartStatus);
+  @PostMapping("initHeart.do")
+  public Map<String, Integer> initHeart(HttpServletRequest request) {
+   return hotelService.getHeartState(request);
   }
   
   @ResponseBody

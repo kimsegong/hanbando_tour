@@ -39,6 +39,7 @@ import com.tour.hanbando.dto.UserDto;
 import com.tour.hanbando.util.HotelFileUtils;
 import com.tour.hanbando.util.MyPageUtils;
 
+import kotlinx.serialization.descriptors.StructureKind.MAP;
 import lombok.RequiredArgsConstructor;
 
 @Transactional
@@ -548,25 +549,26 @@ public class HotelServiceImpl implements HotelService {
    }
   
   @Override
-  public int getHeart(HttpServletRequest request) {
-    
+  public Map<String, Integer> getHeartState(HttpServletRequest request) {
     int userNo =Integer.parseInt(request.getParameter("userNo"));
     int hotelNo = Integer.parseInt(request.getParameter("hotelNo"));
-    
+    int clickNo = Integer.parseInt(request.getParameter("clickNo"));
     HeartDto heartDto = HeartDto.builder()
-                            .userDto(UserDto.builder().userNo(userNo).build())
-                            .hotelDto(HotelDto.builder().hotelNo(hotelNo).build())
-                            .build();
+                          .userDto(UserDto.builder().userNo(userNo).build())
+                          .hotelDto(HotelDto.builder().hotelNo(hotelNo).build())
+                          .build();
     
     int heartStatus = hotelMapper.getCountHeart(heartDto);
     
-    if(heartStatus == 1) {
+    if(heartStatus == 1 && clickNo == 1) {
       hotelMapper.deleteHeart(heartDto);
-    } else if(heartStatus == 0) {
+    } else if(heartStatus == 0 && clickNo == 1) {
       hotelMapper.insertHeart(heartDto);
     }
-    return hotelMapper.getCountHeart(heartDto);
+    
+    return Map.of("heart", hotelMapper.getCountHeart(heartDto));
   }
+
   
   @Override
   public void getHeartHotel(HttpServletRequest request, Model model) {

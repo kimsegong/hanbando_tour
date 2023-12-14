@@ -27,7 +27,7 @@ public interface HotelService {
   public Map<String, Object> getFinalPrice(HttpServletRequest request);
   public List<ReserveDto> getReserveUser(int hotelNo); 
   public Map<String, Object> removeReview(int reviewNo);
-  public int getHeart (HttpServletRequest request);
+  public Map<String, Integer> getHeartState(HttpServletRequest request);
   public void getHeartHotel(HttpServletRequest request, Model model);
   public Map<String, Object> removeHotelHeart(int hotelNo);
   public int removehotel(int hotelNo);
