@@ -115,6 +115,7 @@ public class PackageController {
       model.addAttribute("reserve", reserve);
       model.addAttribute("packageDto", packageDto);
       model.addAttribute("attachList", packageService.getAttachList(request));  
+      model.addAttribute("count", packageService.getTotalReviewCount(packageNo));
       return "package/detail";
   }
 
