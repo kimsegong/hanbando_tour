@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 
-<head th:replace="~{layout/header::head('한반도 투어')}"></head> <!-- 이거 알맞게 바꿔주세요-->
+<head th:replace="~{layout/header::head(${hotel.hotelName})}"></head> <!-- 이거 알맞게 바꿔주세요-->
 <style>
 
 .right {
@@ -51,7 +51,6 @@
 }
 .price1 {
 	font-size: 20px;
-	color: darkred;
 	font-weight: 500;
 }
 .detail {
@@ -59,9 +58,39 @@
 	margin: 10px 0 5px 0;
 	padding: 10px 0 0 0;
 }
+div:has(i) {
+	text-align: center;
+}
+.btn-outline-primary:hover{
+	color:white;
+	background-color: #2f7fa7;
+	
+}
+.btn-outline-primary{
+	border-color: #2f7fa7;
+	color:  #2f7fa7;
+}
+
+i + div{
+	margin-top: 3px;
+}
 .hotelFac, .roomFac{
 	display: flex;
 	justify-content: space-evenly;
+}
+
+.carousel-inner {
+  transition: all 0.2s linear;
+  z-index: 1;
+}
+.carousel:hover .carousel-inner {
+  transform: scale(2.5);
+}
+#roomName{
+	text-align: left;
+	font-size: 20px;
+	font-weight: 400;
+	margin-bottom: 10px;
 }
 .choice{
     box-sizing: border-box;
@@ -132,7 +161,9 @@
 #finalprice:focus, #roomtype:focus {
   outline:none;  
 }
-
+.room_icon i{
+	margin-top: 5px;
+}
 </style>
 
 <body>
@@ -145,16 +176,17 @@
 		    <div class="col-1">	      
 		    </div>
 		    <div class="col-10">
-    		     
-    		     <form id="frm_btn" method="post">
-							<input type="hidden" name="hotelNo" th:value="${hotel.hotelNo}">             
-    		       <button type="button" id="btn_edit">편집</button> 
-               <button type="button" id="btn_remove">삭제</button> 
-    		    <th:block th:if="${session.user != null}">
-             <th:block th:if="${session.user.auth == 0}">
-							</form>
-             </th:block>
-            </th:block>   
+	    		    <div class="d-flex flex-row-reverse">
+	    		    	<th:block th:if="${session.user != null}">
+	             	<th:block th:if="${session.user.auth == 0}">
+	    		     <form id="frm_btn" method="post">
+								<input type="hidden" name="hotelNo" th:value="${hotel.hotelNo}">             
+	    		       <button type="button" id="btn_edit">편집</button> 
+	               <button type="button" id="btn_remove">삭제</button> 
+								</form>
+	             </th:block>
+	            </th:block>   
+            </div>
             <div class="row">
               <div class="col-8">
                 
@@ -167,7 +199,9 @@
 											</div>
 		                  <div class="owl-carousel owl-theme" id="imageWrapper">
 		                    <th:block th:each="hotelImage : ${hotelImage}">
-		                      <img class="owl_img" th:src="@{|${hotelImage.imagePath}/${hotelImage.filesystemName}|}">
+													<th:block th:if="${hotelImage.roomNo == null}">
+		                      	<img class="owl_img" th:src="@{|${hotelImage.imagePath}/${hotelImage.filesystemName}|}" th:id="${hotelImage.originalName}">
+		                      </th:block>	
 		                    </th:block>
 		                  </div>
 		                </div>
@@ -178,7 +212,7 @@
 										</div><div class="hit" th:text="|조회수 : ${hotel.hit}|"></div>
 											<span th:text="${hotel.hotelAddress}" ></span>
 											<div class="price">
-												<span>시작가</span><span class="price1" th:text="| ₩ ${#numbers.formatInteger(lowPrice[0], 3, 'COMMA')}|"></span>
+												<span>시작가</span><span style="font-size: 18px;"> ₩ </span><span class="price1" th:text="| ${#numbers.formatInteger(lowPrice[0], 3, 'COMMA')}|"></span>
 											</div>
 											<div class="detail" th:text="${hotel.hotelDetail}"></div>
 									</div>
@@ -186,7 +220,7 @@
 								</div>
                 <div class="border rounded-1">
 									<div style="font-size: 22px; margin-bottom: 10px;">편의 시설/서비스</div>
-									<div class="hotelFac" style="border-top: 1px #9399a5 solid; padding-top:18px; ">
+									<div class="hotelFac" style="border-top: 1px lightgray solid; padding-top:18px; ">
 										<div th:if="${fac.pool == 0}"><i class="fa-solid fa-person-swimming fa-2xl" style="color: #9399a5;"></i><div>수영장</div></div>
 										<div th:if="${fac.pool == 1}"><i class="fa-solid fa-person-swimming fa-2xl" style="color: #2f7fa7;"></i><div>수영장</div></div>
 											<div th:if="${fac.morning == 0}"><i class="fa-solid fa-utensils fa-2xl" style="color: #9399a5;"></i><div>조식</div></div>
@@ -199,33 +233,53 @@
 											<div th:if="${fac.lounge == 1}"><i class="fa-solid fa-couch fa-2xl" style="color: #2f7fa7;"></i><div>라운지</div></div>
 									</div>
 								</div>
-								
-								<div th:text="${hotel.phoneNumber}" ></div>
-									<div th:text="${hotel.hEmail}" ></div>
-								
+							
 							</div>
 							<div class="col-4 temp">
               <div class="border rounded-1">
                 <form th:action="@{/reserve/writeHotel.form}" method="post">
-                  <div class="sideTitle" id="sideTitle" th:text="${hotel.hotelName}"></div>
+                  <div class="sideTitle" id="sideTitle" th:text="${hotel.hotelName}" style="font-size:20px; font-weight:500; margin-bottom: 10px"></div>
                   <input type="hidden" id="hotelNo" name="hotelNo" th:value="${hotel.hotelNo}">
                   <input type="hidden" id="reserveRoomNo" name="roomNo">
-                  <input id="roomtype" name="roomtype" value="방타입" readonly > </input>
-                  <input id="finalprice" name="finalprice" value="금액" readonly></input>
+                  <input id="roomtype" name="roomtype" value="방을 선택해 주세요" readonly > </input>
+                  <input id="finalprice" name="finalprice" value="" style="margin-bottom:10px; font-weight: 400;" readonly></input>
                   <div class="form-floating mb-3"> 
 										<label for="daterange">체크인/체크아웃</label>
 					          <input type="text" id="daterange" class="daterange form-control" name="daterange" readonly />
 					          <input type="hidden" id="checkin" name="checkin" value="">
 					          <input type="hidden" id="checkout" name="checkout" value="">
 					        </div>
-                  <button type="submit">예약하기</button>
-                  <button class="btn_heart" type="button">찜하기</button>
+                  <div style="text-align: left; margin-top: 20px;">
+                  <button type="submit" class="btn btn-outline-primary">예약하기</button>
+	                  <button type="button" class="btn btn-zero position-absolute top-0 end-0" id="heartButton" onclick="fnHeart(1);fnbBtnClick();" style:"border: none; outline:none;">
+											<span class="position-absolute top-0 start-0 translate-middle badge rounded-pill bg-danger">
+											    찜하기				    
+											</span>
+														<span id="heartIcon"><i class="fa-regular fa-heart" style="color: #fb3c3c; font-size: 24px;"></i></span>
+									    </button>
+									     
+							      </div>
                 </form> 
               </div>
               <div class="border rounded-1" id="map" style="width:100%;height:350px;">
                 <input type="hidden" id="latitude" th:value="${hotel.latitude}">
                 <input type="hidden" id="longitude" th:value="${hotel.longitude}">
               </div>
+              
+            	<div class="border rounded-1">
+								<div style="font-size: 17px;"><div style="display: inline-block;">연락처</div>
+									<div style="text-align: right; display: inline-block; width: 80%;"> 
+						       <a id="kakaotalk-sharing-btn" href="javascript:;">
+						          <img src="https://developers.kakao.com/assets/img/about/logos/kakaotalksharing/kakaotalk_sharing_btn_medium.png"
+						            alt="카카오톡 공유 보내기 버튼" style="width: 33px; height: 33px;" />
+						        </a>
+					          <span class="button gray medium" style="margin-left: 5px;"><a href="#" onclick="clip(); return false;">
+										<img th:src="@{/image/share.png}" style="width: 25px;"></a></span></div></div>
+								<div style="border-top: 1px lightgray solid; padding-top:10px; margin-top: 5px;">대표번호</div>
+								<div th:text="${hotel.phoneNumber}" style="margin-bottom: 5px;"></div>
+								<div>이메일</div>
+								<div th:text="${hotel.hEmail}" ></div>
+							</div>
             </div>
 								
 							<th:block th:each="roomType, roomTypeStat : ${roomType}">
@@ -251,24 +305,24 @@
 										    <span class="visually-hidden">Next</span>
 										  </button>
 										</div>
-										<div th:text="|침대 : ${roomType.bed}|"></div>
-										<div th:text="|전망 : ${roomType.rView}|"></div>
-										<div th:text="|허용인원 : ${roomType.people} 명|"></div>
-										<div th:if="${roomType.bleakfast == 0}">조식 : <i class="fa-solid fa-x" style="color: #96b2c5;"></i></div>
-										<div th:if="${roomType.bleakfast == 1}">조식 : <i class="fa-sharp fa-solid fa-o" style="color: #96b6c5;"></i></div>
-										<div th:if="${roomType.smoke == 0}">흡연 : <i class="fa-solid fa-x" style="color: #96b2c5;"></i></div>
-										<div th:if="${roomType.smoke == 1}">흡연 : <i class="fa-sharp fa-solid fa-o" style="color: #96b6c5;"></i></div>
-										<div th:text="|${roomType.shower}|"></div>
-										<div th:text="|방크기 : ${roomType.rSize}|"></div>
+										<div class="d-flex flex-row room_icon"><i class="fa-solid fa-bed" style="color: #363636;"></i>&nbsp;<div th:text="|침대 : ${roomType.bed}|"></div></div>
+										<div class="d-flex flex-row room_icon"><i class="fa-solid fa-mountain-sun" style="color: #363636;"></i>&nbsp;<div th:text="|전망 : ${roomType.rView}|"></div></div>
+										<div class="d-flex flex-row room_icon">&nbsp;<i class="fa-solid fa-person" style="color: #363636;"></i>&nbsp;<div th:text="|허용인원 : ${roomType.people} 명|"></div></div>
+										<div class="d-flex flex-row room_icon" th:if="${roomType.bleakfast == 0}"><i class="fa-solid fa-bowl-rice" style="color: #363636;"></i>&nbsp;<div>조식 : <i class="fa-solid fa-x" style="color: #363636;"></i></div></div>
+										<div class="d-flex flex-row room_icon" th:if="${roomType.bleakfast == 1}"><i class="fa-solid fa-bowl-rice" style="color: #363636;"></i>&nbsp;<div>조식 : <i class="fa-sharp fa-solid fa-o" style="color: #363636;"></i></div></div>
+										<div class="d-flex flex-row room_icon" th:if="${roomType.smoke == 0}"><i class="fa-solid fa-smoking" style="color: #363636;"></i>&nbsp;<div>흡연 : <i class="fa-solid fa-x" style="color: #363636;"></i></div></div>
+										<div class="d-flex flex-row room_icon" th:if="${roomType.smoke == 1}"><i class="fa-solid fa-smoking" style="color: #363636;"></i>&nbsp;<div>흡연 : <i class="fa-sharp fa-solid fa-o" style="color: #363636;"></i></div></div>
+										<div class="d-flex flex-row room_icon"><i class="fa-solid fa-shower" style="color: #363636;"></i>&nbsp;<div th:text="|${roomType.shower}|"></div></div>
+										<div class="d-flex flex-row room_icon"><i class="fa-solid fa-up-right-and-down-left-from-center" style="color: #363636;"></i>&nbsp;<div th:text="|방크기 : ${roomType.rSize} ㎡|"></div></div>
 									</div>
 									<div class="col-6">
 										<div  th:class="${'roomName'+roomTypeStat.count}" id="roomName" th:text="${roomType.roomName}" th:value="${roomType.roomName}"></div>
-										<div th:text="${roomType.roomDetail}" style="border-top: 1px #9399a5 solid;"></div>
+										<div th:text="${roomType.roomDetail}" style="border-top: 1px lightgray solid; padding-top: 10px;"></div>
 										
                     <th:block th:each="feature : ${roomFeature}">
-											<div class="border rounded-1" th:if="${feature.roomNo == roomType.roomNo}">
-													<div>객실 시설</div>
-												<div class="roomFac">
+											<div class="border rounded-1" th:if="${feature.roomNo == roomType.roomNo}" style="position: absolute; bottom: 0px; width: 100%;">
+													<div style="font-size: 18px;">객실 시설</div>
+												<div class="roomFac" style="border-top: 1px lightgray solid; margin-top: 10px; padding-top: 18px;">
 													<div th:if="${feature.water == 0}"><i class="fa-solid fa-bottle-water fa-2xl" style="color: #9399a5;"></i><div>물</div></div>
 													<div th:if="${feature.water == 1}"><i class="fa-solid fa-bottle-water fa-2xl" style="color: #2f7fa7;"></i><div>물</div></div>
 													<div th:if="${feature.coffee == 0}"><i class="fa-solid fa-mug-saucer fa-2xl" style="color: #9399a5;"></i><div>커피</div></div>
@@ -279,31 +333,38 @@
 													<div th:if="${feature.towel == 1}"><i class="fa-solid fa-rug fa-2xl" style="color: #2f7fa7;"></i><div>수건</div></div>
 													<div th:if="${feature.minibar == 0}"><i class="fa-solid fa-martini-glass fa-2xl" style="color: #9399a5;"></i><div>미니바</div></div>
 													<div th:if="${feature.minibar == 1}"><i class="fa-solid fa-martini-glass fa-2xl" style="color: #2f7fa7;"></i><div>미니바</div></div>
-													<div th:if="${feature.iron == 0}"><i class="fa-solid fa-shirt fa-2xl" style="color: #9399a5;"></i><div>다리미</div></div>
-													<div th:if="${feature.iron == 1}"><i class="fa-solid fa-shirt fa-2xl" style="color: #2f7fa7;"></i><div>다리미</div></div>
+													<div th:if="${feature.iron == 0}"><i class="fa-solid fa-shirt fa-2xl" style="color: #9399a5;"></i><div>세탁서비스</div></div>
+													<div th:if="${feature.iron == 1}"><i class="fa-solid fa-shirt fa-2xl" style="color: #2f7fa7;"></i><div>세탁서비스</div></div>
 											</div>
 											</div>
 									  </th:block>
 									</div>
 									<div class="col-3" style="margin-right: 0;">
-                    <th:block th:each="price : ${price}">
-                      <th:block th:if="${price.roomNo == roomType.roomNo}">
-                        <th:block th:if="${price.bsDate <= #calendars.format(#calendars.createNow(), 'yyyy/MM/dd') && price.beDate >= #calendars.format(#calendars.createNow(), 'yyyy/MM/dd')}">
-                          <div th:text="|비수기 : ${price.bsDate} ~ ${price.beDate}|"></div>
-                          <div th:text="|${price.biPrice}원|"> </div>
-                        </th:block>
-                        <th:block th:if="${price.jsDate <= #calendars.format(#calendars.createNow(), 'yyyy/MM/dd') && price.jeDate >= #calendars.format(#calendars.createNow(), 'yyyy/MM/dd')}">
-                          <div th:text="|준성수기 : ${price.jsDate} ~ ${price.jeDate}|"></div>
-                          <div th:text="|${price.junPrice}원|"> </div>
-                        </th:block>
-                        <th:block th:if="${price.ssDate <= #calendars.format(#calendars.createNow(), 'yyyy/MM/dd') && price.seDate >= #calendars.format(#calendars.createNow(), 'yyyy/MM/dd')}">
-                          <div th:text="|성수기 : ${price.ssDate} ~ ${price.seDate}|"></div>
-                          <div th:text="|${price.sungPrice}원|"> </div>
-                        </th:block>
-                      </th:block>
-										</th:block>
-										<div><button type="button" class="btn-choice" th:attr="data-roomno=${'roomNo' + roomTypeStat.count}" onclick="selectRoom(this.getAttribute('data-roomno'))">선택</button></div>
-										<div th:text="|남은방 : ${roomType.roomMany - countReserveRoom[roomTypeStat.index]} 개| "></div>
+										<div style="text-align: right;">
+	                    <th:block th:each="price : ${price}">
+	                      <th:block th:if="${price.roomNo == roomType.roomNo}">
+	                        <th:block th:if="${price.bsDate <= #calendars.format(#calendars.createNow(), 'yyyy/MM/dd') && price.beDate >= #calendars.format(#calendars.createNow(), 'yyyy/MM/dd')}">
+	                          <div th:text="|비수기  ${price.bsDate} ~ ${price.beDate}|"></div>
+	                          <div style="display: inline-block; font-weight:400; font-size:20px; color:#ed5c59;">₩&ensp;</div><div th:text="|${price.biPrice}|" style="display: inline-block; font-weight: 700; font-size: 25px; color:#ed5c59;"></div>
+	                        </th:block>
+	                        <th:block th:if="${price.jsDate <= #calendars.format(#calendars.createNow(), 'yyyy/MM/dd') && price.jeDate >= #calendars.format(#calendars.createNow(), 'yyyy/MM/dd')}">
+	                          <div th:text="|준성수기  ${price.jsDate} ~ ${price.jeDate}|"></div>
+	                          <div style="display: inline-block; font-weight:400; font-size:20px; color:#ed5c59;">₩&ensp;</div><div th:text="|${price.junPrice}|" style="display: inline-block; font-weight: 700; font-size: 25px; color:#ed5c59;"></div>
+	                        </th:block>
+	                        <th:block th:if="${price.ssDate <= #calendars.format(#calendars.createNow(), 'yyyy/MM/dd') && price.seDate >= #calendars.format(#calendars.createNow(), 'yyyy/MM/dd')}">
+	                          <div th:text="|성수기  ${price.ssDate} ~ ${price.seDate}|"></div>
+	                          <div style="display: inline-block; font-weight:400; font-size:20px; color:#ed5c59;">₩&ensp;</div><div th:text="|${price.sungPrice}|" style="display: inline-block; font-weight: 700; font-size: 25px; color:#ed5c59;"></div>
+	                        </th:block>
+	                      </th:block>
+											</th:block>
+										</div>
+										<div style="font-size: 12px; text-align: right;">1박당 요금 시작가</div>
+										<div class="d-flex flex-column mb-3" style=" position: absolute; bottom: 0px; width: 100%;">
+											<div th:if="${(roomType.roomMany - countReserveRoom[roomTypeStat.index]) >= 5}" th:text="|잔여 객실 : ${roomType.roomMany - countReserveRoom[roomTypeStat.index]} 개|" style="margin-bottom: 10px; font-weight: 400;" ></div>
+											<div th:if="${(roomType.roomMany - countReserveRoom[roomTypeStat.index]) <= 4 && (roomType.roomMany - countReserveRoom[roomTypeStat.index]) > 1}"th:text="|잔여 객실 : ${roomType.roomMany - countReserveRoom[roomTypeStat.index]} 개|" style="margin-bottom: 10px; color: crimson; font-weight: 400;" ></div>
+											<div th:if="${(roomType.roomMany - countReserveRoom[roomTypeStat.index]) == 1}"th:text="|마지막 객실!!|" style="margin-bottom: 10px; color: crimson; font-weight: 400;" ></div>
+											<div><button type="button" class="btn-choice btn btn-outline-primary" th:attr="data-roomno=${'roomNo' + roomTypeStat.count}" onclick="selectRoom(this.getAttribute('data-roomno'))">객실 선택하기</button></div>
+										</div>
 									</div>
 								</div>
 							</div>
@@ -320,7 +381,7 @@
         </th:block>
         
         
-        <div class="choice">여행 후기</div>
+        <div class="choice">이용 후기</div>
         
           <form class="mb-3 frm_review_add" method="post">
           <div id="myform">
@@ -339,7 +400,7 @@
           </fieldset>
               <input type="hidden" name="hotelNo" th:value="${hotel.hotelNo}">
             <div>                          
-              <textarea class="col-auto form-control" name="reviewContents" placeholder="행복했던 여행후기를 남겨보세요"></textarea>   <!-- 예약한사람만 보이게 -->
+              <textarea class="col-auto form-control" name="reviewContents" placeholder="행복했던 투숙 후기를 남겨보세요"></textarea>   <!-- 예약한사람만 보이게 -->
               <button type="button" class="btn btn-kong" id="btn_review_add" style="margin-top: 20px; margin-left: 750px">작성완료</button>
             </div>
             </div>
@@ -347,7 +408,7 @@
            
             
           <div style="overflow: hidden;">
-           <div id="starAve" style="text-align: left;">리뷰평점</div>
+           <div id="starAve" style="text-align: left; margin-left: 16px;">평점</div>
             <div style="height: 100px; float: right;">
                 <select id="sortReview" class="form-select form-select-sm mb-3 h-50 d-inline-block" style="width: 120px;" aria-label=".form-select-sm example">
                     <option value="1" selected>최신순</option>
@@ -356,14 +417,8 @@
             </div>
         </div>
         <div id="reviewAccordion">
-             
         </div>  
     </div>    
-
-            
-            
-            
-            
 		    	</div>
 		    <div class="col-1">	      
 		    </div>
@@ -456,7 +511,6 @@
     roomNumber = document.getElementById(roomNo).value;
     document.getElementById('reserveRoomNo').value = roomNumber;
    	var date = document.getElementById('daterange').value;
-   	console.log(date);
    $.ajax({
 		  type: 'post',
       url: '/hotel/finalPrice.do',
@@ -466,33 +520,17 @@
 				$('#roomType').empty();
 				$('#finalprice').empty();
 				$('#roomtype').val(resData.roomName);
-				$('#finalprice').val(resData.totalPrice);
+				$('#finalprice').val('₩ '+resData.totalPrice);
 				$('#checkin').val(resData.checkin);
 				$('#checkout').val(resData.checkout);
 				
-   console.log(document.getElementById('checkin').value);
-			},
-			  error: (xhr, status, error) => {
-                console.error('AJAX Error:', error);
-                alert('AJAX 요청 중 오류가 발생했습니다.');
-            }
+			}
       
 	 });
-   
-   
-   console.log(document.getElementById('reserveRoomNo').value);
-   console.log(document.getElementById('hotelNo').value);
  }
 
   const fnReviewAdd = () => {
     $('#btn_review_add').click(() => {         
-        // 데이터 확인용
-        console.log('Review Contents:', $('textarea[name="reviewContents"]').val());
-        console.log('User No:', $('#userNo').val());
-        console.log('hotel No:', $('input[name="hotelNo"]').val());
-        console.log('Reserve No:', $('input[name="reserveNo"]').val());
-        console.log('Star:', $('input[name="star"]:checked').val());
-        
         $.ajax({
             type: 'post',
             url: '/hotel/addReview.do',
@@ -506,7 +544,6 @@
             },
             dataType: 'json',
             success: (resData) => {             
-                console.log('Response Data:', resData); // 콘솔에 응답 데이터 출력
                 if (resData.addReviewResult === 1) {
                     alert('리뷰가 등록되었습니다.');
                     $('#reviewContents').val('');
@@ -514,10 +551,6 @@
                 } else {
                     alert('리뷰 등록에 실패했습니다.');
                 }
-            },
-            error: (xhr, status, error) => {
-                console.error('AJAX Error:', error);
-                alert('AJAX 요청 중 오류가 발생했습니다.');
             }
         });
     });
@@ -562,9 +595,6 @@
           } else {
             $('#reviewAccordion').append('<div class="text-center">등록된 리뷰가 없습니다.</div>');
           }
-        },
-        error: (error) => {
-          console.error('Ajax 요청 에러:', error);
         }
       });
     };
@@ -603,16 +633,12 @@
               dataType: 'json',
               success: function(resData) {
                   updateAverageRating(resData.averageRating);
-              },
-              error: function(xhr, status, error) {
-                  console.error('AJAX Error:', error);
-                  alert('평균 별점 업데이트 중 오류가 발생했습니다.');
               }
           });
       });
       
       function updateAverageRating(averageRating) {
-          var displayText = averageRating ? '평균 별점: ' + averageRating.toFixed(2) : '평점 : 0';
+          var displayText = averageRating ? '평점: ' + averageRating.toFixed(2) : '평점 : 0';
           $('#starAve').text(displayText);
       }
 
@@ -653,63 +679,45 @@
     }
     return stars;
 } 
-  const fnReserveClick = () => {
-    $('#btn_reserve').click(() => {
+  const fnbBtnClick = () => {
         let user = /*[[${session.user}]]*/ null;
         if (user === null) { 
             if (confirm('로그인이 필요한 기능입니다. 로그인할까요?')) {
                 location.href = '/user/login.form';
+                return;
             } else {
                 return;
             }
           } 
-      })
   }
   
-  var userNo = 0;
-  
-  
-  $('#userNo').val();
+  var userNo = $('#userNo').val();
+  if(userNo == null){
+	  userNo = 0;
+	}
+	var clickNo=0;
+   const fnHeart = (clickNo) => {
+	  $(document).ready(function(){
+	    $.ajax({
+	      type: 'post',
+	      url: '/hotel/initHeart.do',
+	      data: {userNo: userNo, hotelNo: hotelNo, clickNo:clickNo},
+	      dataType: 'json',
+	      success: (resData) => { 
+					if(resData != null && resData != ''){
+					if(resData.heart == 1){
+						$('#heartIcon').html('');
+						$('#heartIcon').html('<i class="fa-solid fa-heart" style="color: #bd1414; font-size: 24px;"></i>');
+					}else if(resData.heart == 0){
+						$('#heartIcon').html('');
+						$('#heartIcon').html('<i class="fa-regular fa-heart" style="color: #fb3c3c; font-size: 24px;"></i>');
+					}
+				 }
+				}
+	    })
+	  });  
+  }
    
-  $(document).ready(function(){
-    $.ajax({
-      type: 'post',
-      url: '/hotel/initHeart.do',
-      data: {userNo: userNo, hotelNo: hotelNo},
-      dataType: 'json',
-      success: (resData) => {  }
-    })
-  });
-  
-  
-      
-    const fnHeart = () => {
-    $('.btn_heart').click(() => {     
-      $.ajax({
-        type: 'post',
-        url: '/hotel/heart.do',
-        data: {userNo: userNo, hotelNo: hotelNo},
-        dataType: 'json',
-        success: (resData) => {  
-          var str;
-          if(resDate != null && resDate != ""){
-          if(resData === 1){              
-            $('.btn_heart').empty();
-            str += '<i class="fa-solid fa-thumbs-up fa-2xl" style="color: #1f753d;"></i>';
-            $('.btn_heart').append(str);
-          } else if(resData === 0){ 
-            $('.btn_heart').empty();
-            str += '<i class="fa-regular fa-thumbs-up fa-bounce fa-2xl" style="color: #1f753d;"></i>';
-            $('.btn_heart').append(str);
-          }                
-          }
-      },
-      error : (error) => {
-        console.log('못가져왔어');
-      }
-    })
-  })
- }
  var today = new Date();
  var tomorrow = new Date();
  tomorrow.setDate(today.getDate() + 1);
@@ -734,6 +742,7 @@
 
 var checkDate = $('.daterange');
 
+var frmBtn = $('#frm_btn');
 
  const fnEditHotel = () => {
       $('#btn_edit').click(() => {
@@ -751,14 +760,56 @@ var checkDate = $('.daterange');
           })
         }
   
+    var thisUrl = document.URL;
+    var imagePackage = $('img[id*="mainList"]').attr("src"); 
+    var packageTitle = $('#hotelName').text();
+    Kakao.Share.createDefaultButton({
+    container: '#kakaotalk-sharing-btn',
+    objectType: 'feed',
+    content: {
+      title: packageTitle,
+      description: '#여행 #패키지 #호텔 #한반도투어 #행복',
+      imageUrl:
+        imagePackage,
+      link: {
+        // [내 애플리케이션] > [플랫폼] 에서 등록한 사이트 도메인과 일치해야 함
+        mobileWebUrl: thisUrl,
+        webUrl: thisUrl,
+      },
+      
+    },
+    buttons: [
+      {
+        title: '웹으로 보기',
+        link: {
+          mobileWebUrl: thisUrl,
+          webUrl: thisUrl,
+        },
+      },
+    ],
+  });
+
+    function clip(){    
+      var url = '';
+      var textarea = document.createElement("textarea");
+      document.body.appendChild(textarea);
+      url = window.document.location.href;
+      textarea.value = url;
+      textarea.select();
+      document.execCommand("copy");
+      document.body.removeChild(textarea);
+      alert("URL이 복사되었습니다.")
+    }
+  
+  
+  
   fnReviewAdd();
   fnReviewList(sort);
   fnReviewRemove();
-  fnReserveClick();
   fnRemoveHotel();
   fnEditHotel();
   kakaoMap();
-  fnHeart();
+  fnHeart(clickNo);
   
 </script>
 	

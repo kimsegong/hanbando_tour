@@ -50,7 +50,9 @@ public class MainServiceImpl implements MainService {
   
      List<PackageDto> packageDto = mainMapper.searchPackageList(map);
      return Map.of("searchPackageList", packageDto
-                 , "totalPage", myPageUtils.getTotalPage());
+                 , "totalPage", myPageUtils.getTotalPage()
+                 , "count", total );
+                     
    
   }
   @Transactional(readOnly = true)
@@ -72,7 +74,8 @@ public class MainServiceImpl implements MainService {
   
      List<HotelDto> hotelDto = mainMapper.searchHotelList(map);
      return Map.of("searchHotelList", hotelDto
-                 , "totalPage", myPageUtils.getTotalPage());
+                 , "totalPage", myPageUtils.getTotalPage()
+                 , "count" , total);
     
   }
   @Transactional(readOnly = true)

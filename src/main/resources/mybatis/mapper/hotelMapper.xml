@@ -163,22 +163,26 @@
             ROW_NUMBER() OVER (ORDER BY HOTEL_NO DESC) AS RN
          FROM
            HOTEL_T HT
+         WHERE HT.STATUS = 1  
+           <if test="region != 0">
+            AND HT.REGION_NO = #{region}
+           </if>  
          ) H
          LEFT JOIN HOTEL_IMAGE_T HI ON H.HOTEL_NO = HI.HOTEL_NO
          LEFT JOIN REGION_T R ON H.REGION_NO = R.REGION_NO
          WHERE (H.RN BETWEEN #{begin} AND #{end}) AND HI.THUMBNAIL = 1
     
   </select>
-  <select id="countHotel" parameterType="int" resultType="int">
+  <select id="countHotel" parameterType="Map" resultType="int">
     SELECT COUNT(*)
       FROM HOTEL_T
-     WHERE 
-     <if test="recommend == 0">
-			 STATUS = 1
-		 </if> 
-     <if test="recommend == 1">
-			 STATUS = 1
+     WHERE STATUS = 1
+    	<if test="region != 0">
+				AND REGION_NO = #{region}
+			</if>
+     <if test="recommend == 1 and region != 0">
 			 AND RECOMMEND_STATUS = 1
+			 AND REGION_NO = #{region}
 		 </if>
   </select>
   
@@ -254,7 +258,8 @@
             A.RECOMMEND_STATUS,
             A.THUMBNAIL,
             A.FILESYSTEM_NAME,
-            A.IMAGE_PATH
+            A.IMAGE_PATH,
+            A.RN
      FROM ( 
           <include refid="countReview"/>
          SELECT DISTINCT  
@@ -269,15 +274,19 @@
             H.RECOMMEND_STATUS,
             HI.THUMBNAIL,
             HI.FILESYSTEM_NAME,
-            HI.IMAGE_PATH
+            HI.IMAGE_PATH,
+            ROW_NUMBER() OVER (ORDER BY R.CR DESC NULLS LAST) AS RN
             FROM 
      HOTEL_T H
          LEFT JOIN COUNT_REVIEW R ON H.HOTEL_NO = R.HOTEL_NO 
          LEFT JOIN HOTEL_IMAGE_T HI ON H.HOTEL_NO = HI.HOTEL_NO
          LEFT JOIN REGION_T R ON H.REGION_NO = R.REGION_NO 
-         WHERE HI.THUMBNAIL =1
+         WHERE HI.THUMBNAIL =1 AND H.STATUS = 1  
+         <if test="region != 0">
+           AND H.REGION_NO = #{region}
+         </if>  
          ORDER BY CR DESC NULLS LAST) A
-         WHERE ROWNUM BETWEEN #{begin} AND #{end}
+         WHERE RN BETWEEN #{begin} AND #{end}
   </select>  
  <select id="getRecommendHotelList" parameterType="Map" resultMap="HotelMap">
     SELECT  DISTINCT
@@ -305,7 +314,10 @@
         ROW_NUMBER() OVER (ORDER BY HOTEL_NO DESC) AS RN
      FROM
        HOTEL_T HT
-       WHERE HT.RECOMMEND_STATUS =1
+       WHERE HT.RECOMMEND_STATUS =1 AND HT.STATUS = 1  
+       <if test="region != 0">
+         AND HT.REGION_NO = #{region}
+       </if>  
      ) H
      LEFT JOIN HOTEL_IMAGE_T HI ON H.HOTEL_NO = HI.HOTEL_NO
      LEFT JOIN REGION_T R ON H.REGION_NO = R.REGION_NO
@@ -368,7 +380,10 @@
 		          LEFT JOIN HOTEL_IMAGE_T HI ON H.HOTEL_NO = HI.HOTEL_NO  
 		          LEFT JOIN REGION_T R ON H.REGION_NO = R.REGION_NO
 		          LEFT JOIN PRICE P ON H.HOTEL_NO = P.HOTEL_NO
-		    WHERE HI.THUMBNAIL = 1
+		    WHERE HI.THUMBNAIL = 1 AND H.STATUS = 1  
+		    <if test="region != 0">
+          AND H.REGION_NO = #{region}
+         </if>  
 	          	) A 
 	   WHERE A.RN BETWEEN #{begin} AND #{end}
  </select>
@@ -487,6 +502,9 @@
             <if test="roomNo == 0">
             ROOM_NO,
             </if>
+            <if test="roomNo > 0">
+						ROOM_NO,	
+						</if>
             ORIGINAL_NAME, 
             FILESYSTEM_NAME, 
             IMAGE_PATH
@@ -496,10 +514,14 @@
             <if test="roomNo == 0">
            	ROOM_SEQUENCE.CURRVAL,
            	</if>
+           	<if test="roomNo > 0">
+						#{roomNo},	
+						</if>
           	#{originalName},
            	#{filesystemName},
           	#{imagePath}
            )
+           
  </insert>
  <update id="updateHotel" parameterType="HotelDto">
    UPDATE HOTEL_T
@@ -692,7 +714,7 @@
  </select>
  
  <delete id="deleteHeart" parameterType="HeartDto">
-    DELETE FROM HEART_T WHERE USER_NO = #{userDto.userNo} AND HOTEL_NO=#{hotelDtohotelNo}
+    DELETE FROM HEART_T WHERE USER_NO = #{userDto.userNo} AND HOTEL_NO=#{hotelDto.hotelNo}
 </delete>
 
  <insert id="insertHeart" parameterType="HeartDto">
@@ -735,6 +757,64 @@
      FROM ROOMPRICE_T
      WHERE ROOM_NO = #{roomNo} 
  </select>
- </mapper>
+ <update id="updateRoom" parameterType="RoomtypeDto">
+	 UPDATE ROOMTYPE_T SET 
+		    ROOM_DETAIL = #{roomDetail},
+		    ROOM_NAME = #{roomName},
+		    ROOM_MANY = #{roomMany},
+		    R_VIEW = #{rView},
+		    BLEAKFAST = #{bleakfast},
+		    SMOKE = #{smoke},
+		    PEOPLE = #{people},
+		    BED = #{bed},
+		    SHOWER = #{shower},
+		    R_SIZE = #{rSize}
+  	WHERE ROOM_NO = #{roomNo}
+ </update>
+ <update id="updateRoomImage" parameterType="HotelImageDto">
+	 UPDATE HOTEL_IMAGE_T SET 
+		    ORIGINAL_NAME = #{originalName},
+		    THUMBNAIL = #{thumbnail},
+		    FILESYSTEM_NAME = #{filesystemName},
+		    IMAGE_PATH = '#{imagePath}'
+	WHERE ROOM_NO = #{roomNo}
+ </update>
+ <update id="updateRoomFeature" parameterType="RoomFeatureDto"  >
+	 UPDATE ROOM_FEATURE_T SET 
+		    TOWEL = #{towel},
+		    WATER = #{water},
+		    COFFEE = #{coffee},
+		    DRIER = #{drier},
+		    IRON = #{iron},
+		    MINIBAR = #{minibar}
+	WHERE ROOM_NO = #{roomNo}
+ </update>
+ <update id="updateRoomPrice" parameterType="RoomPriceDto">
+	 UPDATE ROOMPRICE_T SET 
+		    BI_PRICE = #{biPrice},
+		    BS_DATE = #{bsDate},
+		    BE_DATE = #{beDate},
+		    JUN_PRICE = #{junPrice},
+		    JS_DATE = #{jsDate},
+		    JE_DATE = #{jeDate},
+		    SUNG_PRICE = #{sungPrice},
+		    SS_DATE = #{ssDate},
+		    SE_DATE = #{seDate}
+		WHERE ROOM_NO = #{roomNo}
+ </update> 
+ <delete id="deleteImage" parameterType="Map">
+	 DELETE FROM HOTEL_IMAGE_T
+    WHERE ORIGINAL_NAME = #{originalName} AND HOTEL_NO = #{hotelNo} 
+ </delete>
+ <update id="updateFacilities" parameterType="FacilitiesDto">
+ 	UPDATE FACILITIES_T SET
+	    POOL = #{pool},
+	    MORNING = #{morning},
+	    SAUNA = #{sauna},
+	    LOUNGE = #{lounge},
+	    ROOMSERVICE = #{roomservice}
+	WHERE HOTEL_NO = #{hotelNo}
+</update>
+  </mapper>
  
 
