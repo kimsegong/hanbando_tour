@@ -76,7 +76,7 @@
         T.THEME_NAME,
         P.PACKAGE_TITLE,
         P.PRICE,
-	P.HIT,
+				P.HIT,
         P.STATUS,
         P.RECOMMEND_STATUS,
         PI.IMAGE_NO,
@@ -97,11 +97,23 @@
             PT.STATUS,
             PT.MAX_PEOPLE,
             PT.RECOMMEND_STATUS,
-            ROW_NUMBER() OVER (ORDER BY PT.PACKAGE_NO DESC) AS RN
+            ROW_NUMBER() OVER (
+            	<choose>
+  	          <when test="condition == 'rowPrice'">
+  	            ORDER BY PT.PRICE ASC
+  	          </when>
+  	          <when test="condition == 'highPrice'">
+  	            ORDER BY PT.PRICE DESC
+  	          </when>
+  	          <otherwise>
+  	            ORDER BY PT.PACKAGE_NO DESC
+  	          </otherwise>
+  	        </choose>
+            ) AS RN
         FROM
             PACKAGE_T PT
         WHERE 
-        		PT.PACKAGE_TITLE LIKE '%' || #{query} || '%'    
+        		PT.PACKAGE_TITLE LIKE '%' || #{query} || '%' AND PT.STATUS = 1     
     ) P
     LEFT JOIN
         PRODUCT_IMAGE_T PI ON P.PACKAGE_NO = PI.PACKAGE_NO
@@ -111,6 +123,7 @@
         THEME_T T ON P.THEME_NO = T.THEME_NO       
     WHERE
         P.RN BETWEEN #{begin} AND #{end} AND PI.THUMBNAIL = 1
+        ORDER BY P.RN ASC
 	</select>
 
 	<select id="countSearchPackage" parameterType="Map" resultType="int">
@@ -157,7 +170,7 @@
             ROW_NUMBER() OVER (ORDER BY HOTEL_NO DESC) AS RN
          FROM
            HOTEL_T HT
-         WHERE HOTEL_NAME LIKE '%' || #{query} || '%'  
+         WHERE HOTEL_NAME LIKE '%' || #{query} || '%' AND HT.STATUS = 1   
          ) H
          LEFT JOIN HOTEL_IMAGE_T HI ON H.HOTEL_NO = HI.HOTEL_NO 
          LEFT JOIN REGION_T R ON H.REGION_NO = R.REGION_NO
@@ -174,6 +187,9 @@
 				    A.PACKAGE_NO,
 				    A.PACKAGE_TITLE,
 				    A.PRICE,
+				    A.MINI_ONE,
+		        A.MINI_TWO,
+		        A.MINI_THREE,
 				    SP,
 				    RN,
 				    PI.IMAGE_NO,
@@ -185,12 +201,18 @@
 			            P.PACKAGE_NO,
 			            P.PACKAGE_TITLE,
 			            P.PRICE,
+			            P.MINI_ONE,
+					        P.MINI_TWO,
+					        P.MINI_THREE,
 			            SUM(R.RESERVE_PERSON) AS SP,
 			            ROW_NUMBER() OVER (ORDER BY SUM(R.RESERVE_PERSON) DESC NULLS LAST) AS RN
 			        FROM PACKAGE_T P LEFT JOIN RESERVE_T R ON P.PACKAGE_NO = R.PACKAGE_NO
 			        GROUP BY
 			            P.PACKAGE_NO,
 			            P.PACKAGE_TITLE,
+			            P.MINI_ONE,
+					        P.MINI_TWO,
+					        P.MINI_THREE,
 			            P.PRICE
 			    ) A LEFT JOIN PRODUCT_IMAGE_T PI ON A.PACKAGE_NO = PI.PACKAGE_NO
 			WHERE (RN BETWEEN 1 AND 4) AND PI.THUMBNAIL = 1
@@ -203,6 +225,9 @@
     SELECT P.PACKAGE_NO, 
 		       P.PACKAGE_TITLE, 
 		       P.PRICE, 
+		       P.MINI_ONE,
+	         P.MINI_TWO,
+	         P.MINI_THREE,
 		       T.THEME_NO, 
 		       T.THEME_NAME,  
 		       PI.IMAGE_NO,
