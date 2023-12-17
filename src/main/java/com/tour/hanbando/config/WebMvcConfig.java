@@ -60,12 +60,14 @@ public class WebMvcConfig implements WebMvcConfigurer {
   public void addResourceHandlers(ResourceHandlerRegistry registry) {
     registry.addResourceHandler("/**")
       .addResourceLocations("classpath:/static/", "classpath:/templates/");
-    registry.addResourceHandler("/mainBanner/**")
-      .addResourceLocations("file:/mainBanner/");
-    registry.addResourceHandler("/package/**")
-    .addResourceLocations("file:/package/");
-    registry.addResourceHandler("/hotel/**")
-    .addResourceLocations("file:/hotel/");
+    registry.addResourceHandler("/hanbando/mainBanner/**")
+      .addResourceLocations("file:/hanbando/mainBanner/");
+    registry.addResourceHandler("/hanbando/package/**")
+    .addResourceLocations("file:/hanbando/package/");
+    registry.addResourceHandler("/hanbando/hotel/**")
+    .addResourceLocations("file:/hanbando/hotel/");
+    registry.addResourceHandler("/hanbando/notice/**")
+    .addResourceLocations("file:/hanbando/notice/");
   }
   
   
