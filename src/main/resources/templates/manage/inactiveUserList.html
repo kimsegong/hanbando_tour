@@ -250,7 +250,7 @@
                       <th:block th:each="ina:${inactiveList}">
                         <tr>
                           <th scope="row" th:text="${ina.userNo}"></th>
-                          <td>
+                          <td width="19%" style="word-break: break-all;">
                             <a th:href="@{/manage/inactiveDetail.do(userNo=${ina.userNo})}" th:text="${ina.email}"></a>
                           </td>
                           <td>
@@ -264,7 +264,7 @@
                             <a th:href="@{/manage/inactiveDetail.do(userNo=${ina.userNo})}" th:if="${ina.gender == 'F'}">여자</a>
                             <a th:href="@{/manage/inactiveDetail.do(userNo=${ina.userNo})}" th:if="${ina.gender == 'M'}">남자</a>
                           </td>
-                          <td>
+                          <td width="12%" style="word-break: break-all;">
                             <a th:href="@{/manage/inactiveDetail.do(userNo=${ina.userNo})}" th:if="${ina.state == 0}">일반회원</a>
                             <a th:href="@{/manage/inactiveDetail.do(userNo=${ina.userNo})}" th:if="${ina.state == 1}">네이버 간편로그인</a>
                             <a th:href="@{/manage/inactiveDetail.do(userNo=${ina.userNo})}" th:if="${ina.state == 2}">카카오 간편로그인</a>

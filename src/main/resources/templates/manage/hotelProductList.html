@@ -375,10 +375,10 @@
                       <th:block th:each="h:${hotelList}">
                         <tr>
                           <th scope="row" th:text="${h.hotelNo}"></th>
-                          <td>
+                          <td >
                             <a th:href="@{/hotel/detail.do(hotelNo=${h.hotelNo})}" th:text="${h.regionDto.regionName}"></a>
                           </td>
-                          <td>
+                          <td width="23%" style="word-break: break-all;">
                             <a th:href="@{/hotel/detail.do(hotelNo=${h.hotelNo})}" th:text="${h.hotelName}"></a>
                           </td>
                           <td>

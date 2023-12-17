@@ -276,7 +276,7 @@
                             <a th:if="${r.hotelDto == null}" th:text="${r.userDto.name}" th:href="@{/manage/reservePackageDetail.do(reserveNo=${r.reserveNo})}" ></a>
                             <a th:if="${r.packageDto == null}" th:text="${r.userDto.name}" th:href="@{/manage/reserveHotelDetail.do(reserveNo=${r.reserveNo})}" ></a>
                           </td>
-                          <td>
+                          <td width="20%" style="word-break: break-all;">
                             <a th:if="${r.hotelDto == null}" th:text="${r.packageDto.packageTitle}" th:href="@{/manage/reservePackageDetail.do(reserveNo=${r.reserveNo})}"></a>
                             <a th:if="${r.packageDto == null}" th:text="${r.hotelDto.hotelName}" th:href="@{/manage/reserveHotelDetail.do(reserveNo=${r.reserveNo})}"></a>
                           </td>
