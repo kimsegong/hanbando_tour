@@ -5,7 +5,7 @@
 <style>
 
   .wrap1 > .box1{
-    height:50px;
+    height:24px;
   }
   
   .wrap1 > .box2{
@@ -20,15 +20,19 @@
     height:70px;
   }
   
+  
   .main_list_wrap {
     margin-left: 8%;
   }
 
-  .title{
+  .title_faq{
     font-size: 30px;
     font-weight: 400;
   }
   
+  .title_faq{
+    margin-left:14%;
+  }
   .faq-table{
     margin-left: 25px; 
   }
@@ -90,18 +94,18 @@
           <a th:if="${session.user != null && session.user.auth == 0}" th:href="@{/notice/inquiryManage.do}" class="w3-bar-item inquiry_manage">1:1문의보기</a>
         </div>    
         </div>
-        <div class="col-10">
+        <div class="col-10" style="margin-right:9%;">
             <!--/*여기에 작성/ 다 만들고 style 지워주세요  */-->
 
   <div class="main_list_wrap">
   
-    <p class="title">자주묻는질문</p>
+    <p class="title_faq">자주묻는질문</p>
      
     <div class="wrap1">
       <div class="box1"></div>    
     </div>
   
-    <div class="btn-toolbar mb-3 justify-content-center" role="toolbar" aria-label="Toolbar with button groups">
+    <div class="btn-toolbar mb-3 justify-content-center" role="toolbar" aria-label="Toolbar with button groups" style="margin-left:16%;">
       <div class="btn-group me-2" role="group" aria-label="First group">
         <div class="btn-group" role="group" aria-label="Faq Category Buttons">
           <a th:each="faqCa : ${faqCaList}" th:href="@{/notice/faqList.do(caNo=${faqCa.caNo})}" class="btn btn-sy my-btn" th:text="${faqCa.caTitle}"></a>
@@ -114,7 +118,9 @@
     
      <div th:if="${session.user != null}">
        <a th:if="${session.user.auth == 0}" th:href="@{/notice/faqWrite.form}">
+        <div style="margin-left:140px;"> 
         <button type="button" id="btn_faq_write">작성하러가기</button> 
+        </div>
        </a>
      </div>
     
@@ -126,7 +132,7 @@
       <div class="row">
         <div class="col-7"></div>
         <div class="col-4" style="display: flex; justify-content: flex-end;">
-          <div class="home">
+          <div class="home" style="margin-left:100px;">
             <a th:href="@{/main.do}"><i class="fa-solid fa-house" style="font-size:15px; margin-right: 5px;"></i></a>
              &nbsp;고객센터  &nbsp;  >   &nbsp; 공지사항
           </div>
@@ -144,7 +150,7 @@
        
         <div class="row accordion">
           <div class="col-1"></div>
-            <div class="col-9 faq-table">
+            <div class="col-9 faq-table" style="margin-left:14%;">
               <th:block th:if="${session.user != null}">
                 <input type="hidden" name="userNo" id="userNo" th:value="${session.user.userNo}">   
               </th:block>

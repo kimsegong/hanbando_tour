@@ -30,8 +30,7 @@
 <script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=c8e918c999e5a28f4d7e1914f1a1956e&libraries=services" type="text/javascript"></script>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
-<script src="https://t1.kakaocdn.net/kakao_js_sdk/2.5.0/kakao.min.js"
-  integrity="sha384-kYPsUbBPlktXsY6/oNHSUDZoTX6+YI51f63jCPEIPFP09ttByAdxd2mEjKuhdqn4" crossorigin="anonymous"></script>
+<script src="https://t1.kakaocdn.net/kakao_js_sdk/2.5.0/kakao.min.js" integrity="sha384-kYPsUbBPlktXsY6/oNHSUDZoTX6+YI51f63jCPEIPFP09ttByAdxd2mEjKuhdqn4" crossorigin="anonymous"></script>
 <script>
   Kakao.init('c8e918c999e5a28f4d7e1914f1a1956e');
 </script>
@@ -60,10 +59,8 @@
     </div>
     <!-- 검색바 -->
     <div class="col-8" style="margin-top: 30px;">
-      <div class="row">
-        <div class="col-md-8">
           <div class="row">
-            <div class="col-10">
+            <div class="col-8">
            <div class="header_search" style="margin-left: 70px;">
              <form class="frm_search" method="get" th:action="@{/main/search.do}">
              <input type="text" class="form-control header_searchbar w-75 p-3 h-50 d-inline-block rounded-pill"  name="query" placeholder="여행지/호텔 입력해주세요🛫">
@@ -71,14 +68,10 @@
              </form>
             </div>     
             </div>
-            <div class="col-6">            
+            <div class="col-4">  
             </div>
           </div>
-        </div>
-        <div class="col-6 col-md-4">
-        </div>
       </div>
-    </div>
     <!-- 아이콘 -->
     <div class="col-1" style="margin-bottom: 20px;">
       <th:block th:if="${session.user != null}"> 
@@ -161,7 +154,9 @@
   </div>
 </nav> 
       
-</div>     
+</div>
+<script>
+</script>     
 
 
 

@@ -13,10 +13,7 @@ input {
 label {
   text-align: left;
 }
-#hotelName {
-	font-size: 30px;
-	font-weight: 600;
-}
+
 #address, .price{
 	display: inline-block;
 }
@@ -66,8 +63,7 @@ label {
 		  <div class="row">
 		    <div class="col-1">	      
 		    </div>
-		    <div class="col-10" style="border:1px gray dotted">
-		      	<!--/*여기에 작성/ 다 만들고 style 지워주세요  */-->
+		    <div class="col-10" >
 				   <h2>호텔 게시글작성</h2>
 			<form method="post" id="hotel_add" th:action="@{/hotel/addHotel.do}"  enctype="multipart/form-data" >
 				<input type="hidden" id="hotelNo" name="hotelNo" th:value="${hotelNo}">
@@ -181,7 +177,7 @@ label {
             </div>
 
 				    <div class="d-grid gap-2 col-6 mx-auto">
-				      <button type="submit" class="btn btn-primary" style="margin: 32px;">작성완료</button>
+				      <button type="submit" class="btn btn-primary" style="margin: 32px;" form="hotel_add">작성완료</button>
 			      </div>
 				
 	  </div>
@@ -229,8 +225,6 @@ label {
                     if (status === kakao.maps.services.Status.OK) {
                         document.getElementById('longitude').value = result[0].x;
                         document.getElementById('latitude').value = result[0].y;
-                        console.log(result);
-                        console.log(result[0].x);
                     }
                 };
                   geocoder.addressSearch(roadAddr, callback);
@@ -281,6 +275,7 @@ label {
 		  $('#files')[0].files = dataTransfer.files; //제거 처리된 FileList를 돌려줌
 		  
 		  div.empty();
+		  alert('해당 첨부 파일이 삭제되었습니다.');
   }
 
 
@@ -292,6 +287,7 @@ label {
           let maxSizePerFile = 1024 * 1024 * 10;
           let totalSize = 0;
           let files = ev.target.files;
+					let mainList = 0;
           for(let i = 0; i < files.length; i++){
             totalSize += files[i].size;
             if(files[i].size > maxSizePerFile){
@@ -300,8 +296,15 @@ label {
               $('#attached_list').empty();
               return;
             }
-            $('#attached_list').append('<div>' + files[i].name + '<button type="button" class="each" onclick="fndeleteEach(this);">X</button></div>');
-          }
+						$('#attached_list').append('<div>' + files[i].name + '<button type="button" class="each" onclick="fndeleteEach(this);" style="border:none;background-color: white; margin-left:4px;"><i class="fa-regular fa-circle-xmark ico_remove_attach"></i></button></div>');        
+						  mainList += files[i].name.startsWith('mainList');
+						  }
+						  if(mainList != 1){
+								alert('mainList이름의 사진을 반드시 올려주세요.');
+								$(ev.target).val('');
+            		$('#attached_list').empty();
+							}
+						  
           if(totalSize > maxSize){
             alert('전체 첨부파일의 최대 크기는 100MB입니다.');
             $(ev.target).val('');
@@ -335,15 +338,13 @@ label {
         async: false,
         dataType: 'json',
         success: (resData) => {  
-                    console.log(resData);
-              
 								 let str = ''
 							   $.each(resData.roomtypeList, (i, room) => {
                  str += '<div class="border rounded-1" style="margin-bottom: 10px;">';
-                 str += '<input type="hidden" value="'+room.roomNo+'">';
+                 str += '<input type="hidden" value="'+room.roomNo+'"class="roomNo">';
                  str += '<div class="row">';
                  str += '<div class="col-3">';
-                 str += '<div class=""fileList>';
+                 str += '<div class="fileList">';
 									 $.each(resData.hotelImageList,(k,image) => {
 										 if(image.roomNo == room.roomNo){
 										str += '<div>'+image.originalName+'</div>' ;
@@ -415,19 +416,41 @@ label {
         data: {roomNo : roomNo},
         dataType: 'json',
         success: (resData) => { 
-					console.log(resData)
 					fnAddRoom ();
 				}
          
     })
   }
   
-   function openModifyHotelRoom(obj){
-		 
-		 console.log(obj + '123');
-    $('.modal-content').load("/hotel/modifyRoom.form?roomNo="+ obj);
-  }
+  const fnHotelModify = () => {
+        $('#hotel_add').submit((ev) => {
+        	if($('#regionSelect').find(':selected').val() === '-지역-'){
+        		alert('지역을 선택해주세요');
+            $('#regionSelect').focus();
+            ev.preventDefault();
+            return;
+        	}
+        	let files = $('#files')[0].files;
+        	if(files.length === 0){
+						alert("사진을 등록해주세요");
+						ev.preventDefault();
+            return;
+					}
+        	
+					if(!$('.roomNo').val()){
+						alert("방을 등록해 주세요 ");
+						ev.preventDefault();
+            return;
+					}
+        })
+      }
   
+  
+  
+  
+  
+  
+   fnHotelModify();
 	 fnFileCheck();
 </script>
 	
