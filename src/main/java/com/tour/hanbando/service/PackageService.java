@@ -37,5 +37,6 @@ public interface PackageService {
   public void getHeartPackage(HttpServletRequest request, Model model);
   public Map<String, Object> removeHeart(int packageNo);
   public Map<String, Object> checkHeart(int packageNo, int userNo);
+  public int getTotalReviewCount(int packageNo);
   
 }

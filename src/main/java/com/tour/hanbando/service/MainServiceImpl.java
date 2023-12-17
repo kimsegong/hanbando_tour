@@ -1,6 +1,9 @@
 package com.tour.hanbando.service;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -13,10 +16,12 @@ import org.springframework.ui.Model;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
+import com.tour.hanbando.dao.HotelMapper;
 import com.tour.hanbando.dao.MainMapper;
 import com.tour.hanbando.dto.BannerImageDto;
 import com.tour.hanbando.dto.HotelDto;
 import com.tour.hanbando.dto.PackageDto;
+import com.tour.hanbando.dto.RoompriceDto;
 import com.tour.hanbando.util.MainFileUtil;
 import com.tour.hanbando.util.MyPageUtils;
 
@@ -27,6 +32,7 @@ import lombok.RequiredArgsConstructor;
 @Service
 public class MainServiceImpl implements MainService {
   private final MainMapper mainMapper;
+  private final HotelMapper hotelMapper;
   private final MyPageUtils myPageUtils;
   private final MainFileUtil mainFileUtil; 
   
@@ -35,6 +41,7 @@ public class MainServiceImpl implements MainService {
   public Map<String, Object> SearchPackageList(HttpServletRequest request) {
     
     String query = request.getParameter("query");
+    String condition = request.getParameter("condition");
     Optional<String> opt = Optional.ofNullable(request.getParameter("page"));
     int page = Integer.parseInt(opt.orElse("1"));
     Map<String, Object> onlyQuery = Map.of("query",query);
@@ -46,11 +53,14 @@ public class MainServiceImpl implements MainService {
       
       Map<String, Object> map = Map.of("begin", myPageUtils.getBegin()
                                      , "end", myPageUtils.getEnd()
+                                     , "condition", condition
                                      ,"query",query);
   
      List<PackageDto> packageDto = mainMapper.searchPackageList(map);
      return Map.of("searchPackageList", packageDto
-                 , "totalPage", myPageUtils.getTotalPage());
+                 , "totalPage", myPageUtils.getTotalPage()
+                 , "count", total );
+                     
    
   }
   @Transactional(readOnly = true)
@@ -58,6 +68,7 @@ public class MainServiceImpl implements MainService {
   public Map<String, Object> SearchHotelList(HttpServletRequest request) {
     String query = request.getParameter("query");
     Optional<String> opt = Optional.ofNullable(request.getParameter("page"));
+    int condition = Integer.parseInt(request.getParameter("condition"));
     int page = Integer.parseInt(opt.orElse("1"));
     Map<String, Object> onlyQuery = Map.of("query",query);
     int display = 9;
@@ -65,16 +76,69 @@ public class MainServiceImpl implements MainService {
       int total = mainMapper.countSearchHotel(onlyQuery);
       
       myPageUtils.setPaging(page, total, display);
-      
       Map<String, Object> map = Map.of("begin", myPageUtils.getBegin()
                                      , "end", myPageUtils.getEnd()
-                                     ,"query",query);
-  
-     List<HotelDto> hotelDto = mainMapper.searchHotelList(map);
+                                     , "condition", condition
+                                     , "query",query);
+      
+      List<HotelDto> hotelDto = new ArrayList<>();
+          
+     if(condition == 0) {
+        hotelDto = mainMapper.searchHotelList(map);
+     } else {
+       hotelDto = mainMapper.getSearchPriceHotelList(map);
+     }
+     
      return Map.of("searchHotelList", hotelDto
-                 , "totalPage", myPageUtils.getTotalPage());
+                 , "totalPage", myPageUtils.getTotalPage()
+                 , "count" , total
+                 ,"price", getPrice(hotelDto) );
+    }
+  
+public List<Integer> getPrice(List<HotelDto> hotelDto){
     
+    List<Integer> hPrice = new ArrayList<>();
+    if(hotelDto.size() != 0) {
+      
+      List<RoompriceDto> roompriceDto = hotelMapper.getListPrice(hotelDto);
+      /* 요금 구하기 */
+      Date date = new Date();
+      SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+      String sToday = sdf.format(date);
+      int today = Integer.parseInt(sToday);
+      int price = 0;
+      
+      for(int i = 0; i < hotelDto.size(); i++) {
+        int biStart = Integer.parseInt(roompriceDto.get(i).getBsDate().replace("/", ""));
+        int biEnd = Integer.parseInt(roompriceDto.get(i).getBeDate().replace("/", ""));
+        
+        int jsStart = Integer.parseInt(roompriceDto.get(i).getJsDate().replace("/", ""));
+        int jsEnd = Integer.parseInt(roompriceDto.get(i).getJeDate().replace("/", ""));
+        
+        int ssStart = Integer.parseInt(roompriceDto.get(i).getSsDate().replace("/", ""));
+        int ssEnd = Integer.parseInt(roompriceDto.get(i).getSeDate().replace("/", ""));
+        
+        if(biStart <= today && today <= biEnd) {
+          price = roompriceDto.get(i).getBiPrice();
+        }else if(jsStart <= today && today <= jsEnd) {
+          price = roompriceDto.get(i).getJunPrice();
+        }else if(ssStart <= today && today <= ssEnd) {
+          price = roompriceDto.get(i).getSungPrice();
+        } else {
+          price = roompriceDto.get(i).getBiPrice();
+        }
+        
+        hPrice.add(price);
+      }
+    } else {
+      hPrice.clear();
+    }
+   
+    
+    return hPrice;
   }
+  
+  
   @Transactional(readOnly = true)
   @Override
   public Map<String, Object> getBestPackage() {

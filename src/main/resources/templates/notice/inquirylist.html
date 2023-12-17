@@ -78,7 +78,27 @@
     text-align: right;
     padding-right: 13%;
   }
-  
+  /* 테이블 크기 조절 */
+.table-inquiry {
+    width: 80%; /* 테이블 전체 너비 조절 */
+    margin: 0 auto; /* 중앙 정렬을 위해 margin 추가 */
+}
+
+/* 테이블 셀 내용 정렬 조절 */
+.table-inquiry th,
+.table-inquiry td {
+    text-align: center;
+}
+
+/* 테이블 각 열의 너비 조절 */
+.table-inquiry th {
+    width: 10%;
+}
+
+.table-inquiry td {
+    width: 18%;
+}
+
 
 </style>
 
@@ -87,68 +107,29 @@
   <div th:replace="~{layout/header::header}"></div>
   
   <div class="main_wrap">
-  
-  
-    <div class="container text-center">
+    
+     <div class="container text-center">
       <div class="row">
-        <div class="col-1">       
-        </div>
-            
-        <!--/* 사이드바 */-->
+        <div class="col-1">
+           <!--/* 사이드바 */-->
         <div class="w3-sidebar w3-bar-block sidebar" style="width:10%; height:200px;">
           <a th:href="@{/notice/list.do}" class="w3-bar-item notice">공지사항</a>
           <a th:href="@{/notice/faqList.do}" class="w3-bar-item faq">자주묻는질문</a>
           <a th:if="${session.user == null}" th:href="@{/notice/inquirylist.do}" class="w3-bar-item inquiry_user">1:1문의하기</a>
           <a th:if="${session.user != null && session.user.auth == 1}" th:href="@{/notice/inquirylist.do(userNo=${session.user.userNo})}" class="w3-bar-item inquiry_user">1:1문의하기</a>
           <a th:if="${session.user != null && session.user.auth == 0}" th:href="@{/notice/inquiryManage.do}" class="w3-bar-item inquiry_manage">1:1문의보기</a>
-        </div>  
-
-
-        <div class="main_list_wrap">    
-        <p class="title">나의 문의내역</p>
-            
-      <div class="row">
-      <div class="col-7"></div>
-        <div class="home">
+        </div>         
+        </div>
+        <div class="col-10">  
+          <p class="title">나의 문의내역</p>     
+          <div class="home">
           <a th:href="@{/main.do}" class="home_a"><i class="fa-solid fa-house home_i" ></i></a>
            &nbsp;고객센터  &nbsp;  >   &nbsp; 공지사항
         </div>
-         
-      <div class = "wrap1">
-        <div class="box1"></div>
-      </div>
-      
-   <div class="container text-center">
-    <div class="row">
-      <div class="col col-lg-2">
-      </div>
-      <div class="col-md-auto">       
-
-      </div>
-      <div class="col">
-      </div>
-    </div>
-   </div>
-      
-      
-    <div class="col-3" style="font-weight:bold"></div>
-    <div class="col-5"></div>
-    <div class="col-2">
-      <a th:href="@{/notice/inquirywrite.form}">
+        <a th:href="@{/notice/inquirywrite.form}">
       <button type="button" id="btn_search_write">문의하기</button> 
       </a>
-    </div>
-    <div class="col-2"></div>
-    
-    <div class = "wrap1">
-      <div class="box2"></div>
-    </div> 
-    
-    <div class="container text-center">
-  <div class="row">
-    <div class="col">
-    </div>
-    <div class="col-9" style="border: 1px solid gray; margin-left: 20px; overflow: hidden;">
+     
      <div th:if="${inquiryCount == 0}">작성된 문의글이 없습니다</div>
    
      <div th:if="${inquiryCount != 0}">
@@ -190,45 +171,17 @@
     
      </div>  
     </div>
-    <div class="col">
-    </div>
-  </div> 
-    <div>  
-      <div style="display: flex; flex-direction: column; align-items: center;"> 
-
-    
-
-  
-  
-  
-  </div>  
-  </div>
-    
-    
-      
-      </div>
-      </div>
-      </div>            
-      
-
-
-      </div>
-      </div>
-      
-      
-      
         </div>
         <div class="col-1">       
         </div>
       </div>
     </div>
+    
+    
   
-  </div>
-
   
-  
+ 
   
   <div th:replace="~{layout/footer::footer}"></div>
 </body>
 </html>
-

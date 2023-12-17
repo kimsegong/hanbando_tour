@@ -308,7 +308,7 @@
             let str = '';
             str += '<div>';
             str += '  <div>침대 : ' + resData.room.bed + '</div>';
-            str += '  <div>전망 : ' + resData.room.rview + '</div>';
+            str += '  <div>전망 : ' + resData.room.rView + '</div>';
             str += '  <div>허용인원 : 최대 ' + resData.room.people + '명</div>';
             if(resData.room.bleakfast == '0'){
               str += '  <div>조식 : <i class="fa-solid fa-x" style="color: #96b2c5;"></i></div>';
@@ -320,7 +320,7 @@
             } else {
               str += '  <div>흡연 : <i class="fa-sharp fa-solid fa-o" style="color: #96b6c5;"></i></div>';
             }
-            str += '  <div>방크기 : ' + resData.room.rsize + '</div>';
+            str += '  <div>방크기 : ' + resData.room.rSize + '</div>';
             str += '</div>';
             
             $('#roomInfo').append(str);

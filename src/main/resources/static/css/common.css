@@ -9,9 +9,6 @@
   font-size: 24px;
   margin-bottom: 20px;
 }
-.attach {
-  margin-bottom: 10px;
-}
 .attach img {
   width: 25px;
 }
@@ -24,6 +21,7 @@
 }
 .attached_list div {
   margin-right: 20px;
+  margin-left: 10px;
 }
 .wrap {
   padding: 10px;
