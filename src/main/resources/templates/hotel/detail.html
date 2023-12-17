@@ -242,7 +242,7 @@ i + div{
                   <input type="hidden" id="hotelNo" name="hotelNo" th:value="${hotel.hotelNo}">
                   <input type="hidden" id="reserveRoomNo" name="roomNo">
                   <input id="roomtype" name="roomtype" value="방을 선택해 주세요" readonly > </input>
-                  <input id="finalprice" name="finalprice" value="" style="margin-bottom:10px; font-weight: 400;" readonly></input>
+                  <div><label for="finalprice">₩</label><input id="finalprice" name="finalprice" value="" style="margin-bottom:10px; font-weight: 400;" readonly></input></div>	
                   <div class="form-floating mb-3"> 
 										<label for="daterange">체크인/체크아웃</label>
 					          <input type="text" id="daterange" class="daterange form-control" name="daterange" readonly />
@@ -520,7 +520,7 @@ i + div{
 				$('#roomType').empty();
 				$('#finalprice').empty();
 				$('#roomtype').val(resData.roomName);
-				$('#finalprice').val('₩ '+resData.totalPrice);
+				$('#finalprice').val(resData.totalPrice);
 				$('#checkin').val(resData.checkin);
 				$('#checkout').val(resData.checkout);
 				
