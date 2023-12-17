@@ -99,16 +99,16 @@
             PT.RECOMMEND_STATUS,
             ROW_NUMBER() OVER (
             	<choose>
-  	          <when test="condition == 'rowPrice'">
-  	            ORDER BY PT.PRICE ASC
-  	          </when>
-  	          <when test="condition == 'highPrice'">
-  	            ORDER BY PT.PRICE DESC
-  	          </when>
-  	          <otherwise>
-  	            ORDER BY PT.PACKAGE_NO DESC
-  	          </otherwise>
-  	        </choose>
+	  	          <when test="condition == 'rowPrice'">
+	  	            ORDER BY PT.PRICE ASC
+	  	          </when>
+	  	          <when test="condition == 'highPrice'">
+	  	            ORDER BY PT.PRICE DESC
+	  	          </when>
+	  	          <otherwise>
+	  	            ORDER BY PT.PACKAGE_NO DESC
+	  	          </otherwise>
+  	        	</choose>
             ) AS RN
         FROM
             PACKAGE_T PT
@@ -181,7 +181,66 @@
       FROM HOTEL_T
      WHERE HOTEL_NAME LIKE '%' || #{query} || '%'
   </select>
-	
+	<select id="getSearchPriceHotelList" parameterType="Map" resultMap="HotelMap">
+	 WITH PRICE AS(
+    SELECT HOTEL_NO,
+           MIN(BI_PRICE) AS MB
+     FROM ROOMPRICE_T
+     GROUP BY HOTEL_NO )    
+	SELECT  A.RN,
+	        A.MB,
+	        A.HOTEL_NO,
+	        A.REGION_NO,
+	        A.HOTEL_NAME,
+	        A.HOTEL_ADDRESS,
+	        A.LATITUDE,
+	        A.LONGITUDE,
+	        A.HOTEL_DETAIL,
+	        A.PHONE_NUMBER,
+	        A.H_EMAIL,
+	        A.CREATED_AT,
+	        A.MODIFIED_AT,
+	        A.HIT,
+	        A.STATUS,
+	        A.RECOMMEND_STATUS,
+	        A.THUMBNAIL,
+	        A.FILESYSTEM_NAME,
+	        A.IMAGE_PATH
+	 FROM ( SELECT
+		        H.HOTEL_NO,
+		        H.REGION_NO,
+		        H.HOTEL_NAME,
+		        H.HOTEL_ADDRESS,
+		        H.LATITUDE,
+		        H.LONGITUDE,
+		        H.HOTEL_DETAIL,
+		        H.PHONE_NUMBER,
+		        H.H_EMAIL,
+		        H.CREATED_AT,
+		        H.MODIFIED_AT,
+		        H.HIT,
+		        H.STATUS,
+		        H.RECOMMEND_STATUS,   
+		        HI.THUMBNAIL,
+		        HI.FILESYSTEM_NAME,
+		        HI.IMAGE_PATH,
+		        P.MB,
+		        ROW_NUMBER() OVER(
+		        <if test="condition == 1">
+							ORDER BY P.MB ASC     
+						</if>
+						<if test="condition == 2">
+							ORDER BY P.MB DESC    
+						</if>
+		        ) AS RN
+		     FROM HOTEL_T H
+		          LEFT JOIN HOTEL_IMAGE_T HI ON H.HOTEL_NO = HI.HOTEL_NO  
+		          LEFT JOIN REGION_T R ON H.REGION_NO = R.REGION_NO
+		          LEFT JOIN PRICE P ON H.HOTEL_NO = P.HOTEL_NO
+		    WHERE H.HOTEL_NAME LIKE '%' || #{query} || '%' AND HI.THUMBNAIL = 1 AND H.STATUS = 1  
+	          	) A 
+	   WHERE A.RN BETWEEN #{begin} AND #{end}
+	</select>   
 	<select id="getBestPackage" resultMap="PackageMap">
     SELECT
 				    A.PACKAGE_NO,

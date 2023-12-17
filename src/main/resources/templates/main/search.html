@@ -3,7 +3,7 @@
 
  <head th:replace="~{layout/header::head('검색 결과')}"></head>
 <style>
-  .card {
+   .card {
       width: 18rem;
       margin-bottom: 20px;
   }
@@ -17,12 +17,31 @@
     background-color: #96B6C5;
     color:white;
       }
-  .card-font {
-    font-family: 'TheJamsil5Bold';
+  .card-title {
+    font-size: 20px;
+    font-weight: 400;
   }
   .btn-outline-kong {
     color: rgb(23, 62, 104);
+  } 
+  .card-img-top {
+        height: 200px; /* 원하는 카드 이미지 높이 */
+        object-fit: cover; /* 이미지가 카드에 맞게 조절될 수 있도록 설정 */
+        width: 100%; /* 가로 크기를 100%로 설정하여 카드 안에 꽉 차게 함 */
+    }
+  hr {
+    border-top: 1px solid black; /* 두께 조절 가능 */
+    margin: 20px 0; /* 필요에 따라 마진 조절 가능 */
   }
+  .title {
+	  font-size: 20px;
+	  font-weight: 200;
+  }
+
+/* 호버 상태 */
+.btn-outline-kong:hover {
+    color: #FF8F8F;
+}
   
 </style>  
 <body>
@@ -34,7 +53,7 @@
   <div class="row">
     <div class="col-1">    
     </div>
-    <div class="col-10" style="border:1px gray dotted" >
+    <div class="col-10">
       
       <input type="hidden" id="query" name="query" th:value="${query}">
       
@@ -51,13 +70,13 @@
          <div class="tab-content" id="myTabContent">
            <div class="tab-pane fade show active" id="package" role="tabpanel" aria-labelledby="package" tabindex="0">
                
-            <div style="display: flex; justify-content: space-between; align-items: center;">
-              <div style="display: inline-block;"> 
+            <div style="display: flex; justify-content: space-between; align-items: center; padding-top: 10px; ">
+              <div style="display: inline-block;" > 
                <span id="count"></span>개의 상품
               </div>
               <div class="btn-group btn-group-sm" role="group" aria-label="Small button group" style="display: inline-block;">
-                <button type="button" class="btn btn-outline-kong" id="reviewPackage">가격낮은순</button>
-                <button type="button" class="btn btn-outline-kong" id="reviewPackage">가격높은순</button>
+                <button type="button" class="btn btn-outline-kong" id="reviewPackage" value="rowPrice">가격낮은순</button>
+                <button type="button" class="btn btn-outline-kong" id="reviewPackage" value="highPrice">가격높은순</button>
               </div>
             </div>
             <hr>
@@ -69,13 +88,13 @@
                
             </div>
            <div class="tab-pane fade" id="hotel" role="tabpanel" aria-labelledby="hotel" tabindex="0">
-                <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div style="display: flex; justify-content: space-between; align-items: center; padding-top: 10px;">
               <div style="display: inline-block;"> 
                <span id="hotelCount"></span>개의 상품
               </div>
               <div class="btn-group btn-group-sm" role="group" aria-label="Small button group" style="display: inline-block;">
-                <button type="button" class="btn btn-outline-kong" id="reviewPackage">가격낮은순</button>
-                <button type="button" class="btn btn-outline-kong" id="reviewPackage">가격높은순</button>
+                <button type="button" class="btn btn-outline-kong" id="reviewHotel" value="1">가격낮은순</button>
+                <button type="button" class="btn btn-outline-kong" id="reviewHotel" value="2">가격높은순</button>
               </div>
             </div>
             <hr>
@@ -114,23 +133,34 @@
    // 전역 변수
     var page = 1;
     var totalPage = 0;
+    var param = 0;
+    
+  
+    
     
      var product = $('#package-tab').text();
      $('#package-tab').click(() => {
         product = $('#package-tab').text(); 
         
      }); 
+     
      $('#hotel-tab').click(() => {
      }); 
-       
+     
+    $('.btn-outline-kong').click(function(){
+    param = $(this).val();
+    page = 1;
+    totalPage = 0;
+     $('#package_list').empty();
+     fnsearchPackageList(param);
+  	})    
     
-   const fnsearchPackageList = () => {
+   const fnsearchPackageList = (param) => {
      let query=$('#query').val();
-    
       $.ajax({
         type: 'get',
         url: '/main/searchPackage.do', 
-        data: {page : page, query : query},
+        data: {page : page, condition : param, query : query},
         dataType: 'json',
         success: (resData) => {  
 					$('#count').empty();
@@ -149,9 +179,8 @@
 							str += '<span class="badge rounded-pill text-bg-info">'+package.miniThree+'</span';
 							str += '</div>';
 							str += '</div>';
-              
               str += '<div class="card-body d-flex flex-column justify-content-between" style="height: 200px;">'; // 내용의 높이를 일정하게 조절
-              str += '<h5 class="card-title title">' + package.packageTitle + '</h5>';
+              str += '<p class="card-title title">' + package.packageTitle + '</p>';
               str += '<div class="d-flex justify-content-between align-items-end">';
               str += '<p class="card-text mb-0" style="margin-bottom: 20px;">~'+package.price+'원</p>';
               str += '</div>';
@@ -161,7 +190,7 @@
               $('#package_list').append(str);
               })
               
-          } else if(resData.searchPackageList.length == 0) {            
+          } else if(resData.searchPackageList == 0) {            
            $('#package_list').append("검색 결과가 없습니다.") ;
           }  
         }
@@ -169,44 +198,54 @@
       
     };
   
-      const fnsearchHotelList = () => {
-     let query=$('#query').val();
-    
-      $.ajax({
-        type: 'get',
-        url: '/main/searchHotel.do', 
-        data: {page : page, query : query},
-        dataType: 'json',
-        success: (resData) => {  
-					$('#hotelCount').empty();
-          $('#hotelCount').append(resData.count);
-          totalPage = resData.totalPage;    
-          if (resData.searchHotelList != null && resData.searchHotelList.length > 0) {
-            if(product === '패키지'){  console.log(resData);
-            var address = '/hotel/increseHit.do?hotelNo=';
-            $.each(resData.searchHotelList, (i, hotel) => {           
-              let str = '<div class="col-md-4">';
-              str += '<div class="card w-100 p-3" style="height: 450px;" onclick="location.href=\''+address+hotel.hotelNo + '\'">';
-              str += '<img src="'+ hotel.hotelImageDto.imagePath +'/'+ hotel.hotelImageDto.filesystemName +'" style="height: 250px;" class="card-img-top" alt="Package Image">';
-              str += '<div class="card-body d-flex flex-column justify-content-between" style="height: 250px;">'; // 내용의 높이를 일정하게 조절
-              str += '<h5 class="card-title card-font">' + hotel.hotelName + '</h5>';
-              str += '<p class="card-text"></p>';          
-              str += '</div>';
-              str += '</div>';
-              str += '</div>';
-              $('#hotel_list').append(str);
-              })
-            }
-          } else if(resData.searchHotelList.length == 0) {
-           $('#hotel_list').append("검색 결과가 없습니다.") ;
+   $('.btn-outline-kong').click(function(){
+    param = $(this).val();
+    page = 1;
+    totalPage = 0;
+     $('#hotel_list').empty();
+     fnsearchHotelList(param);
+  	})    
+  
+  
+  
+   const fnsearchHotelList = (param) => {
+   let query=$('#query').val();
+    $.ajax({
+      type: 'get',
+      url: '/main/searchHotel.do', 
+      data: {page : page, query : query, condition:param},
+      dataType: 'json',
+      success: (resData) => {  
+				$('#hotelCount').empty();
+        $('#hotelCount').append(resData.count);
+        totalPage = resData.totalPage;    
+        if (resData.searchHotelList != null && resData.searchHotelList.length > 0) {
+          if(product === '패키지'){  console.log(resData);
+          var address = '/hotel/increseHit.do?hotelNo=';
+          $.each(resData.searchHotelList, (i, hotel) => {           
+            let str = '<div class="col-md-4">';
+            str += '<div class="card w-100 p-3"  onclick="location.href=\''+address+hotel.hotelNo + '\'">';
+            str += '<img src="'+ hotel.hotelImageDto.imagePath +'/'+ hotel.hotelImageDto.filesystemName +'" style="height: 250px;" class="card-img-top" alt="Package Image">';
+            str += '<div class="card-body">'; // 내용의 높이를 일정하게 조절
+            str += '<p class="card-title">' + hotel.hotelName + '</p>';
+            str += '<p class="card-text">최저 '+resData.price[i] +'원 부터~</p>';
+            str += '<p class="card-text"></p>';          
+            str += '</div>';
+            str += '</div>';
+            str += '</div>';
+            $('#hotel_list').append(str);
+            })
           }
-        },
-        error: (error) => {
-          console.error('Ajax 요청 에러:', error);
+        } else if(resData.searchHotelList == 0) {
+         $('#hotel_list').append("검색 결과가 없습니다.") ;
         }
-      });
-      
-    };
+      },
+      error: (error) => {
+        console.error('Ajax 요청 에러:', error);
+      }
+    });
+    
+  };
   
 
   const fnScroll = () => {
@@ -224,8 +263,8 @@
                   return;              // 마지막 페이지를 보여준 이후에는 아래 코드를 수행하지 말 것 
                 }
                 page++;
-                fnsearchHotelList();
-                fnsearchPackageList();  
+                fnsearchHotelList(param);
+                fnsearchPackageList(param);  
                 
               }
           }, 200);  // 200밀리초(0.2초) 후 동작(시간은 임의로 조정 가능함)
@@ -233,8 +272,8 @@
     }
     
   
-  fnsearchHotelList();
-  fnsearchPackageList();
+  fnsearchHotelList(param);
+  fnsearchPackageList(param);
   fnScroll();
   
 </script>      
