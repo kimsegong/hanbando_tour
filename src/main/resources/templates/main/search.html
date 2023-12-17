@@ -53,7 +53,7 @@
                
             <div style="display: flex; justify-content: space-between; align-items: center;">
               <div style="display: inline-block;"> 
-               <span th:text="${count}"></span>개의 상품
+               <span id="count"></span>개의 상품
               </div>
               <div class="btn-group btn-group-sm" role="group" aria-label="Small button group" style="display: inline-block;">
                 <button type="button" class="btn btn-outline-kong" id="reviewPackage">가격낮은순</button>
@@ -71,7 +71,7 @@
            <div class="tab-pane fade" id="hotel" role="tabpanel" aria-labelledby="hotel" tabindex="0">
                 <div style="display: flex; justify-content: space-between; align-items: center;">
               <div style="display: inline-block;"> 
-               <span th:text="${count}"></span>개의 상품
+               <span id="hotelCount"></span>개의 상품
               </div>
               <div class="btn-group btn-group-sm" role="group" aria-label="Small button group" style="display: inline-block;">
                 <button type="button" class="btn btn-outline-kong" id="reviewPackage">가격낮은순</button>
@@ -133,18 +133,27 @@
         data: {page : page, query : query},
         dataType: 'json',
         success: (resData) => {  
+					$('#count').empty();
+          $('#count').append(resData.count);
           totalPage = resData.totalPage;    
           if (resData.searchPackageList != null && resData.searchPackageList.length > 0) {
             var address = '/package/increseHit.do?packageNo=';
             $.each(resData.searchPackageList, (i, package) => {           
-              let str = '<div class="col-md-4">';
-              str += '<div class="card w-100 p-3"style="height: 450px;" onclick="location.href=\''+address+package.packageNo + '\'">';
-              str += '<img src="' + package.productImageDto.imagePath + '/' + package.productImageDto.filesystemName + '" style="height: 250px;" class="card-img-top" alt="Package Image">';
-              str += '<div class="card-body d-flex flex-column justify-content-between" style="height: 250px;">'; // 내용의 높이를 일정하게 조절
-              str += '<h5 class="card-title card-font">' + package.packageTitle + '</h5>';
+              let str = '<div class="col-md-3 mb-3">';
+              str += '<div class="card w-100 p-2" style="height: 370px;" onclick="location.href=\''+address+package.packageNo + '\'">';
+              str += '<img src="' + package.productImageDto.imagePath + '/' + package.productImageDto.filesystemName + '" class="card-img-top" alt="Package Image">';
+              str += '<div style="margin-top: 15px;">'; // 수정된 부분: 간격 조절
+							str += '<div class="d-flex align-items-end">'; // 수정된 부분: 스타일 적용 부분 변경
+							str += '<span class="badge rounded-pill text-bg-success">'+package.miniOne+'</span>';
+							str += '<span class="badge rounded-pill text-bg-warning">'+package.miniTwo+'</span>';
+							str += '<span class="badge rounded-pill text-bg-info">'+package.miniThree+'</span';
+							str += '</div>';
+							str += '</div>';
+              
+              str += '<div class="card-body d-flex flex-column justify-content-between" style="height: 200px;">'; // 내용의 높이를 일정하게 조절
+              str += '<h5 class="card-title title">' + package.packageTitle + '</h5>';
               str += '<div class="d-flex justify-content-between align-items-end">';
-              str += `<p class="card-text">~${package.price}원</p>`;
-              str += '<p class="card-text"></p>';       
+              str += '<p class="card-text mb-0" style="margin-bottom: 20px;">~'+package.price+'원</p>';
               str += '</div>';
               str += '</div>';
               str += '</div>';
@@ -155,9 +164,6 @@
           } else if(resData.searchPackageList.length == 0) {            
            $('#package_list').append("검색 결과가 없습니다.") ;
           }  
-        },
-        error: (error) => {
-          console.error('Ajax 요청 에러:', error);
         }
       });
       
@@ -172,6 +178,8 @@
         data: {page : page, query : query},
         dataType: 'json',
         success: (resData) => {  
+					$('#hotelCount').empty();
+          $('#hotelCount').append(resData.count);
           totalPage = resData.totalPage;    
           if (resData.searchHotelList != null && resData.searchHotelList.length > 0) {
             if(product === '패키지'){  console.log(resData);

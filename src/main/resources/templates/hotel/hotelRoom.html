@@ -16,7 +16,7 @@
           <input type="hidden" id="hotelNo" name="hotelNo" th:value="${hotelNo}">
 		      <div style="text-align: left;">
             <label for="files" class="form-label" style="font-weight: 500;">객실사진첨부</label>
-            <input type="file" name="files" id="roomFiles" class="form-control" accept="image/*" multiple>
+            <input type="file" name="files" id="roomfiles" class="form-control" accept="image/*" multiple> <button type="button" onclick="deleteRoomAll(this)">전체삭제</button>
             <div id="roomattached_list"></div>
           </div>
           <div style="text-align: left;">
@@ -35,7 +35,7 @@
   		      <label for="shower" class="form-label" style="font-weight: 500;">욕실</label>
   		      <input type="text" id="shower" class="form-control" name="shower" placeholder="샤워실/욕조"> 
   		      <label for="rSize" class="form-label" style="font-weight: 500;">방사이즈</label>
-  		      <input type="number" id="rSize" class="form-control" name="rSize">
+  		      <input type="number" id="rSize" class="form-control" name="rSize" placeholder="㎡">
   		      <div>
   		      <label for="smoke" class="form-check-label" style="font-weight: 500;">흡연유무</label>
   		      <input type="checkbox" id="smoke" class="form-check-input" name="smoke" value="1">
@@ -118,8 +118,6 @@
 			 }
 		 })
    })
-  console.log($('#hotelNo').val());
-  
   
 $('input[type="date"]').change(() => {
    
@@ -135,7 +133,64 @@ $('input[type="date"]').change(() => {
         }
     });
     
+ function deleteRoomAll() {
+    $('#files').val('');
+     $('#roomattached_list').empty();
+ }
+ 
+  // 개별 파일의 삭제 버튼에 적용할 메소드
+    function fndeleteEach(obj){
+		  //현재 버튼(obj)의 상위 요소 중 가장 가까운 div 요소를 찾음
+		  //div는 선택한 파일 목록을 보여주는 부분
+		  const div = $(obj).closest('div');
+		  
+		  //div에서 'button' 태그 중 현재 버튼(obj)의 index가 몇 번째인지 확인
+		  //0부터 시작
+		  const index = div.find('button').index(obj);
+		  const dataTransfer = new DataTransfer();
+		  
+		  let files = $('#roomfiles')[0].files;  //사용자가 입력한 파일을 변수에 할당
+		  
+		  let fileArray = Array.from(files);  //변수에 할당된 파일을 배열로 변환(FileList -> Array)
+		  
+		  fileArray.splice(obj, 1); //해당하는 index의 파일을 배열에서 제거
+		  
+		  fileArray.forEach(file => { dataTransfer.items.add(file); });
+		  //남은 배열을 dataTransfer로 처리(Array -> FileList)
+		  
+		  $('#roomfiles')[0].files = dataTransfer.files; //제거 처리된 FileList를 돌려줌
+		  
+		  div.empty();
+		  alert('해당 첨부 파일이 삭제되었습니다.');
+  }
+
+	function fnRoomFileCheck() {
+        $('#roomfiles').change((ev) => {
+          $('#roomattached_list').empty();
+          let maxSize = 1024 * 1024 * 100;
+          let maxSizePerFile = 1024 * 1024 * 10;
+          let totalSize = 0;
+          let files = ev.target.files;
+          for(let i = 0; i < files.length; i++){
+            totalSize += files[i].size;
+            if(files[i].size > maxSizePerFile){
+              alert('각 첨부파일의 최대 크기는 10MB입니다.');
+              $(ev.target).val('');
+              $('#roomattached_list').empty();
+              return;
+            }
+            $('#roomattached_list').append('<div>' + files[i].name + '<button type="button" class="each" onclick="fndeleteEach(this);" style="border:none; background-color: white; margin-left:4px;"><i class="fa-regular fa-circle-xmark ico_remove_attach"></i></button></div>');
+          }
+          if(totalSize > maxSize){
+            alert('전체 첨부파일의 최대 크기는 100MB입니다.');
+            $(ev.target).val('');
+            $('#roomattached_list').empty();
+            return;
+          }
+        })
+      }    
   
+ fnRoomFileCheck(); 
 </script>
 
 	
