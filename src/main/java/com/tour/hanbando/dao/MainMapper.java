@@ -14,6 +14,7 @@ public interface MainMapper {
   public List<PackageDto> searchPackageList(Map<String, Object> map);
   public int countSearchPackage(Map<String, Object> map);
   public List<HotelDto> searchHotelList(Map<String, Object> map);
+  public List<HotelDto> getSearchPriceHotelList(Map<String, Object> map);
   public int countSearchHotel(Map<String, Object> map);
   public List<PackageDto> getBestPackage();
   public int countTheme();
