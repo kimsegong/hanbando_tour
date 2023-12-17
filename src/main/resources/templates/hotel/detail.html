@@ -79,11 +79,12 @@ i + div{
 	justify-content: space-evenly;
 }
 
-.d-block {
+.carousel-inner {
   transition: all 0.2s linear;
+  z-index: 1;
 }
 .carousel:hover .carousel-inner {
-  transform: scale(3.0);
+  transform: scale(2.5);
 }
 #roomName{
 	text-align: left;
@@ -176,12 +177,12 @@ i + div{
 		    </div>
 		    <div class="col-10">
 	    		    <div class="d-flex flex-row-reverse">
+	    		    	<th:block th:if="${session.user != null}">
+	             	<th:block th:if="${session.user.auth == 0}">
 	    		     <form id="frm_btn" method="post">
 								<input type="hidden" name="hotelNo" th:value="${hotel.hotelNo}">             
 	    		       <button type="button" id="btn_edit">편집</button> 
 	               <button type="button" id="btn_remove">삭제</button> 
-	    		    	<th:block th:if="${session.user != null}">
-	             	<th:block th:if="${session.user.auth == 0}">
 								</form>
 	             </th:block>
 	            </th:block>   
@@ -198,7 +199,9 @@ i + div{
 											</div>
 		                  <div class="owl-carousel owl-theme" id="imageWrapper">
 		                    <th:block th:each="hotelImage : ${hotelImage}">
-		                      <img class="owl_img" th:src="@{|${hotelImage.imagePath}/${hotelImage.filesystemName}|}">
+													<th:block th:if="${hotelImage.roomNo == null}">
+		                      	<img class="owl_img" th:src="@{|${hotelImage.imagePath}/${hotelImage.filesystemName}|}" th:id="${hotelImage.originalName}">
+		                      </th:block>	
 		                    </th:block>
 		                  </div>
 		                </div>
@@ -246,13 +249,16 @@ i + div{
 					          <input type="hidden" id="checkin" name="checkin" value="">
 					          <input type="hidden" id="checkout" name="checkout" value="">
 					        </div>
+                  <div style="text-align: left; margin-top: 20px;">
                   <button type="submit" class="btn btn-outline-primary">예약하기</button>
-                  <button type="button" class="btn btn-zero position-absolute end-0" id="heartButton" onclick="fnHeart(1);" "style:border: none; outline:none;">
-										<span class="position-absolute bottop-0 start-0 translate-middle badge rounded-pill bg-danger">
-										    찜하기				    
-										</span>
-								        <div><span id="heartIcon"><i class="fa-regular fa-heart" style="color: #fb3c3c; font-size: 24px;"></i></span></div>
-								    </button>
+	                  <button type="button" class="btn btn-zero position-absolute top-0 end-0" id="heartButton" onclick="fnHeart(1);fnbBtnClick();" style:"border: none; outline:none;">
+											<span class="position-absolute top-0 start-0 translate-middle badge rounded-pill bg-danger">
+											    찜하기				    
+											</span>
+														<span id="heartIcon"><i class="fa-regular fa-heart" style="color: #fb3c3c; font-size: 24px;"></i></span>
+									    </button>
+									     
+							      </div>
                 </form> 
               </div>
               <div class="border rounded-1" id="map" style="width:100%;height:350px;">
@@ -261,7 +267,14 @@ i + div{
               </div>
               
             	<div class="border rounded-1">
-								<div style="font-size: 17px;">연락처</div>
+								<div style="font-size: 17px;"><div style="display: inline-block;">연락처</div>
+									<div style="text-align: right; display: inline-block; width: 80%;"> 
+						       <a id="kakaotalk-sharing-btn" href="javascript:;">
+						          <img src="https://developers.kakao.com/assets/img/about/logos/kakaotalksharing/kakaotalk_sharing_btn_medium.png"
+						            alt="카카오톡 공유 보내기 버튼" style="width: 33px; height: 33px;" />
+						        </a>
+					          <span class="button gray medium" style="margin-left: 5px;"><a href="#" onclick="clip(); return false;">
+										<img th:src="@{/image/share.png}" style="width: 25px;"></a></span></div></div>
 								<div style="border-top: 1px lightgray solid; padding-top:10px; margin-top: 5px;">대표번호</div>
 								<div th:text="${hotel.phoneNumber}" style="margin-bottom: 5px;"></div>
 								<div>이메일</div>
@@ -498,7 +511,6 @@ i + div{
     roomNumber = document.getElementById(roomNo).value;
     document.getElementById('reserveRoomNo').value = roomNumber;
    	var date = document.getElementById('daterange').value;
-   	console.log(date);
    $.ajax({
 		  type: 'post',
       url: '/hotel/finalPrice.do',
@@ -512,29 +524,13 @@ i + div{
 				$('#checkin').val(resData.checkin);
 				$('#checkout').val(resData.checkout);
 				
-   console.log(document.getElementById('checkin').value);
-			},
-			  error: (xhr, status, error) => {
-                console.error('AJAX Error:', error);
-                alert('AJAX 요청 중 오류가 발생했습니다.');
-            }
+			}
       
 	 });
-   
-   
-   console.log(document.getElementById('reserveRoomNo').value);
-   console.log(document.getElementById('hotelNo').value);
  }
 
   const fnReviewAdd = () => {
     $('#btn_review_add').click(() => {         
-        // 데이터 확인용
-        console.log('Review Contents:', $('textarea[name="reviewContents"]').val());
-        console.log('User No:', $('#userNo').val());
-        console.log('hotel No:', $('input[name="hotelNo"]').val());
-        console.log('Reserve No:', $('input[name="reserveNo"]').val());
-        console.log('Star:', $('input[name="star"]:checked').val());
-        
         $.ajax({
             type: 'post',
             url: '/hotel/addReview.do',
@@ -548,7 +544,6 @@ i + div{
             },
             dataType: 'json',
             success: (resData) => {             
-                console.log('Response Data:', resData); // 콘솔에 응답 데이터 출력
                 if (resData.addReviewResult === 1) {
                     alert('리뷰가 등록되었습니다.');
                     $('#reviewContents').val('');
@@ -556,10 +551,6 @@ i + div{
                 } else {
                     alert('리뷰 등록에 실패했습니다.');
                 }
-            },
-            error: (xhr, status, error) => {
-                console.error('AJAX Error:', error);
-                alert('AJAX 요청 중 오류가 발생했습니다.');
             }
         });
     });
@@ -604,9 +595,6 @@ i + div{
           } else {
             $('#reviewAccordion').append('<div class="text-center">등록된 리뷰가 없습니다.</div>');
           }
-        },
-        error: (error) => {
-          console.error('Ajax 요청 에러:', error);
         }
       });
     };
@@ -645,10 +633,6 @@ i + div{
               dataType: 'json',
               success: function(resData) {
                   updateAverageRating(resData.averageRating);
-              },
-              error: function(xhr, status, error) {
-                  console.error('AJAX Error:', error);
-                  alert('평균 별점 업데이트 중 오류가 발생했습니다.');
               }
           });
       });
@@ -695,17 +679,16 @@ i + div{
     }
     return stars;
 } 
-  const fnReserveClick = () => {
-    $('#btn_reserve').click(() => {
+  const fnbBtnClick = () => {
         let user = /*[[${session.user}]]*/ null;
         if (user === null) { 
             if (confirm('로그인이 필요한 기능입니다. 로그인할까요?')) {
                 location.href = '/user/login.form';
+                return;
             } else {
                 return;
             }
           } 
-      })
   }
   
   var userNo = $('#userNo').val();
@@ -759,6 +742,7 @@ i + div{
 
 var checkDate = $('.daterange');
 
+var frmBtn = $('#frm_btn');
 
  const fnEditHotel = () => {
       $('#btn_edit').click(() => {
@@ -776,10 +760,52 @@ var checkDate = $('.daterange');
           })
         }
   
+    var thisUrl = document.URL;
+    var imagePackage = $('img[id*="mainList"]').attr("src"); 
+    var packageTitle = $('#hotelName').text();
+    Kakao.Share.createDefaultButton({
+    container: '#kakaotalk-sharing-btn',
+    objectType: 'feed',
+    content: {
+      title: packageTitle,
+      description: '#여행 #패키지 #호텔 #한반도투어 #행복',
+      imageUrl:
+        imagePackage,
+      link: {
+        // [내 애플리케이션] > [플랫폼] 에서 등록한 사이트 도메인과 일치해야 함
+        mobileWebUrl: thisUrl,
+        webUrl: thisUrl,
+      },
+      
+    },
+    buttons: [
+      {
+        title: '웹으로 보기',
+        link: {
+          mobileWebUrl: thisUrl,
+          webUrl: thisUrl,
+        },
+      },
+    ],
+  });
+
+    function clip(){    
+      var url = '';
+      var textarea = document.createElement("textarea");
+      document.body.appendChild(textarea);
+      url = window.document.location.href;
+      textarea.value = url;
+      textarea.select();
+      document.execCommand("copy");
+      document.body.removeChild(textarea);
+      alert("URL이 복사되었습니다.")
+    }
+  
+  
+  
   fnReviewAdd();
   fnReviewList(sort);
   fnReviewRemove();
-  fnReserveClick();
   fnRemoveHotel();
   fnEditHotel();
   kakaoMap();
