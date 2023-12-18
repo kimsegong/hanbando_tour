@@ -23,6 +23,10 @@
   .btn-outline-kong {
     color: rgb(23, 62, 104);
   }
+  hr {
+    border-top: 1px solid black; /* 두께 조절 가능 */
+    margin: 20px 0; /* 필요에 따라 마진 조절 가능 */
+  }
   
 </style>  
 <body>
@@ -37,12 +41,10 @@
       
       <th:block th:if="${session.user != null}"> 
 	      <th:block th:if="${session.user.auth == 0}"> 
-		      <a th:href="@{/hotel/write.form}">
-		        <button type="button" class="admin_btn" style="margin-left: auto;">게시글 작성</button>
-		      </a> 
+	        <button type="button" class="admin_btn" style="margin-left: auto;"> <a th:href="@{/hotel/write.form}">게시글 작성</a> </button>
 	      </th:block>
 	    </th:block> 
-      <div style="display: flex; justify-content: space-between; align-items: center;">
+      <div style="display: flex; justify-content: space-between; align-items: center;  margin-top: 25px;">
         <div style="display: inline-block;"> 
          <span id="count"></span>개의 상품
         </div>
@@ -95,11 +97,11 @@
             $.each(resData.hotelList, (i, hotel) => {           
               let str ='';
               str += '<div class="col-md-3 mb-3">';
-              str += '<div class="card w-100" onclick="location.href=\''+address+hotel.hotelNo + '\'">';
-              str += '<img src="'+ hotel.hotelImageDto.imagePath +'/'+ hotel.hotelImageDto.filesystemName +'" style="height: 180px;" class="card-img-top" >';
+              str += '<div class="card w-100" style="height: 320px;" onclick="location.href=\''+address+hotel.hotelNo + '\'">';
+              str += '<img src="'+ hotel.hotelImageDto.imagePath +'/'+ hotel.hotelImageDto.filesystemName +'" style="height: 200px;" class="card-img-top" >';
               str += '<div class="card-body">';
               str += '<p class="card-title">' + hotel.hotelName + '</p>';
-              str += '<p class="card-text">최저 '+resData.price[i] +'원 부터~</p>';
+              str += '<p class="card-text" style="margin-bottom:20px;">최저 '+resData.price[i] +'원 부터~</p>';
               str += '</div>';
               str += '</div>';
               str += '</div>';
