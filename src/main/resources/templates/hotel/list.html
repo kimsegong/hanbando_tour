@@ -33,7 +33,7 @@
   <div class="row">
     <div class="col-1">    
     </div>
-    <div class="col-10" >
+    <div class="col-12" >
       
       <th:block th:if="${session.user != null}"> 
 	      <th:block th:if="${session.user.auth == 0}"> 
@@ -94,9 +94,9 @@
               var address = '/hotel/increseHit.do?hotelNo=';
             $.each(resData.hotelList, (i, hotel) => {           
               let str ='';
-              str += '<div class="col-md-4">';
-              str += '<div class="card w-100 p-3" onclick="location.href=\''+address+hotel.hotelNo + '\'">';
-              str += '<img src="'+ hotel.hotelImageDto.imagePath +'/'+ hotel.hotelImageDto.filesystemName +'" style="height: 250px;" class="card-img-top" >';
+              str += '<div class="col-md-3 mb-3">';
+              str += '<div class="card w-100" onclick="location.href=\''+address+hotel.hotelNo + '\'">';
+              str += '<img src="'+ hotel.hotelImageDto.imagePath +'/'+ hotel.hotelImageDto.filesystemName +'" style="height: 180px;" class="card-img-top" >';
               str += '<div class="card-body">';
               str += '<p class="card-title">' + hotel.hotelName + '</p>';
               str += '<p class="card-text">최저 '+resData.price[i] +'원 부터~</p>';
