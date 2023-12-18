@@ -24,15 +24,18 @@ public interface HotelService {
   public Map<String, Object> loadReviewList(HttpServletRequest request);
   public Map<String, Object> addReview(HttpServletRequest request);
   public double getAverageRating(int hotelNo);
+  public Map<String, Object> getAttachList(HttpServletRequest request);
   public Map<String, Object> getFinalPrice(HttpServletRequest request);
   public List<ReserveDto> getReserveUser(int hotelNo); 
   public Map<String, Object> removeReview(int reviewNo);
-  public int getHeart (HttpServletRequest request);
+  public Map<String, Integer> getHeartState(HttpServletRequest request);
   public void getHeartHotel(HttpServletRequest request, Model model);
   public Map<String, Object> removeHotelHeart(int hotelNo);
   public int removehotel(int hotelNo);
-  // public int modifyHotel(int hotelNo);
-  // public int modifyRoom(HttpServletRequest request);
+  public Map<String, Object> removeImage(HttpServletRequest request);
+  public boolean modifyHotel(MultipartHttpServletRequest multipartRequest) throws Exception;
+  public boolean modifyRoom(MultipartHttpServletRequest multipartRequest, List<MultipartFile> files) throws Exception;
   public void getRoom(int roomNo, Model model);
+  public void gethotel(HttpServletRequest request, Model model);
   public int deleteRoom(HttpServletRequest request);
 }

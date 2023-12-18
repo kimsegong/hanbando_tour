@@ -72,8 +72,8 @@
       , #{agree}
       , 0
       , 1
-      , SYSDATE
-      , SYSDATE
+      , TO_CHAR(SYSDATE,'YYYY/MM/DD')
+      , TO_CHAR(SYSDATE,'YYYY/MM/DD')
     )
   </insert>
 
@@ -172,8 +172,8 @@
       , #{agree}
       , 1
       , 1
-      , SYSDATE
-      , SYSDATE
+      , TO_CHAR(SYSDATE,'YYYY/MM/DD')
+      , TO_CHAR(SYSDATE,'YYYY/MM/DD')
     )
   </insert>
   
@@ -196,8 +196,8 @@
         , #{agree}
         , 2
         , 1
-        , SYSDATE
-        , SYSDATE
+        , TO_CHAR(SYSDATE,'YYYY/MM/DD')
+        , TO_CHAR(SYSDATE,'YYYY/MM/DD')
        )
   </insert>
   

@@ -218,7 +218,7 @@
                   
                 <!--/* 전체 목록을 나타내는 테이블 */-->
                 <div>
-                  <table border="1" class="table table-hover">
+                  <table border="1" class="table table-hover" >
                     <thead>
                       <tr>
                         <th scope="col">회원번호</th>
@@ -235,8 +235,8 @@
                       <th:block th:each="u:${userList}">
                         <tr>
                           <th scope="row" th:text="${u.userNo}"></th>
-                          <td>
-                            <a th:href="@{/manage/userDetail.do(userNo=${u.userNo})}" th:text="${u.email}"></a>
+                          <td width="20%" style="word-break: break-all;">
+                            <a th:href="@{/manage/userDetail.do(userNo=${u.userNo})}" th:text="${u.email}" ></a>
                           </td>
                           <td>
                             <a th:href="@{/manage/userDetail.do(userNo=${u.userNo})}" th:text="${u.name}"></a>

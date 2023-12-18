@@ -102,15 +102,24 @@
           <img th:if="${atc.thumbnail == 1}" 
                th:src="@{|${atc.imagePath}/${atc.filesystemName}|}" class="img-fluid" id="im">
       </div>
-	  <div style="text-align: left;" th:text="|조회수 : ${#numbers.formatInteger(packageDto.hit, 1, 'COMMA')}|"></div>
       <div>
        <div class="choice">여행 주요일정</div>
        <div style="text-align: left; white-space: pre;" th:text="${packageDto.packagePlan}"></div>
+        <div style="margin-top: 10px; width: 250px;" class="position-absolute top-50 end-0 translate-middle-y"> 
+	        <div class="input-group date" data-provide="datepicker" >
+	            <input type="text" class="form-control" id="reserve_start" style="border: none;">
+	            <div class="input-group-addon">
+	                <button class="w3-btn w3-round-xxlarge w3-green w3-block mx-auto">
+	                    <div id="calender" style="color: white; cursor: pointer;">출발일선택</div>
+	                </button>
+	            </div>
+	        </div>
+	    </div>     
        <div class="choice">최대 인원수/ 유의사항</div>
        <div style="text-align: left;" th:text="|${packageDto.maxPeople} 명|"></div>
       <!-- 모달 버튼 -->
       <div class="col-12 text-end">
-       <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+       <button type="button" class="w3-btn w3-round-xxlarge w3-green" data-bs-toggle="modal" data-bs-target="#exampleModal">
         여행시 유의사항
        </button>
       </div>
@@ -119,13 +128,13 @@
         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
           <div class="modal-content">
             <div class="modal-header">
-              <h1 class="modal-title fs-5" id="exampleModalLabel">여행시 유의사항</h1>
+              <p class="modal-title fs-5" id="exampleModalLabel">여행시 유의사항</p>
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body" style="white-space: pre;" th:text="${packageDto.danger}">
             </div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+              <button type="button" class="w3-btn w3-round-xxlarge w3-green" data-bs-dismiss="modal">닫기</button>
             </div>
           </div>
         </div>
@@ -213,7 +222,7 @@
            
             
           <div style="overflow: hidden;">
-           <div id="starAve" style="text-align: left;">리뷰평점</div>
+           <div class="starAve" style="text-align: left;">리뷰평점</div>
             <div style="height: 100px; float: right;">
                 <select id="sortReview" class="form-select form-select-sm mb-3 h-50 d-inline-block" style="width: 120px;" aria-label=".form-select-sm example">
                     <option value="1" selected>최신순</option>
@@ -230,7 +239,7 @@
     
     
     <div class="col-4">
-      <div class="w3-sidebar w3-bar-block" style="width:20%; height: 500px;"> <!-- 사이드바 -->
+      <div class="w3-sidebar w3-bar-block" style="width:24%; height: 550px;"> <!-- 사이드바 -->
        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 30px;">
 	    <div style="font-size: large; font-weight: bolder; text-align: left;" class="blink">선택중인 행사</div>
 		    <button class="btn btn-zero position-absolute top-0 end-0" id="heartButton">
@@ -246,8 +255,15 @@
 		</div>
 		<div style="margin-top: 20px">
 		    <div style="font-weight: bolder; text-align: left; font-size: 25px;" id="pak" th:text="${packageDto.packageTitle}"></div>
-		    <div style="font-size: 30px; text-align: right;" th:text="|${packageDto.price} 원|"></div>
-		</div>						
+		    <div style="font-size: 30px; text-align: right;" th:text="|~ ${packageDto.price} 원|"></div>
+		</div>	
+		<div style="display: flex; align-items: center; margin-bottom: 15px;">
+			<i class="fa-regular fa-eye" style="color: #0f0f10;"></i>
+	    	<span th:text="${#numbers.formatInteger(packageDto.hit, 1, 'COMMA')}"></span>
+		    <div class="starAve" style="text-align: left; margin-left: 10px;">리뷰평점</div>
+		    <i class="fa-regular fa-comment-dots" style="color: #49b521; margin-left: 15px;"></i>
+		    <span th:text="${count}" style="margin-left: 5px;"></span>
+		</div>	
        <div style="text-align: left;">
          <span class="badge text-bg-success" th:text="${packageDto.miniOne}"></span>
          <span class="badge text-bg-warning" th:text="${packageDto.miniTwo}"></span>
@@ -260,20 +276,10 @@
         </a>
          <span class="button gray medium" style="margin-left: 5px;"><a href="#" onclick="clip(); return false;"><img th:src="@{/image/share.png}" style="width: 30px;"></a></span>
       </div>
-     <div style="margin-top: 60px; margin-left: 40%;">
-	    <div> 
-	        <div class="input-group date" data-provide="datepicker" style="width: 210px;">
-	            <input type="text" class="form-control" id="reserve_start" style="border: none;">
-	            <div class="input-group-addon">
-	                <button class="btn btn-kong1">
-	                    <div id="calender" style="color: white; cursor: pointer;">출발일선택</div>
-	                </button>
-	            </div>
-	        </div>
-	    </div>
-       <button class="btn btn-kong1" id="btn_reserve" style="margin-top: 10px; margin-left: 45%;">
+     <div style="margin-top: 50px;">
+		 <button class="w3-btn w3-round-xxlarge w3-green w3-block mx-auto" id="btn_reserve">
         <div style="color: white; cursor: pointer;">예약하러가기</div>
-       </button>
+       </button> 
       </div> 
     </div>
    </div>
@@ -526,10 +532,11 @@
           });
       });
       
-      function updateAverageRating(averageRating) {
-          var displayText = averageRating ? '평균 별점: ' + averageRating.toFixed(2) : '평점 : 0';
-          $('#starAve').text(displayText);
-      }
+	  function updateAverageRating(averageRating) {
+	    var starHtml = '<i class="fa-solid fa-star fa-sm" style="color: #49b521;"></i>';
+	    var displayText = averageRating ? starHtml + ' ' + averageRating.toFixed(2) : starHtml + ' ' +  0;
+	    $('.starAve').html(displayText);
+	}
 
 
     const fnReviewRemove = () => {

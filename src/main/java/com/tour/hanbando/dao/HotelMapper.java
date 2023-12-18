@@ -22,7 +22,7 @@ import com.tour.hanbando.dto.RoomtypeDto;
 @Mapper
 public interface HotelMapper {
   public List<HotelDto> selectHotelList(Map<String, Object> map);
-  public int countHotel(int recommend);
+  public int countHotel(Map<String, Integer> map);
   public List<RoompriceDto> getListPrice(List<HotelDto> hotelDto);
   public int hotelHit(int hotelNo);
   public List<HotelDto> getReviewHotelList(Map<String, Object> map);
@@ -43,8 +43,6 @@ public interface HotelMapper {
   
   public RoompriceDto getEachRoomPrice(int roomNo);
   
-  
-  
   public HotelDto getHotel(int hotelNo);
   public List<HotelImageDto> getHotelImage(int hotelNo);
   public List<HotelImageDto> getRoomImage(int roomNo);
@@ -55,6 +53,7 @@ public interface HotelMapper {
   public RoomFeatureDto getEachRoomFeature(int roomNo);
   public List<RoompriceDto> getPrice(RoomtypeDto roomtypeDto);
   public int deleteRoom(int roomNo);
+  public int deleteImage(Map<String, Object> map);
   
   public RoomtypeDto roomtype(int roomNo);
   public int countReserveRoom(Map<String, Object> map);
@@ -64,6 +63,12 @@ public interface HotelMapper {
   public List<ReviewDto> getReviewList(Map<String, Object> map);
   public List<ReserveDto> getReserve(int hotelNo);
   public int deleteReview(int reviewNo);
+  
+  public int updateRoom(RoomtypeDto roomtypeDto);
+  public int updateRoomImage(HotelImageDto hotelImageDto);
+  public int updateRoomFeature(RoomFeatureDto roomFeatureDto);
+  public int updateRoomPrice(RoompriceDto roompriceDto);
+  public int updateFacilities(FacilitiesDto facilitiesDto);
   
   public int deleteHeart(HeartDto heartDto);
   public int insertHeart(HeartDto heartDto);
