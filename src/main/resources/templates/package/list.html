@@ -128,11 +128,11 @@
                  var address = '/package/increseHit.do?packageNo=';
                 $.each(resData.packageList, (i, package) => {
                    let str = '<div class="col-md-3 mb-3">';
-					str += `<div class="card w-100 p-2" style="height: 370px;" onclick="location.href='${address}${package.packageNo}'">`;
+					str += `<div class="card w-100" style="height: 370px;" onclick="location.href='${address}${package.packageNo}'">`;
 					
 					// 이미지 부분
 					if (package.productImageDto && package.productImageDto.thumbnail === 1) {
-					    str += `<img src="${package.productImageDto.imagePath}/${package.productImageDto.filesystemName}" class="card-img-top" alt="Package Image">`;
+					    str += `<img src="${package.productImageDto.imagePath}/${package.productImageDto.filesystemName}" class="card-img-top" style="height: 180px;" alt="Package Image">`;
 					} else {
 					    str += '<img src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2Fdc4Q17%2FbtsBykVk229%2FPtJu2VtYGEdKF5YDcZm7xK%2Fimg.jpg" class="card-img-top" alt="Package Image">';
 					}
