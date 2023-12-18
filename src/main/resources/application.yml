@@ -4,7 +4,7 @@ spring:
   datasource:
     hikari: 
       driver-class-name: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
-      jdbc-url: ENC(qn02ldQXPuOWHP0BBp7k1rRuuL09bM7YWNxIbPQYwCJsLIV/9rCVUfn9VVTIQEulovF6+Wcab3Q=)
+      jdbc-url: ENC(7UwuBi4JxBpfmyJnmkpxNGIq1HlkwkVrpGEIRaJejZjj98mhoIHqRw3cKIzE4mU+IRB8hyyswLLDdTHkSHA46g==)
       username: ENC(5FxV2Nw1nKKt6f2rMXmgFQ==)
       password: ENC(Ah+NlBUi0C7eqxsozQjanw==)
 

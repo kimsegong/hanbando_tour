@@ -100,10 +100,9 @@ public class HotelController {
   }
   
   @ResponseBody
-  @PostMapping("/heart.do")
-  public void getHeart (HttpServletRequest request, Model model) {
-    int heartStatus = hotelService.getHeart(request);
-    model.addAttribute("heart", heartStatus);
+  @PostMapping("initHeart.do")
+  public Map<String, Integer> initHeart(HttpServletRequest request) {
+   return hotelService.getHeartState(request);
   }
   
   @ResponseBody
@@ -169,12 +168,29 @@ public class HotelController {
   }
   
   /*************************** 수정 ***************************************************/  
-//  @PostMapping("/modifyHotel.do")
-//  public String modifyHotel(HttpServletRequest request, RedirectAttributes redirectAttributes) {
-//    int modifyResult = hotelService.modifyHotel(request);
-//     redirectAttributes.addFlashAttribute("modifyResult", modifyResult);
-//    return "redirect:/hotel/detail.do?hotelNo=" + request.getParameter("hotelNo");
-//  }
+  @PostMapping("/edit.form")
+  public String modify(HttpServletRequest request, Model model) {
+    hotelService.gethotel(request,model);
+    return "hotel/modifyHotel";
+  }
+  @ResponseBody
+  @GetMapping("/getAttachList.do")
+  public Map<String,Object> getAttachList(HttpServletRequest request){
+    return hotelService.getAttachList(request);
+  }
+  
+  @ResponseBody
+  @PostMapping("/removeimage.do")
+  public Map<String, Object> removeImage(HttpServletRequest request) {
+    return hotelService.removeImage(request);
+  }
+  
+  @PostMapping("/modifyHotel.do")
+  public String modifyHotel(MultipartHttpServletRequest multipartRequest, RedirectAttributes redirectAttributes) throws Exception {
+     int modifyResult = hotelService.modifyHotel(multipartRequest) ? 1 : 0;
+     redirectAttributes.addFlashAttribute("modifyResult", modifyResult);
+    return "redirect:/hotel/detail.do?hotelNo=" + multipartRequest.getParameter("hotelNo");
+  }
   
   @GetMapping("/modifyRoom.form")
   public String modiRoom(@RequestParam(value="roomNo", required=false, defaultValue="0") int roomNo, Model model) {
@@ -182,12 +198,12 @@ public class HotelController {
     return "hotel/modifyHotelRoom";
   }
   
-  
-//  @ResponseBody
-//  @PostMapping("/modifyRoom.do")
-//  public int modifyRoom(HttpServletRequest request) {
-//    return hotelService.modifyRoom(request);
-//  }
+  @ResponseBody
+  @PostMapping("/modifyRoom.do")
+  public int modifyRoom(MultipartHttpServletRequest multipartRequest,
+                          @RequestParam("files") List<MultipartFile> files ) throws Exception {
+    return (hotelService.modifyRoom(multipartRequest, files) ? 1 : 0);
+  }
    
   
 }
