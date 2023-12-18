@@ -51,25 +51,8 @@ h3{
 	font-size: 18px;
 	font-weight: 400;
 }
-.mycard {
-	width: 23.75%;
-	height: 300px;
-	display: inline-block;
-	border: 1px darkgray solid;
-	border-radius:5px;
-}
-.card_image {
-	width: 100%;
-	border-radius:5px;
-}
-.btn-heart {
-   float: right;		
-   height: 33px;
-   width: 33px;
-   border: 1px white solid;
-   background-color: #F1F0E8;
-   border-radius: 50%;
-}
+
+
 .fa-xl {
     font-size: 1.5em;
     line-height: .4em;
