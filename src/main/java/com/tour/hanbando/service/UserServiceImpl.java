@@ -9,7 +9,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.security.SecureRandom;
-import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -196,7 +195,6 @@ public class UserServiceImpl implements UserService {
 //          outt.close();
 //        } else {
 //        }
-        
         response.setContentType("text/html; charset=UTF-8");
         PrintWriter out = response.getWriter();
         out.println("<script>");
@@ -204,6 +202,7 @@ public class UserServiceImpl implements UserService {
         out.println("</script>");
         out.flush();
         out.close();
+        
 
         
   } else {
