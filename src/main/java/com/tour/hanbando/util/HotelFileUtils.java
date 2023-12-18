@@ -12,25 +12,25 @@ public class HotelFileUtils {
   // 블로그 작성시 사용된 이미지가 저장될 경로 반환하기
   public String getBlogImagePath() {
     LocalDate today = LocalDate.now();
-    return "/hotel";
+    return "/hanbando/hotel";
   }
   
   //블로그 이미지가 저장된 어제 경로를 반환
   public String getBlogImagePathInYesterday() {
     LocalDate date = LocalDate.now();
     date = date.minusDays(1); // 1일 전
-    return "/hotel" ;
+    return "/hanbando/hotel" ;
   }
   
   // 업로드 게시판 작성시 첨부한 파일이 저장될 경로 반환하기
   public String getUploadPath() {
     LocalDate today = LocalDate.now();
-    return "/hotel" ;
+    return "/hanbando/hotel" ;
   }
   
   // 임시 파일이 저장될 경로 반환하기(zip파일)
   public String getTempPath() {
-    return "/temp";
+    return "/hanbando/temp";
   }
   
   

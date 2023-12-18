@@ -30,9 +30,10 @@
         width: 100%; /* 가로 크기를 100%로 설정하여 카드 안에 꽉 차게 함 */
     }
   hr {
-    border-top: 3px solid black; /* 두께 조절 가능 */
+    border-top: 1px solid black; /* 두께 조절 가능 */
     margin: 20px 0; /* 필요에 따라 마진 조절 가능 */
   }
+
 
 /* 호버 상태 */
 .btn-outline-kong:hover {
@@ -47,7 +48,7 @@
   <div class="row">
     <div class="col-1">    
     </div>
-    <div class="col-10" >
+    <div class="col-12" >
     <th:block th:if="${session.user != null}">
      <th:block th:if="${session.user.auth == 0}">
       <a th:href="@{/package/write.form}">
@@ -55,7 +56,7 @@
       </a> 
      </th:block>
    </th:block>
-      <div style="display: flex; justify-content: space-between; align-items: center;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 25px;">
         <div style="display: inline-block;"> 
          <span id="count"></span>개의 상품🚌
         </div>
@@ -123,26 +124,34 @@
             if (resData.packageList != null && resData.packageList.length > 0) {
                  var address = '/package/increseHit.do?packageNo=';
                 $.each(resData.packageList, (i, package) => {
-                    let str = '<div class="col-md-4">';
-                    str += '<div class="card w-100 p-3" style="height: 450px;" onclick="location.href=\''+address+package.packageNo + '\'">';
-                    
-                    if (package.productImageDto && package.productImageDto.thumbnail === 1) {
-                        str += `<img src="${package.productImageDto.imagePath}/${package.productImageDto.filesystemName}" class="card-img-top" alt="Package Image">`;
-                    } else {
-                        str += '<img src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2Fdc4Q17%2FbtsBykVk229%2FPtJu2VtYGEdKF5YDcZm7xK%2Fimg.jpg" class="card-img-top" alt="Package Image">';
-                    }
-                    
-                    str += '<div class="card-body d-flex flex-column justify-content-between" style="height: 250px;">'; // 내용의 높이를 일정하게 조절
-                    str += `<p class="card-title">${package.packageTitle}</p>`;
-                    str += '<div class="d-flex justify-content-between align-items-end">';
-                    str += `<span class="badge rounded-pill text-bg-success">${package.miniOne}</span>`;
-                    str += `<span class="badge rounded-pill text-bg-warning">${package.miniTwo}</span>`;
-                    str += `<span class="badge rounded-pill text-bg-info">${package.miniThree}</span>`;
-                    str += `<p class="card-text">~${package.price}원</p>`;
-                    str += '</div>';
-                    str += '</div>';
-                    str += '</div>';
-                    str += '</div>';
+                   let str = '<div class="col-md-3 mb-3">';
+					str += `<div class="card w-100" style="height: 370px;" onclick="location.href='${address}${package.packageNo}'">`;
+					
+					// 이미지 부분
+					if (package.productImageDto && package.productImageDto.thumbnail === 1) {
+					    str += `<img src="${package.productImageDto.imagePath}/${package.productImageDto.filesystemName}" class="card-img-top" style="height: 200px;" alt="Package Image">`;
+					} else {
+					    str += '<img src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2Fdc4Q17%2FbtsBykVk229%2FPtJu2VtYGEdKF5YDcZm7xK%2Fimg.jpg" class="card-img-top" alt="Package Image">';
+					}
+					
+					str += '<div style="margin-top: 15px;">'; // 수정된 부분: 간격 조절
+					str += '<div class="d-flex align-items-end" style="margin-left: 10px;">'; // 수정된 부분: 스타일 적용 부분 변경
+					str += `<span class="badge rounded-pill text-bg-success">${package.miniOne}</span>`;
+					str += `<span class="badge rounded-pill text-bg-warning">${package.miniTwo}</span>`;
+					str += `<span class="badge rounded-pill text-bg-info">${package.miniThree}</span>`;
+					str += '</div>';
+					str += '</div>';
+					
+					// 내용 부분
+					str += `<div class="card-body d-flex flex-column justify-content-between" style="height: 200px;">`; // 수정된 부분: height를 줄임
+					str += `<p class="card-title">${package.packageTitle}</p>`;
+					str += '<div style="margin-bottom: 20px; margin-right:15px; text-align: right;">';
+					str += `<p class="card-text mb-0" >~${package.price}원</p>`; // 수정된 부분: 텍스트를 오른쪽으로 이동
+					str += '</div>';
+					str += '</div>';
+					str += '</div>';
+					str += '</div>';
+
                     $('#package_list').append(str);
                 });
             } else {
