@@ -55,7 +55,7 @@ public class MainServiceImpl implements MainService {
                                      , "end", myPageUtils.getEnd()
                                      , "condition", condition
                                      ,"query",query);
-  
+      System.out.println("dkseh");
      List<PackageDto> packageDto = mainMapper.searchPackageList(map);
      return Map.of("searchPackageList", packageDto
                  , "totalPage", myPageUtils.getTotalPage()
