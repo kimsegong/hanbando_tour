@@ -55,7 +55,7 @@ public class HotelServiceImpl implements HotelService {
     Optional<String> opt = Optional.ofNullable(request.getParameter("page"));
     int page = Integer.parseInt(opt.orElse("1"));
     int total = hotelMapper.countHotel(countMap);
-    int display = 9;
+    int display = 12;
     
     myPageUtils.setPaging(page, total, display);
     
