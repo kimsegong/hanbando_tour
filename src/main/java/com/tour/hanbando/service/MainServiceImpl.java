@@ -45,7 +45,7 @@ public class MainServiceImpl implements MainService {
     Optional<String> opt = Optional.ofNullable(request.getParameter("page"));
     int page = Integer.parseInt(opt.orElse("1"));
     Map<String, Object> onlyQuery = Map.of("query",query);
-    int display = 9;
+    int display = 12;
         
       int total = mainMapper.countSearchPackage(onlyQuery);
       
@@ -71,7 +71,7 @@ public class MainServiceImpl implements MainService {
     int condition = Integer.parseInt(request.getParameter("condition"));
     int page = Integer.parseInt(opt.orElse("1"));
     Map<String, Object> onlyQuery = Map.of("query",query);
-    int display = 9;
+    int display = 12;
         
       int total = mainMapper.countSearchHotel(onlyQuery);
       
