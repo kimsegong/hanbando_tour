@@ -416,7 +416,6 @@ label {
   }
   
    function openModifyHotelRoom(obj){
-		 
     $('.modal-content').load("/hotel/modifyRoom.form?roomNo="+ obj);
   }
   
@@ -468,6 +467,7 @@ label {
    fnAttachList();
 	 fnFileCheck();
 	 fnRemoveAttach();
+	 openModifyHotelRoom(obj);
 </script>
 	
 	

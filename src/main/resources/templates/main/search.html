@@ -166,9 +166,10 @@
 					$('#count').empty();
           $('#count').append(resData.count);
           totalPage = resData.totalPage;    
+              console.log(resData)       
           if (resData.searchPackageList != null && resData.searchPackageList.length > 0) {
             var address = '/package/increseHit.do?packageNo=';
-            $.each(resData.searchPackageList, (i, package) => {           
+            $.each(resData.searchPackageList, (i, package) => {    
               let str = '<div class="col-md-3 mb-3">';
               str += '<div class="card w-100 " style="height: 370px;" onclick="location.href=\''+address+package.packageNo + '\'">';
               str += '<img src="' + package.productImageDto.imagePath + '/' + package.productImageDto.filesystemName + '" class="card-img-top" alt="Package Image">';
@@ -182,7 +183,7 @@
               str += '<div class="card-body d-flex flex-column justify-content-between" style="height: 200px;">'; // 내용의 높이를 일정하게 조절
               str += '<p class="card-title title">' + package.packageTitle + '</p>';
               str += '<div style="margin-bottom: 20px; margin-right:15px; text-align: right;">';
-              str += '<p class="card-text mb-0" >~'+package.price+'원</p>';
+              str += '<p class="card-text mb-0" >~'+ package.price +'원</p>';
               str += '</div>';
               str += '</div>';
               str += '</div>';
