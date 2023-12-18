@@ -177,33 +177,33 @@ public class UserServiceImpl implements UserService {
     if (user != null) {
       // 로그인 성공 처리
       request.getSession().setAttribute("user", user);
-      userMapper.insertAccess(email);
-        // 비밀번호 변경 90일 지나면 알림      
-        int userPw90 = userMapper.changePw90(map);
+//      userMapper.insertAccess(email);
+//        // 비밀번호 변경 90일 지나면 알림      
+//        int userPw90 = userMapper.changePw90(map);
+//        
+//        if (userPw90 >= 90)
+//          
+//          {
+//          response.setContentType("text/html; charset=UTF-8");
+//          PrintWriter outt = response.getWriter();
+//          outt.println("<script>");
+//          
+//          
+//          outt.println("alert('마지막 비밀번호 변경일로부터 90일이 경과했습니다. 비밀번호를 변경해주세요.')");
+//          outt.println("location.href='" + request.getContextPath() +  "/user/pwExtension.form'");
+//          outt.println("</script>");
+//          outt.flush();
+//          outt.close();
+//        } else {
+//        }
         
-        if (userPw90 >= 90)
-          
-          {
-          response.setContentType("text/html; charset=UTF-8");
-          PrintWriter outt = response.getWriter();
-          outt.println("<script>");
-          
-          
-          outt.println("alert('마지막 비밀번호 변경일로부터 90일이 경과했습니다. 비밀번호를 변경해주세요.')");
-          outt.println("location.href='" + request.getContextPath() +  "/user/pwExtension.form'");
-          outt.println("</script>");
-          outt.flush();
-          outt.close();
-        } else {
-          response.setContentType("text/html; charset=UTF-8");
-          PrintWriter out = response.getWriter();
-          out.println("<script>");
-          out.println("location.href='" + request.getContextPath() + "/main.do'");
-          out.println("</script>");
-          out.flush();
-          out.close();
-        }
-        
+        response.setContentType("text/html; charset=UTF-8");
+        PrintWriter out = response.getWriter();
+        out.println("<script>");
+        out.println("location.href='" + request.getContextPath() + "/main.do'");
+        out.println("</script>");
+        out.flush();
+        out.close();
 
         
   } else {
@@ -253,7 +253,7 @@ public class UserServiceImpl implements UserService {
     public String getNaverLoginURL(HttpServletRequest request) throws Exception {
     String apiURL = "https://nid.naver.com/oauth2.0/authorize";
     String response_type = "code";
-    String redirect_uri = URLEncoder.encode("http://localhost:8080" + "/user/naver/getAccessToken.do", "UTF-8");
+    String redirect_uri = URLEncoder.encode("http://192.168.0.214:9094" + "/user/naver/getAccessToken.do", "UTF-8");
     String state = new BigInteger(130, new SecureRandom()).toString();
 
     StringBuilder sb = new StringBuilder();
@@ -466,7 +466,7 @@ public class UserServiceImpl implements UserService {
   public String getKakaoLoginURL(HttpServletRequest request) throws Exception {
       String apiURL = "https://kauth.kakao.com/oauth/authorize";
       String response_type = "code";
-      String redirect_uri = URLEncoder.encode("http://localhost:8080/" + "user/kakao/getAccessToken.do", "UTF-8");
+      String redirect_uri = URLEncoder.encode("http://192.168.0.214:9094/" + "user/kakao/getAccessToken.do", "UTF-8");
       String state = new BigInteger(130, new SecureRandom()).toString();
 
       StringBuilder sb = new StringBuilder();
