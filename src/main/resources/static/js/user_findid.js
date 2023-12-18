@@ -3,11 +3,7 @@ $(() => {
 })
 
 
-const getContextPath = () => {
-  let begin = location.href.indexOf(location.host) + location.host.length;
-  let end = location.href.indexOf('/', begin + 1);
-  return location.href.substring(begin, end);
-}
+
 
 
   const fnCheckPwMobile = () => {
@@ -20,10 +16,11 @@ const getContextPath = () => {
         data: "name="+name+"&mobile="+mobile,
         dataType: 'json',
         success:function(resData){  // resData = {"userNo":1, "email":"zzzzz", ...}
-          if(resData.email == null){
+          if(resData.mobile == null){
             alert("회원 정보를 확인해주세요!");
+            alert(resData.mobile);
           } else {
-            alert(resData.email);
+            alert(resData.mobile);
           }
         },
         error:function(){
@@ -47,4 +44,3 @@ modal.addEventListener("click", (e) => {
    }
 })
 */
-
