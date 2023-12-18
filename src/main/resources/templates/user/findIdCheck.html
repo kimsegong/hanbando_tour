@@ -94,7 +94,45 @@
     </div>
   </div>
                     </form>
-                    <script th:src="@{/js/user_findid.js}"></script>
+                    <!--<script th:src="@{/js/user_findid.js}"></script>-->
+                    
+                    <script th:inline="javascript">
+                      $(() => {
+                              fnCheckPwMobile();
+                            })
+
+
+
+
+
+  const fnCheckPwMobile = () => {
+    $('#find_id').click(() => {
+      var name = $('#name').val()
+      var mobile = $('#mobile').val()
+     
+      $.ajax({
+        url: "/user/find_id.do",
+        type: "POST",
+        data: "name="+name+"&mobile="+mobile,
+        dataType: 'json',
+        success:function(resData){  // resData = {"userNo":1, "email":"zzzzz", ...}
+          if(resData.email == null){
+            alert("회원 정보를 확인해주세요!");
+            alert(resData.email);
+          } else {
+            alert(resData.email);
+          }
+        },
+        error:function(){
+          alert("에러입니다");
+        }
+      })
+    })
+  }
+  
+                      
+                      </script>
+                      
                 </div>
             </div>
         </div>
