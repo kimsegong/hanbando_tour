@@ -237,12 +237,12 @@ i + div{
 							</div>
 							<div class="col-4 temp">
               <div class="border rounded-1">
-                <form th:action="@{/reserve/writeHotel.form}" method="post">
+                <form th:action="@{/reserve/writeHotel.form}" method="post" id="reserveInfo">
                   <div class="sideTitle" id="sideTitle" th:text="${hotel.hotelName}" style="font-size:20px; font-weight:500; margin-bottom: 10px"></div>
                   <input type="hidden" id="hotelNo" name="hotelNo" th:value="${hotel.hotelNo}">
                   <input type="hidden" id="reserveRoomNo" name="roomNo">
                   <input id="roomtype" name="roomtype" value="방을 선택해 주세요" readonly > </input>
-                  <div><label for="finalprice">₩</label><input id="finalprice" name="finalprice" value="" style="margin-bottom:10px; font-weight: 400;" readonly></input></div>	
+                  <div><label for="finalprice">₩</label><input id="finalprice" name="finalprice"   style="margin-bottom:10px; font-weight: 400;" readonly></input></div>	
                   <div class="form-floating mb-3"> 
 										<label for="daterange">체크인/체크아웃</label>
 					          <input type="text" id="daterange" class="daterange form-control" name="daterange" readonly />
@@ -800,9 +800,21 @@ var frmBtn = $('#frm_btn');
       document.body.removeChild(textarea);
       alert("URL이 복사되었습니다.")
     }
+    
+  function fnNoroom(){
+      var inputs = document.getElementById("finalprice").value ;
+      $('#reserveInfo').submit((ev) => {
+          if (inputs == "") {
+           alert("객실을 선택해주세요.");
+           ev.preventDefault();
+           return;
+          }
+        })
+      }  
+    
+    
   
-  
-  
+  fnNoroom();
   fnReviewAdd();
   fnReviewList(sort);
   fnReviewRemove();
