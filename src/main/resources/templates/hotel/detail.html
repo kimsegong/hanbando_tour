@@ -804,7 +804,7 @@ var frmBtn = $('#frm_btn');
   function fnNoroom(){
       var inputs = document.getElementById("finalprice").value ;
       $('#reserveInfo').submit((ev) => {
-          if (inputs == "") {
+          if (inputs == null) {
            alert("객실을 선택해주세요.");
            ev.preventDefault();
            return;
