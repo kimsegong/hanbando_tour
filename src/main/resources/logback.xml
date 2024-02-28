@@ -15,7 +15,7 @@
   <!-- 매일 새로운 로그 파일을 만드는 RollingFileAppender -->
   <appender name="rolling" class="ch.qos.logback.core.rolling.RollingFileAppender">
     <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
-      <fileNamePattern>/logs/myhome.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+      <fileNamePattern>/logs/hanbando.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
       <maxFileSize>100MB</maxFileSize>
       <maxHistory>30</maxHistory>
       <totalSizeCap>3GB</totalSizeCap>
