@@ -13,7 +13,6 @@ public class InactiveUserBatch {
 
   private final UserService userService;
   
-
   @Scheduled(cron="0 0 0 1/1 * ?")  
   public void execute() {
     userService.inactiveUserBatch();
