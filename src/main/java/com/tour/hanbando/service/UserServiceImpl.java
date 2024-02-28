@@ -47,11 +47,11 @@ public class UserServiceImpl implements UserService {
   private final MyJavaMailUtils myJavaMailUtils;
 
   
-  private final String client_id = "dteUoZxabIKjJ8XhKGY0";
-  private final String client_secret = "hzj3TKHiSm";
+  private final String client_id = "네이버클라이언트아이디";
+  private final String client_secret = "네이버클라이언트시크릿키";
   
   
-  private final String ka_Client_id = "9ac35c110f888ef0213ea4dbd3fab619";
+  private final String ka_Client_id = "카카오클라이언트아이디";
   
 
   private DefaultMessageService messageService;
@@ -62,15 +62,15 @@ public class UserServiceImpl implements UserService {
   @Override
   public Map<String, Object> certifiedPhoneNumber(String phoneNumber) throws Exception {
     
-      String api_key = "NCS9YET2CLIIXCUL";
-      String api_secret = "CTWEHCPFCPLEM2AVYQY02UDN8LXROBCQ";
+      String api_key = "쿨에스엠에스_키";
+      String api_secret = "쿨에스엠에스_시크릿";
       messageService = NurigoApp.INSTANCE.initialize(api_key, api_secret,"https://api.coolsms.co.kr");
       
       int cerNum = Integer.parseInt(mySecurityUtils.getRandomString(5, false, true));
       
       Message message = new Message();
       // 발신번호 및 수신번호는 반드시 01012345678 형태로 입력되어야 합니다.
-      message.setFrom("01062316858");
+      message.setFrom("발신전화번호(숫자로입력)");
       message.setTo(phoneNumber);
       message.setText("[한반도투어] 본인확인 인증번호는 [" + cerNum + "] 입니다.");
       
@@ -252,7 +252,7 @@ public class UserServiceImpl implements UserService {
     public String getNaverLoginURL(HttpServletRequest request) throws Exception {
     String apiURL = "https://nid.naver.com/oauth2.0/authorize";
     String response_type = "code";
-    String redirect_uri = URLEncoder.encode("http://192.168.0.214:9094" + "/user/naver/getAccessToken.do", "UTF-8");
+    String redirect_uri = URLEncoder.encode("http://localhost:8080" + "/user/naver/getAccessToken.do", "UTF-8");
     String state = new BigInteger(130, new SecureRandom()).toString();
 
     StringBuilder sb = new StringBuilder();
@@ -465,7 +465,7 @@ public class UserServiceImpl implements UserService {
   public String getKakaoLoginURL(HttpServletRequest request) throws Exception {
       String apiURL = "https://kauth.kakao.com/oauth/authorize";
       String response_type = "code";
-      String redirect_uri = URLEncoder.encode("http://192.168.0.214:9094/" + "user/kakao/getAccessToken.do", "UTF-8");
+      String redirect_uri = URLEncoder.encode("http://localhost:8080" + "user/kakao/getAccessToken.do", "UTF-8");
       String state = new BigInteger(130, new SecureRandom()).toString();
 
       StringBuilder sb = new StringBuilder();
