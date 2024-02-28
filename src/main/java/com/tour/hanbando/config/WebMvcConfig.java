@@ -39,7 +39,6 @@ public class WebMvcConfig implements WebMvcConfigurer {
     // 로그인이 필요한 접근을 막는 인터셉터
     registry.addInterceptor(requiredLoginInterceptor)
       .addPathPatterns("/user/mypage.form", "/user/modifyPw.form")
-      .addPathPatterns("/user/findpwCheck.do")
       .addPathPatterns("/user/changePw.form")
       .addPathPatterns("/user/heart.do")
       .addPathPatterns("/user/heartHotel.do")
@@ -69,6 +68,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
     registry.addResourceHandler("/hanbando/notice/**")
     .addResourceLocations("file:/hanbando/notice/");
   }
+  
+  
   
   
   
