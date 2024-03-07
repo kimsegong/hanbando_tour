@@ -10,10 +10,10 @@
  <li>프로젝트 소개</li>
  <li>TECH STACK</li>
  <li>구현기능 & 상세설명</li>
-</ul>
+</ul><br>
 
 <h1>프로젝트 소개</h1>
-<p>✈️국내여행 어디로 갈지 고민될때는 한반도 투어!🚅</p>
+<p>✈️국내여행 어디로 갈지 고민될때는 한반도 투어!🚅</p><br>
 
 <h1>📚TECH STACK📚</h1>
 <table>
@@ -24,7 +24,7 @@
 <th align="center">Spring Boot</th>
 <th align="center">JavaScript</th>
 <th align="center">Jquery</th>
-<th align="center">MySQL</th>
+<th align="center">Oracle</th>
 <th align="center">MyBatis</th>
 <th align="center">Apatch Tomcat</th>
 <th align="center">HTML</th>
@@ -45,7 +45,7 @@
 <td align="center"><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/f432d617c378401551c4ba1fa6670f2e4e4ec6676cf3b8370096f3f8b66554ee/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f6373732d3135373242363f7374796c653d666f722d7468652d6261646765266c6f676f3d63737333266c6f676f436f6c6f723d7768697465"><img src="https://camo.githubusercontent.com/f432d617c378401551c4ba1fa6670f2e4e4ec6676cf3b8370096f3f8b66554ee/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f6373732d3135373242363f7374796c653d666f722d7468652d6261646765266c6f676f3d63737333266c6f676f436f6c6f723d7768697465" data-canonical-src="https://img.shields.io/badge/css-1572B6?style=for-the-badge&amp;logo=css3&amp;logoColor=white" style="max-width: 100%;"></a></td>
 </tr>
 </tbody>
-</table>
+</table><br>
 
 
 ### 기능 요약
