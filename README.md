@@ -56,32 +56,35 @@
 ✔️ 이종혁 : 예약페이지, 결제<br><br><br>
 
 <p>⭐패키지상품페이지 목록⭐</p><br>
-<img src="https://blog.kakaocdn.net/dn/bgM6XF/btsFCZGriwH/KoTaXKD1EizShDbbkCSbIK/img.gif">
+<img src="https://blog.kakaocdn.net/dn/bgM6XF/btsFCZGriwH/KoTaXKD1EizShDbbkCSbIK/img.gif"><br>
 
 <p>⭐카테고리 추가⭐</p><br>
-<img src="https://blog.kakaocdn.net/dn/ulUFg/btsFC0L9IkK/0NenR6LtTBUvjbJazu2tAK/img.gif">
+<img src="https://blog.kakaocdn.net/dn/ulUFg/btsFC0L9IkK/0NenR6LtTBUvjbJazu2tAK/img.gif"><br>
 
 
 <p>⭐패키지상품 추가⭐</p><br>
-<img src="https://blog.kakaocdn.net/dn/VXZfu/btsFA8LadhO/6GHoXHQt6GoECUyI2iwf9k/img.gif">
+<img src="https://blog.kakaocdn.net/dn/VXZfu/btsFA8LadhO/6GHoXHQt6GoECUyI2iwf9k/img.gif"><br>
 
 <p>⭐패키지상품 수정⭐</p><br>
-<img src="https://blog.kakaocdn.net/dn/8t62u/btsFAhPcefc/b6m6Bmtkb9aPBhKK7RRLCk/img.gif">
+<img src="https://blog.kakaocdn.net/dn/8t62u/btsFAhPcefc/b6m6Bmtkb9aPBhKK7RRLCk/img.gif"><br>
 
 
 <p>⭐패키지상품 삭제⭐</p><br>
-<img src="https://blog.kakaocdn.net/dn/bduxhk/btsFD7jOVPp/7fRXu2zdGIqwAvU02bHww0/img.gif">
+<img src="https://blog.kakaocdn.net/dn/bduxhk/btsFD7jOVPp/7fRXu2zdGIqwAvU02bHww0/img.gif"><br>
 
 
 <p>⭐패키지상품 상세⭐</p><br>
+<img src="https://blog.kakaocdn.net/dn/9hXQv/btsFDEPILJT/6Ewt7Ki2kD3kJn0mK4kvkK/img.gif"><br>
 
-### 기능 요약
-1. 회원은 국내 패키지 여행에 대한 정보를 목록으로 편하게 선택할 수 있고 상세페이지를 통해 선택한 패키지에 대한 리뷰를 확인할 수 있고 원하는 날짜를 선택해 예약할 수 있습니다. 각각의 여행상품에 대한 찜하기가 가능하며 목록으로 확인할 수 있습니다.
-2. 회원은 국내 호텔 예약에 대한 정보를 목록으로 편하게 선택할 수 있고 상세페이지를 통해 원하는 날짜와 객실을 선택해 예약할 수 있습니다. 
-3. 고객센터는 공지사항, 자주묻는 질문, 1:1 문의하기로 구성되어있어 관리자와 회원간의 원활한 소통이 가능합니다.
-4. 회원가입시 SMS 인증절차를 거치며 최소한의 정보를 수집하면서도 회원에 대한 검증이 가능하며 카카오, 네이버 간편로그인도 가능합니다.
-5. 관리자는 관리자페이지에서 전체 회원, 상품(패키지,호텔), 리뷰에 대한 목록보기와 간단한 수정이 가능합니다.
-6. 예약시 사용자가 정보를 입력하고 예약하면 대기상태로 진행되며 상세페이지를 통해 수정, 취소, 결제가 가능하고 예약목록을 통해 패키지, 호텔예약 내용들을 확인할 수 있습니다..
+<p>⭐찜목록⭐</p><br>
+<img src="https://blog.kakaocdn.net/dn/dijBPA/btsFB1x8TTM/vskPXKnKMdBXBkct3BWQak/img.gif"><br>
+
+<p>⭐자주묻는질문⭐</p><br>
+<img src="https://blog.kakaocdn.net/dn/lh9hD/btsFDDcd3Jc/KRdxtS3K9toD5nBFr2GkOK/img.gif"><br>
+
+<p>⭐자주묻는질문 수정,삭제⭐</p><br>
+<img src="https://blog.kakaocdn.net/dn/1bMC3/btsFB8w828p/iJLkvHiwbNim6CGzHb2Njk/img.gif"><br>
+
 
 ### 개발 기간
 2023년 11월 20일 ~ 2023년 12월 19일  
