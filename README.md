@@ -2,7 +2,7 @@
 
 <p>한반도, 즉 대한민국 안에서 숙박 및 당일치기 여행이 가능한 여행사 홈페이지 입니다.</p><br><br>
 
-<img src="[https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FQi3lz%2FbtsFCyIXspB%2FztOPctu8jIAWsTMipA8BX1%2Fimg.png](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FGH1k0%2FbtsFz8rg4LG%2FpYKXLROjxHLbXq2EQpyNKK%2Fimg.png)">
+<img src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FGH1k0%2FbtsFz8rg4LG%2FpYKXLROjxHLbXq2EQpyNKK%2Fimg.png">
 
 
 <h1>목차</h1>
