@@ -53,10 +53,27 @@
 ✔️ 김태준 : 고객센터<br>
 ✔️ 나예솜 : 회원페이지<br>
 ✔️ 심희수 : 관리자페이지<br>
-✔️ 이종혁 : 예약페이지, 결제<br><br>
+✔️ 이종혁 : 예약페이지, 결제<br><br><br>
 
-<p>⭐패키지상품페이지⭐</p><br>
+<p>⭐패키지상품페이지 목록⭐</p><br>
 <img src="https://blog.kakaocdn.net/dn/bgM6XF/btsFCZGriwH/KoTaXKD1EizShDbbkCSbIK/img.gif">
+
+<p>⭐카테고리 추가⭐</p><br>
+<img src="https://blog.kakaocdn.net/dn/ulUFg/btsFC0L9IkK/0NenR6LtTBUvjbJazu2tAK/img.gif">
+
+
+<p>⭐패키지상품 추가⭐</p><br>
+<img src="https://blog.kakaocdn.net/dn/VXZfu/btsFA8LadhO/6GHoXHQt6GoECUyI2iwf9k/img.gif">
+
+<p>⭐패키지상품 수정⭐</p><br>
+<img src="https://blog.kakaocdn.net/dn/8t62u/btsFAhPcefc/b6m6Bmtkb9aPBhKK7RRLCk/img.gif">
+
+
+<p>⭐패키지상품 삭제⭐</p><br>
+<img src="https://blog.kakaocdn.net/dn/bduxhk/btsFD7jOVPp/7fRXu2zdGIqwAvU02bHww0/img.gif">
+
+
+<p>⭐패키지상품 상세⭐</p><br>
 
 ### 기능 요약
 1. 회원은 국내 패키지 여행에 대한 정보를 목록으로 편하게 선택할 수 있고 상세페이지를 통해 선택한 패키지에 대한 리뷰를 확인할 수 있고 원하는 날짜를 선택해 예약할 수 있습니다. 각각의 여행상품에 대한 찜하기가 가능하며 목록으로 확인할 수 있습니다.
