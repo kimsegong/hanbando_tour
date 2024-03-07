@@ -2,6 +2,9 @@
 
 <p>한반도, 즉 대한민국 안에서 숙박 및 당일치기 여행이 가능한 여행사 홈페이지 입니다.</p>
 
+<img src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FQi3lz%2FbtsFCyIXspB%2FztOPctu8jIAWsTMipA8BX1%2Fimg.png">
+
+
 ### 소개
 '한반도투어'는 패키지여행과 호텔예약이 가능한 여행사를 목적으로 진행된 프로젝트입니다.
 '한반도투어'라는 이름은 모든 국내여행에 관련된 상품을 제공하자는 취지로 정해졌으며 회원을  대상으로 서비스를 제공합니다.  
