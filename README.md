@@ -49,11 +49,14 @@
 
 <h1>구현기능 & 상세설명</h1>
 ✔️ 남궁수민(팀장) : 메인화면, 호텔상품<br>
-<border><strong>✔️ 김세연 :</strong> 패키지상품, 찜목록, 자주묻는질문</border><br>
+<border><strong>✔️ 김세연:패키지상품, 찜목록, 자주묻는질문</strong></border><br>
 ✔️ 김태준 : 고객센터<br>
 ✔️ 나예솜 : 회원페이지<br>
 ✔️ 심희수 : 관리자페이지<br>
-✔️ 이종혁 : 예약
+✔️ 이종혁 : 예약페이지, 결제
+
+패키지상품페이지
+<img src="https://blog.kakaocdn.net/dn/bgM6XF/btsFCZGriwH/KoTaXKD1EizShDbbkCSbIK/img.gif">
 
 ### 기능 요약
 1. 회원은 국내 패키지 여행에 대한 정보를 목록으로 편하게 선택할 수 있고 상세페이지를 통해 선택한 패키지에 대한 리뷰를 확인할 수 있고 원하는 날짜를 선택해 예약할 수 있습니다. 각각의 여행상품에 대한 찜하기가 가능하며 목록으로 확인할 수 있습니다.
@@ -66,17 +69,4 @@
 ### 개발 기간
 2023년 11월 20일 ~ 2023년 12월 19일  
 
-### 멤버 구성과 기능구현
-- 남궁수민(팀장) : 메인, 호텔
-- 김세연 : 패키지, 찜목록
-- 김태준 : 고객센터
-- 나예솜 : 회원
-- 심희수 : 관리자
-- 이종혁 : 예약
-
-### 기술스택
-- FE : HTML, CSS, JavaScript, Ajax, jQuery
-- BE : JAVA, Spring Framework, SpringBoot, Mybatis
-- TOOLS : STS4(Spring Tools Suite 4), Github, Git
-- DB : OracleDB  
 
