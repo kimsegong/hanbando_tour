@@ -4,6 +4,8 @@
 
 <img src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FGH1k0%2FbtsFz8rg4LG%2FpYKXLROjxHLbXq2EQpyNKK%2Fimg.png"><br>
 
+### 개발 기간
+⏱️2023년 11월 20일 ~ 2023년 12월 19일  
 
 <h1>목차</h1>
 <ul>
@@ -86,9 +88,5 @@
 <img src="https://blog.kakaocdn.net/dn/1bMC3/btsFB8w828p/iJLkvHiwbNim6CGzHb2Njk/img.gif"><br>
 
 
-
-
-### 개발 기간
-2023년 11월 20일 ~ 2023년 12월 19일  
 
 
